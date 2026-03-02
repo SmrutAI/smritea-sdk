@@ -1,28 +1,15 @@
 /**
  * Public-facing types for the smritea TypeScript SDK.
- * Field names use snake_case to match the API JSON response contract.
+ *
+ * Memory and SearchResult are re-exported directly from the auto-generated SDK
+ * so that the type contract matches the API exactly. Field names are camelCase
+ * as produced by the openapi-generator TypeScript mapper.
  */
 
-export interface Memory {
-  id: string;
-  app_id: string;
-  actor_id: string;
-  content: string;
-  metadata?: Record<string, unknown>;
-  actor_type?: string;
-  actor_name?: string;
-  active_from: string;
-  active_to?: string;
-  conversation_id?: string;
-  conversation_message_id?: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface SearchResult {
-  memory: Memory;
-  score: number;
-}
+export type {
+  MemoryMemoryResponse as Memory,
+  MemorySearchMemoryResponse as SearchResult,
+} from './_internal/autogen/models/index.js';
 
 export interface AddMemoryOptions {
   /** Shorthand: sets actor_id and actor_type="user". Takes precedence if actorId also set. */

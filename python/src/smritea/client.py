@@ -3,10 +3,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from smritea._internal.smritea_cloud_sdk import ApiClient, Configuration
-from smritea._internal.smritea_cloud_sdk.api.sdk_memory_api import SDKMemoryApi
-from smritea._internal.smritea_cloud_sdk.exceptions import ApiException
-from smritea._internal.smritea_cloud_sdk.models import (
+from smritea._internal.autogen.smritea_cloud_sdk import ApiClient, Configuration
+from smritea._internal.autogen.smritea_cloud_sdk.api.sdk_memory_api import SDKMemoryApi
+from smritea._internal.autogen.smritea_cloud_sdk.exceptions import ApiException
+from smritea._internal.autogen.smritea_cloud_sdk.models import (
     MemoryCreateMemoryRequest,
     MemorySearchMemoryRequest,
 )

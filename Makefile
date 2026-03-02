@@ -4,7 +4,7 @@ help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}' | sort
 
 generate: ## Regenerate auto-gen SDK from smritea-cloud (run when API changes)
-	cd ../smritea-cloud && make generate-public-sdk
+	cd .. && make generate-public-sdk
 
 test-python: ## Run Python SDK tests
 	cd python && uv run pytest tests/ -v

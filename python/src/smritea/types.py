@@ -1,8 +1,8 @@
 """Public-facing data types for the smritea SDK.
 
 Return types (Memory, SearchResult) are the auto-generated pydantic models from
-``smritea._internal`` — re-exported here as canonical SDK names so that callers
-can ``from smritea import Memory`` without knowing about ``_internal``.
+``smritea._internal.autogen`` — re-exported here as canonical SDK names so that
+callers can ``from smritea import Memory`` without knowing about ``_internal``.
 
 Input option types (AddMemoryOptions, SearchOptions) are new classes that do not
 exist in the auto-gen SDK; they are defined here as pydantic models.
@@ -19,7 +19,7 @@ from pydantic import BaseModel
 # Regenerated from smritea-cloud via: cd ../smritea-cloud && make generate-public-sdk
 # ---------------------------------------------------------------------------
 
-from smritea._internal.smritea_cloud_sdk.models import (
+from smritea._internal.autogen.smritea_cloud_sdk.models import (
     MemoryMemoryResponse as Memory,
     MemorySearchMemoriesResponse,
     MemorySearchMemoryResponse as SearchResult,
