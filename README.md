@@ -1,6 +1,7 @@
 # smritea SDK
 
-Give your AI apps a long-term memory. Store what users tell you, search it back when relevant, and build personalized experiences — without managing vector databases yourself.
+Give your AI apps a long-term memory. Store what users tell you, search it back when relevant, and build personalized
+experiences — without managing vector databases yourself.
 
 **[Get a free API key →](https://smritea.ai)**
 
@@ -10,10 +11,10 @@ Give your AI apps a long-term memory. Store what users tell you, search it back 
 
 ```bash
 # Python
-pip install smritea
+pip install smritea-sdk
 
 # TypeScript / Node.js
-npm install smritea
+npm install smritea-sdk
 ```
 
 ---
@@ -34,6 +35,7 @@ export SMRITEA_APP_ID="app_..."
 ## Quickstart
 
 **Python**
+
 ```python
 import os
 from smritea import SmriteaClient
@@ -53,8 +55,9 @@ for r in results:
 ```
 
 **TypeScript**
+
 ```typescript
-import { SmriteaClient } from 'smritea';
+import { SmriteaClient } from 'smritea-sdk';
 
 const client = new SmriteaClient({
   apiKey: process.env.SMRITEA_API_KEY!,
@@ -98,19 +101,20 @@ const memory = await client.add('User prefers concise replies', {
 console.log(memory.id); // mem_...
 ```
 
-`user_id` / `userId` is a shorthand that sets `actor_id` and forces `actor_type="user"`. For agent or system memories, use `actor_id` + `actor_type` directly.
+`user_id` / `userId` is a shorthand that sets `actor_id` and forces `actor_type="user"`. For agent or system memories,
+use `actor_id` + `actor_type` directly.
 
 **Full signature**
 
-| Parameter (Python) | Parameter (TypeScript) | Default | Description |
-|---|---|---|---|
-| `content` | `content` | required | Memory text |
-| `user_id` | `userId` | `None` | Shorthand: actor_id + actor_type="user" |
-| `actor_id` | `actorId` | `None` | Explicit actor ID |
-| `actor_type` | `actorType` | `"user"` | `"user"` \| `"agent"` \| `"system"` |
-| `actor_name` | `actorName` | `None` | Display name |
-| `metadata` | `metadata` | `None` | Arbitrary key-value dict / object |
-| `conversation_id` | `conversationId` | `None` | Conversation context |
+| Parameter (Python) | Parameter (TypeScript) | Default  | Description                             |
+|--------------------|------------------------|----------|-----------------------------------------|
+| `content`          | `content`              | required | Memory text                             |
+| `user_id`          | `userId`               | `None`   | Shorthand: actor_id + actor_type="user" |
+| `actor_id`         | `actorId`              | `None`   | Explicit actor ID                       |
+| `actor_type`       | `actorType`            | `"user"` | `"user"` \| `"agent"` \| `"system"`     |
+| `actor_name`       | `actorName`            | `None`   | Display name                            |
+| `metadata`         | `metadata`             | `None`   | Arbitrary key-value dict / object       |
+| `conversation_id`  | `conversationId`       | `None`   | Conversation context                    |
 
 ---
 
@@ -144,25 +148,25 @@ Results are ordered by relevance (descending). Each result exposes `score` (floa
 
 **Search methods**
 
-| Method | When to use |
-|--------|-------------|
-| `quick_search` | Low-latency, keyword + vector hybrid |
-| `deep_search` | Higher recall, traverses the memory graph |
+| Method                 | When to use                                |
+|------------------------|--------------------------------------------|
+| `quick_search`         | Low-latency, keyword + vector hybrid       |
+| `deep_search`          | Higher recall, traverses the memory graph  |
 | `context_aware_search` | Reranks results using conversation context |
 
 **Full signature**
 
-| Parameter (Python) | Parameter (TypeScript) | Default | Description |
-|---|---|---|---|
-| `query` | `query` | required | Search text |
-| `user_id` | `userId` | `None` | Filter to this user's memories |
-| `actor_id` | `actorId` | `None` | Filter by actor ID |
-| `actor_type` | `actorType` | `None` | Filter by actor type |
-| `limit` | `limit` | app default | Max results to return |
-| `method` | `method` | app default | Search strategy |
-| `threshold` | `threshold` | `None` | Min relevance score 0.0–1.0 |
-| `graph_depth` | `graphDepth` | `None` | Graph traversal depth override |
-| `conversation_id` | `conversationId` | `None` | Conversation context |
+| Parameter (Python) | Parameter (TypeScript) | Default     | Description                    |
+|--------------------|------------------------|-------------|--------------------------------|
+| `query`            | `query`                | required    | Search text                    |
+| `user_id`          | `userId`               | `None`      | Filter to this user's memories |
+| `actor_id`         | `actorId`              | `None`      | Filter by actor ID             |
+| `actor_type`       | `actorType`            | `None`      | Filter by actor type           |
+| `limit`            | `limit`                | app default | Max results to return          |
+| `method`           | `method`               | app default | Search strategy                |
+| `threshold`        | `threshold`            | `None`      | Min relevance score 0.0–1.0    |
+| `graph_depth`      | `graphDepth`           | `None`      | Graph traversal depth override |
+| `conversation_id`  | `conversationId`       | `None`      | Conversation context           |
 
 ---
 
@@ -251,7 +255,7 @@ import {
   SmriteaQuotaError,
   SmriteaValidationError,
   SmriteaError,
-} from 'smritea';
+} from 'smritea-sdk';
 
 try {
   await client.delete('mem_unknown');
@@ -264,33 +268,33 @@ try {
 
 **Exception reference**
 
-| Exception | HTTP | When |
-|-----------|------|------|
-| `SmriteaAuthError` | 401 | Invalid or missing API key |
-| `SmriteaValidationError` | 400 | Invalid request parameters |
-| `SmriteaNotFoundError` | 404 | Memory ID does not exist |
-| `SmriteaQuotaError` | 402 | Organisation quota exceeded |
-| `SmriteaRateLimitError` | 429 | Rate limit hit — check `.retry_after` / `.retryAfter` |
-| `SmriteaError` | other | Unexpected server error |
+| Exception                | HTTP  | When                                                  |
+|--------------------------|-------|-------------------------------------------------------|
+| `SmriteaAuthError`       | 401   | Invalid or missing API key                            |
+| `SmriteaValidationError` | 400   | Invalid request parameters                            |
+| `SmriteaNotFoundError`   | 404   | Memory ID does not exist                              |
+| `SmriteaQuotaError`      | 402   | Organisation quota exceeded                           |
+| `SmriteaRateLimitError`  | 429   | Rate limit hit — check `.retry_after` / `.retryAfter` |
+| `SmriteaError`           | other | Unexpected server error                               |
 
 ---
 
 ## `Memory` type reference
 
-| Field (Python) | Field (TypeScript) | Type | Description |
-|---|---|---|---|
-| `id` | `id` | string | Memory ID (`mem_...`) |
-| `app_id` | `appId` | string | App this memory belongs to |
-| `content` | `content` | string | Memory text |
-| `actor_id` | `actorId` | string | Actor who owns this memory |
-| `actor_type` | `actorType` | string | `"user"` \| `"agent"` \| `"system"` |
-| `actor_name` | `actorName` | string? | Display name |
-| `metadata` | `metadata` | object? | Arbitrary key-value pairs |
-| `conversation_id` | `conversationId` | string? | Conversation context |
-| `active_from` | `activeFrom` | string | ISO 8601 — when memory becomes valid |
-| `active_to` | `activeTo` | string? | ISO 8601 — when memory expires |
-| `created_at` | `createdAt` | string | ISO 8601 creation timestamp |
-| `updated_at` | `updatedAt` | string | ISO 8601 last update timestamp |
+| Field (Python)    | Field (TypeScript) | Type    | Description                          |
+|-------------------|--------------------|---------|--------------------------------------|
+| `id`              | `id`               | string  | Memory ID (`mem_...`)                |
+| `app_id`          | `appId`            | string  | App this memory belongs to           |
+| `content`         | `content`          | string  | Memory text                          |
+| `actor_id`        | `actorId`          | string  | Actor who owns this memory           |
+| `actor_type`      | `actorType`        | string  | `"user"` \| `"agent"` \| `"system"`  |
+| `actor_name`      | `actorName`        | string? | Display name                         |
+| `metadata`        | `metadata`         | object? | Arbitrary key-value pairs            |
+| `conversation_id` | `conversationId`   | string? | Conversation context                 |
+| `active_from`     | `activeFrom`       | string  | ISO 8601 — when memory becomes valid |
+| `active_to`       | `activeTo`         | string? | ISO 8601 — when memory expires       |
+| `created_at`      | `createdAt`        | string  | ISO 8601 creation timestamp          |
+| `updated_at`      | `updatedAt`        | string  | ISO 8601 last update timestamp       |
 
 > Python fields use `snake_case`; TypeScript fields use `camelCase`.
 
@@ -299,6 +303,7 @@ try {
 ## Constructor
 
 **Python**
+
 ```python
 from smritea import SmriteaClient
 
@@ -310,8 +315,9 @@ client = SmriteaClient(
 ```
 
 **TypeScript**
+
 ```typescript
-import { SmriteaClient } from 'smritea';
+import { SmriteaClient } from 'smritea-sdk';
 
 const client = new SmriteaClient({
   apiKey: 'sk-...',                       // required

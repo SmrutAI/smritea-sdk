@@ -1,5 +1,5 @@
 {
-  "name": "smritea",
+  "name": "smritea-sdk",
   "version": "0.1.0",
   "description": "TypeScript SDK for smritea AI memory system",
   "license": "Apache-2.0",
