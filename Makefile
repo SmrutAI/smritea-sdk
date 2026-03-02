@@ -1,4 +1,4 @@
-.PHONY: generate test-python test-typescript test build-python build-typescript \
+.PHONY: test-python test-typescript test build-python build-typescript \
         publish-python publish-typescript publish clean help \
         lint-python lint-typescript lint
 
@@ -8,9 +8,6 @@
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}' | sort
-
-generate: ## Regenerate auto-gen SDK from smritea-cloud (run when API changes)
-	cd .. && make generate-public-sdk
 
 test-python: ## Run Python SDK tests
 	cd python && uv run pytest tests/ -v
