@@ -1,4 +1,9 @@
-.PHONY: generate test-python test-typescript test build-python build-typescript clean help
+.PHONY: generate test-python test-typescript test build-python build-typescript \
+        publish-python publish-typescript publish clean help
+
+# Publishing tokens — sourced from environment variables:
+#   PYPI_TOKEN   : PyPI API token (starts with pypi-)
+#   NPM_TOKEN    : npm access token
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}' | sort
@@ -19,6 +24,20 @@ build-python: ## Build Python SDK wheel
 
 build-typescript: ## Build TypeScript SDK
 	cd typescript && npm run build
+
+publish-python: build-python ## Build and publish Python SDK to PyPI (requires PYPI_TOKEN env var)
+	@if [ -z "$$PYPI_TOKEN" ]; then \
+		echo "ERROR: PYPI_TOKEN environment variable is not set"; exit 1; \
+	fi
+	cd python && UV_PUBLISH_TOKEN="$$PYPI_TOKEN" uv publish
+
+publish-typescript: build-typescript ## Build and publish TypeScript SDK to npm (requires NPM_TOKEN env var)
+	@if [ -z "$$NPM_TOKEN" ]; then \
+		echo "ERROR: NPM_TOKEN environment variable is not set"; exit 1; \
+	fi
+	cd typescript && npm set "//registry.npmjs.org/:_authToken=$$NPM_TOKEN" && npm publish --access public
+
+publish: publish-python publish-typescript ## Build and publish both SDKs
 
 clean: ## Clean build artifacts
 	rm -rf python/dist
