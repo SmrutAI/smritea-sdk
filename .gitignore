@@ -1,0 +1,15 @@
+# Build artifacts
+python/dist/
+typescript/dist/
+node_modules/
+
+# Python
+__pycache__/
+*.egg-info/
+.pytest_cache/
+*.pyc
+.venv/
+dist/
+
+# TypeScript
+*.js.map
