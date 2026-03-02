@@ -1,5 +1,8 @@
 """Exceptions for the smritea SDK."""
+
 from __future__ import annotations
+
+import contextlib
 
 
 class SmriteaError(Exception):
@@ -11,7 +14,9 @@ class SmriteaError(Exception):
         super().__init__(message)
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(message={self.message!r}, status_code={self.status_code!r})"
+        return (
+            f"{self.__class__.__name__}(message={self.message!r}, status_code={self.status_code!r})"
+        )
 
 
 class SmriteaAuthError(SmriteaError):
@@ -31,7 +36,12 @@ class SmriteaQuotaError(SmriteaError):
 
 
 class SmriteaRateLimitError(SmriteaError):
-    """Raised on HTTP 429 — rate limit exceeded."""
+    """Raised on HTTP 429 — rate limit exceeded after all retries are exhausted.
+
+    Attributes:
+        retry_after: Seconds the server requested before retrying, if provided.
+            This is informational — the SDK already waited this long during retries.
+    """
 
     def __init__(
         self,
@@ -69,10 +79,8 @@ def raise_for_status(status_code: int, message: str, headers: dict | None = None
         raise SmriteaNotFoundError(message, status_code)
     if status_code == 429:
         retry_after: int | None = None
-        if headers and "Retry-After" in headers:
-            try:
+        if headers:
+            with contextlib.suppress(KeyError, ValueError, TypeError):
                 retry_after = int(headers["Retry-After"])
-            except (ValueError, TypeError):
-                pass
         raise SmriteaRateLimitError(message, status_code, retry_after=retry_after)
     raise SmriteaError(message, status_code)

@@ -1,0 +1,213 @@
+# smritea SDK — Python
+
+Python SDK for the [smritea](https://smritea.ai) AI memory system.
+
+**[Get a free API key →](https://smritea.ai)**
+
+---
+
+## Installation
+
+```bash
+pip install smritea-sdk
+```
+
+Requires Python 3.9+.
+
+---
+
+## Get your API key
+
+1. Sign up at **[smritea.ai](https://smritea.ai)** — free account, no credit card required
+2. Create an app in the dashboard and copy your API key (`sk-...`) and App ID (`app_...`)
+3. Export them as environment variables:
+
+```bash
+export SMRITEA_API_KEY="sk-..."
+export SMRITEA_APP_ID="app_..."
+```
+
+---
+
+## Quickstart
+
+```python
+import os
+from smritea import SmriteaClient
+
+client = SmriteaClient(
+    api_key=os.environ["SMRITEA_API_KEY"],
+    app_id=os.environ["SMRITEA_APP_ID"],
+)
+
+# Store something about a user
+client.add("Alice is a vegetarian and loves hiking", user_id="alice")
+
+# Retrieve it later in a different session
+results = client.search("What are Alice's food preferences?", user_id="alice")
+for r in results:
+    print(f"{r.score:.2f}  {r.content}")
+```
+
+---
+
+## Constructor
+
+```python
+from smritea import SmriteaClient
+
+client = SmriteaClient(
+    api_key="sk-...",                    # required
+    app_id="app_...",                    # required
+    base_url="https://api.smritea.ai",  # optional, default shown
+)
+```
+
+---
+
+## Methods
+
+### `add` — Store a memory
+
+```python
+memory = client.add(
+    "User prefers concise replies",
+    user_id="alice",               # shorthand for actor_id + actor_type="user"
+    metadata={"source": "chat"},   # optional
+    conversation_id="conv_123",    # optional
+)
+print(memory.id)  # mem_...
+```
+
+`user_id` is a shorthand — sets `actor_id` and forces `actor_type="user"`. For agent or system memories use `actor_id` + `actor_type` directly.
+
+| Parameter | Default | Description |
+|---|---|---|
+| `content` | required | Memory text |
+| `user_id` | `None` | Shorthand: actor_id + actor_type="user" |
+| `actor_id` | `None` | Explicit actor ID |
+| `actor_type` | `"user"` | `"user"` \| `"agent"` \| `"system"` |
+| `actor_name` | `None` | Display name |
+| `metadata` | `None` | Arbitrary key-value dict |
+| `conversation_id` | `None` | Conversation context |
+
+---
+
+### `search` — Semantic search
+
+```python
+results = client.search(
+    "dietary restrictions",
+    user_id="alice",
+    limit=5,
+    method="deep_search",  # "quick_search" | "deep_search" | "context_aware_search"
+    threshold=0.7,          # min relevance score 0.0–1.0
+)
+for r in results:
+    print(r.score, r.content)
+```
+
+Results are ordered by relevance (descending). Each result exposes `score` (0.0–1.0) and all `Memory` fields directly.
+
+| Search method | When to use |
+|---|---|
+| `quick_search` | Low-latency, keyword + vector hybrid |
+| `deep_search` | Higher recall, traverses the memory graph |
+| `context_aware_search` | Reranks results using conversation context |
+
+| Parameter | Default | Description |
+|---|---|---|
+| `query` | required | Search text |
+| `user_id` | `None` | Filter to this user's memories |
+| `actor_id` | `None` | Filter by actor ID |
+| `actor_type` | `None` | Filter by actor type |
+| `limit` | app default | Max results to return |
+| `method` | app default | Search strategy |
+| `threshold` | `None` | Min relevance score 0.0–1.0 |
+| `graph_depth` | `None` | Graph traversal depth override |
+| `conversation_id` | `None` | Conversation context |
+
+---
+
+### `get` — Retrieve a memory by ID
+
+```python
+memory = client.get("mem_abc123")
+print(memory.content, memory.created_at)
+# Raises SmriteaNotFoundError if the ID does not exist
+```
+
+---
+
+### `delete` — Delete a memory by ID
+
+```python
+client.delete("mem_abc123")
+# Raises SmriteaNotFoundError if the ID does not exist
+```
+
+---
+
+### `get_all` — List all memories
+
+> **Not yet implemented.** Raises `NotImplementedError`.
+> Use `search()` with a broad query as a workaround:
+
+```python
+results = client.search("", user_id="alice", limit=100)
+```
+
+---
+
+## Error handling
+
+```python
+from smritea import (
+    SmriteaClient,
+    SmriteaAuthError,
+    SmriteaNotFoundError,
+    SmriteaRateLimitError,
+    SmriteaQuotaError,
+    SmriteaValidationError,
+    SmriteaError,
+)
+
+try:
+    results = client.search("preferences", user_id="alice")
+except SmriteaAuthError:
+    print("Check your API key")
+except SmriteaRateLimitError as e:
+    print(f"Rate limited — retry after {e.retry_after}s")
+except SmriteaQuotaError:
+    print("Plan quota exceeded")
+except SmriteaError as e:
+    print(f"Unexpected error: {e}")
+```
+
+| Exception | HTTP | When |
+|---|---|---|
+| `SmriteaAuthError` | 401 | Invalid or missing API key |
+| `SmriteaValidationError` | 400 | Invalid request parameters |
+| `SmriteaNotFoundError` | 404 | Memory ID does not exist |
+| `SmriteaQuotaError` | 402 | Organisation quota exceeded |
+| `SmriteaRateLimitError` | 429 | Rate limit hit — check `.retry_after` |
+| `SmriteaError` | other | Unexpected server error |
+
+---
+
+## `Memory` type reference
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | str | Memory ID (`mem_...`) |
+| `app_id` | str | App this memory belongs to |
+| `content` | str | Memory text |
+| `actor_id` | str | Actor who owns this memory |
+| `actor_type` | str | `"user"` \| `"agent"` \| `"system"` |
+| `actor_name` | str \| None | Display name |
+| `metadata` | dict \| None | Arbitrary key-value pairs |
+| `conversation_id` | str \| None | Conversation context |
+| `active_from` | str | ISO 8601 — when memory becomes valid |
+| `active_to` | str \| None | ISO 8601 — when memory expires |
+| `created_at` | str | ISO 8601 creation timestamp |
+| `updated_at` | str | ISO 8601 last update timestamp |

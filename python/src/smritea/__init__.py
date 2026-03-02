@@ -9,19 +9,18 @@ from smritea.exceptions import (
     SmriteaRateLimitError,
     SmriteaValidationError,
 )
-
 from smritea.types import Memory, SearchResult
 
 __all__ = [
-    'SmriteaClient',
-    'Memory',
-    'SearchResult',
-    'SmriteaError',
-    'SmriteaAuthError',
-    'SmriteaNotFoundError',
-    'SmriteaValidationError',
-    'SmriteaQuotaError',
-    'SmriteaRateLimitError',
+    "SmriteaClient",
+    "Memory",
+    "SearchResult",
+    "SmriteaError",
+    "SmriteaAuthError",
+    "SmriteaNotFoundError",
+    "SmriteaValidationError",
+    "SmriteaQuotaError",
+    "SmriteaRateLimitError",
 ]
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"

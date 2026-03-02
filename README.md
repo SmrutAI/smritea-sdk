@@ -7,15 +7,12 @@ experiences — without managing vector databases yourself.
 
 ---
 
-## Installation
+## Packages
 
-```bash
-# Python
-pip install smritea-sdk
-
-# TypeScript / Node.js
-npm install smritea-sdk
-```
+| Language             | Package                   | Docs                                         |
+|----------------------|---------------------------|----------------------------------------------|
+| Python               | `pip install smritea-sdk` | [python/README.md](python/README.md)         |
+| TypeScript / Node.js | `npm install smritea-sdk` | [typescript/README.md](typescript/README.md) |
 
 ---
 
@@ -84,9 +81,9 @@ for (const r of results) {
 # Python
 memory = client.add(
     "User prefers concise replies",
-    user_id="alice",               # shorthand for actor_id + actor_type="user"
-    metadata={"source": "chat"},   # optional arbitrary key-value pairs
-    conversation_id="conv_123",    # optional — links memory to a conversation
+    user_id="alice",  # shorthand for actor_id + actor_type="user"
+    metadata={"source": "chat"},  # optional arbitrary key-value pairs
+    conversation_id="conv_123",  # optional — links memory to a conversation
 )
 print(memory.id)  # mem_...
 ```
@@ -308,8 +305,8 @@ try {
 from smritea import SmriteaClient
 
 client = SmriteaClient(
-    api_key="sk-...",                    # required
-    app_id="app_...",                    # required
+    api_key="sk-...",  # required
+    app_id="app_...",  # required
     base_url="https://api.smritea.ai",  # optional, default shown
 )
 ```

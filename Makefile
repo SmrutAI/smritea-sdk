@@ -1,5 +1,6 @@
 .PHONY: generate test-python test-typescript test build-python build-typescript \
-        publish-python publish-typescript publish clean help
+        publish-python publish-typescript publish clean help \
+        lint-python lint-typescript lint
 
 # Publishing tokens — sourced from environment variables:
 #   PYPI_TOKEN   : PyPI API token (starts with pypi-)
@@ -38,6 +39,17 @@ publish-typescript: build-typescript ## Build and publish TypeScript SDK to npm 
 	cd typescript && npm set "//registry.npmjs.org/:_authToken=$$NPM_TOKEN" && npm publish --access public
 
 publish: publish-python publish-typescript ## Build and publish both SDKs
+
+lint-python: ## Lint Python SDK with ruff (excludes _internal/autogen)
+	cd python && uvx ruff check src/smritea
+	cd python && uvx ruff format --check src/smritea
+
+lint-typescript: ## Type-check and lint TypeScript SDK (excludes _internal/autogen)
+	cd typescript && npm install --silent
+	cd typescript && npm run typecheck
+	cd typescript && npm run lint
+
+lint: lint-python lint-typescript ## Lint all SDKs
 
 clean: ## Clean build artifacts
 	rm -rf python/dist

@@ -51,7 +51,13 @@ export class SmriteaQuotaError extends SmriteaError {
   }
 }
 
-/** HTTP 429 -- rate limit exceeded. Check retryAfter (seconds) before retrying. */
+/**
+ * HTTP 429 -- rate limit exceeded after all retries are exhausted.
+ *
+ * `retryAfter` is the value from the server's Retry-After header (seconds),
+ * if provided. This is informational — the SDK already waited this long
+ * during its automatic retry attempts.
+ */
 export class SmriteaRateLimitError extends SmriteaError {
   retryAfter?: number;
 

@@ -7,11 +7,22 @@ callers can ``from smritea import Memory`` without knowing about ``_internal``.
 Input option types (AddMemoryOptions, SearchOptions) are new classes that do not
 exist in the auto-gen SDK; they are defined here as pydantic models.
 """
+
 from __future__ import annotations
 
 from typing import Any
 
 from pydantic import BaseModel
+
+from smritea._internal.autogen.smritea_cloud_sdk.models import (
+    MemoryMemoryResponse as Memory,
+)
+from smritea._internal.autogen.smritea_cloud_sdk.models import (
+    MemorySearchMemoriesResponse,
+)
+from smritea._internal.autogen.smritea_cloud_sdk.models import (
+    MemorySearchMemoryResponse as SearchResult,
+)
 
 # ---------------------------------------------------------------------------
 # Re-export auto-gen return types under canonical SDK names.
@@ -19,11 +30,7 @@ from pydantic import BaseModel
 # Regenerated from smritea-cloud via: cd ../smritea-cloud && make generate-public-sdk
 # ---------------------------------------------------------------------------
 
-from smritea._internal.autogen.smritea_cloud_sdk.models import (
-    MemoryMemoryResponse as Memory,
-    MemorySearchMemoriesResponse,
-    MemorySearchMemoryResponse as SearchResult,
-)
+__all__ = ["Memory", "SearchResult", "MemorySearchMemoriesResponse"]
 
 
 # ---------------------------------------------------------------------------

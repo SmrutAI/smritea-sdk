@@ -10,12 +10,16 @@ import {
   SmriteaValidationError,
 } from './errors.js';
 
+const RETRY_CAP_MS = 30_000;
+
 export class SmriteaClient {
   private readonly appId: string;
   private readonly api: SDKMemoryApi;
+  private readonly maxRetries: number;
 
   constructor(config: SmriteaClientConfig) {
     this.appId = config.appId;
+    this.maxRetries = config.maxRetries ?? 2;
     const configuration = new Configuration({
       basePath: config.baseUrl?.replace(/\/$/, '') ?? 'https://api.smritea.ai',
       apiKey: config.apiKey,
@@ -27,8 +31,8 @@ export class SmriteaClient {
     const actorId = options?.userId ?? options?.actorId;
     const actorType = options?.userId !== undefined ? 'user' : options?.actorType;
 
-    try {
-      return await this.api.createMemory({
+    return this.withRetry(() =>
+      this.api.createMemory({
         request: {
           appId: this.appId,
           content,
@@ -38,18 +42,16 @@ export class SmriteaClient {
           metadata: options?.metadata as never,
           conversationId: options?.conversationId,
         },
-      });
-    } catch (err) {
-      return this.handleError(err);
-    }
+      }),
+    );
   }
 
   async search(query: string, options?: SearchOptions): Promise<SearchResult[]> {
     const actorId = options?.userId ?? options?.actorId;
     const actorType = options?.userId !== undefined ? 'user' : options?.actorType;
 
-    try {
-      const response = await this.api.searchMemories({
+    const response = await this.withRetry(() =>
+      this.api.searchMemories({
         request: {
           appId: this.appId,
           query,
@@ -61,32 +63,69 @@ export class SmriteaClient {
           graphDepth: options?.graphDepth,
           conversationId: options?.conversationId,
         },
-      });
-      return response.memories ?? [];
-    } catch (err) {
-      return this.handleError(err);
-    }
+      }),
+    );
+    return response.memories ?? [];
   }
 
   async get(memoryId: string): Promise<Memory> {
-    try {
-      return await this.api.getMemory({ memoryId });
-    } catch (err) {
-      return this.handleError(err);
-    }
+    return this.withRetry(() => this.api.getMemory({ memoryId }));
   }
 
   async delete(memoryId: string): Promise<void> {
-    try {
-      await this.api.deleteMemory({ memoryId });
-    } catch (err) {
-      this.handleError(err);
-    }
+    await this.withRetry(() => this.api.deleteMemory({ memoryId }));
   }
 
   // ------------------------------------------------------------------
   // Private helpers
   // ------------------------------------------------------------------
+
+  /**
+   * Execute fn, retrying on HTTP 429 up to maxRetries times.
+   *
+   * Sleep strategy per attempt:
+   * 1. Retry-After header value (seconds), capped at 30 s.
+   * 2. Exponential backoff (1 s, 2 s, 4 s, …) with ±25 % jitter, capped at 30 s.
+   *
+   * After all retries are exhausted the 429 is re-raised as SmriteaRateLimitError
+   * with retryAfter populated from the final response header if available.
+   */
+  private async withRetry<T>(fn: () => Promise<T>): Promise<T> {
+    for (let attempt = 0; attempt <= this.maxRetries; attempt++) {
+      try {
+        return await fn();
+      } catch (err) {
+        if (err instanceof ResponseError && err.response.status === 429 && attempt < this.maxRetries) {
+          await new Promise<void>((resolve) =>
+            setTimeout(resolve, this.retryDelayMs(attempt, this.parseRetryAfter(err.response))),
+          );
+          continue;
+        }
+        this.handleError(err);
+      }
+    }
+    throw new Error('unreachable');
+  }
+
+  /** Calculate sleep duration in milliseconds for a retry attempt. */
+  private retryDelayMs(attempt: number, retryAfterSeconds?: number): number {
+    if (retryAfterSeconds !== undefined && retryAfterSeconds > 0) {
+      return Math.min(retryAfterSeconds * 1000, RETRY_CAP_MS);
+    }
+    // Exponential backoff: 1 s, 2 s, 4 s, …
+    const baseMs = Math.min(1000 * Math.pow(2, attempt), RETRY_CAP_MS);
+    // ±25 % jitter
+    const jitter = baseMs * (0.75 + 0.5 * Math.random());
+    return Math.min(jitter, RETRY_CAP_MS);
+  }
+
+  /** Extract the Retry-After header value in seconds, or undefined. */
+  private parseRetryAfter(response: Response): number | undefined {
+    const header = response.headers.get('Retry-After');
+    if (header === null) return undefined;
+    const parsed = parseInt(header, 10);
+    return isNaN(parsed) ? undefined : parsed;
+  }
 
   private handleError(err: unknown): never {
     if (err instanceof ResponseError) {
@@ -97,11 +136,7 @@ export class SmriteaClient {
         case 401: throw new SmriteaAuthError(message, status);
         case 402: throw new SmriteaQuotaError(message, status);
         case 404: throw new SmriteaNotFoundError(message, status);
-        case 429: {
-          const retryAfter = err.response.headers.get('Retry-After');
-          const parsed = retryAfter !== null ? parseInt(retryAfter, 10) : undefined;
-          throw new SmriteaRateLimitError(message, status, isNaN(parsed ?? NaN) ? undefined : parsed);
-        }
+        case 429: throw new SmriteaRateLimitError(message, status, this.parseRetryAfter(err.response));
         default: throw new SmriteaError(message, status);
       }
     }

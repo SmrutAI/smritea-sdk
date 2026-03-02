@@ -39,4 +39,10 @@ export interface SmriteaClientConfig {
   appId: string;
   /** Override API base URL. Defaults to https://api.smritea.ai */
   baseUrl?: string;
+  /**
+   * Automatic retries on HTTP 429. Uses Retry-After header when the server
+   * provides one, otherwise exponential backoff with jitter (capped at 30 s).
+   * Set to 0 to disable. Default: 2.
+   */
+  maxRetries?: number;
 }
