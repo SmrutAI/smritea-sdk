@@ -76,6 +76,14 @@ export class SmriteaClient {
     await this.withRetry(() => this.api.deleteMemory({ memoryId }));
   }
 
+  async getAll(options?: { userId?: string; limit?: number; offset?: number }): Promise<Memory[]> {
+    void options; // parameter reserved for future use
+    throw new Error(
+      'getAll() is not yet available. The list memories endpoint is pending ' +
+        'dashboard testing. Use search() to find specific memories.',
+    );
+  }
+
   // ------------------------------------------------------------------
   // Private helpers
   // ------------------------------------------------------------------
