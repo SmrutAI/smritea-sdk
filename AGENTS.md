@@ -113,7 +113,8 @@ _retry_delay(attempt, retry_after):
 
 - **Never disable a lint rule to work around a code smell.** Fix the code. If a rule genuinely does
   not apply to this project, add it to the ignore list only after explicit confirmation from the user.
-- **Never suppress exceptions silently** unless there is an explicitly documented reason added after expicit approval from the user. Use narrow
+- **Never suppress exceptions silently** unless there is an explicitly documented reason added after expicit approval
+  from the user. Use narrow
   exception types and handle or re-raise.
 - **Import order** is enforced by the linter. Do not manually reorder — let the linter fix it.
 
@@ -135,6 +136,84 @@ _retry_delay(attempt, retry_after):
 - Test the retry logic explicitly: mock the API to return 429 N times then succeed; assert the
   correct number of sleeps occurred with approximately correct durations.
 - The `_internal/` directory must be excluded from test coverage collection.
+
+---
+
+## Adding a New Language SDK
+
+When adding a new language (e.g. `go/`, `ruby/`, `java/`), the following Makefile targets and
+pre-commit hooks are **mandatory**. They must be wired up before any code is merged.
+
+### Required Makefile Targets
+
+Add language-specific targets following the `<target>-<lang>` naming convention, then register
+them in the top-level wrappers:
+
+| Target           | What it does                                  | Example                              |
+|------------------|-----------------------------------------------|--------------------------------------|
+| `format-<lang>`  | Auto-format and auto-fix lint issues in place | `ruff format` + `ruff check --fix`   |
+| `lint-<lang>`    | Check-only — fails if anything is wrong       | `ruff check` + `ruff format --check` |
+| `build-<lang>`   | Compile / package the SDK                     | `uv build` / `tsc` / `go build`      |
+| `test-<lang>`    | Run the full unit test suite                  | `uv run pytest tests/ -v`            |
+| `publish-<lang>` | Build and publish to the package registry     | `uv publish` / `npm publish`         |
+
+After adding the language-specific targets, add them to the top-level wrappers:
+
+```makefile
+format: format-python format-typescript format-<lang>  ## Auto-format all SDKs
+lint:   lint-python   lint-typescript   lint-<lang>    ## Lint all SDKs
+test:   test-python   test-typescript   test-<lang>    ## Run all SDK tests
+```
+
+Also add all new target names to the `.PHONY` declaration at the top of the Makefile.
+
+### Required Pre-commit Hooks
+
+Add four hooks in `.pre-commit-config.yaml` under the `local` repo, in this exact order:
+
+```yaml
+- id: sdk-format
+  name: Format (... + <Lang>)
+  entry: make format
+  language: system
+  files: \.(py|ts|<ext>)$        # add the new file extension
+  exclude: _internal/autogen/
+  pass_filenames: false
+
+- id: sdk-lint
+  name: Lint (... + <Lang>)
+  entry: make lint
+  language: system
+  files: \.(py|ts|<ext>)$
+  exclude: _internal/autogen/
+  pass_filenames: false
+
+- id: sdk-test
+  name: Test (... + <Lang>)
+  entry: make test
+  language: system
+  files: \.(py|ts|<ext>)$
+  exclude: _internal/autogen/
+  pass_filenames: false
+```
+
+Note: there is no separate `build` hook — build is covered implicitly by the type-check step
+inside `lint-<lang>`. Add a dedicated build hook only if the language has a separate compile
+step that is not part of lint (e.g. a compiled language where type errors only surface at
+build time).
+
+### Checklist for a New Language
+
+- [ ] `<lang>/` directory created with `client`, `types`, `errors`, `_internal/autogen` structure
+- [ ] `_internal/autogen/` excluded from linter and type-checker (in the language's own config file — not in the
+  Makefile)
+- [ ] `format-<lang>` target added and wired into `make format`
+- [ ] `lint-<lang>` target added and wired into `make lint`
+- [ ] `test-<lang>` target added and wired into `make test`
+- [ ] `build-<lang>` and `publish-<lang>` targets added
+- [ ] `.PHONY` updated
+- [ ] `files` pattern in all three pre-commit hooks updated to include the new extension
+- [ ] Hook names updated to list the new language
 
 ---
 

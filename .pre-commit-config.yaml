@@ -15,6 +15,14 @@ repos:
 
   - repo: local
     hooks:
+      - id: sdk-format
+        name: Format (Python + TypeScript)
+        entry: make format
+        language: system
+        files: \.(py|ts)$
+        exclude: _internal/autogen/
+        pass_filenames: false
+
       - id: sdk-lint
         name: Lint (Python + TypeScript)
         entry: make lint

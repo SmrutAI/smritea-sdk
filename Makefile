@@ -44,7 +44,7 @@ format-python: ## Auto-format Python SDK with ruff (format + fix auto-fixable li
 	cd python && uvx ruff format src/smritea
 	cd python && uvx ruff check --fix src/smritea
 
-lint-python: format-python ## Lint Python SDK with ruff — auto-formats first, then fails on remaining issues
+lint-python: ## Lint Python SDK with ruff
 	cd python && uvx ruff check src/smritea
 	cd python && uvx ruff format --check src/smritea
 
@@ -52,7 +52,8 @@ format-typescript: ## Auto-fix TypeScript SDK with ESLint (--fix)
 	cd typescript && npm install --silent
 	cd typescript && npm run lint:fix
 
-lint-typescript: format-typescript ## Lint TypeScript SDK — auto-fixes first, then fails on remaining issues
+lint-typescript: ## Lint TypeScript SDK
+	cd typescript && npm install --silent
 	cd typescript && npm run typecheck
 	cd typescript && npm run lint
 
