@@ -1,5 +1,6 @@
 .PHONY: test-python test-typescript test build-python build-typescript \
         publish-python publish-typescript publish clean help \
+        format-python format-typescript format \
         lint-python lint-typescript lint
 
 # Publishing tokens — sourced from environment variables:
@@ -39,14 +40,23 @@ publish-typescript: build-typescript ## Build and publish TypeScript SDK to npm 
 
 publish: publish-python publish-typescript ## Build and publish both SDKs
 
-lint-python: ## Lint Python SDK with ruff (excludes _internal/autogen)
+format-python: ## Auto-format Python SDK with ruff (format + fix auto-fixable lint issues)
+	cd python && uvx ruff format src/smritea
+	cd python && uvx ruff check --fix src/smritea
+
+lint-python: format-python ## Lint Python SDK with ruff — auto-formats first, then fails on remaining issues
 	cd python && uvx ruff check src/smritea
 	cd python && uvx ruff format --check src/smritea
 
-lint-typescript: ## Type-check and lint TypeScript SDK (excludes _internal/autogen)
+format-typescript: ## Auto-fix TypeScript SDK with ESLint (--fix)
 	cd typescript && npm install --silent
+	cd typescript && npm run lint:fix
+
+lint-typescript: format-typescript ## Lint TypeScript SDK — auto-fixes first, then fails on remaining issues
 	cd typescript && npm run typecheck
 	cd typescript && npm run lint
+
+format: format-python format-typescript ## Auto-format all SDKs (Python + TypeScript)
 
 lint: lint-python lint-typescript ## Lint all SDKs
 

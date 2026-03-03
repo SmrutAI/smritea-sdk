@@ -95,6 +95,11 @@ class SmriteaClient:
             actor_id = user_id
             actor_type = "user"
 
+        if metadata is not None and not isinstance(metadata, dict):
+            raise SmriteaValidationError(
+                f"metadata must be a dictionary, got {type(metadata).__name__}", 400
+            )
+
         request = MemoryCreateMemoryRequest(
             app_id=self._app_id,
             content=content,
@@ -232,7 +237,10 @@ class SmriteaClient:
         Always capped at 30 seconds.
         """
         if retry_after is not None and retry_after > 0:
-            return min(float(retry_after), _RETRY_CAP_SECONDS)
+            # Sleep for 90% of the server-specified wait time. The 10% headroom
+            # accounts for one-way network latency: by the time the request
+            # arrives at the server the rate-limit window will have expired.
+            return min(float(retry_after) * 0.9, _RETRY_CAP_SECONDS)
         base = min(1.0 * (2.0**attempt), _RETRY_CAP_SECONDS)
         jitter = base * (0.75 + 0.5 * random.random())
         return min(jitter, _RETRY_CAP_SECONDS)

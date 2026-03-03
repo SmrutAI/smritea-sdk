@@ -16,7 +16,7 @@ export interface AddMemoryOptions {
   userId?: string;
   /** Explicit actor ID. Use when actor_type is not "user". */
   actorId?: string;
-  actorType?: string;
+  actorType?: 'user' | 'agent' | 'system';
   actorName?: string;
   metadata?: Record<string, unknown>;
   conversationId?: string;
@@ -26,7 +26,7 @@ export interface SearchOptions {
   /** Shorthand: sets actor_id and actor_type="user" filter. */
   userId?: string;
   actorId?: string;
-  actorType?: string;
+  actorType?: 'user' | 'agent' | 'system';
   limit?: number;
   method?: string;
   threshold?: number;

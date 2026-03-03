@@ -22,3 +22,11 @@ repos:
         files: \.(py|ts)$
         exclude: _internal/autogen/
         pass_filenames: false
+
+      - id: sdk-test
+        name: Test (Python + TypeScript)
+        entry: make test
+        language: system
+        files: \.(py|ts)$
+        exclude: _internal/autogen/
+        pass_filenames: false

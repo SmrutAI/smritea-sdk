@@ -18,8 +18,8 @@ dependencies = [
     "pydantic>=2.0",
 ]
 
-[project.optional-dependencies]
-dev = [
+[tool.uv]
+dev-dependencies = [
     "pytest>=7.0",
     "pytest-mock>=3.10",
     "responses>=0.23",

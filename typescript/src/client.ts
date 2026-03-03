@@ -31,13 +31,20 @@ export class SmriteaClient {
     const actorId = options?.userId ?? options?.actorId;
     const actorType = options?.userId !== undefined ? 'user' : options?.actorType;
 
+    if (options?.metadata !== undefined) {
+      const m = options.metadata;
+      if (typeof m !== 'object' || m === null || Array.isArray(m)) {
+        throw new SmriteaValidationError('metadata must be a plain object (dictionary)', 400);
+      }
+    }
+
     return this.withRetry(() =>
       this.api.createMemory({
         request: {
           appId: this.appId,
           content,
           actorId,
-          actorType: actorType as never,
+          actorType,
           actorName: options?.actorName,
           metadata: options?.metadata as never,
           conversationId: options?.conversationId,
@@ -56,7 +63,7 @@ export class SmriteaClient {
           appId: this.appId,
           query,
           actorId,
-          actorType: actorType as never,
+          actorType,
           limit: options?.limit,
           method: options?.method as never,
           threshold: options?.threshold,
@@ -118,7 +125,10 @@ export class SmriteaClient {
   /** Calculate sleep duration in milliseconds for a retry attempt. */
   private retryDelayMs(attempt: number, retryAfterSeconds?: number): number {
     if (retryAfterSeconds !== undefined && retryAfterSeconds > 0) {
-      return Math.min(retryAfterSeconds * 1000, RETRY_CAP_MS);
+      // Sleep for 90% of the server-specified wait time. The 10% headroom
+      // accounts for one-way network latency: by the time the request
+      // arrives at the server the rate-limit window will have expired.
+      return Math.min(retryAfterSeconds * 0.9 * 1000, RETRY_CAP_MS);
     }
     // Exponential backoff: 1 s, 2 s, 4 s, …
     const baseMs = Math.min(1000 * Math.pow(2, attempt), RETRY_CAP_MS);

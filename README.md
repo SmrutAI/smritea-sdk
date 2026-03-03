@@ -18,7 +18,7 @@ experiences — without managing vector databases yourself.
 
 ## Get your API key
 
-1. Sign up at **[smritea.ai](https://smritea.ai)** — free account, no credit card required
+1. Sign up at **[smritea.ai](https://smritea.ai)** — free tier available
 2. Create an app in the dashboard and copy your API key (`sk-...`) and App ID (`app_...`)
 3. Export them as environment variables:
 
