@@ -18,9 +18,11 @@ test-typescript: ## Run TypeScript SDK tests
 test: test-python test-typescript ## Run all SDK tests
 
 build-python: ## Build Python SDK wheel
+	rm -rf python/dist
 	cd python && uv build
 
 build-typescript: ## Build TypeScript SDK
+	rm -rf typescript/dist
 	cd typescript && npm run build
 
 publish-python: build-python ## Build and publish Python SDK to PyPI (requires PYPI_TOKEN env var)

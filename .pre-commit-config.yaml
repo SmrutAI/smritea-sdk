@@ -1,0 +1,24 @@
+# Pre-commit hooks for smritea-sdk
+#
+# Setup:
+#   pip install pre-commit && pre-commit install
+#
+# Usage:
+#   pre-commit run --all-files   # Run all hooks
+#   pre-commit run <hook-id>     # Run a specific hook
+
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: sdk-lint
+        name: Lint (Python + TypeScript)
+        entry: make lint
+        language: system
+        files: \.(py|ts)$
+        exclude: _internal/autogen/
+        pass_filenames: false
