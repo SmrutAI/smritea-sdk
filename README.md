@@ -9,10 +9,13 @@ experiences — without managing vector databases yourself.
 
 ## Packages
 
-| Language             | Package                   | Docs                                         |
-|----------------------|---------------------------|----------------------------------------------|
-| Python               | `pip install smritea-sdk` | [python/README.md](python/README.md)         |
-| TypeScript / Node.js | `npm install smritea-sdk` | [typescript/README.md](typescript/README.md) |
+| Language             | Package                                               | Docs                                         |
+|----------------------|-------------------------------------------------------|----------------------------------------------|
+| Python               | `pip install smritea-sdk`                             | [python/README.md](python/README.md)         |
+| TypeScript / Node.js | `npm install smritea-sdk`                             | [typescript/README.md](typescript/README.md) |
+| Go                   | `go get github.com/SmrutAI/smritea-sdk/go`            | [go/README.md](go/README.md)                 |
+| Java                 | `ai.smritea:smritea-sdk` (Maven Central)              | [java/README.md](java/README.md)             |
+| C#                   | `dotnet add package Smritea.Sdk`                      | [csharp/README.md](csharp/README.md)         |
 
 ---
 
@@ -71,6 +74,88 @@ for (const r of results) {
 }
 ```
 
+**Go**
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+
+    smritea "github.com/SmrutAI/smritea-sdk/go"
+)
+
+func main() {
+    client := smritea.NewClient(smritea.ClientConfig{
+        APIKey: os.Getenv("SMRITEA_API_KEY"),
+        AppID:  os.Getenv("SMRITEA_APP_ID"),
+    })
+
+    ctx := context.Background()
+
+    // Store something about a user
+    client.Add(ctx, "Alice is a vegetarian and loves hiking", &smritea.AddOptions{
+        UserID: strPtr("alice"),
+    })
+
+    // Retrieve it later
+    results, _ := client.Search(ctx, "What are Alice's food preferences?", &smritea.SearchOptions{
+        UserID: strPtr("alice"),
+    })
+    for _, r := range results {
+        fmt.Printf("%v  %v\n", r.Score, r.Memory.Content)
+    }
+}
+
+func strPtr(s string) *string { return &s }
+```
+
+**Java**
+
+```java
+import ai.smritea.sdk.SmriteaClient;
+import ai.smritea.sdk.model.*;
+
+SmriteaClient client = new SmriteaClient(
+    System.getenv("SMRITEA_API_KEY"),
+    System.getenv("SMRITEA_APP_ID")
+);
+
+// Store something about a user
+Memory mem = client.add("Alice is a vegetarian and loves hiking",
+    new AddOptions().withUserId("alice"));
+
+// Retrieve it later
+List<SearchResult> results = client.search("What are Alice's food preferences?",
+    new SearchOptions().withUserId("alice"));
+for (SearchResult r : results) {
+    System.out.printf("%.2f  %s%n", r.getScore(), r.getContent());
+}
+```
+
+**C#**
+
+```csharp
+using Smritea.Sdk;
+
+var client = new SmriteaClient(
+    apiKey: Environment.GetEnvironmentVariable("SMRITEA_API_KEY")!,
+    appId: Environment.GetEnvironmentVariable("SMRITEA_APP_ID")!
+);
+
+// Store something about a user
+var mem = await client.AddAsync("Alice is a vegetarian and loves hiking",
+    new AddOptions { UserId = "alice" });
+
+// Retrieve it later
+var results = await client.SearchAsync("What are Alice's food preferences?",
+    new SearchOptions { UserId = "alice" });
+foreach (var r in results)
+    Console.WriteLine($"{r.Score:F2}  {r.Content}");
+```
+
 ---
 
 ## Methods
@@ -103,15 +188,15 @@ use `actor_id` + `actor_type` directly.
 
 **Full signature**
 
-| Parameter (Python) | Parameter (TypeScript) | Default  | Description                             |
-|--------------------|------------------------|----------|-----------------------------------------|
-| `content`          | `content`              | required | Memory text                             |
-| `user_id`          | `userId`               | `None`   | Shorthand: actor_id + actor_type="user" |
-| `actor_id`         | `actorId`              | `None`   | Explicit actor ID                       |
-| `actor_type`       | `actorType`            | `"user"` | `"user"` \| `"agent"` \| `"system"`     |
-| `actor_name`       | `actorName`            | `None`   | Display name                            |
-| `metadata`         | `metadata`             | `None`   | Arbitrary key-value dict / object       |
-| `conversation_id`  | `conversationId`       | `None`   | Conversation context                    |
+| Parameter (Python) | Parameter (TypeScript) | Parameter (Go) | Parameter (Java) | Parameter (C#) | Default  | Description                             |
+|--------------------|------------------------|----------------|------------------|----------------|----------|-----------------------------------------|
+| `content`          | `content`              | `content`      | `content`        | `content`      | required | Memory text                             |
+| `user_id`          | `userId`               | `UserID`       | `userId`         | `UserId`       | `None`   | Shorthand: actor_id + actor_type="user" |
+| `actor_id`         | `actorId`              | `ActorID`      | `actorId`        | `ActorId`      | `None`   | Explicit actor ID                       |
+| `actor_type`       | `actorType`            | `ActorType`    | `actorType`      | `ActorType`    | `"user"` | `"user"` \| `"agent"` \| `"system"`     |
+| `actor_name`       | `actorName`            | `ActorName`    | `actorName`      | `ActorName`    | `None`   | Display name                            |
+| `metadata`         | `metadata`             | `Metadata`     | `metadata`       | `Metadata`     | `None`   | Arbitrary key-value dict / object       |
+| `conversation_id`  | `conversationId`       | `ConversationID` | `conversationId` | `ConversationId` | `None` | Conversation context                    |
 
 ---
 
@@ -153,17 +238,17 @@ Results are ordered by relevance (descending). Each result exposes `score` (floa
 
 **Full signature**
 
-| Parameter (Python) | Parameter (TypeScript) | Default     | Description                    |
-|--------------------|------------------------|-------------|--------------------------------|
-| `query`            | `query`                | required    | Search text                    |
-| `user_id`          | `userId`               | `None`      | Filter to this user's memories |
-| `actor_id`         | `actorId`              | `None`      | Filter by actor ID             |
-| `actor_type`       | `actorType`            | `None`      | Filter by actor type           |
-| `limit`            | `limit`                | app default | Max results to return          |
-| `method`           | `method`               | app default | Search strategy                |
-| `threshold`        | `threshold`            | `None`      | Min relevance score 0.0–1.0    |
-| `graph_depth`      | `graphDepth`           | `None`      | Graph traversal depth override |
-| `conversation_id`  | `conversationId`       | `None`      | Conversation context           |
+| Parameter (Python) | Parameter (TypeScript) | Parameter (Go) | Parameter (Java) | Parameter (C#) | Default     | Description                    |
+|--------------------|------------------------|----------------|------------------|----------------|-------------|--------------------------------|
+| `query`            | `query`                | `query`        | `query`          | `query`        | required    | Search text                    |
+| `user_id`          | `userId`               | `UserID`       | `userId`         | `UserId`       | `None`      | Filter to this user's memories |
+| `actor_id`         | `actorId`              | `ActorID`      | `actorId`        | `ActorId`      | `None`      | Filter by actor ID             |
+| `actor_type`       | `actorType`            | `ActorType`    | `actorType`      | `ActorType`    | `None`      | Filter by actor type           |
+| `limit`            | `limit`                | `Limit`        | `limit`          | `Limit`        | app default | Max results to return          |
+| `method`           | `method`               | `Method`       | `method`         | `Method`       | app default | Search strategy                |
+| `threshold`        | `threshold`            | `Threshold`    | `threshold`      | `Threshold`    | `None`      | Min relevance score 0.0–1.0    |
+| `graph_depth`      | `graphDepth`           | `GraphDepth`   | `graphDepth`     | `GraphDepth`   | `None`      | Graph traversal depth override |
+| `conversation_id`  | `conversationId`       | `ConversationID` | `conversationId` | `ConversationId` | `None`   | Conversation context           |
 
 ---
 
@@ -203,9 +288,14 @@ Raises / throws `SmriteaNotFoundError` if the ID does not exist.
 
 ### `get_all` — List all memories
 
-> **Not yet implemented.**
+> **Not yet implemented** across all SDKs.
 >
-> `get_all()` raises `NotImplementedError` in Python. There is no equivalent method in TypeScript.
+> - Python: `get_all()` raises `NotImplementedError`
+> - TypeScript: no equivalent method
+> - Go: `GetAll()` returns an error
+> - Java: `getAll()` throws `UnsupportedOperationException`
+> - C#: `GetAllAsync()` throws `NotImplementedException`
+>
 > The list memories endpoint is pending. Use `search()` with a broad query as a workaround.
 
 ```python
@@ -265,35 +355,35 @@ try {
 
 **Exception reference**
 
-| Exception                | HTTP  | When                                                  |
-|--------------------------|-------|-------------------------------------------------------|
-| `SmriteaAuthError`       | 401   | Invalid or missing API key                            |
-| `SmriteaValidationError` | 400   | Invalid request parameters                            |
-| `SmriteaNotFoundError`   | 404   | Memory ID does not exist                              |
-| `SmriteaQuotaError`      | 402   | Organisation quota exceeded                           |
-| `SmriteaRateLimitError`  | 429   | Rate limit hit — check `.retry_after` / `.retryAfter` |
-| `SmriteaError`           | other | Unexpected server error                               |
+| Exception (Python/TS/Go/Java) | Exception (C#)              | HTTP  | When                                                  |
+|-------------------------------|-----------------------------|-------|-------------------------------------------------------|
+| `SmriteaAuthError`            | `SmriteaAuthException`      | 401   | Invalid or missing API key                            |
+| `SmriteaValidationError`      | `SmriteaValidationException`| 400   | Invalid request parameters                            |
+| `SmriteaNotFoundError`        | `SmriteaNotFoundException`  | 404   | Memory ID does not exist                              |
+| `SmriteaQuotaError`           | `SmriteaQuotaException`     | 402   | Organisation quota exceeded                           |
+| `SmriteaRateLimitError`       | `SmriteaRateLimitException` | 429   | Rate limit hit — check `.retry_after` / `.retryAfter` / `.RetryAfter` |
+| `SmriteaError`                | `SmriteaException`          | other | Unexpected server error                               |
 
 ---
 
 ## `Memory` type reference
 
-| Field (Python)    | Field (TypeScript) | Type    | Description                          |
-|-------------------|--------------------|---------|--------------------------------------|
-| `id`              | `id`               | string  | Memory ID (`mem_...`)                |
-| `app_id`          | `appId`            | string  | App this memory belongs to           |
-| `content`         | `content`          | string  | Memory text                          |
-| `actor_id`        | `actorId`          | string  | Actor who owns this memory           |
-| `actor_type`      | `actorType`        | string  | `"user"` \| `"agent"` \| `"system"`  |
-| `actor_name`      | `actorName`        | string? | Display name                         |
-| `metadata`        | `metadata`         | object? | Arbitrary key-value pairs            |
-| `conversation_id` | `conversationId`   | string? | Conversation context                 |
-| `active_from`     | `activeFrom`       | string  | ISO 8601 — when memory becomes valid |
-| `active_to`       | `activeTo`         | string? | ISO 8601 — when memory expires       |
-| `created_at`      | `createdAt`        | string  | ISO 8601 creation timestamp          |
-| `updated_at`      | `updatedAt`        | string  | ISO 8601 last update timestamp       |
+| Field (Python)    | Field (TypeScript) | Field (Go)     | Field (Java)         | Field (C#)     | Type    | Description                          |
+|-------------------|--------------------|----------------|----------------------|----------------|---------|--------------------------------------|
+| `id`              | `id`               | `Id`           | `getId()`            | `Id`           | string  | Memory ID (`mem_...`)                |
+| `app_id`          | `appId`            | `AppId`        | `getAppId()`         | `AppId`        | string  | App this memory belongs to           |
+| `content`         | `content`          | `Content`      | `getContent()`       | `Content`      | string  | Memory text                          |
+| `actor_id`        | `actorId`          | `ActorId`      | `getActorId()`       | `ActorId`      | string  | Actor who owns this memory           |
+| `actor_type`      | `actorType`        | `ActorType`    | `getActorType()`     | `ActorType`    | string  | `"user"` \| `"agent"` \| `"system"`  |
+| `actor_name`      | `actorName`        | `ActorName`    | `getActorName()`     | `ActorName`    | string? | Display name                         |
+| `metadata`        | `metadata`         | `Metadata`     | `getMetadata()`      | `Metadata`     | object? | Arbitrary key-value pairs            |
+| `conversation_id` | `conversationId`   | `ConversationId` | `getConversationId()` | `ConversationId` | string? | Conversation context                 |
+| `active_from`     | `activeFrom`       | `ActiveFrom`   | `getActiveFrom()`    | `ActiveFrom`   | string  | ISO 8601 — when memory becomes valid |
+| `active_to`       | `activeTo`         | `ActiveTo`     | `getActiveTo()`      | `ActiveTo`     | string? | ISO 8601 — when memory expires       |
+| `created_at`      | `createdAt`        | `CreatedAt`    | `getCreatedAt()`     | `CreatedAt`    | string  | ISO 8601 creation timestamp          |
+| `updated_at`      | `updatedAt`        | `UpdatedAt`    | `getUpdatedAt()`     | `UpdatedAt`    | string  | ISO 8601 last update timestamp       |
 
-> Python fields use `snake_case`; TypeScript fields use `camelCase`.
+> Python fields use `snake_case`; TypeScript fields use `camelCase`; Go and C# fields use `PascalCase`; Java uses `getFieldName()` getter methods.
 
 ---
 
@@ -334,13 +424,20 @@ make generate
 # Tests
 make test-python
 make test-typescript
-make test             # both
+make test-go
+make test-java
+make test-csharp
+make test             # all
 
 # Build distribution artifacts
 make build-python       # python/dist/smritea-*.whl
 make build-typescript   # typescript/dist/
+make build-java         # java/target/smritea-sdk-*.jar
+make build-csharp       # csharp/bin/Release/Smritea.Sdk.*.nupkg
 
 # Publish (tokens from environment variables)
 PYPI_TOKEN=pypi-... make publish-python
 NPM_TOKEN=npm_...  make publish-typescript
+make publish-java     # requires SONATYPE_USERNAME + SONATYPE_PASSWORD
+make publish-csharp   # requires NUGET_API_KEY
 ```

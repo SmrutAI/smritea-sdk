@@ -1,0 +1,225 @@
+# smritea SDK — Java
+
+Java SDK for the [smritea](https://smritea.ai) AI memory system.
+
+**[Get a free API key →](https://smritea.ai)**
+
+---
+
+## Installation
+
+**Maven**
+
+```xml
+<dependency>
+    <groupId>ai.smritea</groupId>
+    <artifactId>smritea-sdk</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+
+**Gradle**
+
+```groovy
+implementation 'ai.smritea:smritea-sdk:0.1.0'
+```
+
+Requires Java 11+.
+
+---
+
+## Get your API key
+
+1. Sign up at **[smritea.ai](https://smritea.ai)** — free account, no credit card required
+2. Create an app in the dashboard and copy your API key (`sk-...`) and App ID (`app_...`)
+3. Export them as environment variables:
+
+```bash
+export SMRITEA_API_KEY="sk-..."
+export SMRITEA_APP_ID="app_..."
+```
+
+---
+
+## Quickstart
+
+```java
+import ai.smritea.sdk.SmriteaClient;
+import ai.smritea.sdk.model.*;
+
+SmriteaClient client = new SmriteaClient(
+    System.getenv("SMRITEA_API_KEY"),
+    System.getenv("SMRITEA_APP_ID")
+);
+
+// Store something about a user
+Memory mem = client.add("Alice is a vegetarian and loves hiking",
+    new AddOptions().withUserId("alice"));
+
+// Retrieve it later
+List<SearchResult> results = client.search("What are Alice's food preferences?",
+    new SearchOptions().withUserId("alice"));
+for (SearchResult r : results) {
+    System.out.printf("%.2f  %s%n", r.getScore(), r.getContent());
+}
+```
+
+---
+
+## Constructor
+
+```java
+import ai.smritea.sdk.SmriteaClient;
+
+SmriteaClient client = new SmriteaClient(
+    "sk-...",                           // apiKey — required
+    "app_...",                          // appId — required
+    "https://api.smritea.ai",          // baseUrl — optional, default shown
+    2                                   // maxRetries — optional, default 2; 0 disables retry
+);
+```
+
+---
+
+## Methods
+
+### `add` — Store a memory
+
+```java
+Memory memory = client.add("User prefers concise replies",
+    new AddOptions()
+        .withUserId("alice")                                    // shorthand for actorId + actorType="user"
+        .withMetadata(Map.of("source", "chat"))                 // optional
+        .withConversationId("conv_123"));                       // optional
+System.out.println(memory.getId()); // mem_...
+```
+
+`userId` is a shorthand — sets `actorId` and forces `actorType="user"`. For agent or system memories use `actorId` + `actorType` directly.
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `content` | `String` | required | Memory text |
+| `userId` | `String` | `null` | Shorthand: actorId + actorType="user" |
+| `actorId` | `String` | `null` | Explicit actor ID |
+| `actorType` | `String` | `null` | `"user"` \| `"agent"` \| `"system"` |
+| `actorName` | `String` | `null` | Display name |
+| `metadata` | `Map<String, Object>` | `null` | Arbitrary key-value map |
+| `conversationId` | `String` | `null` | Conversation context |
+
+---
+
+### `search` — Semantic search
+
+```java
+List<SearchResult> results = client.search("dietary restrictions",
+    new SearchOptions()
+        .withUserId("alice")
+        .withLimit(5)
+        .withMethod("deep_search")      // "quick_search" | "deep_search" | "context_aware_search"
+        .withThreshold(0.7f));           // min relevance score 0.0–1.0
+for (SearchResult r : results) {
+    System.out.println(r.getScore() + "  " + r.getContent());
+}
+```
+
+Results are ordered by relevance (descending). Each result exposes `getScore()` (0.0–1.0) and all `Memory` fields via getter methods.
+
+| Search method | When to use |
+|---|---|
+| `quick_search` | Low-latency, keyword + vector hybrid |
+| `deep_search` | Higher recall, traverses the memory graph |
+| `context_aware_search` | Reranks results using conversation context |
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `query` | `String` | required | Search text |
+| `userId` | `String` | `null` | Filter to this user's memories |
+| `actorId` | `String` | `null` | Filter by actor ID |
+| `actorType` | `String` | `null` | Filter by actor type |
+| `limit` | `Integer` | app default | Max results to return |
+| `method` | `String` | app default | Search strategy |
+| `threshold` | `Float` | `null` | Min relevance score 0.0–1.0 |
+| `graphDepth` | `Integer` | `null` | Graph traversal depth override |
+| `conversationId` | `String` | `null` | Conversation context |
+
+---
+
+### `get` — Retrieve a memory by ID
+
+```java
+Memory memory = client.get("mem_abc123");
+System.out.println(memory.getContent() + " " + memory.getCreatedAt());
+// Throws SmriteaNotFoundError if the ID does not exist
+```
+
+---
+
+### `delete` — Delete a memory by ID
+
+```java
+client.delete("mem_abc123");
+// Throws SmriteaNotFoundError if the ID does not exist
+```
+
+---
+
+### `getAll` — List all memories
+
+> **Not yet implemented.** Throws `UnsupportedOperationException`.
+> Use `search()` with a broad query as a workaround:
+
+```java
+List<SearchResult> results = client.search("", new SearchOptions()
+    .withUserId("alice")
+    .withLimit(100));
+```
+
+---
+
+## Error handling
+
+```java
+import ai.smritea.sdk.SmriteaClient;
+import ai.smritea.sdk.errors.*;
+
+try {
+    List<SearchResult> results = client.search("preferences",
+        new SearchOptions().withUserId("alice"));
+} catch (SmriteaAuthError e) {
+    System.out.println("Check your API key");
+} catch (SmriteaRateLimitError e) {
+    System.out.printf("Rate limited — retry after %ds%n", e.getRetryAfter());
+} catch (SmriteaQuotaError e) {
+    System.out.println("Plan quota exceeded");
+} catch (SmriteaError e) {
+    System.out.printf("Unexpected error: %s%n", e.getMessage());
+}
+```
+
+| Exception | HTTP | When |
+|---|---|---|
+| `SmriteaAuthError` | 401 | Invalid or missing API key |
+| `SmriteaValidationError` | 400 | Invalid request parameters |
+| `SmriteaNotFoundError` | 404 | Memory ID does not exist |
+| `SmriteaQuotaError` | 402 | Organisation quota exceeded |
+| `SmriteaRateLimitError` | 429 | Rate limit hit — check `.getRetryAfter()` |
+| `SmriteaError` | other | Unexpected server error |
+
+---
+
+## `Memory` type reference
+
+| Getter method | Type | Description |
+|---|---|---|
+| `getId()` | String | Memory ID (`mem_...`) |
+| `getAppId()` | String | App this memory belongs to |
+| `getContent()` | String | Memory text |
+| `getActorId()` | String | Actor who owns this memory |
+| `getActorType()` | String | `"user"` \| `"agent"` \| `"system"` |
+| `getActorName()` | String | Display name (nullable) |
+| `getMetadata()` | Map<String, Object> | Arbitrary key-value pairs (nullable) |
+| `getConversationId()` | String | Conversation context (nullable) |
+| `getActiveFrom()` | String | ISO 8601 — when memory becomes valid |
+| `getActiveTo()` | String | ISO 8601 — when memory expires (nullable) |
+| `getCreatedAt()` | String | ISO 8601 creation timestamp |
+| `getUpdatedAt()` | String | ISO 8601 last update timestamp |
