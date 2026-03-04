@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>Smritea.Sdk</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>SmrutAI</Authors>
+    <Description>C# SDK for the smritea AI memory system</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://smritea.ai</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SmrutAI/smritea-sdk</RepositoryUrl>
+    <RootNamespace>Smritea.Sdk</RootNamespace>
+    <AssemblyName>Smritea.Sdk</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Smritea.Sdk.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="all" />
+    <PackageReference Include="Roslynator.Analyzers" Version="4.12.9" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

@@ -31,6 +31,12 @@ Each language lives in its own subdirectory and is an independently publishable 
 - `go/` — Go module `github.com/SmrutAI/smritea-sdk/go`, import as `import smritea "github.com/SmrutAI/smritea-sdk/go"`
   **Note**: Go uses `internal/autogen` (compiler-enforced `internal/` package, no leading underscore),
   unlike Python/TypeScript which use `_internal/autogen` (convention-based).
+- `java/` — Maven package `ai.smritea:smritea-sdk`, import as `import ai.smritea.sdk.SmriteaClient`
+  **Note**: Java uses `_internal/autogen` (naming convention) + JPMS `module-info.java` to prevent
+  external use (unexported package).
+- `csharp/` — NuGet package `Smritea.Sdk`, import as `using Smritea.Sdk`
+  **Note**: C# uses `internal class` (compiler-enforced, assembly-scoped) for autogen types.
+  `<InternalsVisibleTo Include="Smritea.Sdk.Tests" />` in the `.csproj` exposes internals to tests.
 
 When adding a new language, follow the same structure: one `client` file, one `types` file, one `errors`
 file, with `_internal/autogen` (or `internal/autogen` for Go) excluded from lint and type-checking.
@@ -110,6 +116,8 @@ _retry_delay(attempt, retry_after):
     - Python: `pyproject.toml` `[tool.ruff] exclude`
     - TypeScript: `.eslintrc.json` `ignorePatterns` (for ESLint); `tsconfig.json` `exclude` (for tsc)
     - Go: `.golangci.yml` `run.exclude-dirs` (for golangci-lint)
+    - Java: `checkstyle-suppressions.xml` `<suppress checks=".*" files="[\\/]_internal[\\/]autogen[\\/]"/>` (for Checkstyle)
+    - C#: `.editorconfig` `[_internal/autogen/**/*.cs]` with `generated_code = true` (for Roslyn + dotnet-format)
 
 ---
 

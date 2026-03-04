@@ -1,0 +1,11 @@
+# C# SDK Editor Config
+root = false
+
+[*.cs]
+# Default settings for all C# files
+indent_style = space
+indent_size = 4
+
+# Suppress all analyzers for auto-generated code
+[_internal/autogen/**/*.cs]
+generated_code = true

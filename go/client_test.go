@@ -531,3 +531,18 @@ func TestWithRetry_ContextCanceledDuringRetrySleep(t *testing.T) {
 		t.Fatal("timed out waiting for context cancellation to propagate")
 	}
 }
+
+// ---------------------------------------------------------------------------
+// GetAll — not-yet-implemented stub
+// ---------------------------------------------------------------------------
+
+func TestGetAll_NotImplemented(t *testing.T) {
+	client := NewClient(ClientConfig{APIKey: "k", AppID: "a"})
+	_, err := client.GetAll(context.Background())
+	if err == nil {
+		t.Fatal("expected error from GetAll, got nil")
+	}
+	if !strings.Contains(err.Error(), "not yet available") {
+		t.Errorf("unexpected error message: %v", err)
+	}
+}

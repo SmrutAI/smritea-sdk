@@ -156,6 +156,13 @@ func (c *SmriteaClient) Delete(ctx context.Context, memoryID string) error {
 	return err
 }
 
+// GetAll is not yet implemented. The list memories endpoint is pending server-side
+// implementation. This method is provided for forward compatibility.
+func (c *SmriteaClient) GetAll(_ context.Context) ([]*Memory, error) {
+	return nil, fmt.Errorf("smritea: GetAll() is not yet available. " +
+		"The list memories endpoint is pending server-side implementation")
+}
+
 // resolveActor applies the user_id convenience shorthand. When userID is
 // non-nil it is used as the actor ID and the type is forced to "user".
 // Otherwise actorID and actorType are returned unchanged.

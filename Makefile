@@ -1,8 +1,7 @@
-.PHONY: test-python test-typescript test-go test build-python build-typescript build-go \
-        publish-python publish-typescript publish clean help \
-        format-python format-typescript format-go format \
-        lint-python lint-typescript lint-go lint \
-        setup-go
+.PHONY: test-python test-typescript test-go test-java test-csharp test build-python build-typescript build-go build-java build-csharp \
+        publish-python publish-typescript publish-java publish-csharp publish clean help \
+        format-python format-typescript format-go format-java format-csharp format \
+        lint-python lint-typescript lint-go lint-java lint-csharp lint
 
 # Publishing tokens — sourced from environment variables:
 #   PYPI_TOKEN   : PyPI API token (starts with pypi-)
@@ -17,7 +16,7 @@ test-python: ## Run Python SDK tests
 test-typescript: ## Run TypeScript SDK tests
 	cd typescript && npm test
 
-test: test-python test-typescript test-go ## Run all SDK tests
+test: test-python test-typescript test-go test-java test-csharp ## Run all SDK tests
 
 build-python: ## Build Python SDK wheel
 	rm -rf python/dist
@@ -39,7 +38,7 @@ publish-typescript: build-typescript ## Build and publish TypeScript SDK to npm 
 	fi
 	cd typescript && npm set "//registry.npmjs.org/:_authToken=$$NPM_TOKEN" && npm publish --access public
 
-publish: publish-python publish-typescript ## Build and publish both SDKs
+publish: publish-python publish-typescript publish-java publish-csharp ## Build and publish all SDKs
 
 format-python: ## Auto-format Python SDK with ruff (format + fix auto-fixable lint issues)
 	cd python && uvx ruff format src/smritea
@@ -61,11 +60,6 @@ lint-typescript: ## Lint TypeScript SDK
 build-go: ## Build Go SDK (verify compilation — no binary output needed for a library)
 	cd go && go build ./...
 
-setup-go: ## Install Go SDK tooling (golangci-lint, goimports, gci)
-	@command -v golangci-lint > /dev/null 2>&1 || (echo "Installing golangci-lint..." && brew install golangci-lint)
-	@command -v goimports > /dev/null 2>&1 || go install golang.org/x/tools/cmd/goimports@latest
-	@command -v gci > /dev/null 2>&1 || go install github.com/daixiang0/gci@latest
-
 format-go: ## Auto-format Go SDK (golangci-lint --fix + goimports + gci)
 	cd go && golangci-lint run --fix ./... 2>/dev/null || true
 	find go -name "*.go" -not -path "*/internal/autogen/*" -exec goimports -w {} +
@@ -77,9 +71,44 @@ lint-go: ## Lint Go SDK with golangci-lint (check-only)
 test-go: ## Run Go SDK tests
 	cd go && go test ./... -v
 
-format: format-python format-typescript format-go ## Auto-format all SDKs
+format-java: ## Auto-format Java SDK with google-java-format via Maven
+	cd java && mvn com.spotify.fmt:fmt-maven-plugin:format
 
-lint: lint-python lint-typescript lint-go ## Lint all SDKs
+lint-java: ## Lint Java SDK (checkstyle + verify format)
+	cd java && mvn checkstyle:check
+	cd java && mvn com.spotify.fmt:fmt-maven-plugin:check
+
+test-java: ## Run Java SDK tests
+	cd java && mvn test
+
+build-java: ## Build Java SDK (compile + package)
+	cd java && mvn package -DskipTests
+
+publish-java: build-java ## Publish Java SDK to Maven Central
+	@if [ -z "$$SONATYPE_USERNAME" ]; then echo "ERROR: SONATYPE_USERNAME not set"; exit 1; fi
+	cd java && mvn deploy -P release
+
+format-csharp: ## Auto-format C# SDK with dotnet-format
+	cd csharp && dotnet format
+
+lint-csharp: ## Lint C# SDK (dotnet format check + build with analyzers)
+	cd csharp && dotnet format --verify-no-changes
+	cd csharp && dotnet build --no-restore -warnaserror
+
+test-csharp: ## Run C# SDK tests
+	cd csharp && dotnet test
+
+build-csharp: ## Build C# SDK
+	cd csharp && dotnet build --configuration Release
+
+publish-csharp: build-csharp ## Publish C# SDK to NuGet
+	@if [ -z "$$NUGET_API_KEY" ]; then echo "ERROR: NUGET_API_KEY not set"; exit 1; fi
+	cd csharp && dotnet pack --configuration Release --output ./bin/Release
+	cd csharp && dotnet nuget push "bin/Release/*.nupkg" --api-key "$$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+format: format-python format-typescript format-go format-java format-csharp ## Auto-format all SDKs
+
+lint: lint-python lint-typescript lint-go lint-java lint-csharp ## Lint all SDKs
 
 clean: ## Clean build artifacts
 	rm -rf python/dist

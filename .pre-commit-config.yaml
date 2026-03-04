@@ -16,25 +16,25 @@ repos:
   - repo: local
     hooks:
       - id: sdk-format
-        name: Format (Python + TypeScript + Go)
+        name: Format (Python + TypeScript + Go + Java + C#)
         entry: make format
         language: system
-        files: \.(py|ts|go)$
+        files: \.(py|ts|go|java|cs)$
         exclude: _internal/autogen/|internal/autogen/
         pass_filenames: false
 
       - id: sdk-lint
-        name: Lint (Python + TypeScript + Go)
+        name: Lint (Python + TypeScript + Go + Java + C#)
         entry: make lint
         language: system
-        files: \.(py|ts|go)$
+        files: \.(py|ts|go|java|cs)$
         exclude: _internal/autogen/|internal/autogen/
         pass_filenames: false
 
       - id: sdk-test
-        name: Test (Python + TypeScript + Go)
+        name: Test (Python + TypeScript + Go + Java + C#)
         entry: make test
         language: system
-        files: \.(py|ts|go)$
+        files: \.(py|ts|go|java|cs)$
         exclude: _internal/autogen/|internal/autogen/
         pass_filenames: false
