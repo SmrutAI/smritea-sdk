@@ -1,0 +1,70 @@
+version: "2"
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+formatters:
+  enable:
+    - gci
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/SmrutAI)
+
+linters:
+  default: standard
+  enable:
+    - nilerr
+    - nilnesserr
+    - nilnil
+    - errorlint
+    - bodyclose
+    - errchkjson
+    - exhaustive
+    - gosec
+    - gocritic
+    - wrapcheck
+    - wastedassign
+    - prealloc
+    - perfsprint
+    - unconvert
+    - copyloopvar
+  settings:
+    govet:
+      enable:
+        - nilness
+        - shadow
+    staticcheck:
+      checks:
+        - all
+        - -ST1000
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+    exhaustive:
+      check:
+        - switch
+    wrapcheck:
+      ignore-sigs:
+        - .Errorf(
+        - errors.New(
+        - errors.Unwrap(
+        - errors.Join(
+  exclusions:
+    presets:
+      - std-error-handling
+      - common-false-positives
+    rules:
+      - path: '.*_test\.go'
+        linters: [bodyclose, errchkjson, exhaustive, errcheck, nilerr, nilnesserr, nilnil, errorlint, gosec, wrapcheck, gocritic]
+      - linters: [staticcheck]
+        text: "ST1003"
+      - linters: [gosec]
+        text: "G101"
+
+run:
+  exclude-dirs:
+    - internal/autogen

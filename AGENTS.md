@@ -28,9 +28,12 @@ Each language lives in its own subdirectory and is an independently publishable 
 
 - `python/` — PyPI package `smritea-sdk`, import as `from smritea import SmriteaClient`
 - `typescript/` — npm package `smritea-sdk`, import as `import { SmriteaClient } from 'smritea-sdk'`
+- `go/` — Go module `github.com/SmrutAI/smritea-sdk/go`, import as `import smritea "github.com/SmrutAI/smritea-sdk/go"`
+  **Note**: Go uses `internal/autogen` (compiler-enforced `internal/` package, no leading underscore),
+  unlike Python/TypeScript which use `_internal/autogen` (convention-based).
 
 When adding a new language, follow the same structure: one `client` file, one `types` file, one `errors`
-file, with `_internal/autogen` excluded from lint and type-checking.
+file, with `_internal/autogen` (or `internal/autogen` for Go) excluded from lint and type-checking.
 
 ---
 
@@ -106,6 +109,7 @@ _retry_delay(attempt, retry_after):
   `_internal/autogen` exclusion. Do not repeat it in Makefiles, CI scripts, or package manager configs.
     - Python: `pyproject.toml` `[tool.ruff] exclude`
     - TypeScript: `.eslintrc.json` `ignorePatterns` (for ESLint); `tsconfig.json` `exclude` (for tsc)
+    - Go: `.golangci.yml` `run.exclude-dirs` (for golangci-lint)
 
 ---
 
@@ -177,7 +181,7 @@ Add four hooks in `.pre-commit-config.yaml` under the `local` repo, in this exac
   entry: make format
   language: system
   files: \.(py|ts|<ext>)$        # add the new file extension
-  exclude: _internal/autogen/
+  exclude: _internal/autogen/|internal/autogen/
   pass_filenames: false
 
 - id: sdk-lint
@@ -185,7 +189,7 @@ Add four hooks in `.pre-commit-config.yaml` under the `local` repo, in this exac
   entry: make lint
   language: system
   files: \.(py|ts|<ext>)$
-  exclude: _internal/autogen/
+  exclude: _internal/autogen/|internal/autogen/
   pass_filenames: false
 
 - id: sdk-test
@@ -193,7 +197,7 @@ Add four hooks in `.pre-commit-config.yaml` under the `local` repo, in this exac
   entry: make test
   language: system
   files: \.(py|ts|<ext>)$
-  exclude: _internal/autogen/
+  exclude: _internal/autogen/|internal/autogen/
   pass_filenames: false
 ```
 

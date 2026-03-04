@@ -1,7 +1,8 @@
-.PHONY: test-python test-typescript test build-python build-typescript \
+.PHONY: test-python test-typescript test-go test build-python build-typescript build-go \
         publish-python publish-typescript publish clean help \
-        format-python format-typescript format \
-        lint-python lint-typescript lint
+        format-python format-typescript format-go format \
+        lint-python lint-typescript lint-go lint \
+        setup-go
 
 # Publishing tokens — sourced from environment variables:
 #   PYPI_TOKEN   : PyPI API token (starts with pypi-)
@@ -16,7 +17,7 @@ test-python: ## Run Python SDK tests
 test-typescript: ## Run TypeScript SDK tests
 	cd typescript && npm test
 
-test: test-python test-typescript ## Run all SDK tests
+test: test-python test-typescript test-go ## Run all SDK tests
 
 build-python: ## Build Python SDK wheel
 	rm -rf python/dist
@@ -57,9 +58,28 @@ lint-typescript: ## Lint TypeScript SDK
 	cd typescript && npm run typecheck
 	cd typescript && npm run lint
 
-format: format-python format-typescript ## Auto-format all SDKs (Python + TypeScript)
+build-go: ## Build Go SDK (verify compilation — no binary output needed for a library)
+	cd go && go build ./...
 
-lint: lint-python lint-typescript ## Lint all SDKs
+setup-go: ## Install Go SDK tooling (golangci-lint, goimports, gci)
+	@command -v golangci-lint > /dev/null 2>&1 || (echo "Installing golangci-lint..." && brew install golangci-lint)
+	@command -v goimports > /dev/null 2>&1 || go install golang.org/x/tools/cmd/goimports@latest
+	@command -v gci > /dev/null 2>&1 || go install github.com/daixiang0/gci@latest
+
+format-go: ## Auto-format Go SDK (golangci-lint --fix + goimports + gci)
+	cd go && golangci-lint run --fix ./... 2>/dev/null || true
+	find go -name "*.go" -not -path "*/internal/autogen/*" -exec goimports -w {} +
+	find go -name "*.go" -not -path "*/internal/autogen/*" -exec gci write --skip-generated -s standard -s default -s "prefix(github.com/SmrutAI)" {} +
+
+lint-go: ## Lint Go SDK with golangci-lint (check-only)
+	cd go && golangci-lint run ./...
+
+test-go: ## Run Go SDK tests
+	cd go && go test ./... -v
+
+format: format-python format-typescript format-go ## Auto-format all SDKs
+
+lint: lint-python lint-typescript lint-go ## Lint all SDKs
 
 clean: ## Clean build artifacts
 	rm -rf python/dist
