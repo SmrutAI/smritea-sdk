@@ -13,11 +13,9 @@
 package ai.smritea.sdk._internal.autogen.model;
 
 import ai.smritea.sdk._internal.autogen.ApiClient;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,375 +24,365 @@ import java.util.StringJoiner;
 
 /** CommondtoPersonaExtractionConfig */
 @JsonPropertyOrder({
-    CommondtoPersonaExtractionConfig.JSON_PROPERTY_ACTOR_TYPES,
-    CommondtoPersonaExtractionConfig.JSON_PROPERTY_DOMAINS,
-    CommondtoPersonaExtractionConfig.JSON_PROPERTY_ENABLED,
-    CommondtoPersonaExtractionConfig.JSON_PROPERTY_MAX_TOKENS,
-    CommondtoPersonaExtractionConfig.JSON_PROPERTY_MODEL,
-    CommondtoPersonaExtractionConfig.JSON_PROPERTY_TEMPERATURE
+  CommondtoPersonaExtractionConfig.JSON_PROPERTY_ACTOR_TYPES,
+  CommondtoPersonaExtractionConfig.JSON_PROPERTY_DOMAINS,
+  CommondtoPersonaExtractionConfig.JSON_PROPERTY_ENABLED,
+  CommondtoPersonaExtractionConfig.JSON_PROPERTY_MAX_TOKENS,
+  CommondtoPersonaExtractionConfig.JSON_PROPERTY_MODEL,
+  CommondtoPersonaExtractionConfig.JSON_PROPERTY_TEMPERATURE
 })
 @javax.annotation.Generated(
-        value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        date = "2026-03-05T00:12:24.621116+05:30[Asia/Kolkata]",
-        comments = "Generator version: 7.19.0")
+    value = "org.openapitools.codegen.languages.JavaClientCodegen",
+    date = "2026-03-05T18:33:01.293352+05:30[Asia/Kolkata]",
+    comments = "Generator version: 7.19.0")
 public class CommondtoPersonaExtractionConfig {
-    public static final String JSON_PROPERTY_ACTOR_TYPES = "actor_types";
-    @javax.annotation.Nullable private List<String> actorTypes = new ArrayList<>();
+  public static final String JSON_PROPERTY_ACTOR_TYPES = "actor_types";
+  @javax.annotation.Nullable private List<String> actorTypes = new ArrayList<>();
 
-    public static final String JSON_PROPERTY_DOMAINS = "domains";
+  public static final String JSON_PROPERTY_DOMAINS = "domains";
+  @javax.annotation.Nullable private List<CommondtoPersonaDomainConfig> domains = new ArrayList<>();
 
-    @javax.annotation.Nullable
-    private List<CommondtoPersonaDomainConfig> domains = new ArrayList<>();
+  public static final String JSON_PROPERTY_ENABLED = "enabled";
+  @javax.annotation.Nullable private Boolean enabled;
 
-    public static final String JSON_PROPERTY_ENABLED = "enabled";
-    @javax.annotation.Nullable private Boolean enabled;
+  public static final String JSON_PROPERTY_MAX_TOKENS = "max_tokens";
+  @javax.annotation.Nullable private Integer maxTokens;
 
-    public static final String JSON_PROPERTY_MAX_TOKENS = "max_tokens";
-    @javax.annotation.Nullable private Integer maxTokens;
+  public static final String JSON_PROPERTY_MODEL = "model";
+  @javax.annotation.Nullable private String model;
 
-    public static final String JSON_PROPERTY_MODEL = "model";
-    @javax.annotation.Nullable private String model;
+  public static final String JSON_PROPERTY_TEMPERATURE = "temperature";
+  @javax.annotation.Nullable private BigDecimal temperature;
 
-    public static final String JSON_PROPERTY_TEMPERATURE = "temperature";
-    @javax.annotation.Nullable private BigDecimal temperature;
+  public CommondtoPersonaExtractionConfig() {}
 
-    public CommondtoPersonaExtractionConfig() {}
+  public CommondtoPersonaExtractionConfig actorTypes(
+      @javax.annotation.Nullable List<String> actorTypes) {
+    this.actorTypes = actorTypes;
+    return this;
+  }
 
-    public CommondtoPersonaExtractionConfig actorTypes(
-            @javax.annotation.Nullable List<String> actorTypes) {
-        this.actorTypes = actorTypes;
-        return this;
+  public CommondtoPersonaExtractionConfig addActorTypesItem(String actorTypesItem) {
+    if (this.actorTypes == null) {
+      this.actorTypes = new ArrayList<>();
+    }
+    this.actorTypes.add(actorTypesItem);
+    return this;
+  }
+
+  /**
+   * ActorTypes filters which actor types to extract personas for (empty &#x3D; all types). Valid
+   * types: user, agent, system
+   *
+   * @return actorTypes
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPES, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getActorTypes() {
+    return actorTypes;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPES, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setActorTypes(@javax.annotation.Nullable List<String> actorTypes) {
+    this.actorTypes = actorTypes;
+  }
+
+  public CommondtoPersonaExtractionConfig domains(
+      @javax.annotation.Nullable List<CommondtoPersonaDomainConfig> domains) {
+    this.domains = domains;
+    return this;
+  }
+
+  public CommondtoPersonaExtractionConfig addDomainsItem(CommondtoPersonaDomainConfig domainsItem) {
+    if (this.domains == null) {
+      this.domains = new ArrayList<>();
+    }
+    this.domains.add(domainsItem);
+    return this;
+  }
+
+  /**
+   * Domains specifies which persona domains to extract. Each domain defines a category of traits
+   * (preferences, interests, etc.).
+   *
+   * @return domains
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_DOMAINS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<CommondtoPersonaDomainConfig> getDomains() {
+    return domains;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_DOMAINS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDomains(@javax.annotation.Nullable List<CommondtoPersonaDomainConfig> domains) {
+    this.domains = domains;
+  }
+
+  public CommondtoPersonaExtractionConfig enabled(@javax.annotation.Nullable Boolean enabled) {
+    this.enabled = enabled;
+    return this;
+  }
+
+  /**
+   * Enabled controls whether persona extraction is active. When false, no persona traits are
+   * extracted from memory content. Unlike Entity/Fact extraction, persona has no multi-pass
+   * reflection — it runs a single LLM call.
+   *
+   * @return enabled
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ENABLED, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getEnabled() {
+    return enabled;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_ENABLED, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setEnabled(@javax.annotation.Nullable Boolean enabled) {
+    this.enabled = enabled;
+  }
+
+  public CommondtoPersonaExtractionConfig maxTokens(@javax.annotation.Nullable Integer maxTokens) {
+    this.maxTokens = maxTokens;
+    return this;
+  }
+
+  /**
+   * MaxTokens is the maximum completion tokens for LLM responses.
+   *
+   * @return maxTokens
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_MAX_TOKENS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getMaxTokens() {
+    return maxTokens;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_MAX_TOKENS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setMaxTokens(@javax.annotation.Nullable Integer maxTokens) {
+    this.maxTokens = maxTokens;
+  }
+
+  public CommondtoPersonaExtractionConfig model(@javax.annotation.Nullable String model) {
+    this.model = model;
+    return this;
+  }
+
+  /**
+   * Model is the LLM model to use (empty &#x3D; use provider default).
+   *
+   * @return model
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getModel() {
+    return model;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setModel(@javax.annotation.Nullable String model) {
+    this.model = model;
+  }
+
+  public CommondtoPersonaExtractionConfig temperature(
+      @javax.annotation.Nullable BigDecimal temperature) {
+    this.temperature = temperature;
+    return this;
+  }
+
+  /**
+   * Temperature controls LLM randomness for extraction.
+   *
+   * @return temperature
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TEMPERATURE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public BigDecimal getTemperature() {
+    return temperature;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_TEMPERATURE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTemperature(@javax.annotation.Nullable BigDecimal temperature) {
+    this.temperature = temperature;
+  }
+
+  /** Return true if this commondto.PersonaExtractionConfig object is equal to o. */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    CommondtoPersonaExtractionConfig commondtoPersonaExtractionConfig =
+        (CommondtoPersonaExtractionConfig) o;
+    return Objects.equals(this.actorTypes, commondtoPersonaExtractionConfig.actorTypes)
+        && Objects.equals(this.domains, commondtoPersonaExtractionConfig.domains)
+        && Objects.equals(this.enabled, commondtoPersonaExtractionConfig.enabled)
+        && Objects.equals(this.maxTokens, commondtoPersonaExtractionConfig.maxTokens)
+        && Objects.equals(this.model, commondtoPersonaExtractionConfig.model)
+        && Objects.equals(this.temperature, commondtoPersonaExtractionConfig.temperature);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(actorTypes, domains, enabled, maxTokens, model, temperature);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class CommondtoPersonaExtractionConfig {\n");
+    sb.append("    actorTypes: ").append(toIndentedString(actorTypes)).append("\n");
+    sb.append("    domains: ").append(toIndentedString(domains)).append("\n");
+    sb.append("    enabled: ").append(toIndentedString(enabled)).append("\n");
+    sb.append("    maxTokens: ").append(toIndentedString(maxTokens)).append("\n");
+    sb.append("    model: ").append(toIndentedString(model)).append("\n");
+    sb.append("    temperature: ").append(toIndentedString(temperature)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+
+  /**
+   * Convert the instance into URL query string.
+   *
+   * @return URL query string
+   */
+  public String toUrlQueryString() {
+    return toUrlQueryString(null);
+  }
+
+  /**
+   * Convert the instance into URL query string.
+   *
+   * @param prefix prefix of the query string
+   * @return URL query string
+   */
+  public String toUrlQueryString(String prefix) {
+    String suffix = "";
+    String containerSuffix = "";
+    String containerPrefix = "";
+    if (prefix == null) {
+      // style=form, explode=true, e.g. /pet?name=cat&type=manx
+      prefix = "";
+    } else {
+      // deepObject style e.g. /pet?id[name]=cat&id[type]=manx
+      prefix = prefix + "[";
+      suffix = "]";
+      containerSuffix = "]";
+      containerPrefix = "[";
     }
 
-    public CommondtoPersonaExtractionConfig addActorTypesItem(String actorTypesItem) {
-        if (this.actorTypes == null) {
-            this.actorTypes = new ArrayList<>();
+    StringJoiner joiner = new StringJoiner("&");
+
+    // add `actor_types` to the URL query string
+    if (getActorTypes() != null) {
+      for (int i = 0; i < getActorTypes().size(); i++) {
+        joiner.add(
+            String.format(
+                java.util.Locale.ROOT,
+                "%sactor_types%s%s=%s",
+                prefix,
+                suffix,
+                "".equals(suffix)
+                    ? ""
+                    : String.format(
+                        java.util.Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix),
+                ApiClient.urlEncode(ApiClient.valueToString(getActorTypes().get(i)))));
+      }
+    }
+
+    // add `domains` to the URL query string
+    if (getDomains() != null) {
+      for (int i = 0; i < getDomains().size(); i++) {
+        if (getDomains().get(i) != null) {
+          joiner.add(
+              getDomains()
+                  .get(i)
+                  .toUrlQueryString(
+                      String.format(
+                          java.util.Locale.ROOT,
+                          "%sdomains%s%s",
+                          prefix,
+                          suffix,
+                          "".equals(suffix)
+                              ? ""
+                              : String.format(
+                                  java.util.Locale.ROOT,
+                                  "%s%d%s",
+                                  containerPrefix,
+                                  i,
+                                  containerSuffix))));
         }
-        this.actorTypes.add(actorTypesItem);
-        return this;
+      }
     }
 
-    /**
-     * ActorTypes filters which actor types to extract personas for (empty &#x3D; all types). Valid
-     * types: user, agent, system
-     *
-     * @return actorTypes
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPES, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public List<String> getActorTypes() {
-        return actorTypes;
+    // add `enabled` to the URL query string
+    if (getEnabled() != null) {
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%senabled%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getEnabled()))));
     }
 
-    @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPES, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setActorTypes(@javax.annotation.Nullable List<String> actorTypes) {
-        this.actorTypes = actorTypes;
+    // add `max_tokens` to the URL query string
+    if (getMaxTokens() != null) {
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%smax_tokens%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getMaxTokens()))));
     }
 
-    public CommondtoPersonaExtractionConfig domains(
-            @javax.annotation.Nullable List<CommondtoPersonaDomainConfig> domains) {
-        this.domains = domains;
-        return this;
+    // add `model` to the URL query string
+    if (getModel() != null) {
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%smodel%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getModel()))));
     }
 
-    public CommondtoPersonaExtractionConfig addDomainsItem(
-            CommondtoPersonaDomainConfig domainsItem) {
-        if (this.domains == null) {
-            this.domains = new ArrayList<>();
-        }
-        this.domains.add(domainsItem);
-        return this;
+    // add `temperature` to the URL query string
+    if (getTemperature() != null) {
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%stemperature%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getTemperature()))));
     }
 
-    /**
-     * Domains specifies which persona domains to extract. Each domain defines a category of traits
-     * (preferences, interests, etc.).
-     *
-     * @return domains
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_DOMAINS, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public List<CommondtoPersonaDomainConfig> getDomains() {
-        return domains;
-    }
-
-    @JsonProperty(value = JSON_PROPERTY_DOMAINS, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setDomains(@javax.annotation.Nullable List<CommondtoPersonaDomainConfig> domains) {
-        this.domains = domains;
-    }
-
-    public CommondtoPersonaExtractionConfig enabled(@javax.annotation.Nullable Boolean enabled) {
-        this.enabled = enabled;
-        return this;
-    }
-
-    /**
-     * Enabled controls whether persona extraction is active. When false, no persona traits are
-     * extracted from memory content. Unlike Entity/Fact extraction, persona has no multi-pass
-     * reflection — it runs a single LLM call.
-     *
-     * @return enabled
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_ENABLED, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    @JsonProperty(value = JSON_PROPERTY_ENABLED, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setEnabled(@javax.annotation.Nullable Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public CommondtoPersonaExtractionConfig maxTokens(
-            @javax.annotation.Nullable Integer maxTokens) {
-        this.maxTokens = maxTokens;
-        return this;
-    }
-
-    /**
-     * MaxTokens is the maximum completion tokens for LLM responses.
-     *
-     * @return maxTokens
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_MAX_TOKENS, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public Integer getMaxTokens() {
-        return maxTokens;
-    }
-
-    @JsonProperty(value = JSON_PROPERTY_MAX_TOKENS, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setMaxTokens(@javax.annotation.Nullable Integer maxTokens) {
-        this.maxTokens = maxTokens;
-    }
-
-    public CommondtoPersonaExtractionConfig model(@javax.annotation.Nullable String model) {
-        this.model = model;
-        return this;
-    }
-
-    /**
-     * Model is the LLM model to use (empty &#x3D; use provider default).
-     *
-     * @return model
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public String getModel() {
-        return model;
-    }
-
-    @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setModel(@javax.annotation.Nullable String model) {
-        this.model = model;
-    }
-
-    public CommondtoPersonaExtractionConfig temperature(
-            @javax.annotation.Nullable BigDecimal temperature) {
-        this.temperature = temperature;
-        return this;
-    }
-
-    /**
-     * Temperature controls LLM randomness for extraction.
-     *
-     * @return temperature
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_TEMPERATURE, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public BigDecimal getTemperature() {
-        return temperature;
-    }
-
-    @JsonProperty(value = JSON_PROPERTY_TEMPERATURE, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setTemperature(@javax.annotation.Nullable BigDecimal temperature) {
-        this.temperature = temperature;
-    }
-
-    /** Return true if this commondto.PersonaExtractionConfig object is equal to o. */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        CommondtoPersonaExtractionConfig commondtoPersonaExtractionConfig =
-                (CommondtoPersonaExtractionConfig) o;
-        return Objects.equals(this.actorTypes, commondtoPersonaExtractionConfig.actorTypes)
-                && Objects.equals(this.domains, commondtoPersonaExtractionConfig.domains)
-                && Objects.equals(this.enabled, commondtoPersonaExtractionConfig.enabled)
-                && Objects.equals(this.maxTokens, commondtoPersonaExtractionConfig.maxTokens)
-                && Objects.equals(this.model, commondtoPersonaExtractionConfig.model)
-                && Objects.equals(this.temperature, commondtoPersonaExtractionConfig.temperature);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(actorTypes, domains, enabled, maxTokens, model, temperature);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class CommondtoPersonaExtractionConfig {\n");
-        sb.append("    actorTypes: ").append(toIndentedString(actorTypes)).append("\n");
-        sb.append("    domains: ").append(toIndentedString(domains)).append("\n");
-        sb.append("    enabled: ").append(toIndentedString(enabled)).append("\n");
-        sb.append("    maxTokens: ").append(toIndentedString(maxTokens)).append("\n");
-        sb.append("    model: ").append(toIndentedString(model)).append("\n");
-        sb.append("    temperature: ").append(toIndentedString(temperature)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first
-     * line).
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
-
-    /**
-     * Convert the instance into URL query string.
-     *
-     * @return URL query string
-     */
-    public String toUrlQueryString() {
-        return toUrlQueryString(null);
-    }
-
-    /**
-     * Convert the instance into URL query string.
-     *
-     * @param prefix prefix of the query string
-     * @return URL query string
-     */
-    public String toUrlQueryString(String prefix) {
-        String suffix = "";
-        String containerSuffix = "";
-        String containerPrefix = "";
-        if (prefix == null) {
-            // style=form, explode=true, e.g. /pet?name=cat&type=manx
-            prefix = "";
-        } else {
-            // deepObject style e.g. /pet?id[name]=cat&id[type]=manx
-            prefix = prefix + "[";
-            suffix = "]";
-            containerSuffix = "]";
-            containerPrefix = "[";
-        }
-
-        StringJoiner joiner = new StringJoiner("&");
-
-        // add `actor_types` to the URL query string
-        if (getActorTypes() != null) {
-            for (int i = 0; i < getActorTypes().size(); i++) {
-                joiner.add(
-                        String.format(
-                                java.util.Locale.ROOT,
-                                "%sactor_types%s%s=%s",
-                                prefix,
-                                suffix,
-                                "".equals(suffix)
-                                        ? ""
-                                        : String.format(
-                                                java.util.Locale.ROOT,
-                                                "%s%d%s",
-                                                containerPrefix,
-                                                i,
-                                                containerSuffix),
-                                ApiClient.urlEncode(
-                                        ApiClient.valueToString(getActorTypes().get(i)))));
-            }
-        }
-
-        // add `domains` to the URL query string
-        if (getDomains() != null) {
-            for (int i = 0; i < getDomains().size(); i++) {
-                if (getDomains().get(i) != null) {
-                    joiner.add(
-                            getDomains()
-                                    .get(i)
-                                    .toUrlQueryString(
-                                            String.format(
-                                                    java.util.Locale.ROOT,
-                                                    "%sdomains%s%s",
-                                                    prefix,
-                                                    suffix,
-                                                    "".equals(suffix)
-                                                            ? ""
-                                                            : String.format(
-                                                                    java.util.Locale.ROOT,
-                                                                    "%s%d%s",
-                                                                    containerPrefix,
-                                                                    i,
-                                                                    containerSuffix))));
-                }
-            }
-        }
-
-        // add `enabled` to the URL query string
-        if (getEnabled() != null) {
-            joiner.add(
-                    String.format(
-                            java.util.Locale.ROOT,
-                            "%senabled%s=%s",
-                            prefix,
-                            suffix,
-                            ApiClient.urlEncode(ApiClient.valueToString(getEnabled()))));
-        }
-
-        // add `max_tokens` to the URL query string
-        if (getMaxTokens() != null) {
-            joiner.add(
-                    String.format(
-                            java.util.Locale.ROOT,
-                            "%smax_tokens%s=%s",
-                            prefix,
-                            suffix,
-                            ApiClient.urlEncode(ApiClient.valueToString(getMaxTokens()))));
-        }
-
-        // add `model` to the URL query string
-        if (getModel() != null) {
-            joiner.add(
-                    String.format(
-                            java.util.Locale.ROOT,
-                            "%smodel%s=%s",
-                            prefix,
-                            suffix,
-                            ApiClient.urlEncode(ApiClient.valueToString(getModel()))));
-        }
-
-        // add `temperature` to the URL query string
-        if (getTemperature() != null) {
-            joiner.add(
-                    String.format(
-                            java.util.Locale.ROOT,
-                            "%stemperature%s=%s",
-                            prefix,
-                            suffix,
-                            ApiClient.urlEncode(ApiClient.valueToString(getTemperature()))));
-        }
-
-        return joiner.toString();
-    }
+    return joiner.toString();
+  }
 }

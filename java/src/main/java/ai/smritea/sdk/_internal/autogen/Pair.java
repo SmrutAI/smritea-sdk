@@ -13,27 +13,27 @@
 package ai.smritea.sdk._internal.autogen;
 
 @javax.annotation.Generated(
-        value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        date = "2026-03-05T00:12:24.621116+05:30[Asia/Kolkata]",
-        comments = "Generator version: 7.19.0")
+    value = "org.openapitools.codegen.languages.JavaClientCodegen",
+    date = "2026-03-05T18:33:01.293352+05:30[Asia/Kolkata]",
+    comments = "Generator version: 7.19.0")
 public class Pair {
-    private final String name;
-    private final String value;
+  private final String name;
+  private final String value;
 
-    public Pair(String name, String value) {
-        this.name = isValidString(name) ? name : "";
-        this.value = isValidString(value) ? value : "";
-    }
+  public Pair(String name, String value) {
+    this.name = isValidString(name) ? name : "";
+    this.value = isValidString(value) ? value : "";
+  }
 
-    public String getName() {
-        return this.name;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public String getValue() {
-        return this.value;
-    }
+  public String getValue() {
+    return this.value;
+  }
 
-    private static boolean isValidString(String arg) {
-        return arg != null;
-    }
+  private static boolean isValidString(String arg) {
+    return arg != null;
+  }
 }

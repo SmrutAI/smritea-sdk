@@ -13,7 +13,6 @@
 package ai.smritea.sdk._internal.autogen;
 
 import com.fasterxml.jackson.databind.util.StdDateFormat;
-
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
@@ -23,38 +22,38 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 @javax.annotation.Generated(
-        value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        date = "2026-03-05T00:12:24.621116+05:30[Asia/Kolkata]",
-        comments = "Generator version: 7.19.0")
+    value = "org.openapitools.codegen.languages.JavaClientCodegen",
+    date = "2026-03-05T18:33:01.293352+05:30[Asia/Kolkata]",
+    comments = "Generator version: 7.19.0")
 public class RFC3339DateFormat extends DateFormat {
-    private static final long serialVersionUID = 1L;
-    private static final TimeZone TIMEZONE_Z = TimeZone.getTimeZone("UTC");
+  private static final long serialVersionUID = 1L;
+  private static final TimeZone TIMEZONE_Z = TimeZone.getTimeZone("UTC");
 
-    private final StdDateFormat fmt =
-            new StdDateFormat().withTimeZone(TIMEZONE_Z).withColonInTimeZone(true);
+  private final StdDateFormat fmt =
+      new StdDateFormat().withTimeZone(TIMEZONE_Z).withColonInTimeZone(true);
 
-    public RFC3339DateFormat() {
-        this.calendar = new GregorianCalendar();
-        this.numberFormat = new DecimalFormat();
-    }
+  public RFC3339DateFormat() {
+    this.calendar = new GregorianCalendar();
+    this.numberFormat = new DecimalFormat();
+  }
 
-    @Override
-    public Date parse(String source) {
-        return parse(source, new ParsePosition(0));
-    }
+  @Override
+  public Date parse(String source) {
+    return parse(source, new ParsePosition(0));
+  }
 
-    @Override
-    public Date parse(String source, ParsePosition pos) {
-        return fmt.parse(source, pos);
-    }
+  @Override
+  public Date parse(String source, ParsePosition pos) {
+    return fmt.parse(source, pos);
+  }
 
-    @Override
-    public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
-        return fmt.format(date, toAppendTo, fieldPosition);
-    }
+  @Override
+  public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
+    return fmt.format(date, toAppendTo, fieldPosition);
+  }
 
-    @Override
-    public Object clone() {
-        return super.clone();
-    }
+  @Override
+  public Object clone() {
+    return super.clone();
+  }
 }

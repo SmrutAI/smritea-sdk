@@ -15,7 +15,6 @@ package ai.smritea.sdk._internal.autogen.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,145 +23,141 @@ import java.util.StringJoiner;
 /** MemorySearchMemoriesResponse */
 @JsonPropertyOrder({MemorySearchMemoriesResponse.JSON_PROPERTY_MEMORIES})
 @javax.annotation.Generated(
-        value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        date = "2026-03-05T00:12:24.621116+05:30[Asia/Kolkata]",
-        comments = "Generator version: 7.19.0")
+    value = "org.openapitools.codegen.languages.JavaClientCodegen",
+    date = "2026-03-05T18:33:01.293352+05:30[Asia/Kolkata]",
+    comments = "Generator version: 7.19.0")
 public class MemorySearchMemoriesResponse {
-    public static final String JSON_PROPERTY_MEMORIES = "memories";
+  public static final String JSON_PROPERTY_MEMORIES = "memories";
+  @javax.annotation.Nullable private List<MemorySearchMemoryResponse> memories = new ArrayList<>();
 
-    @javax.annotation.Nullable
-    private List<MemorySearchMemoryResponse> memories = new ArrayList<>();
+  public MemorySearchMemoriesResponse() {}
 
-    public MemorySearchMemoriesResponse() {}
+  public MemorySearchMemoriesResponse memories(
+      @javax.annotation.Nullable List<MemorySearchMemoryResponse> memories) {
+    this.memories = memories;
+    return this;
+  }
 
-    public MemorySearchMemoriesResponse memories(
-            @javax.annotation.Nullable List<MemorySearchMemoryResponse> memories) {
-        this.memories = memories;
-        return this;
+  public MemorySearchMemoriesResponse addMemoriesItem(MemorySearchMemoryResponse memoriesItem) {
+    if (this.memories == null) {
+      this.memories = new ArrayList<>();
+    }
+    this.memories.add(memoriesItem);
+    return this;
+  }
+
+  /**
+   * Get memories
+   *
+   * @return memories
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_MEMORIES, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<MemorySearchMemoryResponse> getMemories() {
+    return memories;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_MEMORIES, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setMemories(@javax.annotation.Nullable List<MemorySearchMemoryResponse> memories) {
+    this.memories = memories;
+  }
+
+  /** Return true if this memory.SearchMemoriesResponse object is equal to o. */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    MemorySearchMemoriesResponse memorySearchMemoriesResponse = (MemorySearchMemoriesResponse) o;
+    return Objects.equals(this.memories, memorySearchMemoriesResponse.memories);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(memories);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class MemorySearchMemoriesResponse {\n");
+    sb.append("    memories: ").append(toIndentedString(memories)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+
+  /**
+   * Convert the instance into URL query string.
+   *
+   * @return URL query string
+   */
+  public String toUrlQueryString() {
+    return toUrlQueryString(null);
+  }
+
+  /**
+   * Convert the instance into URL query string.
+   *
+   * @param prefix prefix of the query string
+   * @return URL query string
+   */
+  public String toUrlQueryString(String prefix) {
+    String suffix = "";
+    String containerSuffix = "";
+    String containerPrefix = "";
+    if (prefix == null) {
+      // style=form, explode=true, e.g. /pet?name=cat&type=manx
+      prefix = "";
+    } else {
+      // deepObject style e.g. /pet?id[name]=cat&id[type]=manx
+      prefix = prefix + "[";
+      suffix = "]";
+      containerSuffix = "]";
+      containerPrefix = "[";
     }
 
-    public MemorySearchMemoriesResponse addMemoriesItem(MemorySearchMemoryResponse memoriesItem) {
-        if (this.memories == null) {
-            this.memories = new ArrayList<>();
+    StringJoiner joiner = new StringJoiner("&");
+
+    // add `memories` to the URL query string
+    if (getMemories() != null) {
+      for (int i = 0; i < getMemories().size(); i++) {
+        if (getMemories().get(i) != null) {
+          joiner.add(
+              getMemories()
+                  .get(i)
+                  .toUrlQueryString(
+                      String.format(
+                          java.util.Locale.ROOT,
+                          "%smemories%s%s",
+                          prefix,
+                          suffix,
+                          "".equals(suffix)
+                              ? ""
+                              : String.format(
+                                  java.util.Locale.ROOT,
+                                  "%s%d%s",
+                                  containerPrefix,
+                                  i,
+                                  containerSuffix))));
         }
-        this.memories.add(memoriesItem);
-        return this;
+      }
     }
 
-    /**
-     * Get memories
-     *
-     * @return memories
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_MEMORIES, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public List<MemorySearchMemoryResponse> getMemories() {
-        return memories;
-    }
-
-    @JsonProperty(value = JSON_PROPERTY_MEMORIES, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setMemories(@javax.annotation.Nullable List<MemorySearchMemoryResponse> memories) {
-        this.memories = memories;
-    }
-
-    /** Return true if this memory.SearchMemoriesResponse object is equal to o. */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        MemorySearchMemoriesResponse memorySearchMemoriesResponse =
-                (MemorySearchMemoriesResponse) o;
-        return Objects.equals(this.memories, memorySearchMemoriesResponse.memories);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(memories);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class MemorySearchMemoriesResponse {\n");
-        sb.append("    memories: ").append(toIndentedString(memories)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first
-     * line).
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
-
-    /**
-     * Convert the instance into URL query string.
-     *
-     * @return URL query string
-     */
-    public String toUrlQueryString() {
-        return toUrlQueryString(null);
-    }
-
-    /**
-     * Convert the instance into URL query string.
-     *
-     * @param prefix prefix of the query string
-     * @return URL query string
-     */
-    public String toUrlQueryString(String prefix) {
-        String suffix = "";
-        String containerSuffix = "";
-        String containerPrefix = "";
-        if (prefix == null) {
-            // style=form, explode=true, e.g. /pet?name=cat&type=manx
-            prefix = "";
-        } else {
-            // deepObject style e.g. /pet?id[name]=cat&id[type]=manx
-            prefix = prefix + "[";
-            suffix = "]";
-            containerSuffix = "]";
-            containerPrefix = "[";
-        }
-
-        StringJoiner joiner = new StringJoiner("&");
-
-        // add `memories` to the URL query string
-        if (getMemories() != null) {
-            for (int i = 0; i < getMemories().size(); i++) {
-                if (getMemories().get(i) != null) {
-                    joiner.add(
-                            getMemories()
-                                    .get(i)
-                                    .toUrlQueryString(
-                                            String.format(
-                                                    java.util.Locale.ROOT,
-                                                    "%smemories%s%s",
-                                                    prefix,
-                                                    suffix,
-                                                    "".equals(suffix)
-                                                            ? ""
-                                                            : String.format(
-                                                                    java.util.Locale.ROOT,
-                                                                    "%s%d%s",
-                                                                    containerPrefix,
-                                                                    i,
-                                                                    containerSuffix))));
-                }
-            }
-        }
-
-        return joiner.toString();
-    }
+    return joiner.toString();
+  }
 }

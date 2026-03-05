@@ -125,11 +125,8 @@
                 <artifactId>fmt-maven-plugin</artifactId>
                 <version>2.29</version>
                 <configuration>
-                    <!-- AOSP style = google-java-format with 4-space indentation.
-                         Matches the Checkstyle basicOffset=4 setting in checkstyle.xml.
-                         Without this, google-java-format defaults to 2-space which
-                         conflicts with Checkstyle's Indentation check. -->
-                    <style>AOSP</style>
+                    <!-- Default Google Java Style = 2-space indentation.
+                         Matches the Checkstyle basicOffset=2 setting in checkstyle.xml. -->
                 </configuration>
                 <executions>
                     <execution>
@@ -198,6 +195,17 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>3.2.7</version>
+                        <configuration>
+                            <!-- Non-interactive signing for scripts/CI:
+                                 - Passphrase is read from the MAVEN_GPG_PASSPHRASE
+                                   environment variable (plugin 3.2.0+ native support).
+                                 - loopback pinentry prevents GPG from launching an
+                                   interactive prompt when no agent is cached. -->
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

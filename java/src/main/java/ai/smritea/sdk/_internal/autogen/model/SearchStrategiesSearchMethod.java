@@ -17,55 +17,55 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 /** Gets or Sets search_strategies.SearchMethod */
 public enum SearchStrategiesSearchMethod {
-    SearchMethodQuickSearch("quick_search"),
+  SearchMethodQuickSearch("quick_search"),
 
-    SearchMethodDeepSearch("deep_search"),
+  SearchMethodDeepSearch("deep_search"),
 
-    SearchMethodContextAwareSearch("context_aware_search"),
+  SearchMethodContextAwareSearch("context_aware_search"),
 
-    SearchMethodGraphProximity("graph_proximity"),
+  SearchMethodGraphProximity("graph_proximity"),
 
-    SearchMethodDiversified("diversified"),
+  SearchMethodDiversified("diversified"),
 
-    SearchMethodSemanticRerank("semantic_rerank");
+  SearchMethodSemanticRerank("semantic_rerank");
 
-    private String value;
+  private String value;
 
-    SearchStrategiesSearchMethod(String value) {
-        this.value = value;
+  SearchStrategiesSearchMethod(String value) {
+    this.value = value;
+  }
+
+  @JsonValue
+  public String getValue() {
+    return value;
+  }
+
+  @Override
+  public String toString() {
+    return String.valueOf(value);
+  }
+
+  @JsonCreator
+  public static SearchStrategiesSearchMethod fromValue(String value) {
+    for (SearchStrategiesSearchMethod b : SearchStrategiesSearchMethod.values()) {
+      if (b.value.equals(value)) {
+        return b;
+      }
+    }
+    throw new IllegalArgumentException("Unexpected value '" + value + "'");
+  }
+
+  /**
+   * Convert the instance into URL query string.
+   *
+   * @param prefix prefix of the query string
+   * @return URL query string
+   */
+  public String toUrlQueryString(String prefix) {
+    if (prefix == null) {
+      prefix = "";
     }
 
-    @JsonValue
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static SearchStrategiesSearchMethod fromValue(String value) {
-        for (SearchStrategiesSearchMethod b : SearchStrategiesSearchMethod.values()) {
-            if (b.value.equals(value)) {
-                return b;
-            }
-        }
-        throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-
-    /**
-     * Convert the instance into URL query string.
-     *
-     * @param prefix prefix of the query string
-     * @return URL query string
-     */
-    public String toUrlQueryString(String prefix) {
-        if (prefix == null) {
-            prefix = "";
-        }
-
-        return String.format(java.util.Locale.ROOT, "%s=%s", prefix, this.toString());
-    }
+    return String.format(java.util.Locale.ROOT, "%s=%s", prefix, this.toString());
+  }
 }

@@ -5,8 +5,16 @@
         install-python install-typescript install-go install-java install-csharp install
 
 # Publishing tokens — sourced from environment variables:
-#   PYPI_TOKEN   : PyPI API token (starts with pypi-)
-#   NPM_TOKEN    : npm access token
+#   PYPI_TOKEN            : PyPI API token (starts with pypi-)
+#   NPM_TOKEN             : npm access token
+#   SONATYPE_USERNAME     : Sonatype user token username (from central.sonatype.com)
+#   SONATYPE_PASSWORD     : Sonatype user token password (from central.sonatype.com)
+#   MAVEN_GPG_PASSPHRASE  : GPG key passphrase (read by maven-gpg-plugin 3.2.0+)
+#   NUGET_API_KEY         : NuGet.org API key
+
+# Optional: set to a custom settings.xml path to use instead of ~/.m2/settings.xml
+# Example: MAVEN_SETTINGS_FILE=/tmp/mvn-settings.xml make publish-java
+MAVEN_SETTINGS_ARG := $(if $(MAVEN_SETTINGS_FILE),-s $(MAVEN_SETTINGS_FILE),)
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}' | sort
@@ -104,7 +112,7 @@ build-java: ## Build Java SDK (compile + package)
 
 publish-java: build-java ## Publish Java SDK to Maven Central
 	@if [ -z "$$SONATYPE_USERNAME" ]; then echo "ERROR: SONATYPE_USERNAME not set"; exit 1; fi
-	cd java && mvn deploy -P release
+	cd java && mvn deploy -P release $(MAVEN_SETTINGS_ARG)
 
 format-csharp: ## Auto-format C# SDK with dotnet-format
 	cd csharp && dotnet format Smritea.Sdk.sln

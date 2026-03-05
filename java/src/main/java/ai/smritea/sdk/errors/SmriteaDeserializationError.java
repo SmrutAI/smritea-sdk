@@ -6,23 +6,23 @@ package ai.smritea.sdk.errors;
  */
 public class SmriteaDeserializationError extends SmriteaError {
 
-    /**
-     * Creates a new deserialization error.
-     *
-     * @param message description of what failed to deserialize
-     */
-    public SmriteaDeserializationError(String message) {
-        super(message, null);
-    }
+  /**
+   * Creates a new deserialization error.
+   *
+   * @param message description of what failed to deserialize
+   */
+  public SmriteaDeserializationError(String message) {
+    super(message, null);
+  }
 
-    /**
-     * Creates a new deserialization error wrapping a cause.
-     *
-     * @param message description of what failed to deserialize
-     * @param cause the underlying exception (e.g. JsonProcessingException)
-     */
-    public SmriteaDeserializationError(String message, Throwable cause) {
-        super(message);
-        initCause(cause);
-    }
+  /**
+   * Creates a new deserialization error wrapping a cause.
+   *
+   * @param message description of what failed to deserialize
+   * @param cause the underlying exception (e.g. JsonProcessingException)
+   */
+  public SmriteaDeserializationError(String message, Throwable cause) {
+    super(message);
+    initCause(cause);
+  }
 }

@@ -13,11 +13,9 @@
 package ai.smritea.sdk._internal.autogen.model;
 
 import ai.smritea.sdk._internal.autogen.ApiClient;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,262 +23,256 @@ import java.util.StringJoiner;
 
 /** CommondtoPersonaDomainConfig */
 @JsonPropertyOrder({
-    CommondtoPersonaDomainConfig.JSON_PROPERTY_DESCRIPTION,
-    CommondtoPersonaDomainConfig.JSON_PROPERTY_IS_DEFAULT,
-    CommondtoPersonaDomainConfig.JSON_PROPERTY_NAME,
-    CommondtoPersonaDomainConfig.JSON_PROPERTY_TRAITS
+  CommondtoPersonaDomainConfig.JSON_PROPERTY_DESCRIPTION,
+  CommondtoPersonaDomainConfig.JSON_PROPERTY_IS_DEFAULT,
+  CommondtoPersonaDomainConfig.JSON_PROPERTY_NAME,
+  CommondtoPersonaDomainConfig.JSON_PROPERTY_TRAITS
 })
 @javax.annotation.Generated(
-        value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        date = "2026-03-05T00:12:24.621116+05:30[Asia/Kolkata]",
-        comments = "Generator version: 7.19.0")
+    value = "org.openapitools.codegen.languages.JavaClientCodegen",
+    date = "2026-03-05T18:33:01.293352+05:30[Asia/Kolkata]",
+    comments = "Generator version: 7.19.0")
 public class CommondtoPersonaDomainConfig {
-    public static final String JSON_PROPERTY_DESCRIPTION = "description";
-    @javax.annotation.Nullable private String description;
+  public static final String JSON_PROPERTY_DESCRIPTION = "description";
+  @javax.annotation.Nullable private String description;
 
-    public static final String JSON_PROPERTY_IS_DEFAULT = "is_default";
-    @javax.annotation.Nullable private Boolean isDefault;
+  public static final String JSON_PROPERTY_IS_DEFAULT = "is_default";
+  @javax.annotation.Nullable private Boolean isDefault;
 
-    public static final String JSON_PROPERTY_NAME = "name";
-    @javax.annotation.Nullable private String name;
+  public static final String JSON_PROPERTY_NAME = "name";
+  @javax.annotation.Nullable private String name;
 
-    public static final String JSON_PROPERTY_TRAITS = "traits";
-    @javax.annotation.Nullable private List<String> traits = new ArrayList<>();
+  public static final String JSON_PROPERTY_TRAITS = "traits";
+  @javax.annotation.Nullable private List<String> traits = new ArrayList<>();
 
-    public CommondtoPersonaDomainConfig() {}
+  public CommondtoPersonaDomainConfig() {}
 
-    public CommondtoPersonaDomainConfig description(@javax.annotation.Nullable String description) {
-        this.description = description;
-        return this;
+  public CommondtoPersonaDomainConfig description(@javax.annotation.Nullable String description) {
+    this.description = description;
+    return this;
+  }
+
+  /**
+   * Description describes what kind of traits this domain captures.
+   *
+   * @return description
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_DESCRIPTION, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getDescription() {
+    return description;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_DESCRIPTION, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDescription(@javax.annotation.Nullable String description) {
+    this.description = description;
+  }
+
+  public CommondtoPersonaDomainConfig isDefault(@javax.annotation.Nullable Boolean isDefault) {
+    this.isDefault = isDefault;
+    return this;
+  }
+
+  /**
+   * IsDefault indicates if this domain is included by default.
+   *
+   * @return isDefault
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_IS_DEFAULT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getIsDefault() {
+    return isDefault;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_IS_DEFAULT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIsDefault(@javax.annotation.Nullable Boolean isDefault) {
+    this.isDefault = isDefault;
+  }
+
+  public CommondtoPersonaDomainConfig name(@javax.annotation.Nullable String name) {
+    this.name = name;
+    return this;
+  }
+
+  /**
+   * Name is the domain identifier (e.g., \&quot;preferences\&quot;, \&quot;interests\&quot;,
+   * \&quot;demographics\&quot;).
+   *
+   * @return name
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getName() {
+    return name;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setName(@javax.annotation.Nullable String name) {
+    this.name = name;
+  }
+
+  public CommondtoPersonaDomainConfig traits(@javax.annotation.Nullable List<String> traits) {
+    this.traits = traits;
+    return this;
+  }
+
+  public CommondtoPersonaDomainConfig addTraitsItem(String traitsItem) {
+    if (this.traits == null) {
+      this.traits = new ArrayList<>();
+    }
+    this.traits.add(traitsItem);
+    return this;
+  }
+
+  /**
+   * Traits lists expected trait names for this domain (optional, for LLM guidance).
+   *
+   * @return traits
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TRAITS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getTraits() {
+    return traits;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_TRAITS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTraits(@javax.annotation.Nullable List<String> traits) {
+    this.traits = traits;
+  }
+
+  /** Return true if this commondto.PersonaDomainConfig object is equal to o. */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    CommondtoPersonaDomainConfig commondtoPersonaDomainConfig = (CommondtoPersonaDomainConfig) o;
+    return Objects.equals(this.description, commondtoPersonaDomainConfig.description)
+        && Objects.equals(this.isDefault, commondtoPersonaDomainConfig.isDefault)
+        && Objects.equals(this.name, commondtoPersonaDomainConfig.name)
+        && Objects.equals(this.traits, commondtoPersonaDomainConfig.traits);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(description, isDefault, name, traits);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class CommondtoPersonaDomainConfig {\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    isDefault: ").append(toIndentedString(isDefault)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    traits: ").append(toIndentedString(traits)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+
+  /**
+   * Convert the instance into URL query string.
+   *
+   * @return URL query string
+   */
+  public String toUrlQueryString() {
+    return toUrlQueryString(null);
+  }
+
+  /**
+   * Convert the instance into URL query string.
+   *
+   * @param prefix prefix of the query string
+   * @return URL query string
+   */
+  public String toUrlQueryString(String prefix) {
+    String suffix = "";
+    String containerSuffix = "";
+    String containerPrefix = "";
+    if (prefix == null) {
+      // style=form, explode=true, e.g. /pet?name=cat&type=manx
+      prefix = "";
+    } else {
+      // deepObject style e.g. /pet?id[name]=cat&id[type]=manx
+      prefix = prefix + "[";
+      suffix = "]";
+      containerSuffix = "]";
+      containerPrefix = "[";
     }
 
-    /**
-     * Description describes what kind of traits this domain captures.
-     *
-     * @return description
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_DESCRIPTION, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public String getDescription() {
-        return description;
+    StringJoiner joiner = new StringJoiner("&");
+
+    // add `description` to the URL query string
+    if (getDescription() != null) {
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sdescription%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getDescription()))));
     }
 
-    @JsonProperty(value = JSON_PROPERTY_DESCRIPTION, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setDescription(@javax.annotation.Nullable String description) {
-        this.description = description;
+    // add `is_default` to the URL query string
+    if (getIsDefault() != null) {
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sis_default%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getIsDefault()))));
     }
 
-    public CommondtoPersonaDomainConfig isDefault(@javax.annotation.Nullable Boolean isDefault) {
-        this.isDefault = isDefault;
-        return this;
+    // add `name` to the URL query string
+    if (getName() != null) {
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sname%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getName()))));
     }
 
-    /**
-     * IsDefault indicates if this domain is included by default.
-     *
-     * @return isDefault
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_IS_DEFAULT, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public Boolean getIsDefault() {
-        return isDefault;
+    // add `traits` to the URL query string
+    if (getTraits() != null) {
+      for (int i = 0; i < getTraits().size(); i++) {
+        joiner.add(
+            String.format(
+                java.util.Locale.ROOT,
+                "%straits%s%s=%s",
+                prefix,
+                suffix,
+                "".equals(suffix)
+                    ? ""
+                    : String.format(
+                        java.util.Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix),
+                ApiClient.urlEncode(ApiClient.valueToString(getTraits().get(i)))));
+      }
     }
 
-    @JsonProperty(value = JSON_PROPERTY_IS_DEFAULT, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setIsDefault(@javax.annotation.Nullable Boolean isDefault) {
-        this.isDefault = isDefault;
-    }
-
-    public CommondtoPersonaDomainConfig name(@javax.annotation.Nullable String name) {
-        this.name = name;
-        return this;
-    }
-
-    /**
-     * Name is the domain identifier (e.g., \&quot;preferences\&quot;, \&quot;interests\&quot;,
-     * \&quot;demographics\&quot;).
-     *
-     * @return name
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public String getName() {
-        return name;
-    }
-
-    @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setName(@javax.annotation.Nullable String name) {
-        this.name = name;
-    }
-
-    public CommondtoPersonaDomainConfig traits(@javax.annotation.Nullable List<String> traits) {
-        this.traits = traits;
-        return this;
-    }
-
-    public CommondtoPersonaDomainConfig addTraitsItem(String traitsItem) {
-        if (this.traits == null) {
-            this.traits = new ArrayList<>();
-        }
-        this.traits.add(traitsItem);
-        return this;
-    }
-
-    /**
-     * Traits lists expected trait names for this domain (optional, for LLM guidance).
-     *
-     * @return traits
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_TRAITS, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public List<String> getTraits() {
-        return traits;
-    }
-
-    @JsonProperty(value = JSON_PROPERTY_TRAITS, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setTraits(@javax.annotation.Nullable List<String> traits) {
-        this.traits = traits;
-    }
-
-    /** Return true if this commondto.PersonaDomainConfig object is equal to o. */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        CommondtoPersonaDomainConfig commondtoPersonaDomainConfig =
-                (CommondtoPersonaDomainConfig) o;
-        return Objects.equals(this.description, commondtoPersonaDomainConfig.description)
-                && Objects.equals(this.isDefault, commondtoPersonaDomainConfig.isDefault)
-                && Objects.equals(this.name, commondtoPersonaDomainConfig.name)
-                && Objects.equals(this.traits, commondtoPersonaDomainConfig.traits);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(description, isDefault, name, traits);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class CommondtoPersonaDomainConfig {\n");
-        sb.append("    description: ").append(toIndentedString(description)).append("\n");
-        sb.append("    isDefault: ").append(toIndentedString(isDefault)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("    traits: ").append(toIndentedString(traits)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first
-     * line).
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
-
-    /**
-     * Convert the instance into URL query string.
-     *
-     * @return URL query string
-     */
-    public String toUrlQueryString() {
-        return toUrlQueryString(null);
-    }
-
-    /**
-     * Convert the instance into URL query string.
-     *
-     * @param prefix prefix of the query string
-     * @return URL query string
-     */
-    public String toUrlQueryString(String prefix) {
-        String suffix = "";
-        String containerSuffix = "";
-        String containerPrefix = "";
-        if (prefix == null) {
-            // style=form, explode=true, e.g. /pet?name=cat&type=manx
-            prefix = "";
-        } else {
-            // deepObject style e.g. /pet?id[name]=cat&id[type]=manx
-            prefix = prefix + "[";
-            suffix = "]";
-            containerSuffix = "]";
-            containerPrefix = "[";
-        }
-
-        StringJoiner joiner = new StringJoiner("&");
-
-        // add `description` to the URL query string
-        if (getDescription() != null) {
-            joiner.add(
-                    String.format(
-                            java.util.Locale.ROOT,
-                            "%sdescription%s=%s",
-                            prefix,
-                            suffix,
-                            ApiClient.urlEncode(ApiClient.valueToString(getDescription()))));
-        }
-
-        // add `is_default` to the URL query string
-        if (getIsDefault() != null) {
-            joiner.add(
-                    String.format(
-                            java.util.Locale.ROOT,
-                            "%sis_default%s=%s",
-                            prefix,
-                            suffix,
-                            ApiClient.urlEncode(ApiClient.valueToString(getIsDefault()))));
-        }
-
-        // add `name` to the URL query string
-        if (getName() != null) {
-            joiner.add(
-                    String.format(
-                            java.util.Locale.ROOT,
-                            "%sname%s=%s",
-                            prefix,
-                            suffix,
-                            ApiClient.urlEncode(ApiClient.valueToString(getName()))));
-        }
-
-        // add `traits` to the URL query string
-        if (getTraits() != null) {
-            for (int i = 0; i < getTraits().size(); i++) {
-                joiner.add(
-                        String.format(
-                                java.util.Locale.ROOT,
-                                "%straits%s%s=%s",
-                                prefix,
-                                suffix,
-                                "".equals(suffix)
-                                        ? ""
-                                        : String.format(
-                                                java.util.Locale.ROOT,
-                                                "%s%d%s",
-                                                containerPrefix,
-                                                i,
-                                                containerSuffix),
-                                ApiClient.urlEncode(ApiClient.valueToString(getTraits().get(i)))));
-            }
-        }
-
-        return joiner.toString();
-    }
+    return joiner.toString();
+  }
 }

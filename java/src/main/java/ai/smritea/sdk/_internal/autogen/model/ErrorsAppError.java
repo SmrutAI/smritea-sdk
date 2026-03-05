@@ -13,212 +13,209 @@
 package ai.smritea.sdk._internal.autogen.model;
 
 import ai.smritea.sdk._internal.autogen.ApiClient;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** ErrorsAppError */
 @JsonPropertyOrder({
-    ErrorsAppError.JSON_PROPERTY_CODE,
-    ErrorsAppError.JSON_PROPERTY_DETAILS,
-    ErrorsAppError.JSON_PROPERTY_MESSAGE
+  ErrorsAppError.JSON_PROPERTY_CODE,
+  ErrorsAppError.JSON_PROPERTY_DETAILS,
+  ErrorsAppError.JSON_PROPERTY_MESSAGE
 })
 @javax.annotation.Generated(
-        value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        date = "2026-03-05T00:12:24.621116+05:30[Asia/Kolkata]",
-        comments = "Generator version: 7.19.0")
+    value = "org.openapitools.codegen.languages.JavaClientCodegen",
+    date = "2026-03-05T18:33:01.293352+05:30[Asia/Kolkata]",
+    comments = "Generator version: 7.19.0")
 public class ErrorsAppError {
-    public static final String JSON_PROPERTY_CODE = "code";
-    @javax.annotation.Nullable private ErrorsErrorCode code;
+  public static final String JSON_PROPERTY_CODE = "code";
+  @javax.annotation.Nullable private ErrorsErrorCode code;
 
-    public static final String JSON_PROPERTY_DETAILS = "details";
-    @javax.annotation.Nullable private String details;
+  public static final String JSON_PROPERTY_DETAILS = "details";
+  @javax.annotation.Nullable private String details;
 
-    public static final String JSON_PROPERTY_MESSAGE = "message";
-    @javax.annotation.Nullable private String message;
+  public static final String JSON_PROPERTY_MESSAGE = "message";
+  @javax.annotation.Nullable private String message;
 
-    public ErrorsAppError() {}
+  public ErrorsAppError() {}
 
-    public ErrorsAppError code(@javax.annotation.Nullable ErrorsErrorCode code) {
-        this.code = code;
-        return this;
+  public ErrorsAppError code(@javax.annotation.Nullable ErrorsErrorCode code) {
+    this.code = code;
+    return this;
+  }
+
+  /**
+   * Get code
+   *
+   * @return code
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CODE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public ErrorsErrorCode getCode() {
+    return code;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_CODE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setCode(@javax.annotation.Nullable ErrorsErrorCode code) {
+    this.code = code;
+  }
+
+  public ErrorsAppError details(@javax.annotation.Nullable String details) {
+    this.details = details;
+    return this;
+  }
+
+  /**
+   * Get details
+   *
+   * @return details
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_DETAILS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getDetails() {
+    return details;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_DETAILS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDetails(@javax.annotation.Nullable String details) {
+    this.details = details;
+  }
+
+  public ErrorsAppError message(@javax.annotation.Nullable String message) {
+    this.message = message;
+    return this;
+  }
+
+  /**
+   * Get message
+   *
+   * @return message
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getMessage() {
+    return message;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setMessage(@javax.annotation.Nullable String message) {
+    this.message = message;
+  }
+
+  /** Return true if this errors.AppError object is equal to o. */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ErrorsAppError errorsAppError = (ErrorsAppError) o;
+    return Objects.equals(this.code, errorsAppError.code)
+        && Objects.equals(this.details, errorsAppError.details)
+        && Objects.equals(this.message, errorsAppError.message);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(code, details, message);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class ErrorsAppError {\n");
+    sb.append("    code: ").append(toIndentedString(code)).append("\n");
+    sb.append("    details: ").append(toIndentedString(details)).append("\n");
+    sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+
+  /**
+   * Convert the instance into URL query string.
+   *
+   * @return URL query string
+   */
+  public String toUrlQueryString() {
+    return toUrlQueryString(null);
+  }
+
+  /**
+   * Convert the instance into URL query string.
+   *
+   * @param prefix prefix of the query string
+   * @return URL query string
+   */
+  public String toUrlQueryString(String prefix) {
+    String suffix = "";
+    String containerSuffix = "";
+    String containerPrefix = "";
+    if (prefix == null) {
+      // style=form, explode=true, e.g. /pet?name=cat&type=manx
+      prefix = "";
+    } else {
+      // deepObject style e.g. /pet?id[name]=cat&id[type]=manx
+      prefix = prefix + "[";
+      suffix = "]";
+      containerSuffix = "]";
+      containerPrefix = "[";
     }
 
-    /**
-     * Get code
-     *
-     * @return code
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_CODE, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public ErrorsErrorCode getCode() {
-        return code;
+    StringJoiner joiner = new StringJoiner("&");
+
+    // add `code` to the URL query string
+    if (getCode() != null) {
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%scode%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getCode()))));
     }
 
-    @JsonProperty(value = JSON_PROPERTY_CODE, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setCode(@javax.annotation.Nullable ErrorsErrorCode code) {
-        this.code = code;
+    // add `details` to the URL query string
+    if (getDetails() != null) {
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sdetails%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getDetails()))));
     }
 
-    public ErrorsAppError details(@javax.annotation.Nullable String details) {
-        this.details = details;
-        return this;
+    // add `message` to the URL query string
+    if (getMessage() != null) {
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%smessage%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getMessage()))));
     }
 
-    /**
-     * Get details
-     *
-     * @return details
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_DETAILS, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public String getDetails() {
-        return details;
-    }
-
-    @JsonProperty(value = JSON_PROPERTY_DETAILS, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setDetails(@javax.annotation.Nullable String details) {
-        this.details = details;
-    }
-
-    public ErrorsAppError message(@javax.annotation.Nullable String message) {
-        this.message = message;
-        return this;
-    }
-
-    /**
-     * Get message
-     *
-     * @return message
-     */
-    @javax.annotation.Nullable
-    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public String getMessage() {
-        return message;
-    }
-
-    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
-    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-    public void setMessage(@javax.annotation.Nullable String message) {
-        this.message = message;
-    }
-
-    /** Return true if this errors.AppError object is equal to o. */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ErrorsAppError errorsAppError = (ErrorsAppError) o;
-        return Objects.equals(this.code, errorsAppError.code)
-                && Objects.equals(this.details, errorsAppError.details)
-                && Objects.equals(this.message, errorsAppError.message);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(code, details, message);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class ErrorsAppError {\n");
-        sb.append("    code: ").append(toIndentedString(code)).append("\n");
-        sb.append("    details: ").append(toIndentedString(details)).append("\n");
-        sb.append("    message: ").append(toIndentedString(message)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first
-     * line).
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
-
-    /**
-     * Convert the instance into URL query string.
-     *
-     * @return URL query string
-     */
-    public String toUrlQueryString() {
-        return toUrlQueryString(null);
-    }
-
-    /**
-     * Convert the instance into URL query string.
-     *
-     * @param prefix prefix of the query string
-     * @return URL query string
-     */
-    public String toUrlQueryString(String prefix) {
-        String suffix = "";
-        String containerSuffix = "";
-        String containerPrefix = "";
-        if (prefix == null) {
-            // style=form, explode=true, e.g. /pet?name=cat&type=manx
-            prefix = "";
-        } else {
-            // deepObject style e.g. /pet?id[name]=cat&id[type]=manx
-            prefix = prefix + "[";
-            suffix = "]";
-            containerSuffix = "]";
-            containerPrefix = "[";
-        }
-
-        StringJoiner joiner = new StringJoiner("&");
-
-        // add `code` to the URL query string
-        if (getCode() != null) {
-            joiner.add(
-                    String.format(
-                            java.util.Locale.ROOT,
-                            "%scode%s=%s",
-                            prefix,
-                            suffix,
-                            ApiClient.urlEncode(ApiClient.valueToString(getCode()))));
-        }
-
-        // add `details` to the URL query string
-        if (getDetails() != null) {
-            joiner.add(
-                    String.format(
-                            java.util.Locale.ROOT,
-                            "%sdetails%s=%s",
-                            prefix,
-                            suffix,
-                            ApiClient.urlEncode(ApiClient.valueToString(getDetails()))));
-        }
-
-        // add `message` to the URL query string
-        if (getMessage() != null) {
-            joiner.add(
-                    String.format(
-                            java.util.Locale.ROOT,
-                            "%smessage%s=%s",
-                            prefix,
-                            suffix,
-                            ApiClient.urlEncode(ApiClient.valueToString(getMessage()))));
-        }
-
-        return joiner.toString();
-    }
+    return joiner.toString();
+  }
 }
