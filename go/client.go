@@ -159,7 +159,7 @@ func (c *SmriteaClient) Delete(ctx context.Context, memoryID string) error {
 // GetAll is not yet implemented. The list memories endpoint is pending server-side
 // implementation. This method is provided for forward compatibility.
 func (c *SmriteaClient) GetAll(_ context.Context) ([]*Memory, error) {
-	return nil, fmt.Errorf("smritea: GetAll() is not yet available. " +
+	return nil, errors.New("smritea: GetAll() is not yet available. " +
 		"The list memories endpoint is pending server-side implementation")
 }
 

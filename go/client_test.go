@@ -192,6 +192,73 @@ func TestResolveActor_AllNil(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
+// Fluent option builder tests
+// ---------------------------------------------------------------------------
+
+func TestAddOptions_Builder(t *testing.T) {
+	opts := NewAddOptions().WithUserID("u1").WithActorName("Alice").WithConversationID("conv-1")
+
+	if opts.UserID == nil || *opts.UserID != "u1" {
+		t.Errorf("WithUserID: got %v, want u1", opts.UserID)
+	}
+	if opts.ActorName == nil || *opts.ActorName != "Alice" {
+		t.Errorf("WithActorName: got %v, want Alice", opts.ActorName)
+	}
+	if opts.ConversationID == nil || *opts.ConversationID != "conv-1" {
+		t.Errorf("WithConversationID: got %v, want conv-1", opts.ConversationID)
+	}
+	// Unset fields remain nil
+	if opts.ActorID != nil {
+		t.Errorf("ActorID should be nil, got %v", *opts.ActorID)
+	}
+}
+
+func TestSearchOptions_Builder(t *testing.T) {
+	opts := NewSearchOptions().WithLimit(10).WithMethod("hybrid").WithThreshold(0.8)
+
+	if opts.Limit == nil || *opts.Limit != 10 {
+		t.Errorf("WithLimit: got %v, want 10", opts.Limit)
+	}
+	if opts.Method == nil || *opts.Method != "hybrid" {
+		t.Errorf("WithMethod: got %v, want hybrid", opts.Method)
+	}
+	if opts.Threshold == nil || *opts.Threshold != 0.8 {
+		t.Errorf("WithThreshold: got %v, want 0.8", opts.Threshold)
+	}
+	// Unset fields remain nil
+	if opts.GraphDepth != nil {
+		t.Errorf("GraphDepth should be nil, got %v", *opts.GraphDepth)
+	}
+}
+
+func TestAddOptions_Builder_UsedInAdd(t *testing.T) {
+	// Verify fluent builder works end-to-end with Add()
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body map[string]interface{}
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		actorID, actorIDOK := body["actor_id"].(string)       // nolint:not-an-error — type assertion bool, not error
+		actorType, actorTypeOK := body["actor_type"].(string) // nolint:not-an-error — type assertion bool, not error
+		if !actorIDOK || actorID != "user-42" || !actorTypeOK || actorType != "user" {
+			http.Error(w, "wrong actor fields", http.StatusBadRequest)
+			return
+		}
+		writeJSON(w, http.StatusOK, memJSON("mem-builder", "content"))
+	})
+	client := newTestClient(t, handler, 1)
+
+	mem, err := client.Add(context.Background(), "content", NewAddOptions().WithUserID("user-42"))
+	if err != nil {
+		t.Fatalf("Add with builder opts: unexpected error: %v", err)
+	}
+	if mem == nil || mem.Id == nil || *mem.Id != "mem-builder" {
+		t.Errorf("Add with builder opts: got unexpected memory %+v", mem)
+	}
+}
+
+// ---------------------------------------------------------------------------
 // Integration tests — httptest-based, exercise the full HTTP round-trip.
 //
 // The autogen appends operation paths to cfg.BaseURL (= httptest server URL):

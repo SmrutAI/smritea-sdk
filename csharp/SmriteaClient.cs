@@ -1,15 +1,18 @@
+// <copyright file="SmriteaClient.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace Smritea.Sdk;
 
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Smritea.Internal.Autogen.Api;
+using Smritea.Internal.Autogen.Client;
+using Smritea.Internal.Autogen.Model;
 
 /// <summary>
 /// Entry point for all smritea memory operations.
 /// Create one instance per application and reuse it across calls.
-/// Implements <see cref="IDisposable"/> to release the underlying <see cref="HttpClient"/>
-/// when the client owns it.
+/// All methods delegate to the auto-generated <see cref="SDKMemoryApi"/> for HTTP handling.
+/// Implements <see cref="IDisposable"/> to release the underlying API client resources.
 /// </summary>
 public class SmriteaClient : IDisposable
 {
@@ -17,14 +20,13 @@ public class SmriteaClient : IDisposable
     private const int DefaultMaxRetries = 2;
     private const double RetryCap = 30.0;
 
-    private readonly string _appId;
-    private readonly int _maxRetries;
-    private readonly HttpClient _httpClient;
-    private readonly JsonSerializerOptions _jsonOptions;
-    private readonly bool _ownsHttpClient;
+    private readonly string appId;
+    private readonly int maxRetries;
+    private readonly SDKMemoryApi api;
 
     /// <summary>
-    /// Creates a new <see cref="SmriteaClient"/> that owns its own <see cref="HttpClient"/>.
+    /// Initializes a new instance of the <see cref="SmriteaClient"/> class.
+    /// Creates a new <see cref="SmriteaClient"/> with the default base URL and retry count.
     /// </summary>
     /// <param name="apiKey">API key for authentication.</param>
     /// <param name="appId">Application ID injected into every request.</param>
@@ -34,42 +36,32 @@ public class SmriteaClient : IDisposable
     {
         ArgumentNullException.ThrowIfNull(apiKey);
         ArgumentNullException.ThrowIfNull(appId);
-        _appId = appId;
-        _maxRetries = Math.Max(0, maxRetries);
-        _ownsHttpClient = true;
-        _httpClient = new HttpClient { BaseAddress = new Uri(baseUrl ?? DefaultBaseUrl) };
-        _httpClient.DefaultRequestHeaders.Add("X-API-Key", apiKey);
-        _jsonOptions = new JsonSerializerOptions
+        this.appId = appId;
+        this.maxRetries = Math.Max(0, maxRetries);
+
+        var resolvedBaseUrl = baseUrl ?? DefaultBaseUrl;
+        var config = new Configuration
         {
-            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            // BasePath is the server root only — the autogen paths already include /api/v1/...
+            BasePath = resolvedBaseUrl,
         };
+        config.ApiKey["X-API-Key"] = apiKey;
+        this.api = new SDKMemoryApi(config);
     }
 
     /// <summary>
-    /// Creates a new <see cref="SmriteaClient"/> with an externally managed <see cref="HttpClient"/>.
-    /// Useful for testing with WireMock or custom HTTP pipelines.
-    /// The caller is responsible for disposing the <paramref name="httpClient"/>.
+    /// Initializes a new instance of the <see cref="SmriteaClient"/> class.
+    /// Internal constructor for testing. Allows injecting a pre-configured <see cref="SDKMemoryApi"/>
+    /// backed by a test HTTP client (e.g. pointed at WireMock).
     /// </summary>
-    /// <param name="apiKey">API key for authentication.</param>
     /// <param name="appId">Application ID injected into every request.</param>
-    /// <param name="httpClient">Pre-configured HTTP client.</param>
-    /// <param name="maxRetries">Maximum number of retries on HTTP 429. Defaults to 2.</param>
-    public SmriteaClient(string apiKey, string appId, HttpClient httpClient, int maxRetries = DefaultMaxRetries)
+    /// <param name="maxRetries">Maximum number of retries on HTTP 429 (minimum 0).</param>
+    /// <param name="api">The pre-configured SDKMemoryApi instance.</param>
+    internal SmriteaClient(string appId, int maxRetries, SDKMemoryApi api)
     {
-        ArgumentNullException.ThrowIfNull(apiKey);
-        ArgumentNullException.ThrowIfNull(appId);
-        ArgumentNullException.ThrowIfNull(httpClient);
-        _appId = appId;
-        _maxRetries = Math.Max(0, maxRetries);
-        _ownsHttpClient = false;
-        _httpClient = httpClient;
-        _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-API-Key", apiKey);
-        _jsonOptions = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        };
+        this.appId = appId;
+        this.maxRetries = Math.Max(0, maxRetries);
+        this.api = api;
     }
 
     /// <summary>
@@ -78,150 +70,236 @@ public class SmriteaClient : IDisposable
     /// When <see cref="AddOptions.UserId"/> is set it takes precedence over
     /// <see cref="AddOptions.ActorId"/> and forces actor_type="user".
     /// </summary>
+    /// <param name="content">The memory content text to store.</param>
+    /// <param name="opts">Optional add options for actor attribution, metadata, and conversation scoping.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>A <see cref="Task{TResult}"/> resolving to the stored <see cref="Memory"/>.</returns>
     public async Task<Memory> AddAsync(string content, AddOptions? opts = null, CancellationToken ct = default)
     {
-        var body = new Dictionary<string, object?> { ["app_id"] = _appId, ["content"] = content };
+        var request = new MemoryCreateMemoryRequest
+        {
+            AppId = this.appId,
+            Content = content,
+        };
 
         if (opts is not null)
         {
             var actorId = opts.UserId ?? opts.ActorId;
             var actorType = opts.UserId is not null ? "user" : opts.ActorType;
 
-            if (actorId is not null) body["actor_id"] = actorId;
-            if (actorType is not null) body["actor_type"] = actorType;
-            if (opts.ActorName is not null) body["actor_name"] = opts.ActorName;
-            if (opts.Metadata is not null) body["metadata"] = opts.Metadata;
-            if (opts.ConversationId is not null) body["conversation_id"] = opts.ConversationId;
+            if (actorId is not null)
+            {
+                request.ActorId = actorId;
+            }
+
+            if (actorType is not null)
+            {
+                request.ActorType = Enum.Parse<MemoryCreateMemoryRequest.ActorTypeEnum>(
+                    actorType, ignoreCase: true);
+            }
+
+            if (opts.ActorName is not null)
+            {
+                request.ActorName = opts.ActorName;
+            }
+
+            if (opts.Metadata is not null)
+            {
+                request.Metadata = opts.Metadata;
+            }
+
+            if (opts.ConversationId is not null)
+            {
+                request.ConversationId = opts.ConversationId;
+            }
         }
 
-        return await ExecuteWithRetryAsync(async token =>
-        {
-            var resp = await SendRequestAsync(HttpMethod.Post, "/api/v1/sdk/memories", body, token);
-            var respBody = await resp.Content.ReadAsStringAsync(token);
-            if (!resp.IsSuccessStatusCode)
-                throw MapError((int)resp.StatusCode, respBody, GetRetryAfterHeader(resp));
-            return JsonSerializer.Deserialize<Memory>(respBody, _jsonOptions)
-                   ?? throw new SmriteaException("Failed to deserialize memory response");
-        }, ct);
+        return await this.ExecuteWithRetryAsync(
+            async token =>
+            {
+                try
+                {
+                    var resp = await this.api.CreateMemoryAsync(request, token);
+                    if (resp is null)
+                    {
+                        throw new SmriteaDeserializationException(
+                            "Server returned null for CreateMemory. The response body could not be deserialized.");
+                    }
+
+                    return new Memory(resp);
+                }
+                catch (ApiException e)
+                {
+                    throw MapError(e);
+                }
+            },
+            ct);
     }
 
     /// <summary>
     /// Retrieves memories ranked by relevance to the given query.
     /// Returns an empty list when no memories match.
     /// </summary>
+    /// <param name="query">The search query string.</param>
+    /// <param name="opts">Optional search options for filtering and ranking.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>A <see cref="Task{TResult}"/> resolving to a read-only list of <see cref="SearchResult"/> items.</returns>
     public async Task<IReadOnlyList<SearchResult>> SearchAsync(string query, SearchOptions? opts = null, CancellationToken ct = default)
     {
-        var body = new Dictionary<string, object?> { ["app_id"] = _appId, ["query"] = query };
+        // Must use the named-argument constructor form.
+        // The autogen constructor validates appId/query and throws ArgumentNullException
+        // if they are null. Object initializer syntax calls the constructor first with all
+        // defaults (null), which triggers the guard before the setters run.
+        var request = new MemorySearchMemoryRequest(appId: this.appId, query: query);
 
         if (opts is not null)
         {
             var actorId = opts.UserId ?? opts.ActorId;
             var actorType = opts.UserId is not null ? "user" : opts.ActorType;
 
-            if (actorId is not null) body["actor_id"] = actorId;
-            if (actorType is not null) body["actor_type"] = actorType;
-            if (opts.Limit is not null) body["limit"] = opts.Limit;
-            if (opts.Method is not null) body["method"] = opts.Method;
-            if (opts.Threshold is not null) body["threshold"] = opts.Threshold;
-            if (opts.GraphDepth is not null) body["graph_depth"] = opts.GraphDepth;
-            if (opts.ConversationId is not null) body["conversation_id"] = opts.ConversationId;
+            if (actorId is not null)
+            {
+                request.ActorId = actorId;
+            }
+
+            if (actorType is not null)
+            {
+                request.ActorType = Enum.Parse<MemorySearchMemoryRequest.ActorTypeEnum>(
+                    actorType, ignoreCase: true);
+            }
+
+            if (opts.Limit is not null)
+            {
+                request.Limit = opts.Limit.Value;
+            }
+
+            if (opts.Method is not null)
+            {
+                request.Method = Enum.Parse<SearchStrategiesSearchMethod>(
+                    opts.Method, ignoreCase: true);
+            }
+
+            if (opts.Threshold is not null)
+            {
+                request.Threshold = (decimal)opts.Threshold.Value;
+            }
+
+            if (opts.GraphDepth is not null)
+            {
+                request.GraphDepth = opts.GraphDepth.Value;
+            }
+
+            if (opts.ConversationId is not null)
+            {
+                request.ConversationId = opts.ConversationId;
+            }
         }
 
-        return await ExecuteWithRetryAsync(async token =>
-        {
-            var resp = await SendRequestAsync(HttpMethod.Post, "/api/v1/sdk/memories/search", body, token);
-            var respBody = await resp.Content.ReadAsStringAsync(token);
-            if (!resp.IsSuccessStatusCode)
-                throw MapError((int)resp.StatusCode, respBody, GetRetryAfterHeader(resp));
-
-            using var doc = JsonDocument.Parse(respBody);
-            if (!doc.RootElement.TryGetProperty("memories", out var memoriesEl))
-                return Array.Empty<SearchResult>();
-
-            var results = new List<SearchResult>();
-            foreach (var item in memoriesEl.EnumerateArray())
+        return await this.ExecuteWithRetryAsync<IReadOnlyList<SearchResult>>(
+            async token =>
             {
-                Memory? mem = null;
-                if (item.TryGetProperty("memory", out var memEl))
-                    mem = JsonSerializer.Deserialize<Memory>(memEl.GetRawText(), _jsonOptions);
-                double? score = item.TryGetProperty("score", out var scoreEl) ? scoreEl.GetDouble() : null;
-                results.Add(new SearchResult { Memory = mem, Score = score });
-            }
-            return results;
-        }, ct);
+                try
+                {
+                    var resp = await this.api.SearchMemoriesAsync(request, token);
+                    var memories = resp.Memories;
+                    if (memories is null || memories.Count == 0)
+                    {
+                        return Array.Empty<SearchResult>();
+                    }
+
+                    var results = new List<SearchResult>(memories.Count);
+                    foreach (var m in memories)
+                    {
+                        results.Add(new SearchResult(m));
+                    }
+
+                    return results;
+                }
+                catch (ApiException e)
+                {
+                    throw MapError(e);
+                }
+            },
+            ct);
     }
 
     /// <summary>
     /// Fetches a single memory by its ID.
     /// Throws <see cref="SmriteaNotFoundException"/> when the memory does not exist.
     /// </summary>
+    /// <param name="memoryId">The unique identifier of the memory to retrieve.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>A <see cref="Task{TResult}"/> resolving to the <see cref="Memory"/>.</returns>
     public async Task<Memory> GetAsync(string memoryId, CancellationToken ct = default)
     {
-        return await ExecuteWithRetryAsync(async token =>
-        {
-            var resp = await SendRequestAsync(HttpMethod.Get, $"/api/v1/sdk/memories/{memoryId}", null, token);
-            var respBody = await resp.Content.ReadAsStringAsync(token);
-            if (!resp.IsSuccessStatusCode)
-                throw MapError((int)resp.StatusCode, respBody, GetRetryAfterHeader(resp));
-            return JsonSerializer.Deserialize<Memory>(respBody, _jsonOptions)
-                   ?? throw new SmriteaException("Failed to deserialize memory response");
-        }, ct);
+        return await this.ExecuteWithRetryAsync(
+            async token =>
+            {
+                try
+                {
+                    var resp = await this.api.GetMemoryAsync(memoryId, token);
+                    if (resp is null)
+                    {
+                        throw new SmriteaDeserializationException(
+                            "Server returned null for GetMemory. The response body could not be deserialized.");
+                    }
+
+                    return new Memory(resp);
+                }
+                catch (ApiException e)
+                {
+                    throw MapError(e);
+                }
+            },
+            ct);
     }
 
     /// <summary>
     /// Permanently removes a memory by its ID.
     /// Throws <see cref="SmriteaNotFoundException"/> when the memory does not exist.
     /// </summary>
+    /// <param name="memoryId">The unique identifier of the memory to delete.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous delete operation.</returns>
     public async Task DeleteAsync(string memoryId, CancellationToken ct = default)
     {
-        await ExecuteWithRetryAsync(async token =>
-        {
-            var resp = await SendRequestAsync(HttpMethod.Delete, $"/api/v1/sdk/memories/{memoryId}", null, token);
-            if (!resp.IsSuccessStatusCode)
+        await this.ExecuteWithRetryAsync<int>(
+            async token =>
             {
-                var respBody = await resp.Content.ReadAsStringAsync(token);
-                throw MapError((int)resp.StatusCode, respBody, GetRetryAfterHeader(resp));
-            }
-            return 0; // dummy return for generic retry helper
-        }, ct);
+                try
+                {
+                    await this.api.DeleteMemoryAsync(memoryId, token);
+                    return 0; // dummy return for generic retry helper
+                }
+                catch (ApiException e)
+                {
+                    throw MapError(e);
+                }
+            },
+            ct);
     }
 
     /// <summary>
     /// Not yet implemented. The list memories endpoint is pending server-side implementation.
     /// </summary>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>A <see cref="Task{TResult}"/> resolving to a read-only list of all <see cref="Memory"/> items.</returns>
     public Task<IReadOnlyList<Memory>> GetAllAsync(CancellationToken ct = default)
     {
         throw new NotImplementedException(
             "GetAllAsync() is not yet available. The list memories endpoint is pending server-side implementation.");
     }
 
-    /// <summary>Disposes the underlying <see cref="HttpClient"/> if this client owns it.</summary>
+    /// <summary>Disposes the underlying <see cref="SDKMemoryApi"/> and its HTTP resources.</summary>
     public void Dispose()
     {
-        if (_ownsHttpClient) _httpClient.Dispose();
+        this.api.Dispose();
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>
-    /// Executes <paramref name="fn"/> up to <c>_maxRetries + 1</c> times, retrying only on
-    /// <see cref="SmriteaRateLimitException"/>. Other errors propagate immediately.
-    /// </summary>
-    private async Task<T> ExecuteWithRetryAsync<T>(Func<CancellationToken, Task<T>> fn, CancellationToken ct)
-    {
-        for (var attempt = 0; attempt <= _maxRetries; attempt++)
-        {
-            try
-            {
-                return await fn(ct);
-            }
-            catch (SmriteaRateLimitException ex) when (attempt < _maxRetries)
-            {
-                var delay = RetryDelay(attempt, ex.RetryAfter);
-                await Task.Delay(TimeSpan.FromSeconds(delay), ct);
-            }
-        }
-        throw new SmriteaException("max retries exceeded");
-    }
+    // ---------------------------------------------------------------------------
+    // Static helpers — must appear before non-static member per SA1204
+    // ---------------------------------------------------------------------------
 
     /// <summary>
     /// Computes how long to sleep before the next retry attempt.
@@ -229,55 +307,35 @@ public class SmriteaClient : IDisposable
     /// (to account for clock skew) capped at <see cref="RetryCap"/>. Otherwise exponential backoff
     /// with +/-25% jitter is applied, also capped at <see cref="RetryCap"/>.
     /// </summary>
+    /// <param name="attempt">The zero-based retry attempt number.</param>
+    /// <param name="retryAfter">Seconds from the server Retry-After header, or null if absent.</param>
+    /// <returns>The number of seconds to sleep before the next attempt.</returns>
     private static double RetryDelay(int attempt, int? retryAfter)
     {
         if (retryAfter is > 0)
         {
             return Math.Min(retryAfter.Value * 0.9, RetryCap);
         }
+
         var baseDelay = Math.Min(Math.Pow(2, attempt), RetryCap);
-        var jitter = baseDelay * (0.75 + 0.5 * Random.Shared.NextDouble());
+        var jitter = baseDelay * (0.75 + (0.5 * Random.Shared.NextDouble()));
         return Math.Min(jitter, RetryCap);
     }
 
     /// <summary>
-    /// Maps an HTTP status code to the appropriate typed SDK exception.
+    /// Extracts the Retry-After header value from an <see cref="ApiException"/>.
     /// </summary>
-    private static SmriteaException MapError(int statusCode, string body, string? retryAfterHeader)
+    /// <param name="e">The API exception whose headers to inspect.</param>
+    /// <returns>The header value string, or null if not present.</returns>
+    private static string? GetRetryAfterHeader(ApiException e)
     {
-        return statusCode switch
+        if (e.Headers is null)
         {
-            400 => new SmriteaValidationException(body, statusCode),
-            401 => new SmriteaAuthException(body, statusCode),
-            402 => new SmriteaQuotaException(body, statusCode),
-            404 => new SmriteaNotFoundException(body, statusCode),
-            429 => new SmriteaRateLimitException(body, statusCode, ParseRetryAfter(retryAfterHeader)),
-            _ => new SmriteaException(body, statusCode),
-        };
-    }
-
-    /// <summary>
-    /// Sends an HTTP request with optional JSON body.
-    /// </summary>
-    private async Task<HttpResponseMessage> SendRequestAsync(
-        HttpMethod method, string path, Dictionary<string, object?>? body, CancellationToken ct)
-    {
-        using var request = new HttpRequestMessage(method, path);
-        if (body is not null)
-        {
-            var json = JsonSerializer.Serialize(body, _jsonOptions);
-            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            return null;
         }
-        return await _httpClient.SendAsync(request, ct);
-    }
 
-    /// <summary>
-    /// Extracts the Retry-After header value as a string, or null if absent.
-    /// </summary>
-    private static string? GetRetryAfterHeader(HttpResponseMessage resp)
-    {
-        return resp.Headers.RetryAfter?.Delta?.TotalSeconds is double secs
-            ? ((int)secs).ToString()
+        return e.Headers.TryGetValue("Retry-After", out var values)
+            ? values.FirstOrDefault()
             : null;
     }
 
@@ -285,9 +343,73 @@ public class SmriteaClient : IDisposable
     /// Parses the Retry-After header string into an integer number of seconds.
     /// Returns null if the header is absent or not a valid integer.
     /// </summary>
+    /// <param name="header">The raw Retry-After header string, or null if absent.</param>
+    /// <returns>The parsed number of seconds, or null if the header is absent or unparseable.</returns>
     private static int? ParseRetryAfter(string? header)
     {
-        if (string.IsNullOrEmpty(header)) return null;
+        if (string.IsNullOrEmpty(header))
+        {
+            return null;
+        }
+
         return int.TryParse(header, out var val) ? val : null;
+    }
+
+    /// <summary>
+    /// Converts an <see cref="ApiException"/> into the appropriate typed SDK exception.
+    /// Matches the Java/Go/Python mapError function exactly.
+    /// </summary>
+    /// <param name="e">The autogen API exception to convert.</param>
+    /// <returns>A typed <see cref="SmriteaException"/> matching the HTTP status code.</returns>
+    private static SmriteaException MapError(ApiException e)
+    {
+        var statusCode = e.ErrorCode;
+        var body = e.Message;
+        return statusCode switch
+        {
+            400 => new SmriteaValidationException(body, statusCode),
+            401 => new SmriteaAuthException(body, statusCode),
+            402 => new SmriteaQuotaException(body, statusCode),
+            404 => new SmriteaNotFoundException(body, statusCode),
+            429 => new SmriteaRateLimitException(body, statusCode, ParseRetryAfter(GetRetryAfterHeader(e))),
+            _ => new SmriteaException(body, statusCode),
+        };
+    }
+
+    // ---------------------------------------------------------------------------
+    // Retry logic — non-static, comes after static helpers per SA1204
+    // ---------------------------------------------------------------------------
+
+    /// <summary>
+    /// Executes <paramref name="fn"/> up to <c>maxRetries + 1</c> times, retrying only on
+    /// <see cref="SmriteaRateLimitException"/>. Other errors propagate immediately.
+    /// After all retries are exhausted, the last <see cref="SmriteaRateLimitException"/> is rethrown.
+    /// </summary>
+    /// <param name="fn">The async function to execute, receiving a <see cref="CancellationToken"/>.</param>
+    /// <param name="ct">Cancellation token forwarded to <paramref name="fn"/> and delay calls.</param>
+    /// <returns>A <see cref="Task{TResult}"/> resolving to the result of <paramref name="fn"/>.</returns>
+    private async Task<T> ExecuteWithRetryAsync<T>(Func<CancellationToken, Task<T>> fn, CancellationToken ct)
+    {
+        SmriteaRateLimitException? lastRateLimitEx = null;
+        for (var attempt = 0; attempt <= this.maxRetries; attempt++)
+        {
+            try
+            {
+                return await fn(ct);
+            }
+            catch (SmriteaRateLimitException ex)
+            {
+                lastRateLimitEx = ex;
+                if (attempt < this.maxRetries)
+                {
+                    var delay = RetryDelay(attempt, ex.RetryAfter);
+                    await Task.Delay(TimeSpan.FromSeconds(delay), ct);
+                }
+            }
+        }
+
+        // All retries exhausted — rethrow the last rate limit exception so callers
+        // can inspect RetryAfter for their own backoff logic.
+        throw lastRateLimitEx ?? new SmriteaException("max retries exceeded");
     }
 }

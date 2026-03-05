@@ -15,6 +15,16 @@ repos:
 
   - repo: local
     hooks:
+      # Runs first — ensures all language dependencies are downloaded before
+      # any format/lint/test hook tries to build. Mirrors smritea-cloud's
+      # go-module-sync hook which runs before all other hooks.
+      - id: sdk-install
+        name: Install SDK dependencies (Python + TypeScript + Go + Java + C#)
+        entry: make install
+        language: system
+        files: pom\.xml|\.csproj|package\.json|pyproject\.toml|go\.(mod|sum)$
+        pass_filenames: false
+
       - id: sdk-format
         name: Format (Python + TypeScript + Go + Java + C#)
         entry: make format

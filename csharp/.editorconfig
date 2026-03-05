@@ -6,6 +6,12 @@ root = false
 indent_style = space
 indent_size = 4
 
+# Documentation rules: suppress for secondary/inherited constructors and builder fluent methods.
+# The main public API surface (SmriteaClient methods, exception hierarchy) is fully documented.
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1611.severity = none
+dotnet_diagnostic.SA1616.severity = none
+
 # Suppress all analyzers for auto-generated code
 [_internal/autogen/**/*.cs]
 generated_code = true

@@ -1,6 +1,16 @@
 package ai.smritea.sdk;
 
+import ai.smritea.sdk._internal.autogen.ApiClient;
+import ai.smritea.sdk._internal.autogen.ApiException;
+import ai.smritea.sdk._internal.autogen.api.SdkMemoryApi;
+import ai.smritea.sdk._internal.autogen.model.MemoryCreateMemoryRequest;
+import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoriesResponse;
+import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryRequest;
+import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.SearchStrategiesSearchMethod;
 import ai.smritea.sdk.errors.SmriteaAuthError;
+import ai.smritea.sdk.errors.SmriteaDeserializationError;
 import ai.smritea.sdk.errors.SmriteaError;
 import ai.smritea.sdk.errors.SmriteaNotFoundError;
 import ai.smritea.sdk.errors.SmriteaQuotaError;
@@ -11,23 +21,10 @@ import ai.smritea.sdk.model.Memory;
 import ai.smritea.sdk.model.SearchOptions;
 import ai.smritea.sdk.model.SearchResult;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -43,10 +40,7 @@ public class SmriteaClient {
 
     private final String appId;
     private final int maxRetries;
-    private final HttpClient httpClient;
-    private final String baseUrl;
-    private final String apiKey;
-    private final ObjectMapper objectMapper;
+    private final SdkMemoryApi api;
 
     /**
      * Creates a new SmriteaClient with the default base URL and retry count.
@@ -69,16 +63,33 @@ public class SmriteaClient {
     public SmriteaClient(String apiKey, String appId, String baseUrl, int maxRetries) {
         Objects.requireNonNull(apiKey, "apiKey must not be null");
         Objects.requireNonNull(appId, "appId must not be null");
-        this.apiKey = apiKey;
         this.appId = appId;
-        this.baseUrl = baseUrl != null ? baseUrl : DEFAULT_BASE_URL;
         this.maxRetries = Math.max(0, maxRetries);
-        this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(30))
-                .build();
-        this.objectMapper = new ObjectMapper()
-                .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        // The autogen SdkMemoryApi already includes /api/v1 in every path (e.g.
+        // /api/v1/sdk/memories). updateBaseUri() parses the full URL into separate scheme/host/port
+        // fields so getBaseUri() returns the bare host. setBasePath() would only set the path
+        // suffix
+        // and getBaseUri() would produce a malformed URL with the full URL string as the path.
+        String resolvedBaseUrl = baseUrl != null ? baseUrl : DEFAULT_BASE_URL;
+        ApiClient apiClient = new ApiClient();
+        apiClient.updateBaseUri(resolvedBaseUrl);
+        apiClient.setRequestInterceptor(builder -> builder.header("X-API-Key", apiKey));
+        this.api = new SdkMemoryApi(apiClient);
+    }
+
+    /**
+     * Package-private constructor for testing. Allows injecting a custom {@link SdkMemoryApi}
+     * backed by a test {@link ApiClient} (e.g. pointed at WireMock).
+     *
+     * @param appId the application ID injected into every request
+     * @param maxRetries maximum number of retries on 429 responses (minimum 0)
+     * @param api the pre-configured SdkMemoryApi instance
+     */
+    SmriteaClient(String appId, int maxRetries, SdkMemoryApi api) {
+        this.appId = appId;
+        this.maxRetries = Math.max(0, maxRetries);
+        this.api = api;
     }
 
     /**
@@ -91,29 +102,45 @@ public class SmriteaClient {
      * @throws SmriteaError on any API error
      */
     public Memory add(String content, AddOptions opts) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("app_id", appId);
-        body.put("content", content);
+        MemoryCreateMemoryRequest request = new MemoryCreateMemoryRequest();
+        request.setAppId(appId);
+        request.setContent(content);
 
         if (opts != null) {
             // resolveActor: if userId is set, use it as actorId and force actorType="user"
             String actorId = opts.getUserId() != null ? opts.getUserId() : opts.getActorId();
             String actorType = opts.getUserId() != null ? "user" : opts.getActorType();
 
-            if (actorId != null) body.put("actor_id", actorId);
-            if (actorType != null) body.put("actor_type", actorType);
-            if (opts.getActorName() != null) body.put("actor_name", opts.getActorName());
-            if (opts.getMetadata() != null) body.put("metadata", opts.getMetadata());
-            if (opts.getConversationId() != null) body.put("conversation_id", opts.getConversationId());
+            if (actorId != null) {
+                request.setActorId(actorId);
+            }
+            if (actorType != null) {
+                request.setActorType(MemoryCreateMemoryRequest.ActorTypeEnum.fromValue(actorType));
+            }
+            if (opts.getActorName() != null) {
+                request.setActorName(opts.getActorName());
+            }
+            if (opts.getMetadata() != null) {
+                request.setMetadata(opts.getMetadata());
+            }
+            if (opts.getConversationId() != null) {
+                request.setConversationId(opts.getConversationId());
+            }
         }
 
-        return executeWithRetry(() -> {
-            HttpResponse<String> resp = sendRequest("POST", "/api/v1/sdk/memories", body);
-            if (resp.statusCode() >= 400) {
-                throw mapError(resp.statusCode(), resp.body(), getRetryAfterHeader(resp));
-            }
-            return parseMemory(objectMapper.readTree(resp.body()));
-        });
+        return executeWithRetry(
+                () -> {
+                    try {
+                        MemoryMemoryResponse resp = api.createMemory(request);
+                        if (resp == null) {
+                            throw new SmriteaDeserializationError(
+                                    "server returned null body for add() — expected a MemoryMemoryResponse object");
+                        }
+                        return new Memory(resp);
+                    } catch (ApiException e) {
+                        throw mapError(e);
+                    }
+                });
     }
 
     /**
@@ -126,42 +153,54 @@ public class SmriteaClient {
      * @throws SmriteaError on any API error
      */
     public List<SearchResult> search(String query, SearchOptions opts) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("app_id", appId);
-        body.put("query", query);
+        MemorySearchMemoryRequest request = new MemorySearchMemoryRequest();
+        request.setAppId(appId);
+        request.setQuery(query);
 
         if (opts != null) {
             String actorId = opts.getUserId() != null ? opts.getUserId() : opts.getActorId();
             String actorType = opts.getUserId() != null ? "user" : opts.getActorType();
 
-            if (actorId != null) body.put("actor_id", actorId);
-            if (actorType != null) body.put("actor_type", actorType);
-            if (opts.getLimit() != null) body.put("limit", opts.getLimit());
-            if (opts.getMethod() != null) body.put("method", opts.getMethod());
-            if (opts.getThreshold() != null) body.put("threshold", opts.getThreshold());
-            if (opts.getGraphDepth() != null) body.put("graph_depth", opts.getGraphDepth());
-            if (opts.getConversationId() != null) body.put("conversation_id", opts.getConversationId());
+            if (actorId != null) {
+                request.setActorId(actorId);
+            }
+            if (actorType != null) {
+                request.setActorType(MemorySearchMemoryRequest.ActorTypeEnum.fromValue(actorType));
+            }
+            if (opts.getLimit() != null) {
+                request.setLimit(opts.getLimit());
+            }
+            if (opts.getMethod() != null) {
+                request.setMethod(SearchStrategiesSearchMethod.fromValue(opts.getMethod()));
+            }
+            if (opts.getThreshold() != null) {
+                request.setThreshold(BigDecimal.valueOf(opts.getThreshold()));
+            }
+            if (opts.getGraphDepth() != null) {
+                request.setGraphDepth(opts.getGraphDepth());
+            }
+            if (opts.getConversationId() != null) {
+                request.setConversationId(opts.getConversationId());
+            }
         }
 
-        return executeWithRetry(() -> {
-            HttpResponse<String> resp = sendRequest("POST", "/api/v1/sdk/memories/search", body);
-            if (resp.statusCode() >= 400) {
-                throw mapError(resp.statusCode(), resp.body(), getRetryAfterHeader(resp));
-            }
-            // Parse: {"memories": [{"memory": {...}, "score": 0.9}, ...]}
-            JsonNode root = objectMapper.readTree(resp.body());
-            JsonNode memoriesNode = root.get("memories");
-            if (memoriesNode == null || !memoriesNode.isArray()) {
-                return Collections.emptyList();
-            }
-            List<SearchResult> results = new ArrayList<>();
-            for (JsonNode node : memoriesNode) {
-                Memory mem = parseMemory(node.get("memory"));
-                Double score = node.has("score") ? node.get("score").asDouble() : null;
-                results.add(new SearchResult(mem, score));
-            }
-            return results;
-        });
+        return executeWithRetry(
+                () -> {
+                    try {
+                        MemorySearchMemoriesResponse resp = api.searchMemories(request);
+                        List<MemorySearchMemoryResponse> memories = resp.getMemories();
+                        if (memories == null || memories.isEmpty()) {
+                            return Collections.emptyList();
+                        }
+                        List<SearchResult> results = new ArrayList<>(memories.size());
+                        for (int i = 0; i < memories.size(); i++) {
+                            results.add(new SearchResult(memories.get(i)));
+                        }
+                        return results;
+                    } catch (ApiException e) {
+                        throw mapError(e);
+                    }
+                });
     }
 
     /**
@@ -173,13 +212,19 @@ public class SmriteaClient {
      * @throws SmriteaError on any other API error
      */
     public Memory get(String memoryId) {
-        return executeWithRetry(() -> {
-            HttpResponse<String> resp = sendRequest("GET", "/api/v1/sdk/memories/" + memoryId, null);
-            if (resp.statusCode() >= 400) {
-                throw mapError(resp.statusCode(), resp.body(), getRetryAfterHeader(resp));
-            }
-            return parseMemory(objectMapper.readTree(resp.body()));
-        });
+        return executeWithRetry(
+                () -> {
+                    try {
+                        MemoryMemoryResponse resp = api.getMemory(memoryId);
+                        if (resp == null) {
+                            throw new SmriteaDeserializationError(
+                                    "server returned null body for get() — expected a MemoryMemoryResponse object");
+                        }
+                        return new Memory(resp);
+                    } catch (ApiException e) {
+                        throw mapError(e);
+                    }
+                });
     }
 
     /**
@@ -190,14 +235,15 @@ public class SmriteaClient {
      * @throws SmriteaError on any other API error
      */
     public void delete(String memoryId) {
-        executeWithRetry(() -> {
-            HttpResponse<String> resp =
-                    sendRequest("DELETE", "/api/v1/sdk/memories/" + memoryId, null);
-            if (resp.statusCode() >= 400) {
-                throw mapError(resp.statusCode(), resp.body(), getRetryAfterHeader(resp));
-            }
-            return null;
-        });
+        executeWithRetry(
+                () -> {
+                    try {
+                        api.deleteMemory(memoryId);
+                        return null;
+                    } catch (ApiException e) {
+                        throw mapError(e);
+                    }
+                });
     }
 
     /**
@@ -248,6 +294,9 @@ public class SmriteaClient {
                 throw new SmriteaError(e.getMessage(), null);
             }
         }
+        // Unreachable: the loop always returns on success or throws on non-retriable errors.
+        // On the final attempt, SmriteaRateLimitError is rethrown directly.
+        // This satisfies the Java compiler's requirement for a return/throw after the loop.
         throw new SmriteaError("max retries exceeded", null);
     }
 
@@ -270,55 +319,22 @@ public class SmriteaClient {
     // ---------------------------------------------------------------------------
 
     /**
-     * Converts an HTTP status code into the appropriate typed SDK error. Matches the Go mapError
-     * function exactly.
+     * Extracts the Retry-After header value from an {@link ApiException}.
+     *
+     * @return the header value, or null if not present
      */
-    private SmriteaError mapError(int statusCode, String body, String retryAfterHeader) {
-        switch (statusCode) {
-            case 400:
-                return new SmriteaValidationError(body, statusCode);
-            case 401:
-                return new SmriteaAuthError(body, statusCode);
-            case 402:
-                return new SmriteaQuotaError(body, statusCode);
-            case 404:
-                return new SmriteaNotFoundError(body, statusCode);
-            case 429:
-                Integer retryAfter = parseRetryAfter(retryAfterHeader);
-                return new SmriteaRateLimitError(body, statusCode, retryAfter);
-            default:
-                return new SmriteaError(body, statusCode);
+    private String getRetryAfterHeader(ApiException e) {
+        if (e.getResponseHeaders() == null) {
+            return null;
         }
+        return e.getResponseHeaders().firstValue("Retry-After").orElse(null);
     }
 
-    // ---------------------------------------------------------------------------
-    // HTTP helpers
-    // ---------------------------------------------------------------------------
-
-    private HttpResponse<String> sendRequest(String method, String path, Map<String, Object> body)
-            throws IOException, InterruptedException {
-        HttpRequest.Builder builder =
-                HttpRequest.newBuilder()
-                        .uri(URI.create(baseUrl + path))
-                        .header("Content-Type", "application/json")
-                        .header("X-API-Key", apiKey);
-
-        if (body != null) {
-            String json = objectMapper.writeValueAsString(body);
-            builder.method(method, HttpRequest.BodyPublishers.ofString(json));
-        } else if ("DELETE".equals(method)) {
-            builder.DELETE();
-        } else {
-            builder.GET();
-        }
-
-        return httpClient.send(builder.build(), HttpResponse.BodyHandlers.ofString());
-    }
-
-    private String getRetryAfterHeader(HttpResponse<String> resp) {
-        return resp.headers().firstValue("Retry-After").orElse(null);
-    }
-
+    /**
+     * Parses a Retry-After header string into an Integer (seconds).
+     *
+     * @return the parsed value, or null if unparseable
+     */
     private Integer parseRetryAfter(String header) {
         if (header == null || header.isEmpty()) {
             return null;
@@ -330,46 +346,27 @@ public class SmriteaClient {
         }
     }
 
-    // ---------------------------------------------------------------------------
-    // JSON deserialization helpers
-    // ---------------------------------------------------------------------------
-
     /**
-     * Parses a Memory from a JsonNode. This avoids requiring Jackson annotations on the Memory
-     * class by extracting fields manually and calling the all-args constructor.
+     * Converts an {@link ApiException} into the appropriate typed SDK error. Matches the Go
+     * mapError function exactly.
      */
-    private Memory parseMemory(JsonNode node) {
-        if (node == null || node.isNull()) {
-            return null;
+    private SmriteaError mapError(ApiException e) {
+        int statusCode = e.getCode();
+        String body = e.getResponseBody();
+        switch (statusCode) {
+            case 400:
+                return new SmriteaValidationError(body, statusCode);
+            case 401:
+                return new SmriteaAuthError(body, statusCode);
+            case 402:
+                return new SmriteaQuotaError(body, statusCode);
+            case 404:
+                return new SmriteaNotFoundError(body, statusCode);
+            case 429:
+                Integer retryAfter = parseRetryAfter(getRetryAfterHeader(e));
+                return new SmriteaRateLimitError(body, statusCode, retryAfter);
+            default:
+                return new SmriteaError(body, statusCode);
         }
-        return new Memory(
-                textOrNull(node, "id"),
-                textOrNull(node, "app_id"),
-                textOrNull(node, "content"),
-                textOrNull(node, "actor_id"),
-                textOrNull(node, "actor_type"),
-                textOrNull(node, "actor_name"),
-                parseMetadata(node.get("metadata")),
-                textOrNull(node, "conversation_id"),
-                textOrNull(node, "conversation_message_id"),
-                textOrNull(node, "active_from"),
-                textOrNull(node, "active_to"),
-                textOrNull(node, "created_at"),
-                textOrNull(node, "updated_at"));
-    }
-
-    private String textOrNull(JsonNode node, String field) {
-        JsonNode child = node.get(field);
-        if (child == null || child.isNull()) {
-            return null;
-        }
-        return child.asText();
-    }
-
-    private Map<String, Object> parseMetadata(JsonNode node) {
-        if (node == null || node.isNull()) {
-            return null;
-        }
-        return objectMapper.convertValue(node, new TypeReference<Map<String, Object>>() {});
     }
 }

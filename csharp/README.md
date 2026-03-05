@@ -41,11 +41,11 @@ var client = new SmriteaClient(
 
 // Store something about a user
 var mem = await client.AddAsync("Alice is a vegetarian and loves hiking",
-    new AddOptions { UserId = "alice" });
+    new AddOptions().WithUserId("alice"));
 
 // Retrieve it later
 var results = await client.SearchAsync("What are Alice's food preferences?",
-    new SearchOptions { UserId = "alice" });
+    new SearchOptions().WithUserId("alice"));
 foreach (var r in results)
     Console.WriteLine($"{r.Score:F2}  {r.Content}");
 ```
@@ -72,12 +72,11 @@ var client = new SmriteaClient(
 ### `AddAsync` — Store a memory
 
 ```csharp
-var memory = await client.AddAsync("User prefers concise replies", new AddOptions
-{
-    UserId = "alice",                                           // shorthand for ActorId + ActorType="user"
-    Metadata = new Dictionary<string, object> { ["source"] = "chat" },  // optional
-    ConversationId = "conv_123",                                // optional
-});
+var memory = await client.AddAsync("User prefers concise replies",
+    new AddOptions()
+        .WithUserId("alice")                                           // shorthand for ActorId + ActorType="user"
+        .WithMetadata(new Dictionary<string, object> { ["source"] = "chat" })  // optional
+        .WithConversationId("conv_123"));                              // optional
 Console.WriteLine(memory.Id); // mem_...
 ```
 
@@ -100,13 +99,12 @@ All methods accept an optional `CancellationToken` as the last parameter.
 ### `SearchAsync` — Semantic search
 
 ```csharp
-var results = await client.SearchAsync("dietary restrictions", new SearchOptions
-{
-    UserId = "alice",
-    Limit = 5,
-    Method = "deep_search",     // "quick_search" | "deep_search" | "context_aware_search"
-    Threshold = 0.7f,           // min relevance score 0.0–1.0
-});
+var results = await client.SearchAsync("dietary restrictions",
+    new SearchOptions()
+        .WithUserId("alice")
+        .WithLimit(5)
+        .WithMethod("deep_search")     // "quick_search" | "deep_search" | "context_aware_search"
+        .WithThreshold(0.7f));         // min relevance score 0.0–1.0
 foreach (var r in results)
     Console.WriteLine($"{r.Score}  {r.Content}");
 ```
@@ -158,11 +156,8 @@ await client.DeleteAsync("mem_abc123");
 > Use `SearchAsync()` with a broad query as a workaround:
 
 ```csharp
-var results = await client.SearchAsync("", new SearchOptions
-{
-    UserId = "alice",
-    Limit = 100,
-});
+var results = await client.SearchAsync("",
+    new SearchOptions().WithUserId("alice").WithLimit(100));
 ```
 
 ---
@@ -174,10 +169,8 @@ using Smritea.Sdk;
 
 try
 {
-    var results = await client.SearchAsync("preferences", new SearchOptions
-    {
-        UserId = "alice",
-    });
+    var results = await client.SearchAsync("preferences",
+        new SearchOptions().WithUserId("alice"));
 }
 catch (SmriteaAuthException)
 {

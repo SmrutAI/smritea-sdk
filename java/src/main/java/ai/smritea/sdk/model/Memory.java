@@ -1,135 +1,177 @@
 package ai.smritea.sdk.model;
 
+import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
+
 import java.util.Map;
 
 /**
- * Public-facing Memory type. Wraps the auto-generated MemoryMemoryResponse. When autogen types are
- * generated, the constructor will accept the inner type. For now, this uses direct fields that match
- * the server response.
+ * Public-facing Memory type. Delegates to the auto-generated {@link MemoryMemoryResponse}.
+ *
+ * <p>Use the {@link Builder} to construct instances in tests — avoids error-prone positional args.
+ * In production, instances are created internally by {@code SmriteaClient} from deserialized
+ * autogen responses.
  */
 public final class Memory {
-    private final String id;
-    private final String appId;
-    private final String content;
-    private final String actorId;
-    private final String actorType;
-    private final String actorName;
-    private final Map<String, Object> metadata;
-    private final String conversationId;
-    private final String conversationMessageId;
-    private final String activeFrom;
-    private final String activeTo;
-    private final String createdAt;
-    private final String updatedAt;
+    private final MemoryMemoryResponse inner;
 
     /**
-     * Creates a new Memory instance.
+     * Creates a Memory from the auto-generated response type. Called by SmriteaClient after
+     * deserializing the server response. External callers should not use this constructor directly
+     * (the autogen type is an internal implementation detail).
      *
-     * @param id the memory ID
-     * @param appId the app ID this memory belongs to
-     * @param content the memory content text
-     * @param actorId the actor ID who created this memory
-     * @param actorType the type of actor (e.g. "user", "agent")
-     * @param actorName the display name of the actor
-     * @param metadata arbitrary key-value metadata
-     * @param conversationId the conversation this memory belongs to
-     * @param conversationMessageId the specific message ID within the conversation
-     * @param activeFrom ISO-8601 timestamp for when this memory becomes active
-     * @param activeTo ISO-8601 timestamp for when this memory expires
-     * @param createdAt ISO-8601 timestamp for creation time
-     * @param updatedAt ISO-8601 timestamp for last update time
+     * @param inner the autogen response object
      */
-    public Memory(
-            String id,
-            String appId,
-            String content,
-            String actorId,
-            String actorType,
-            String actorName,
-            Map<String, Object> metadata,
-            String conversationId,
-            String conversationMessageId,
-            String activeFrom,
-            String activeTo,
-            String createdAt,
-            String updatedAt) {
-        this.id = id;
-        this.appId = appId;
-        this.content = content;
-        this.actorId = actorId;
-        this.actorType = actorType;
-        this.actorName = actorName;
-        this.metadata = metadata;
-        this.conversationId = conversationId;
-        this.conversationMessageId = conversationMessageId;
-        this.activeFrom = activeFrom;
-        this.activeTo = activeTo;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    public Memory(MemoryMemoryResponse inner) {
+        this.inner = inner;
+    }
+
+    /**
+     * Returns a new builder with required fields pre-set.
+     *
+     * @param id the memory ID (required)
+     * @param appId the app ID this memory belongs to (required)
+     * @param content the memory content text (required)
+     * @param createdAt ISO-8601 creation timestamp (required)
+     * @param updatedAt ISO-8601 last update timestamp (required)
+     */
+    public static Builder builder(
+            String id, String appId, String content, String createdAt, String updatedAt) {
+        return new Builder(id, appId, content, createdAt, updatedAt);
     }
 
     /** Returns the memory ID. */
     public String getId() {
-        return id;
+        return inner.getId();
     }
 
     /** Returns the app ID this memory belongs to. */
     public String getAppId() {
-        return appId;
+        return inner.getAppId();
     }
 
     /** Returns the memory content text. */
     public String getContent() {
-        return content;
+        return inner.getContent();
     }
 
     /** Returns the actor ID who created this memory. */
     public String getActorId() {
-        return actorId;
+        return inner.getActorId();
     }
 
     /** Returns the type of actor (e.g. "user", "agent"). */
     public String getActorType() {
-        return actorType;
+        return inner.getActorType();
     }
 
     /** Returns the display name of the actor. */
     public String getActorName() {
-        return actorName;
+        return inner.getActorName();
     }
 
-    /** Returns the arbitrary key-value metadata. */
+    /**
+     * Returns the arbitrary key-value metadata, or null if not set. The autogen type stores
+     * metadata as {@code Object}; this getter casts it to a typed map.
+     */
+    @SuppressWarnings("unchecked")
     public Map<String, Object> getMetadata() {
-        return metadata;
+        Object raw = inner.getMetadata();
+        if (raw instanceof Map) {
+            return (Map<String, Object>) raw;
+        }
+        return null;
     }
 
     /** Returns the conversation ID this memory belongs to. */
     public String getConversationId() {
-        return conversationId;
+        return inner.getConversationId();
     }
 
     /** Returns the specific message ID within the conversation. */
     public String getConversationMessageId() {
-        return conversationMessageId;
+        return inner.getConversationMessageId();
     }
 
     /** Returns the ISO-8601 timestamp for when this memory becomes active. */
     public String getActiveFrom() {
-        return activeFrom;
+        return inner.getActiveFrom();
     }
 
     /** Returns the ISO-8601 timestamp for when this memory expires. */
     public String getActiveTo() {
-        return activeTo;
+        return inner.getActiveTo();
     }
 
     /** Returns the ISO-8601 timestamp for creation time. */
     public String getCreatedAt() {
-        return createdAt;
+        return inner.getCreatedAt();
     }
 
     /** Returns the ISO-8601 timestamp for last update time. */
     public String getUpdatedAt() {
-        return updatedAt;
+        return inner.getUpdatedAt();
+    }
+
+    /**
+     * Builder for constructing {@link Memory} instances with named fields. Internally populates a
+     * {@link MemoryMemoryResponse} and wraps it.
+     */
+    public static final class Builder {
+        private final MemoryMemoryResponse delegate;
+
+        private Builder(
+                String id, String appId, String content, String createdAt, String updatedAt) {
+            delegate = new MemoryMemoryResponse();
+            delegate.setId(id);
+            delegate.setAppId(appId);
+            delegate.setContent(content);
+            delegate.setCreatedAt(createdAt);
+            delegate.setUpdatedAt(updatedAt);
+        }
+
+        public Builder actorId(String actorId) {
+            delegate.setActorId(actorId);
+            return this;
+        }
+
+        public Builder actorType(String actorType) {
+            delegate.setActorType(actorType);
+            return this;
+        }
+
+        public Builder actorName(String actorName) {
+            delegate.setActorName(actorName);
+            return this;
+        }
+
+        public Builder metadata(Map<String, Object> metadata) {
+            delegate.setMetadata(metadata);
+            return this;
+        }
+
+        public Builder conversationId(String conversationId) {
+            delegate.setConversationId(conversationId);
+            return this;
+        }
+
+        public Builder conversationMessageId(String conversationMessageId) {
+            delegate.setConversationMessageId(conversationMessageId);
+            return this;
+        }
+
+        public Builder activeFrom(String activeFrom) {
+            delegate.setActiveFrom(activeFrom);
+            return this;
+        }
+
+        public Builder activeTo(String activeTo) {
+            delegate.setActiveTo(activeTo);
+            return this;
+        }
+
+        /** Builds an immutable {@link Memory} instance. */
+        public Memory build() {
+            return new Memory(delegate);
+        }
     }
 }

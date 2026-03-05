@@ -1,7 +1,8 @@
 .PHONY: test-python test-typescript test-go test-java test-csharp test build-python build-typescript build-go build-java build-csharp \
         publish-python publish-typescript publish-java publish-csharp publish clean help \
         format-python format-typescript format-go format-java format-csharp format \
-        lint-python lint-typescript lint-go lint-java lint-csharp lint
+        lint-python lint-typescript lint-go lint-java lint-csharp lint \
+        install-python install-typescript install-go install-java install-csharp install
 
 # Publishing tokens — sourced from environment variables:
 #   PYPI_TOKEN   : PyPI API token (starts with pypi-)
@@ -71,6 +72,23 @@ lint-go: ## Lint Go SDK with golangci-lint (check-only)
 test-go: ## Run Go SDK tests
 	cd go && go test ./... -v
 
+install-python: ## Install Python SDK dependencies (uv sync)
+	cd python && uv sync
+
+install-typescript: ## Install TypeScript SDK dependencies (npm install)
+	cd typescript && npm install --silent
+
+install-go: ## Download Go SDK dependencies (go mod download)
+	cd go && go mod download
+
+install-java: ## Download Java SDK dependencies to local Maven cache (mvn dependency:resolve)
+	cd java && mvn dependency:resolve -q
+
+install-csharp: ## Restore C# SDK NuGet dependencies (dotnet restore)
+	cd csharp && dotnet restore
+
+install: install-python install-typescript install-go install-java install-csharp ## Install/sync all SDK dependencies
+
 format-java: ## Auto-format Java SDK with google-java-format via Maven
 	cd java && mvn com.spotify.fmt:fmt-maven-plugin:format
 
@@ -89,10 +107,10 @@ publish-java: build-java ## Publish Java SDK to Maven Central
 	cd java && mvn deploy -P release
 
 format-csharp: ## Auto-format C# SDK with dotnet-format
-	cd csharp && dotnet format
+	cd csharp && dotnet format Smritea.Sdk.sln
 
 lint-csharp: ## Lint C# SDK (dotnet format check + build with analyzers)
-	cd csharp && dotnet format --verify-no-changes
+	cd csharp && dotnet format Smritea.Sdk.sln --verify-no-changes
 	cd csharp && dotnet build --no-restore -warnaserror
 
 test-csharp: ## Run C# SDK tests

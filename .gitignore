@@ -13,3 +13,15 @@ dist/
 
 # TypeScript
 *.js.map
+
+# Java (Maven)
+java/target/
+java/.mvn/wrapper/maven-wrapper.jar
+
+# C# (.NET)
+csharp/bin/
+csharp/obj/
+csharp/tests/bin/
+csharp/tests/obj/
+csharp/TestResults/
+csharp/tests/TestResults/

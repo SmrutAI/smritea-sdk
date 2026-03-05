@@ -89,14 +89,24 @@ setup_go() {
 setup_java() {
     _info "Setting up Java SDK tools..."
     if ! _check_cmd java; then
-        _err "JDK not found. Install JDK 11+ via: brew install openjdk"
-        _track_failure "Java: java not found"
-        return
+        _info "Installing OpenJDK..."
+        if command -v brew &>/dev/null; then
+            brew install openjdk
+        else
+            _err "JDK not found and brew unavailable. Install JDK 11+ manually."
+            _track_failure "Java: java not found"
+            return
+        fi
     fi
     if ! _check_cmd mvn; then
-        _err "Maven not found. Install Maven 3+ via: brew install maven"
-        _track_failure "Java: mvn not found"
-        return
+        _info "Installing Maven..."
+        if command -v brew &>/dev/null; then
+            brew install maven
+        else
+            _err "Maven not found and brew unavailable. Install Maven 3+ manually."
+            _track_failure "Java: mvn not found"
+            return
+        fi
     fi
     _info "Downloading Java SDK dependencies..."
     cd "$SDK_ROOT/java" && mvn dependency:resolve -q
@@ -106,9 +116,14 @@ setup_java() {
 setup_csharp() {
     _info "Setting up C# SDK tools..."
     if ! _check_cmd dotnet; then
-        _err ".NET SDK not found. Install .NET 8+ via: brew install --cask dotnet-sdk"
-        _track_failure "C#: dotnet not found"
-        return
+        _info "Installing .NET SDK..."
+        if command -v brew &>/dev/null; then
+            brew install --cask dotnet-sdk
+        else
+            _err ".NET SDK not found and brew unavailable. Install .NET 8+ manually."
+            _track_failure "C#: dotnet not found"
+            return
+        fi
     fi
     _info "Restoring C# SDK dependencies..."
     cd "$SDK_ROOT/csharp" && dotnet restore

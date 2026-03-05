@@ -2,7 +2,6 @@ package ai.smritea.sdk.errors;
 
 /** Base error type for all Smritea SDK errors. */
 public class SmriteaError extends RuntimeException {
-    private final String message;
     private final Integer statusCode;
 
     /**
@@ -13,7 +12,6 @@ public class SmriteaError extends RuntimeException {
      */
     public SmriteaError(String message, Integer statusCode) {
         super(message);
-        this.message = message;
         this.statusCode = statusCode;
     }
 
@@ -24,11 +22,6 @@ public class SmriteaError extends RuntimeException {
      */
     public SmriteaError(String message) {
         this(message, null);
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
     }
 
     /**

@@ -1,3 +1,5 @@
+using Smritea.Internal.Autogen.Api;
+using Smritea.Internal.Autogen.Client;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
@@ -22,8 +24,14 @@ public class SmriteaClientTests : IDisposable
 
     private SmriteaClient CreateClient(int maxRetries = 2)
     {
-        var httpClient = new HttpClient { BaseAddress = new Uri(_server.Url!) };
-        return new SmriteaClient("test-key", "app-test", httpClient, maxRetries);
+        var config = new Configuration
+        {
+            // Use the WireMock server root only — the autogen paths include /api/v1/... already.
+            BasePath = _server.Url,
+        };
+        config.ApiKey["X-API-Key"] = "test-key";
+        var api = new SDKMemoryApi(config);
+        return new SmriteaClient("app-test", maxRetries, api);
     }
 
     // -----------------------------------------------------------------------
@@ -51,13 +59,13 @@ public class SmriteaClientTests : IDisposable
     public async Task AddAsync_UserIdShorthand_SetsActorFields()
     {
         _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost()
-                .WithBody(b => b.Contains("\"actor_id\":\"user-42\"") && b.Contains("\"actor_type\":\"user\"")))
+                .WithBody(b => b != null && b.Contains("\"actor_id\":\"user-42\"") && b.Contains("\"actor_type\":\"user\"")))
             .RespondWith(Response.Create().WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
                 .WithBody("{\"id\":\"mem-2\",\"content\":\"content\",\"app_id\":\"app-test\"}"));
 
         using var client = CreateClient();
-        var mem = await client.AddAsync("content", new AddOptions { UserId = "user-42" });
+        var mem = await client.AddAsync("content", new AddOptions().WithUserId("user-42"));
 
         Assert.NotNull(mem);
         Assert.Equal("mem-2", mem.Id);
@@ -67,14 +75,14 @@ public class SmriteaClientTests : IDisposable
     public async Task AddAsync_ExplicitActorIdAndType()
     {
         _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost()
-                .WithBody(b => b.Contains("\"actor_id\":\"agent-7\"") && b.Contains("\"actor_type\":\"agent\"")))
+                .WithBody(b => b != null && b.Contains("\"actor_id\":\"agent-7\"") && b.Contains("\"actor_type\":\"agent\"")))
             .RespondWith(Response.Create().WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
                 .WithBody("{\"id\":\"mem-3\",\"content\":\"content\",\"app_id\":\"app-test\"}"));
 
         using var client = CreateClient();
         var mem = await client.AddAsync("content",
-            new AddOptions { ActorId = "agent-7", ActorType = "agent" });
+            new AddOptions().WithActorId("agent-7").WithActorType("agent"));
 
         Assert.NotNull(mem);
         Assert.Equal("mem-3", mem.Id);
@@ -99,7 +107,7 @@ public class SmriteaClientTests : IDisposable
         Assert.Single(results);
         Assert.Equal("mem-1", results[0].Memory!.Id);
         Assert.Equal("found", results[0].Content);
-        Assert.Equal(0.9, results[0].Score!.Value, 3);
+        Assert.Equal(0.9, results[0].Score, 3);
     }
 
     [Fact]
@@ -216,13 +224,15 @@ public class SmriteaClientTests : IDisposable
     [Fact]
     public async Task AddAsync_429_RetryThenSuccess()
     {
+        // First stub has no WhenStateIs() — it matches in ANY state (including whatever
+        // the initial scenario state is in this WireMock.Net version).  WillSetStateTo
+        // transitions the scenario to "retried" so that subsequent requests hit stub 2.
         _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
             .InScenario("retry")
-            .WhenStateIs("Started")
+            .WillSetStateTo("retried")
             .RespondWith(Response.Create().WithStatusCode(429)
                 .WithHeader("Retry-After", "1")
-                .WithBody("{\"detail\":\"rate limited\"}"))
-            .WillSetStateTo("retried");
+                .WithBody("{\"detail\":\"rate limited\"}"));
         _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
             .InScenario("retry")
             .WhenStateIs("retried")
@@ -251,6 +261,36 @@ public class SmriteaClientTests : IDisposable
 
         Assert.NotNull(ex.RetryAfter);
         Assert.Equal(1, ex.RetryAfter);
+    }
+
+    // -----------------------------------------------------------------------
+    // Deserialization error
+    // -----------------------------------------------------------------------
+
+    [Fact]
+    public async Task AddAsync_NullBody_ThrowsSmriteaDeserializationException()
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
+            .RespondWith(Response.Create().WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody("null"));
+
+        using var client = CreateClient();
+        await Assert.ThrowsAsync<SmriteaDeserializationException>(
+            () => client.AddAsync("x"));
+    }
+
+    [Fact]
+    public async Task GetAsync_NullBody_ThrowsSmriteaDeserializationException()
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories/mem-null").UsingGet())
+            .RespondWith(Response.Create().WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody("null"));
+
+        using var client = CreateClient();
+        await Assert.ThrowsAsync<SmriteaDeserializationException>(
+            () => client.GetAsync("mem-null"));
     }
 
     // -----------------------------------------------------------------------
