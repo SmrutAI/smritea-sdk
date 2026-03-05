@@ -51,20 +51,16 @@ func main() {
     ctx := context.Background()
 
     // Store something about a user
-    client.Add(ctx, "Alice is a vegetarian and loves hiking", &smritea.AddOptions{
-        UserID: strPtr("alice"),
-    })
+    client.Add(ctx, "Alice is a vegetarian and loves hiking",
+        smritea.NewAddOptions().WithUserID("alice"))
 
     // Retrieve it later
-    results, _ := client.Search(ctx, "What are Alice's food preferences?", &smritea.SearchOptions{
-        UserID: strPtr("alice"),
-    })
+    results, _ := client.Search(ctx, "What are Alice's food preferences?",
+        smritea.NewSearchOptions().WithUserID("alice"))
     for _, r := range results {
         fmt.Printf("%v  %v\n", r.Score, r.Memory.Content)
     }
 }
-
-func strPtr(s string) *string { return &s }
 ```
 
 ---
@@ -78,7 +74,7 @@ client := smritea.NewClient(smritea.ClientConfig{
     APIKey:     "sk-...",                   // required
     AppID:      "app_...",                  // required
     BaseURL:    "https://api.smritea.ai",   // optional, default shown
-    MaxRetries: 2,                          // optional, default 2; 0 disables retry
+    MaxRetries: 2,                          // optional, default 2
 })
 ```
 
@@ -89,11 +85,11 @@ client := smritea.NewClient(smritea.ClientConfig{
 ### `Add` — Store a memory
 
 ```go
-memory, err := client.Add(ctx, "User prefers concise replies", &smritea.AddOptions{
-    UserID:         strPtr("alice"),              // shorthand for ActorID + ActorType="user"
-    Metadata:       map[string]interface{}{"source": "chat"}, // optional
-    ConversationID: strPtr("conv_123"),           // optional
-})
+memory, err := client.Add(ctx, "User prefers concise replies",
+    smritea.NewAddOptions().
+        WithUserID("alice").                                           // shorthand for ActorID + ActorType="user"
+        WithMetadata(map[string]interface{}{"source": "chat"}).       // optional
+        WithConversationID("conv_123"))                                // optional
 fmt.Println(memory.Id) // mem_...
 ```
 
@@ -114,12 +110,12 @@ fmt.Println(memory.Id) // mem_...
 ### `Search` — Semantic search
 
 ```go
-results, err := client.Search(ctx, "dietary restrictions", &smritea.SearchOptions{
-    UserID:    strPtr("alice"),
-    Limit:     int32Ptr(5),
-    Method:    strPtr("deep_search"), // "quick_search" | "deep_search" | "context_aware_search"
-    Threshold: float32Ptr(0.7),       // min relevance score 0.0–1.0
-})
+results, err := client.Search(ctx, "dietary restrictions",
+    smritea.NewSearchOptions().
+        WithUserID("alice").
+        WithLimit(5).
+        WithMethod("deep_search").   // "quick_search" | "deep_search" | "context_aware_search"
+        WithThreshold(0.7))          // min relevance score 0.0–1.0
 for _, r := range results {
     fmt.Println(r.Score, r.Memory.Content)
 }
@@ -172,10 +168,8 @@ err := client.Delete(ctx, "mem_abc123")
 > Use `Search()` with a broad query as a workaround:
 
 ```go
-results, _ := client.Search(ctx, "", &smritea.SearchOptions{
-    UserID: strPtr("alice"),
-    Limit:  int32Ptr(100),
-})
+results, _ := client.Search(ctx, "",
+    smritea.NewSearchOptions().WithUserID("alice").WithLimit(100))
 ```
 
 ---
@@ -190,9 +184,8 @@ import (
     smritea "github.com/SmrutAI/smritea-sdk/go"
 )
 
-results, err := client.Search(ctx, "preferences", &smritea.SearchOptions{
-    UserID: strPtr("alice"),
-})
+results, err := client.Search(ctx, "preferences",
+    smritea.NewSearchOptions().WithUserID("alice"))
 if err != nil {
     var authErr *smritea.SmriteaAuthError
     var rateLimitErr *smritea.SmriteaRateLimitError
@@ -237,6 +230,7 @@ if err != nil {
 | `ActorName` | *string | Display name |
 | `Metadata` | map[string]interface{} | Arbitrary key-value pairs |
 | `ConversationId` | *string | Conversation context |
+| `ConversationMessageId` | *string | Message within the conversation |
 | `ActiveFrom` | string | ISO 8601 — when memory becomes valid |
 | `ActiveTo` | *string | ISO 8601 — when memory expires |
 | `CreatedAt` | string | ISO 8601 creation timestamp |

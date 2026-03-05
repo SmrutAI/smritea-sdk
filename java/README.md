@@ -45,7 +45,11 @@ export SMRITEA_APP_ID="app_..."
 
 ```java
 import ai.smritea.sdk.SmriteaClient;
-import ai.smritea.sdk.model.*;
+import ai.smritea.sdk.model.AddOptions;
+import ai.smritea.sdk.model.Memory;
+import ai.smritea.sdk.model.SearchOptions;
+import ai.smritea.sdk.model.SearchResult;
+import java.util.List;
 
 SmriteaClient client = new SmriteaClient(
     System.getenv("SMRITEA_API_KEY"),
@@ -71,13 +75,20 @@ for (SearchResult r : results) {
 ```java
 import ai.smritea.sdk.SmriteaClient;
 
+// Minimal (uses default base URL and 2 retries)
+SmriteaClient client = new SmriteaClient("sk-...", "app_...");
+
+// Full
 SmriteaClient client = new SmriteaClient(
     "sk-...",                           // apiKey — required
     "app_...",                          // appId — required
-    "https://api.smritea.ai",          // baseUrl — optional, default shown
+    "https://api.smritea.ai",           // baseUrl — optional, default shown
     2                                   // maxRetries — optional, default 2; 0 disables retry
 );
 ```
+
+All methods are **synchronous** and return values directly. For async use, wrap calls in a
+`CompletableFuture` or virtual thread (`Thread.ofVirtual()`).
 
 ---
 
@@ -99,12 +110,12 @@ System.out.println(memory.getId()); // mem_...
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `content` | `String` | required | Memory text |
-| `userId` | `String` | `null` | Shorthand: actorId + actorType="user" |
-| `actorId` | `String` | `null` | Explicit actor ID |
-| `actorType` | `String` | `null` | `"user"` \| `"agent"` \| `"system"` |
-| `actorName` | `String` | `null` | Display name |
-| `metadata` | `Map<String, Object>` | `null` | Arbitrary key-value map |
-| `conversationId` | `String` | `null` | Conversation context |
+| `withUserId(v)` | `String` | `null` | Shorthand: actorId + actorType="user" |
+| `withActorId(v)` | `String` | `null` | Explicit actor ID |
+| `withActorType(v)` | `String` | `null` | `"user"` \| `"agent"` \| `"system"` |
+| `withActorName(v)` | `String` | `null` | Display name |
+| `withMetadata(v)` | `Map<String, Object>` | `null` | Arbitrary key-value map |
+| `withConversationId(v)` | `String` | `null` | Conversation context |
 
 ---
 
@@ -133,14 +144,14 @@ Results are ordered by relevance (descending). Each result exposes `getScore()` 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `query` | `String` | required | Search text |
-| `userId` | `String` | `null` | Filter to this user's memories |
-| `actorId` | `String` | `null` | Filter by actor ID |
-| `actorType` | `String` | `null` | Filter by actor type |
-| `limit` | `Integer` | app default | Max results to return |
-| `method` | `String` | app default | Search strategy |
-| `threshold` | `Float` | `null` | Min relevance score 0.0–1.0 |
-| `graphDepth` | `Integer` | `null` | Graph traversal depth override |
-| `conversationId` | `String` | `null` | Conversation context |
+| `withUserId(v)` | `String` | `null` | Filter to this user's memories |
+| `withActorId(v)` | `String` | `null` | Filter by actor ID |
+| `withActorType(v)` | `String` | `null` | Filter by actor type |
+| `withLimit(v)` | `Integer` | app default | Max results to return |
+| `withMethod(v)` | `String` | app default | Search strategy |
+| `withThreshold(v)` | `Float` | `null` | Min relevance score 0.0–1.0 |
+| `withGraphDepth(v)` | `Integer` | `null` | Graph traversal depth override |
+| `withConversationId(v)` | `String` | `null` | Conversation context |
 
 ---
 
@@ -179,8 +190,10 @@ List<SearchResult> results = client.search("", new SearchOptions()
 ## Error handling
 
 ```java
-import ai.smritea.sdk.SmriteaClient;
-import ai.smritea.sdk.errors.*;
+import ai.smritea.sdk.errors.SmriteaAuthError;
+import ai.smritea.sdk.errors.SmriteaRateLimitError;
+import ai.smritea.sdk.errors.SmriteaQuotaError;
+import ai.smritea.sdk.errors.SmriteaError;
 
 try {
     List<SearchResult> results = client.search("preferences",
@@ -203,6 +216,7 @@ try {
 | `SmriteaNotFoundError` | 404 | Memory ID does not exist |
 | `SmriteaQuotaError` | 402 | Organisation quota exceeded |
 | `SmriteaRateLimitError` | 429 | Rate limit hit — check `.getRetryAfter()` |
+| `SmriteaDeserializationError` | — | Server returned an unexpected response body |
 | `SmriteaError` | other | Unexpected server error |
 
 ---
@@ -219,6 +233,7 @@ try {
 | `getActorName()` | String | Display name (nullable) |
 | `getMetadata()` | Map<String, Object> | Arbitrary key-value pairs (nullable) |
 | `getConversationId()` | String | Conversation context (nullable) |
+| `getConversationMessageId()` | String | Message within the conversation (nullable) |
 | `getActiveFrom()` | String | ISO 8601 — when memory becomes valid |
 | `getActiveTo()` | String | ISO 8601 — when memory expires (nullable) |
 | `getCreatedAt()` | String | ISO 8601 creation timestamp |

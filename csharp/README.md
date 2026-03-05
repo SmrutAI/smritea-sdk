@@ -197,6 +197,7 @@ catch (SmriteaException ex)
 | `SmriteaNotFoundException` | 404 | Memory ID does not exist |
 | `SmriteaQuotaException` | 402 | Organisation quota exceeded |
 | `SmriteaRateLimitException` | 429 | Rate limit hit — check `.RetryAfter` |
+| `SmriteaDeserializationException` | — | Server returned an unexpected response body |
 | `SmriteaException` | other | Unexpected server error |
 
 ---
@@ -205,15 +206,16 @@ catch (SmriteaException ex)
 
 | Property | Type | Description |
 |---|---|---|
-| `Id` | string | Memory ID (`mem_...`) |
-| `AppId` | string | App this memory belongs to |
-| `Content` | string | Memory text |
-| `ActorId` | string | Actor who owns this memory |
-| `ActorType` | string | `"user"` \| `"agent"` \| `"system"` |
-| `ActorName` | string? | Display name |
-| `Metadata` | Dictionary<string, object>? | Arbitrary key-value pairs |
-| `ConversationId` | string? | Conversation context |
-| `ActiveFrom` | string | ISO 8601 — when memory becomes valid |
-| `ActiveTo` | string? | ISO 8601 — when memory expires |
-| `CreatedAt` | string | ISO 8601 creation timestamp |
-| `UpdatedAt` | string | ISO 8601 last update timestamp |
+| `Id` | `string?` | Memory ID (`mem_...`) |
+| `AppId` | `string?` | App this memory belongs to |
+| `Content` | `string?` | Memory text |
+| `ActorId` | `string?` | Actor who owns this memory |
+| `ActorType` | `string?` | `"user"` \| `"agent"` \| `"system"` |
+| `ActorName` | `string?` | Display name |
+| `Metadata` | `Dictionary<string, object>?` | Arbitrary key-value pairs |
+| `ConversationId` | `string?` | Conversation context |
+| `ConversationMessageId` | `string?` | Message within the conversation |
+| `ActiveFrom` | `string?` | ISO 8601 — when memory becomes valid |
+| `ActiveTo` | `string?` | ISO 8601 — when memory expires |
+| `CreatedAt` | `string?` | ISO 8601 creation timestamp |
+| `UpdatedAt` | `string?` | ISO 8601 last update timestamp |

@@ -60,6 +60,7 @@ const client = new SmriteaClient({
   apiKey: 'sk-...',                       // required
   appId: 'app_...',                       // required
   baseUrl: 'https://api.smritea.ai',      // optional, default shown
+  maxRetries: 2,                          // optional, default 2; 0 disables retry
 });
 ```
 
@@ -145,9 +146,9 @@ await client.delete('mem_abc123');
 
 ---
 
-### `get_all` — List all memories
+### `getAll` — List all memories
 
-> **Not yet implemented.** There is no `get_all` method in the TypeScript SDK.
+> **Not yet implemented.** `getAll()` throws an `Error` when called.
 > Use `search()` with a broad query as a workaround:
 
 ```typescript
@@ -203,6 +204,7 @@ All fields use `camelCase`.
 | `actorName` | `string?` | Display name |
 | `metadata` | `object?` | Arbitrary key-value pairs |
 | `conversationId` | `string?` | Conversation context |
+| `conversationMessageId` | `string?` | Message within the conversation |
 | `activeFrom` | `string` | ISO 8601 — when memory becomes valid |
 | `activeTo` | `string?` | ISO 8601 — when memory expires |
 | `createdAt` | `string` | ISO 8601 creation timestamp |
