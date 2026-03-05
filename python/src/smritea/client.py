@@ -71,7 +71,7 @@ class SmriteaClient:
         *,
         user_id: str | None = None,
         actor_id: str | None = None,
-        actor_type: str = "user",
+        actor_type: str | None = None,
         actor_name: str | None = None,
         metadata: dict[str, Any] | None = None,
         conversation_id: str | None = None,
@@ -82,7 +82,8 @@ class SmriteaClient:
             content: The memory content to store.
             user_id: Convenience shorthand — sets actor_id and actor_type='user'.
             actor_id: Explicit actor ID (used when user_id is not provided).
-            actor_type: Actor type ('user', 'agent', 'system'). Default 'user'.
+            actor_type: Actor type ('user', 'agent', 'system').
+                Defaults to None (server uses app default).
             actor_name: Optional display name for the actor.
             metadata: Optional key-value metadata.
             conversation_id: Optional conversation context.

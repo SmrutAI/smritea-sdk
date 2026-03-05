@@ -3,6 +3,7 @@
 from smritea.client import SmriteaClient
 from smritea.exceptions import (
     SmriteaAuthError,
+    SmriteaDeserializationError,
     SmriteaError,
     SmriteaNotFoundError,
     SmriteaQuotaError,
@@ -17,6 +18,7 @@ __all__ = [
     "SearchResult",
     "SmriteaError",
     "SmriteaAuthError",
+    "SmriteaDeserializationError",
     "SmriteaNotFoundError",
     "SmriteaValidationError",
     "SmriteaQuotaError",

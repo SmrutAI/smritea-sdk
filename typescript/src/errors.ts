@@ -52,6 +52,19 @@ export class SmriteaQuotaError extends SmriteaError {
 }
 
 /**
+ * Raised when the server returns a response that cannot be deserialized.
+ * This typically indicates an unexpected API response format or a server-side
+ * error that produced a malformed body.
+ */
+export class SmriteaDeserializationError extends SmriteaError {
+  constructor(message: string, statusCode?: number) {
+    super(message, statusCode);
+    this.name = 'SmriteaDeserializationError';
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+/**
  * HTTP 429 -- rate limit exceeded after all retries are exhausted.
  *
  * `retryAfter` is the value from the server's Retry-After header (seconds),

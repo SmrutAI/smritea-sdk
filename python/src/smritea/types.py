@@ -39,7 +39,7 @@ __all__ = ["Memory", "SearchResult", "MemorySearchMemoriesResponse"]
 # ---------------------------------------------------------------------------
 
 
-class AddMemoryOptions(BaseModel):
+class AddOptions(BaseModel):
     """Options for SmriteaClient.add().
 
     ``user_id`` is a convenience shorthand: sets ``actor_id`` and forces
@@ -49,7 +49,7 @@ class AddMemoryOptions(BaseModel):
 
     user_id: str | None = None
     actor_id: str | None = None
-    actor_type: str = "user"
+    actor_type: str | None = None
     actor_name: str | None = None
     metadata: dict[str, Any] | None = None
     conversation_id: str | None = None

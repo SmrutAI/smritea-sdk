@@ -11,7 +11,7 @@ export type {
   MemorySearchMemoryResponse as SearchResult,
 } from './_internal/autogen/models/index.js';
 
-export interface AddMemoryOptions {
+export interface AddOptions {
   /** Shorthand: sets actor_id and actor_type="user". Takes precedence if actorId also set. */
   userId?: string;
   /** Explicit actor ID. Use when actor_type is not "user". */

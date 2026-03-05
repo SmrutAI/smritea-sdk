@@ -35,6 +35,14 @@ class SmriteaQuotaError(SmriteaError):
     """Raised on HTTP 402 — quota exceeded for this organization."""
 
 
+class SmriteaDeserializationError(SmriteaError):
+    """Raised when the server returns a response that cannot be deserialized.
+
+    This typically indicates an unexpected API response format or a server-side
+    error that produced a malformed body.
+    """
+
+
 class SmriteaRateLimitError(SmriteaError):
     """Raised on HTTP 429 — rate limit exceeded after all retries are exhausted.
 

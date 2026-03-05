@@ -41,6 +41,13 @@ type SmriteaQuotaError struct {
 	SmriteaError
 }
 
+// SmriteaDeserializationError is returned when the server returns a response that cannot
+// be deserialized. This typically indicates an unexpected API response format or a
+// server-side error that produced a malformed body.
+type SmriteaDeserializationError struct {
+	SmriteaError
+}
+
 // SmriteaRateLimitError is returned when the server responds with HTTP 429 Too Many Requests.
 // RetryAfter holds the number of seconds to wait before retrying, parsed from the
 // Retry-After response header. It is nil if the header was absent or unparseable.

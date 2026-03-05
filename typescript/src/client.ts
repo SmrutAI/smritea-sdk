@@ -1,6 +1,6 @@
 import { Configuration, ResponseError } from './_internal/autogen/runtime.js';
 import { SDKMemoryApi } from './_internal/autogen/apis/SDKMemoryApi.js';
-import type { AddMemoryOptions, Memory, SearchOptions, SearchResult, SmriteaClientConfig } from './types.js';
+import type { AddOptions, Memory, SearchOptions, SearchResult, SmriteaClientConfig } from './types.js';
 import {
   SmriteaAuthError,
   SmriteaError,
@@ -27,7 +27,7 @@ export class SmriteaClient {
     this.api = new SDKMemoryApi(configuration);
   }
 
-  async add(content: string, options?: AddMemoryOptions): Promise<Memory> {
+  async add(content: string, options?: AddOptions): Promise<Memory> {
     const actorId = options?.userId ?? options?.actorId;
     const actorType = options?.userId !== undefined ? 'user' : options?.actorType;
 
