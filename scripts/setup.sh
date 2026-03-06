@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
+# smritea SDK — per-language development tool setup
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# DRIFT PREVENTION
+# When adding a new tool or language here, also add it to
+# /path/to/smriti/.devcontainer/Dockerfile.dev so the dev container stays
+# in sync. The Dockerfile is the primary install surface; this script is a
+# fallback/validator that skips anything already present in PATH.
+# ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -36,14 +45,29 @@ _check_cmd() {
     fi
 }
 
+# Returns 0 on macOS, 1 on Linux/other.
+# Use this to guard every brew / --cask call so they never run in the
+# Docker dev container or any other Linux environment.
+_is_macos() { [[ "$(uname -s)" == "Darwin" ]]; }
+
+# Shown when a tool is missing on Linux.  These tools are baked into the
+# Docker image; a missing binary means the image is out of date.
+_linux_missing() {
+    local tool="$1"
+    _err "${tool} not found on Linux."
+    _warn "This tool should be pre-installed in the Docker image."
+    _warn "Rebuild: docker build -f .devcontainer/Dockerfile.dev -t smriti-dev ."
+}
+
 # ── Per-language setup ────────────────────────────────────────────────
 setup_python() {
     _info "Setting up Python SDK tools..."
     if ! _check_cmd uv; then
         _info "Installing uv..."
-        if command -v brew &>/dev/null; then
+        if _is_macos && command -v brew &>/dev/null; then
             brew install uv
         else
+            # Portable installer — works on macOS and Linux alike.
             curl -LsSf https://astral.sh/uv/install.sh | sh
         fi
     fi
@@ -55,7 +79,11 @@ setup_python() {
 setup_typescript() {
     _info "Setting up TypeScript SDK tools..."
     if ! _check_cmd node; then
-        _err "Node.js not found. Install Node 18+ via: brew install node"
+        if _is_macos; then
+            _err "Node.js not found. Install Node 18+ via: brew install node"
+        else
+            _linux_missing "node"
+        fi
         _track_failure "TypeScript: node not found"
         return
     fi
@@ -67,13 +95,22 @@ setup_typescript() {
 setup_go() {
     _info "Setting up Go SDK tools..."
     if ! _check_cmd go; then
-        _err "Go not found. Install Go 1.22+ via: brew install go"
+        if _is_macos; then
+            _err "Go not found. Install Go 1.22+ via: brew install go"
+        else
+            _linux_missing "go"
+        fi
         _track_failure "Go: go not found"
         return
     fi
     if ! _check_cmd golangci-lint; then
         _info "Installing golangci-lint..."
-        brew install golangci-lint 2>/dev/null || go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+        # go install works on all platforms; brew is macOS-only convenience.
+        if _is_macos && command -v brew &>/dev/null; then
+            brew install golangci-lint
+        else
+            go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+        fi
     fi
     if ! _check_cmd goimports; then
         _info "Installing goimports..."
@@ -90,20 +127,20 @@ setup_java() {
     _info "Setting up Java SDK tools..."
     if ! _check_cmd java; then
         _info "Installing OpenJDK..."
-        if command -v brew &>/dev/null; then
+        if _is_macos && command -v brew &>/dev/null; then
             brew install openjdk
         else
-            _err "JDK not found and brew unavailable. Install JDK 11+ manually."
+            _linux_missing "java (OpenJDK 21)"
             _track_failure "Java: java not found"
             return
         fi
     fi
     if ! _check_cmd mvn; then
         _info "Installing Maven..."
-        if command -v brew &>/dev/null; then
+        if _is_macos && command -v brew &>/dev/null; then
             brew install maven
         else
-            _err "Maven not found and brew unavailable. Install Maven 3+ manually."
+            _linux_missing "mvn (Maven)"
             _track_failure "Java: mvn not found"
             return
         fi
@@ -117,10 +154,11 @@ setup_csharp() {
     _info "Setting up C# SDK tools..."
     if ! _check_cmd dotnet; then
         _info "Installing .NET SDK..."
-        if command -v brew &>/dev/null; then
+        if _is_macos && command -v brew &>/dev/null; then
+            # brew --cask is macOS-only; never runs on Linux.
             brew install --cask dotnet-sdk
         else
-            _err ".NET SDK not found and brew unavailable. Install .NET 8+ manually."
+            _linux_missing "dotnet (.NET SDK 8)"
             _track_failure "C#: dotnet not found"
             return
         fi
@@ -134,7 +172,16 @@ setup_hooks() {
     _info "Setting up pre-commit hooks..."
     if ! _check_cmd pre-commit; then
         _info "Installing pre-commit..."
-        pip3 install pre-commit 2>/dev/null || brew install pre-commit
+        # pip3 is the portable path; brew is macOS-only fallback.
+        if pip3 install pre-commit 2>/dev/null; then
+            _ok "pre-commit installed via pip3"
+        elif _is_macos && command -v brew &>/dev/null; then
+            brew install pre-commit
+        else
+            _linux_missing "pre-commit"
+            _track_failure "Hooks: pre-commit not found"
+            return
+        fi
     fi
     cd "$SDK_ROOT" && pre-commit install
     _ok "Pre-commit hooks installed"
