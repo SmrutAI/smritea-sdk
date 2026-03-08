@@ -10,41 +10,48 @@
  * Do not edit the class manually.
  */
 
+
 package ai.smritea.sdk._internal.autogen.model;
 
-import ai.smritea.sdk._internal.autogen.ApiClient;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.StringJoiner;
+import java.util.Objects;
+import java.util.Map;
+import java.util.HashMap;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigDecimal;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-/** CommondtoRelativeStandingConfig */
+
+import ai.smritea.sdk._internal.autogen.ApiClient;
+/**
+ * CommondtoRelativeStandingConfig
+ */
 @JsonPropertyOrder({
   CommondtoRelativeStandingConfig.JSON_PROPERTY_DECAY_FACTOR,
   CommondtoRelativeStandingConfig.JSON_PROPERTY_DECAY_FUNCTION,
   CommondtoRelativeStandingConfig.JSON_PROPERTY_IMPORTANCE
 })
-@javax.annotation.Generated(
-    value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    date = "2026-03-05T18:33:01.293352+05:30[Asia/Kolkata]",
-    comments = "Generator version: 7.19.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.19.0")
 public class CommondtoRelativeStandingConfig {
   public static final String JSON_PROPERTY_DECAY_FACTOR = "decay_factor";
-  @javax.annotation.Nullable private BigDecimal decayFactor;
+  @javax.annotation.Nullable
+  private BigDecimal decayFactor;
 
   /**
-   * DecayFunction selects the temporal decay algorithm. Defaults to \&quot;exponential\&quot;.
-   * Options: exponential, gaussian, linear.
+   * DecayFunction selects the temporal decay algorithm. Defaults to \&quot;exponential\&quot;. Options: exponential, gaussian, linear.
    */
   public enum DecayFunctionEnum {
     EXPONENTIAL(String.valueOf("exponential")),
-
+    
     GAUSSIAN(String.valueOf("gaussian")),
-
+    
     LINEAR(String.valueOf("linear"));
 
     private String value;
@@ -75,23 +82,23 @@ public class CommondtoRelativeStandingConfig {
   }
 
   public static final String JSON_PROPERTY_DECAY_FUNCTION = "decay_function";
-  @javax.annotation.Nullable private DecayFunctionEnum decayFunction;
+  @javax.annotation.Nullable
+  private DecayFunctionEnum decayFunction;
 
   public static final String JSON_PROPERTY_IMPORTANCE = "importance";
-  @javax.annotation.Nullable private BigDecimal importance;
+  @javax.annotation.Nullable
+  private BigDecimal importance;
 
-  public CommondtoRelativeStandingConfig() {}
+  public CommondtoRelativeStandingConfig() { 
+  }
 
-  public CommondtoRelativeStandingConfig decayFactor(
-      @javax.annotation.Nullable BigDecimal decayFactor) {
+  public CommondtoRelativeStandingConfig decayFactor(@javax.annotation.Nullable BigDecimal decayFactor) {
     this.decayFactor = decayFactor;
     return this;
   }
 
   /**
-   * DecayFactor modulates the temporal decay rate: effectiveRate &#x3D; baseRate × decay_factor. 0
-   * &#x3D; no decay (pinned), 0.2 &#x3D; light, 1.0 &#x3D; standard, 3.0+ &#x3D; aggressive.
-   *
+   * DecayFactor modulates the temporal decay rate: effectiveRate &#x3D; baseRate × decay_factor. 0 &#x3D; no decay (pinned), 0.2 &#x3D; light, 1.0 &#x3D; standard, 3.0+ &#x3D; aggressive.
    * @return decayFactor
    */
   @javax.annotation.Nullable
@@ -101,22 +108,21 @@ public class CommondtoRelativeStandingConfig {
     return decayFactor;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_DECAY_FACTOR, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setDecayFactor(@javax.annotation.Nullable BigDecimal decayFactor) {
     this.decayFactor = decayFactor;
   }
 
-  public CommondtoRelativeStandingConfig decayFunction(
-      @javax.annotation.Nullable DecayFunctionEnum decayFunction) {
+
+  public CommondtoRelativeStandingConfig decayFunction(@javax.annotation.Nullable DecayFunctionEnum decayFunction) {
     this.decayFunction = decayFunction;
     return this;
   }
 
   /**
-   * DecayFunction selects the temporal decay algorithm. Defaults to \&quot;exponential\&quot;.
-   * Options: exponential, gaussian, linear.
-   *
+   * DecayFunction selects the temporal decay algorithm. Defaults to \&quot;exponential\&quot;. Options: exponential, gaussian, linear.
    * @return decayFunction
    */
   @javax.annotation.Nullable
@@ -126,22 +132,21 @@ public class CommondtoRelativeStandingConfig {
     return decayFunction;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_DECAY_FUNCTION, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setDecayFunction(@javax.annotation.Nullable DecayFunctionEnum decayFunction) {
     this.decayFunction = decayFunction;
   }
 
-  public CommondtoRelativeStandingConfig importance(
-      @javax.annotation.Nullable BigDecimal importance) {
+
+  public CommondtoRelativeStandingConfig importance(@javax.annotation.Nullable BigDecimal importance) {
     this.importance = importance;
     return this;
   }
 
   /**
-   * Importance is the memory importance score (0-1, default 1.0). Used as a ranking signal in RRF
-   * reranking — higher importance &#x3D; better rank.
-   *
+   * Importance is the memory importance score (0-1, default 1.0). Used as a ranking signal in RRF reranking — higher importance &#x3D; better rank.
    * @return importance
    */
   @javax.annotation.Nullable
@@ -151,13 +156,17 @@ public class CommondtoRelativeStandingConfig {
     return importance;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_IMPORTANCE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setImportance(@javax.annotation.Nullable BigDecimal importance) {
     this.importance = importance;
   }
 
-  /** Return true if this commondto.RelativeStandingConfig object is equal to o. */
+
+  /**
+   * Return true if this commondto.RelativeStandingConfig object is equal to o.
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -166,11 +175,10 @@ public class CommondtoRelativeStandingConfig {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CommondtoRelativeStandingConfig commondtoRelativeStandingConfig =
-        (CommondtoRelativeStandingConfig) o;
-    return Objects.equals(this.decayFactor, commondtoRelativeStandingConfig.decayFactor)
-        && Objects.equals(this.decayFunction, commondtoRelativeStandingConfig.decayFunction)
-        && Objects.equals(this.importance, commondtoRelativeStandingConfig.importance);
+    CommondtoRelativeStandingConfig commondtoRelativeStandingConfig = (CommondtoRelativeStandingConfig) o;
+    return Objects.equals(this.decayFactor, commondtoRelativeStandingConfig.decayFactor) &&
+        Objects.equals(this.decayFunction, commondtoRelativeStandingConfig.decayFunction) &&
+        Objects.equals(this.importance, commondtoRelativeStandingConfig.importance);
   }
 
   @Override
@@ -190,7 +198,8 @@ public class CommondtoRelativeStandingConfig {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -233,37 +242,20 @@ public class CommondtoRelativeStandingConfig {
 
     // add `decay_factor` to the URL query string
     if (getDecayFactor() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sdecay_factor%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getDecayFactor()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sdecay_factor%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getDecayFactor()))));
     }
 
     // add `decay_function` to the URL query string
     if (getDecayFunction() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sdecay_function%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getDecayFunction()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sdecay_function%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getDecayFunction()))));
     }
 
     // add `importance` to the URL query string
     if (getImportance() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%simportance%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getImportance()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%simportance%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getImportance()))));
     }
 
     return joiner.toString();
   }
 }
+

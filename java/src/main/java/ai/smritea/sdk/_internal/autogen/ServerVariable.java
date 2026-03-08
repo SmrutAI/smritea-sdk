@@ -10,29 +10,28 @@
  * Do not edit the class manually.
  */
 
+
 package ai.smritea.sdk._internal.autogen;
 
 import java.util.HashSet;
 
-/** Representing a Server Variable for server URL template substitution. */
-@javax.annotation.Generated(
-    value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    date = "2026-03-05T18:33:01.293352+05:30[Asia/Kolkata]",
-    comments = "Generator version: 7.19.0")
+/**
+ * Representing a Server Variable for server URL template substitution.
+ */
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.19.0")
 public class ServerVariable {
-  public String description;
-  public String defaultValue;
-  public HashSet<String> enumValues = null;
+    public String description;
+    public String defaultValue;
+    public HashSet<String> enumValues = null;
 
-  /**
-   * @param description A description for the server variable.
-   * @param defaultValue The default value to use for substitution.
-   * @param enumValues An enumeration of string values to be used if the substitution options are
-   *     from a limited set.
-   */
-  public ServerVariable(String description, String defaultValue, HashSet<String> enumValues) {
-    this.description = description;
-    this.defaultValue = defaultValue;
-    this.enumValues = enumValues;
-  }
+    /**
+     * @param description A description for the server variable.
+     * @param defaultValue The default value to use for substitution.
+     * @param enumValues An enumeration of string values to be used if the substitution options are from a limited set.
+     */
+    public ServerVariable(String description, String defaultValue, HashSet<String> enumValues) {
+        this.description = description;
+        this.defaultValue = defaultValue;
+        this.enumValues = enumValues;
+    }
 }

@@ -10,36 +10,50 @@
  * Do not edit the class manually.
  */
 
+
 package ai.smritea.sdk._internal.autogen.model;
 
-import ai.smritea.sdk._internal.autogen.ApiClient;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.StringJoiner;
+import java.util.Objects;
+import java.util.Map;
+import java.util.HashMap;
+import ai.smritea.sdk._internal.autogen.model.ErrorsErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import java.util.Objects;
-import java.util.StringJoiner;
 
-/** ErrorsAppError */
+
+import ai.smritea.sdk._internal.autogen.ApiClient;
+/**
+ * ErrorsAppError
+ */
 @JsonPropertyOrder({
   ErrorsAppError.JSON_PROPERTY_CODE,
   ErrorsAppError.JSON_PROPERTY_DETAILS,
   ErrorsAppError.JSON_PROPERTY_MESSAGE
 })
-@javax.annotation.Generated(
-    value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    date = "2026-03-05T18:33:01.293352+05:30[Asia/Kolkata]",
-    comments = "Generator version: 7.19.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.19.0")
 public class ErrorsAppError {
   public static final String JSON_PROPERTY_CODE = "code";
-  @javax.annotation.Nullable private ErrorsErrorCode code;
+  @javax.annotation.Nullable
+  private ErrorsErrorCode code;
 
   public static final String JSON_PROPERTY_DETAILS = "details";
-  @javax.annotation.Nullable private String details;
+  @javax.annotation.Nullable
+  private String details;
 
   public static final String JSON_PROPERTY_MESSAGE = "message";
-  @javax.annotation.Nullable private String message;
+  @javax.annotation.Nullable
+  private String message;
 
-  public ErrorsAppError() {}
+  public ErrorsAppError() { 
+  }
 
   public ErrorsAppError code(@javax.annotation.Nullable ErrorsErrorCode code) {
     this.code = code;
@@ -48,7 +62,6 @@ public class ErrorsAppError {
 
   /**
    * Get code
-   *
    * @return code
    */
   @javax.annotation.Nullable
@@ -58,11 +71,13 @@ public class ErrorsAppError {
     return code;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_CODE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setCode(@javax.annotation.Nullable ErrorsErrorCode code) {
     this.code = code;
   }
+
 
   public ErrorsAppError details(@javax.annotation.Nullable String details) {
     this.details = details;
@@ -71,7 +86,6 @@ public class ErrorsAppError {
 
   /**
    * Get details
-   *
    * @return details
    */
   @javax.annotation.Nullable
@@ -81,11 +95,13 @@ public class ErrorsAppError {
     return details;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_DETAILS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setDetails(@javax.annotation.Nullable String details) {
     this.details = details;
   }
+
 
   public ErrorsAppError message(@javax.annotation.Nullable String message) {
     this.message = message;
@@ -94,7 +110,6 @@ public class ErrorsAppError {
 
   /**
    * Get message
-   *
    * @return message
    */
   @javax.annotation.Nullable
@@ -104,13 +119,17 @@ public class ErrorsAppError {
     return message;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMessage(@javax.annotation.Nullable String message) {
     this.message = message;
   }
 
-  /** Return true if this errors.AppError object is equal to o. */
+
+  /**
+   * Return true if this errors.AppError object is equal to o.
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -120,9 +139,9 @@ public class ErrorsAppError {
       return false;
     }
     ErrorsAppError errorsAppError = (ErrorsAppError) o;
-    return Objects.equals(this.code, errorsAppError.code)
-        && Objects.equals(this.details, errorsAppError.details)
-        && Objects.equals(this.message, errorsAppError.message);
+    return Objects.equals(this.code, errorsAppError.code) &&
+        Objects.equals(this.details, errorsAppError.details) &&
+        Objects.equals(this.message, errorsAppError.message);
   }
 
   @Override
@@ -142,7 +161,8 @@ public class ErrorsAppError {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -185,37 +205,20 @@ public class ErrorsAppError {
 
     // add `code` to the URL query string
     if (getCode() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%scode%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getCode()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%scode%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getCode()))));
     }
 
     // add `details` to the URL query string
     if (getDetails() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sdetails%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getDetails()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sdetails%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getDetails()))));
     }
 
     // add `message` to the URL query string
     if (getMessage() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%smessage%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getMessage()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%smessage%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMessage()))));
     }
 
     return joiner.toString();
   }
 }
+

@@ -10,19 +10,31 @@
  * Do not edit the class manually.
  */
 
+
 package ai.smritea.sdk._internal.autogen.model;
 
-import ai.smritea.sdk._internal.autogen.ApiClient;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.StringJoiner;
+import java.util.Objects;
+import java.util.Map;
+import java.util.HashMap;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-/** CommondtoEntityExtractionConfig */
+
+import ai.smritea.sdk._internal.autogen.ApiClient;
+/**
+ * CommondtoEntityExtractionConfig
+ */
 @JsonPropertyOrder({
   CommondtoEntityExtractionConfig.JSON_PROPERTY_CONTEXT_WINDOW,
   CommondtoEntityExtractionConfig.JSON_PROPERTY_ENABLE_CONTEXT,
@@ -34,50 +46,54 @@ import java.util.StringJoiner;
   CommondtoEntityExtractionConfig.JSON_PROPERTY_MODEL,
   CommondtoEntityExtractionConfig.JSON_PROPERTY_TEMPERATURE
 })
-@javax.annotation.Generated(
-    value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    date = "2026-03-05T18:33:01.293352+05:30[Asia/Kolkata]",
-    comments = "Generator version: 7.19.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.19.0")
 public class CommondtoEntityExtractionConfig {
   public static final String JSON_PROPERTY_CONTEXT_WINDOW = "context_window";
-  @javax.annotation.Nullable private Integer contextWindow;
+  @javax.annotation.Nullable
+  private Integer contextWindow;
 
   public static final String JSON_PROPERTY_ENABLE_CONTEXT = "enable_context";
-  @javax.annotation.Nullable private Boolean enableContext;
+  @javax.annotation.Nullable
+  private Boolean enableContext;
 
   public static final String JSON_PROPERTY_ENTITY_TYPES = "entity_types";
-  @javax.annotation.Nullable private List<String> entityTypes = new ArrayList<>();
+  @javax.annotation.Nullable
+  private List<String> entityTypes = new ArrayList<>();
 
   public static final String JSON_PROPERTY_FALLBACK_MESSAGES = "fallback_messages";
-  @javax.annotation.Nullable private Integer fallbackMessages;
+  @javax.annotation.Nullable
+  private Integer fallbackMessages;
 
   public static final String JSON_PROPERTY_MAX_PASSES = "max_passes";
-  @javax.annotation.Nullable private Integer maxPasses;
+  @javax.annotation.Nullable
+  private Integer maxPasses;
 
   public static final String JSON_PROPERTY_MAX_TOKENS = "max_tokens";
-  @javax.annotation.Nullable private Integer maxTokens;
+  @javax.annotation.Nullable
+  private Integer maxTokens;
 
   public static final String JSON_PROPERTY_MIN_CONFIDENCE = "min_confidence";
-  @javax.annotation.Nullable private BigDecimal minConfidence;
+  @javax.annotation.Nullable
+  private BigDecimal minConfidence;
 
   public static final String JSON_PROPERTY_MODEL = "model";
-  @javax.annotation.Nullable private String model;
+  @javax.annotation.Nullable
+  private String model;
 
   public static final String JSON_PROPERTY_TEMPERATURE = "temperature";
-  @javax.annotation.Nullable private BigDecimal temperature;
+  @javax.annotation.Nullable
+  private BigDecimal temperature;
 
-  public CommondtoEntityExtractionConfig() {}
+  public CommondtoEntityExtractionConfig() { 
+  }
 
-  public CommondtoEntityExtractionConfig contextWindow(
-      @javax.annotation.Nullable Integer contextWindow) {
+  public CommondtoEntityExtractionConfig contextWindow(@javax.annotation.Nullable Integer contextWindow) {
     this.contextWindow = contextWindow;
     return this;
   }
 
   /**
-   * ContextWindow is the number of previous messages to include in context. Only used when
-   * EnableContext is true. 0 means use default (10 messages).
-   *
+   * ContextWindow is the number of previous messages to include in context. Only used when EnableContext is true. 0 means use default (10 messages).
    * @return contextWindow
    */
   @javax.annotation.Nullable
@@ -87,23 +103,21 @@ public class CommondtoEntityExtractionConfig {
     return contextWindow;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_CONTEXT_WINDOW, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setContextWindow(@javax.annotation.Nullable Integer contextWindow) {
     this.contextWindow = contextWindow;
   }
 
-  public CommondtoEntityExtractionConfig enableContext(
-      @javax.annotation.Nullable Boolean enableContext) {
+
+  public CommondtoEntityExtractionConfig enableContext(@javax.annotation.Nullable Boolean enableContext) {
     this.enableContext = enableContext;
     return this;
   }
 
   /**
-   * EnableContext enables context-aware extraction using conversation history. When true,
-   * extraction considers previous messages in the conversation for better entity resolution and
-   * relationship detection.
-   *
+   * EnableContext enables context-aware extraction using conversation history. When true, extraction considers previous messages in the conversation for better entity resolution and relationship detection.
    * @return enableContext
    */
   @javax.annotation.Nullable
@@ -113,14 +127,15 @@ public class CommondtoEntityExtractionConfig {
     return enableContext;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_ENABLE_CONTEXT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setEnableContext(@javax.annotation.Nullable Boolean enableContext) {
     this.enableContext = enableContext;
   }
 
-  public CommondtoEntityExtractionConfig entityTypes(
-      @javax.annotation.Nullable List<String> entityTypes) {
+
+  public CommondtoEntityExtractionConfig entityTypes(@javax.annotation.Nullable List<String> entityTypes) {
     this.entityTypes = entityTypes;
     return this;
   }
@@ -134,9 +149,7 @@ public class CommondtoEntityExtractionConfig {
   }
 
   /**
-   * EntityTypes filters which entity types to extract (empty &#x3D; all types). Valid types:
-   * person, organization, concept, location, event, product, other
-   *
+   * EntityTypes filters which entity types to extract (empty &#x3D; all types). Valid types: person, organization, concept, location, event, product, other
    * @return entityTypes
    */
   @javax.annotation.Nullable
@@ -146,22 +159,21 @@ public class CommondtoEntityExtractionConfig {
     return entityTypes;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_ENTITY_TYPES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setEntityTypes(@javax.annotation.Nullable List<String> entityTypes) {
     this.entityTypes = entityTypes;
   }
 
-  public CommondtoEntityExtractionConfig fallbackMessages(
-      @javax.annotation.Nullable Integer fallbackMessages) {
+
+  public CommondtoEntityExtractionConfig fallbackMessages(@javax.annotation.Nullable Integer fallbackMessages) {
     this.fallbackMessages = fallbackMessages;
     return this;
   }
 
   /**
-   * FallbackMessages is the minimum number of messages to include even if the conversation is
-   * shorter than ContextWindow. Prevents empty context.
-   *
+   * FallbackMessages is the minimum number of messages to include even if the conversation is shorter than ContextWindow. Prevents empty context.
    * @return fallbackMessages
    */
   @javax.annotation.Nullable
@@ -171,11 +183,13 @@ public class CommondtoEntityExtractionConfig {
     return fallbackMessages;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_FALLBACK_MESSAGES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setFallbackMessages(@javax.annotation.Nullable Integer fallbackMessages) {
     this.fallbackMessages = fallbackMessages;
   }
+
 
   public CommondtoEntityExtractionConfig maxPasses(@javax.annotation.Nullable Integer maxPasses) {
     this.maxPasses = maxPasses;
@@ -183,11 +197,7 @@ public class CommondtoEntityExtractionConfig {
   }
 
   /**
-   * MaxPasses controls how many extraction passes to perform. -1 &#x3D; explicitly skip entity
-   * extraction (sentinel value). 0 &#x3D; not specified (Go zero value), use default. 1-5 &#x3D;
-   * run N extraction passes. Multiple passes can improve extraction quality but increase cost and
-   * latency.
-   *
+   * MaxPasses controls how many extraction passes to perform. -1 &#x3D; explicitly skip entity extraction (sentinel value). 0 &#x3D; not specified (Go zero value), use default. 1-5 &#x3D; run N extraction passes. Multiple passes can improve extraction quality but increase cost and latency.
    * @return maxPasses
    */
   @javax.annotation.Nullable
@@ -197,11 +207,13 @@ public class CommondtoEntityExtractionConfig {
     return maxPasses;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_MAX_PASSES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMaxPasses(@javax.annotation.Nullable Integer maxPasses) {
     this.maxPasses = maxPasses;
   }
+
 
   public CommondtoEntityExtractionConfig maxTokens(@javax.annotation.Nullable Integer maxTokens) {
     this.maxTokens = maxTokens;
@@ -209,11 +221,7 @@ public class CommondtoEntityExtractionConfig {
   }
 
   /**
-   * MaxTokens is the maximum completion tokens for LLM responses. 0 &#x3D; not set (use default).
-   * Higher values allow more entities but increase cost.
-   * TODO(https://linear.app/bityantriki/issue/BIT-83): revert gte&#x3D;0 to gte&#x3D;100 once
-   * pedantigo applies defaults to nested structs during Validate()
-   *
+   * MaxTokens is the maximum completion tokens for LLM responses. 0 &#x3D; not set (use default). Higher values allow more entities but increase cost. TODO(https://linear.app/bityantriki/issue/BIT-83): revert gte&#x3D;0 to gte&#x3D;100 once pedantigo applies defaults to nested structs during Validate()
    * @return maxTokens
    */
   @javax.annotation.Nullable
@@ -223,22 +231,21 @@ public class CommondtoEntityExtractionConfig {
     return maxTokens;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_MAX_TOKENS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMaxTokens(@javax.annotation.Nullable Integer maxTokens) {
     this.maxTokens = maxTokens;
   }
 
-  public CommondtoEntityExtractionConfig minConfidence(
-      @javax.annotation.Nullable BigDecimal minConfidence) {
+
+  public CommondtoEntityExtractionConfig minConfidence(@javax.annotation.Nullable BigDecimal minConfidence) {
     this.minConfidence = minConfidence;
     return this;
   }
 
   /**
-   * MinConfidence is the minimum confidence threshold for extracted entities (0.0 to 1.0). Entities
-   * below this threshold are filtered out.
-   *
+   * MinConfidence is the minimum confidence threshold for extracted entities (0.0 to 1.0). Entities below this threshold are filtered out.
    * @return minConfidence
    */
   @javax.annotation.Nullable
@@ -248,11 +255,13 @@ public class CommondtoEntityExtractionConfig {
     return minConfidence;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_MIN_CONFIDENCE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMinConfidence(@javax.annotation.Nullable BigDecimal minConfidence) {
     this.minConfidence = minConfidence;
   }
+
 
   public CommondtoEntityExtractionConfig model(@javax.annotation.Nullable String model) {
     this.model = model;
@@ -260,9 +269,7 @@ public class CommondtoEntityExtractionConfig {
   }
 
   /**
-   * Model is the LLM model to use (empty &#x3D; use provider default). Examples:
-   * \&quot;gpt-4\&quot;, \&quot;gpt-3.5-turbo\&quot;, \&quot;llama-3.3-70b-versatile\&quot;
-   *
+   * Model is the LLM model to use (empty &#x3D; use provider default). Examples: \&quot;gpt-4\&quot;, \&quot;gpt-3.5-turbo\&quot;, \&quot;llama-3.3-70b-versatile\&quot;
    * @return model
    */
   @javax.annotation.Nullable
@@ -272,22 +279,21 @@ public class CommondtoEntityExtractionConfig {
     return model;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setModel(@javax.annotation.Nullable String model) {
     this.model = model;
   }
 
-  public CommondtoEntityExtractionConfig temperature(
-      @javax.annotation.Nullable BigDecimal temperature) {
+
+  public CommondtoEntityExtractionConfig temperature(@javax.annotation.Nullable BigDecimal temperature) {
     this.temperature = temperature;
     return this;
   }
 
   /**
-   * Temperature controls LLM randomness (0.0 &#x3D; deterministic, higher &#x3D; creative). For
-   * extraction, lower values (0.0-0.3) are recommended for consistency.
-   *
+   * Temperature controls LLM randomness (0.0 &#x3D; deterministic, higher &#x3D; creative). For extraction, lower values (0.0-0.3) are recommended for consistency.
    * @return temperature
    */
   @javax.annotation.Nullable
@@ -297,13 +303,17 @@ public class CommondtoEntityExtractionConfig {
     return temperature;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_TEMPERATURE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setTemperature(@javax.annotation.Nullable BigDecimal temperature) {
     this.temperature = temperature;
   }
 
-  /** Return true if this commondto.EntityExtractionConfig object is equal to o. */
+
+  /**
+   * Return true if this commondto.EntityExtractionConfig object is equal to o.
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -312,31 +322,21 @@ public class CommondtoEntityExtractionConfig {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CommondtoEntityExtractionConfig commondtoEntityExtractionConfig =
-        (CommondtoEntityExtractionConfig) o;
-    return Objects.equals(this.contextWindow, commondtoEntityExtractionConfig.contextWindow)
-        && Objects.equals(this.enableContext, commondtoEntityExtractionConfig.enableContext)
-        && Objects.equals(this.entityTypes, commondtoEntityExtractionConfig.entityTypes)
-        && Objects.equals(this.fallbackMessages, commondtoEntityExtractionConfig.fallbackMessages)
-        && Objects.equals(this.maxPasses, commondtoEntityExtractionConfig.maxPasses)
-        && Objects.equals(this.maxTokens, commondtoEntityExtractionConfig.maxTokens)
-        && Objects.equals(this.minConfidence, commondtoEntityExtractionConfig.minConfidence)
-        && Objects.equals(this.model, commondtoEntityExtractionConfig.model)
-        && Objects.equals(this.temperature, commondtoEntityExtractionConfig.temperature);
+    CommondtoEntityExtractionConfig commondtoEntityExtractionConfig = (CommondtoEntityExtractionConfig) o;
+    return Objects.equals(this.contextWindow, commondtoEntityExtractionConfig.contextWindow) &&
+        Objects.equals(this.enableContext, commondtoEntityExtractionConfig.enableContext) &&
+        Objects.equals(this.entityTypes, commondtoEntityExtractionConfig.entityTypes) &&
+        Objects.equals(this.fallbackMessages, commondtoEntityExtractionConfig.fallbackMessages) &&
+        Objects.equals(this.maxPasses, commondtoEntityExtractionConfig.maxPasses) &&
+        Objects.equals(this.maxTokens, commondtoEntityExtractionConfig.maxTokens) &&
+        Objects.equals(this.minConfidence, commondtoEntityExtractionConfig.minConfidence) &&
+        Objects.equals(this.model, commondtoEntityExtractionConfig.model) &&
+        Objects.equals(this.temperature, commondtoEntityExtractionConfig.temperature);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        contextWindow,
-        enableContext,
-        entityTypes,
-        fallbackMessages,
-        maxPasses,
-        maxTokens,
-        minConfidence,
-        model,
-        temperature);
+    return Objects.hash(contextWindow, enableContext, entityTypes, fallbackMessages, maxPasses, maxTokens, minConfidence, model, temperature);
   }
 
   @Override
@@ -357,7 +357,8 @@ public class CommondtoEntityExtractionConfig {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -400,109 +401,54 @@ public class CommondtoEntityExtractionConfig {
 
     // add `context_window` to the URL query string
     if (getContextWindow() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%scontext_window%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getContextWindow()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%scontext_window%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getContextWindow()))));
     }
 
     // add `enable_context` to the URL query string
     if (getEnableContext() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%senable_context%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getEnableContext()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%senable_context%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getEnableContext()))));
     }
 
     // add `entity_types` to the URL query string
     if (getEntityTypes() != null) {
       for (int i = 0; i < getEntityTypes().size(); i++) {
-        joiner.add(
-            String.format(
-                java.util.Locale.ROOT,
-                "%sentity_types%s%s=%s",
-                prefix,
-                suffix,
-                "".equals(suffix)
-                    ? ""
-                    : String.format(
-                        java.util.Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix),
-                ApiClient.urlEncode(ApiClient.valueToString(getEntityTypes().get(i)))));
+        joiner.add(String.format(java.util.Locale.ROOT, "%sentity_types%s%s=%s", prefix, suffix,
+            "".equals(suffix) ? "" : String.format(java.util.Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix),
+            ApiClient.urlEncode(ApiClient.valueToString(getEntityTypes().get(i)))));
       }
     }
 
     // add `fallback_messages` to the URL query string
     if (getFallbackMessages() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sfallback_messages%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getFallbackMessages()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sfallback_messages%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getFallbackMessages()))));
     }
 
     // add `max_passes` to the URL query string
     if (getMaxPasses() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%smax_passes%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getMaxPasses()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%smax_passes%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMaxPasses()))));
     }
 
     // add `max_tokens` to the URL query string
     if (getMaxTokens() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%smax_tokens%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getMaxTokens()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%smax_tokens%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMaxTokens()))));
     }
 
     // add `min_confidence` to the URL query string
     if (getMinConfidence() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%smin_confidence%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getMinConfidence()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%smin_confidence%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMinConfidence()))));
     }
 
     // add `model` to the URL query string
     if (getModel() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%smodel%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getModel()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%smodel%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getModel()))));
     }
 
     // add `temperature` to the URL query string
     if (getTemperature() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%stemperature%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getTemperature()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%stemperature%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getTemperature()))));
     }
 
     return joiner.toString();
   }
 }
+

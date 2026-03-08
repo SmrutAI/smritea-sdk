@@ -10,12 +10,10 @@
  * Do not edit the class manually.
  */
 
+
 package ai.smritea.sdk._internal.autogen;
 
-@javax.annotation.Generated(
-    value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    date = "2026-03-05T18:33:01.293352+05:30[Asia/Kolkata]",
-    comments = "Generator version: 7.19.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.19.0")
 public class Pair {
   private final String name;
   private final String value;
