@@ -53,7 +53,7 @@ export interface CommondtoFactExtractionConfig {
     /**
      * Strategy is the fact extraction strategy to use.
      * Default: "llm_fact_extraction"
-     * @type {string}
+     * @type {CommondtoFactExtractionConfigStrategyEnum}
      * @memberof CommondtoFactExtractionConfig
      */
     strategy?: CommondtoFactExtractionConfigStrategyEnum;

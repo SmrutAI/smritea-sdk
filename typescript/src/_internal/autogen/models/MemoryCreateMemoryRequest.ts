@@ -76,7 +76,7 @@ export interface MemoryCreateMemoryRequest {
     /**
      * ActorType is the type of the actor (user|agent|system).
      * Required when ActorID is present; omit for conversation-level or app-level memories.
-     * @type {string}
+     * @type {MemoryCreateMemoryRequestActorTypeEnum}
      * @memberof MemoryCreateMemoryRequest
      */
     actorType?: MemoryCreateMemoryRequestActorTypeEnum;

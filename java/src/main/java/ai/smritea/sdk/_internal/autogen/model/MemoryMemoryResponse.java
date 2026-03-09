@@ -49,7 +49,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   MemoryMemoryResponse.JSON_PROPERTY_RELATIVE_STANDING,
   MemoryMemoryResponse.JSON_PROPERTY_UPDATED_AT
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.19.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class MemoryMemoryResponse {
   public static final String JSON_PROPERTY_ACTIVE_FROM = "active_from";
   @javax.annotation.Nullable

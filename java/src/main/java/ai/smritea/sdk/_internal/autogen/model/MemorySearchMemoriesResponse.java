@@ -38,7 +38,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 @JsonPropertyOrder({
   MemorySearchMemoriesResponse.JSON_PROPERTY_MEMORIES
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.19.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class MemorySearchMemoriesResponse {
   public static final String JSON_PROPERTY_MEMORIES = "memories";
   @javax.annotation.Nullable

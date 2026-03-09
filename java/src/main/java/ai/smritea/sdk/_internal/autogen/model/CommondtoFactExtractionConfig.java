@@ -41,7 +41,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   CommondtoFactExtractionConfig.JSON_PROPERTY_STRATEGY,
   CommondtoFactExtractionConfig.JSON_PROPERTY_TEMPERATURE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.19.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class CommondtoFactExtractionConfig {
   public static final String JSON_PROPERTY_MAX_PASSES = "max_passes";
   @javax.annotation.Nullable

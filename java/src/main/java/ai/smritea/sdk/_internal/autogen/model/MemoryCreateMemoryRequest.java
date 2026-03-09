@@ -52,7 +52,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   MemoryCreateMemoryRequest.JSON_PROPERTY_PERSONA_EXTRACTION_OVERRIDES,
   MemoryCreateMemoryRequest.JSON_PROPERTY_RELATIVE_STANDING
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.19.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class MemoryCreateMemoryRequest {
   public static final String JSON_PROPERTY_ACTIVE_FROM = "active_from";
   @javax.annotation.Nullable

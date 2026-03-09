@@ -38,7 +38,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   ErrorsAppError.JSON_PROPERTY_DETAILS,
   ErrorsAppError.JSON_PROPERTY_MESSAGE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.19.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class ErrorsAppError {
   public static final String JSON_PROPERTY_CODE = "code";
   @javax.annotation.Nullable

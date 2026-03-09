@@ -46,7 +46,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   CommondtoEntityExtractionConfig.JSON_PROPERTY_MODEL,
   CommondtoEntityExtractionConfig.JSON_PROPERTY_TEMPERATURE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.19.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class CommondtoEntityExtractionConfig {
   public static final String JSON_PROPERTY_CONTEXT_WINDOW = "context_window";
   @javax.annotation.Nullable

@@ -29,7 +29,7 @@ export interface CommondtoRelativeStandingConfig {
     /**
      * DecayFunction selects the temporal decay algorithm.
      * Defaults to "exponential". Options: exponential, gaussian, linear.
-     * @type {string}
+     * @type {CommondtoRelativeStandingConfigDecayFunctionEnum}
      * @memberof CommondtoRelativeStandingConfig
      */
     decayFunction?: CommondtoRelativeStandingConfigDecayFunctionEnum;

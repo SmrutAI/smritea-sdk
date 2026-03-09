@@ -38,7 +38,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   CommondtoRelativeStandingConfig.JSON_PROPERTY_DECAY_FUNCTION,
   CommondtoRelativeStandingConfig.JSON_PROPERTY_IMPORTANCE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.19.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class CommondtoRelativeStandingConfig {
   public static final String JSON_PROPERTY_DECAY_FACTOR = "decay_factor";
   @javax.annotation.Nullable

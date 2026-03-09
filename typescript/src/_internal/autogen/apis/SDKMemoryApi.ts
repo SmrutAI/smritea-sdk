@@ -56,10 +56,9 @@ export interface SearchMemoriesRequest {
 export class SDKMemoryApi extends runtime.BaseAPI {
 
     /**
-     * Create a new memory with quota and rate limit enforcement
-     * Create memory (SDK)
+     * Creates request options for createMemory without sending the request
      */
-    async createMemoryRaw(requestParameters: CreateMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MemoryMemoryResponse>> {
+    async createMemoryRequestOpts(requestParameters: CreateMemoryRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
@@ -80,13 +79,22 @@ export class SDKMemoryApi extends runtime.BaseAPI {
 
         let urlPath = `/api/v1/sdk/memories`;
 
-        const response = await this.request({
+        return {
             path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
             body: MemoryCreateMemoryRequestToJSON(requestParameters['request']),
-        }, initOverrides);
+        };
+    }
+
+    /**
+     * Create a new memory with quota and rate limit enforcement
+     * Create memory (SDK)
+     */
+    async createMemoryRaw(requestParameters: CreateMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MemoryMemoryResponse>> {
+        const requestOptions = await this.createMemoryRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => MemoryMemoryResponseFromJSON(jsonValue));
     }
@@ -101,10 +109,9 @@ export class SDKMemoryApi extends runtime.BaseAPI {
     }
 
     /**
-     * Delete a memory by ID with rate limit enforcement
-     * Delete memory (SDK)
+     * Creates request options for deleteMemory without sending the request
      */
-    async deleteMemoryRaw(requestParameters: DeleteMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async deleteMemoryRequestOpts(requestParameters: DeleteMemoryRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['memoryId'] == null) {
             throw new runtime.RequiredError(
                 'memoryId',
@@ -124,12 +131,21 @@ export class SDKMemoryApi extends runtime.BaseAPI {
         let urlPath = `/api/v1/sdk/memories/{memory_id}`;
         urlPath = urlPath.replace(`{${"memory_id"}}`, encodeURIComponent(String(requestParameters['memoryId'])));
 
-        const response = await this.request({
+        return {
             path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
+        };
+    }
+
+    /**
+     * Delete a memory by ID with rate limit enforcement
+     * Delete memory (SDK)
+     */
+    async deleteMemoryRaw(requestParameters: DeleteMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.deleteMemoryRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
@@ -143,10 +159,9 @@ export class SDKMemoryApi extends runtime.BaseAPI {
     }
 
     /**
-     * Get a single memory by ID with rate limit enforcement
-     * Get memory by ID (SDK)
+     * Creates request options for getMemory without sending the request
      */
-    async getMemoryRaw(requestParameters: GetMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MemoryMemoryResponse>> {
+    async getMemoryRequestOpts(requestParameters: GetMemoryRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['memoryId'] == null) {
             throw new runtime.RequiredError(
                 'memoryId',
@@ -166,12 +181,21 @@ export class SDKMemoryApi extends runtime.BaseAPI {
         let urlPath = `/api/v1/sdk/memories/{memory_id}`;
         urlPath = urlPath.replace(`{${"memory_id"}}`, encodeURIComponent(String(requestParameters['memoryId'])));
 
-        const response = await this.request({
+        return {
             path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
+        };
+    }
+
+    /**
+     * Get a single memory by ID with rate limit enforcement
+     * Get memory by ID (SDK)
+     */
+    async getMemoryRaw(requestParameters: GetMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MemoryMemoryResponse>> {
+        const requestOptions = await this.getMemoryRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => MemoryMemoryResponseFromJSON(jsonValue));
     }
@@ -186,10 +210,9 @@ export class SDKMemoryApi extends runtime.BaseAPI {
     }
 
     /**
-     * Search memories with quota and rate limit enforcement
-     * Search memories (SDK)
+     * Creates request options for searchMemories without sending the request
      */
-    async searchMemoriesRaw(requestParameters: SearchMemoriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MemorySearchMemoriesResponse>> {
+    async searchMemoriesRequestOpts(requestParameters: SearchMemoriesRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
@@ -210,13 +233,22 @@ export class SDKMemoryApi extends runtime.BaseAPI {
 
         let urlPath = `/api/v1/sdk/memories/search`;
 
-        const response = await this.request({
+        return {
             path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
             body: MemorySearchMemoryRequestToJSON(requestParameters['request']),
-        }, initOverrides);
+        };
+    }
+
+    /**
+     * Search memories with quota and rate limit enforcement
+     * Search memories (SDK)
+     */
+    async searchMemoriesRaw(requestParameters: SearchMemoriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MemorySearchMemoriesResponse>> {
+        const requestOptions = await this.searchMemoriesRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => MemorySearchMemoriesResponseFromJSON(jsonValue));
     }

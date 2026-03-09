@@ -36,7 +36,7 @@ export interface MemorySearchMemoryRequest {
     /**
      * ActorType filters search to messages from a specific actor type (optional).
      * Values: "user", "agent", "system"
-     * @type {string}
+     * @type {MemorySearchMemoryRequestActorTypeEnum}
      * @memberof MemorySearchMemoryRequest
      */
     actorType?: MemorySearchMemoryRequestActorTypeEnum;
