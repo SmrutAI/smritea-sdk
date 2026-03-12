@@ -33,7 +33,7 @@ type MemorySearchMemoryRequest struct {
 	// 0=use app config, 1-5=override traversal depth
 	GraphDepth *int32 `json:"graph_depth,omitempty"`
 	Limit *int32 `json:"limit,omitempty"`
-	Method *SearchStrategiesSearchMethod `json:"method,omitempty"`
+	Method *ModelEnumsSearchMethod `json:"method,omitempty"`
 	Query string `json:"query"`
 	// 0=no filtering (pipeline uses RRF scores, not cosine similarity)
 	Threshold *float32 `json:"threshold,omitempty"`
@@ -281,9 +281,9 @@ func (o *MemorySearchMemoryRequest) SetLimit(v int32) {
 }
 
 // GetMethod returns the Method field value if set, zero value otherwise.
-func (o *MemorySearchMemoryRequest) GetMethod() SearchStrategiesSearchMethod {
+func (o *MemorySearchMemoryRequest) GetMethod() ModelEnumsSearchMethod {
 	if o == nil || IsNil(o.Method) {
-		var ret SearchStrategiesSearchMethod
+		var ret ModelEnumsSearchMethod
 		return ret
 	}
 	return *o.Method
@@ -291,7 +291,7 @@ func (o *MemorySearchMemoryRequest) GetMethod() SearchStrategiesSearchMethod {
 
 // GetMethodOk returns a tuple with the Method field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *MemorySearchMemoryRequest) GetMethodOk() (*SearchStrategiesSearchMethod, bool) {
+func (o *MemorySearchMemoryRequest) GetMethodOk() (*ModelEnumsSearchMethod, bool) {
 	if o == nil || IsNil(o.Method) {
 		return nil, false
 	}
@@ -307,8 +307,8 @@ func (o *MemorySearchMemoryRequest) HasMethod() bool {
 	return false
 }
 
-// SetMethod gets a reference to the given SearchStrategiesSearchMethod and assigns it to the Method field.
-func (o *MemorySearchMemoryRequest) SetMethod(v SearchStrategiesSearchMethod) {
+// SetMethod gets a reference to the given ModelEnumsSearchMethod and assigns it to the Method field.
+func (o *MemorySearchMemoryRequest) SetMethod(v ModelEnumsSearchMethod) {
 	o.Method = &v
 }
 

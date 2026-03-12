@@ -26,9 +26,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Gets or Sets search_strategies.SearchMethod
+ * Gets or Sets model_enums.SearchMethod
  */
-public enum SearchStrategiesSearchMethod {
+public enum ModelEnumsSearchMethod {
+  
+  SearchMethodInvalid("invalid_search_method"),
   
   SearchMethodQuickSearch("quick_search"),
   
@@ -44,7 +46,7 @@ public enum SearchStrategiesSearchMethod {
 
   private String value;
 
-  SearchStrategiesSearchMethod(String value) {
+  ModelEnumsSearchMethod(String value) {
     this.value = value;
   }
 
@@ -59,8 +61,8 @@ public enum SearchStrategiesSearchMethod {
   }
 
   @JsonCreator
-  public static SearchStrategiesSearchMethod fromValue(String value) {
-    for (SearchStrategiesSearchMethod b : SearchStrategiesSearchMethod.values()) {
+  public static ModelEnumsSearchMethod fromValue(String value) {
+    for (ModelEnumsSearchMethod b : ModelEnumsSearchMethod.values()) {
       if (b.value.equals(value)) {
         return b;
       }

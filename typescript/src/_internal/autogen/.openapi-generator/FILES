@@ -13,8 +13,8 @@ docs/MemoryMemoryResponse.md
 docs/MemorySearchMemoriesResponse.md
 docs/MemorySearchMemoryRequest.md
 docs/MemorySearchMemoryResponse.md
+docs/ModelEnumsSearchMethod.md
 docs/SDKMemoryApi.md
-docs/SearchStrategiesSearchMethod.md
 index.ts
 models/CommondtoEntityExtractionConfig.ts
 models/CommondtoFactExtractionConfig.ts
@@ -28,6 +28,6 @@ models/MemoryMemoryResponse.ts
 models/MemorySearchMemoriesResponse.ts
 models/MemorySearchMemoryRequest.ts
 models/MemorySearchMemoryResponse.ts
-models/SearchStrategiesSearchMethod.ts
+models/ModelEnumsSearchMethod.ts
 models/index.ts
 runtime.ts

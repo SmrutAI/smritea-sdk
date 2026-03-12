@@ -12,4 +12,4 @@ export * from './MemoryMemoryResponse';
 export * from './MemorySearchMemoriesResponse';
 export * from './MemorySearchMemoryRequest';
 export * from './MemorySearchMemoryResponse';
-export * from './SearchStrategiesSearchMethod';
+export * from './ModelEnumsSearchMethod';

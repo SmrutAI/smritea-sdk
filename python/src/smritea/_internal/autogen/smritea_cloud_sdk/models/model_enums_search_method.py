@@ -19,14 +19,15 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class SearchStrategiesSearchMethod(str, Enum):
+class ModelEnumsSearchMethod(str, Enum):
     """
-    SearchStrategiesSearchMethod
+    ModelEnumsSearchMethod
     """
 
     """
     allowed enum values
     """
+    SearchMethodInvalid = 'invalid_search_method'
     SearchMethodQuickSearch = 'quick_search'
     SearchMethodDeepSearch = 'deep_search'
     SearchMethodContextAwareSearch = 'context_aware_search'
@@ -36,7 +37,7 @@ class SearchStrategiesSearchMethod(str, Enum):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SearchStrategiesSearchMethod from a JSON string"""
+        """Create an instance of ModelEnumsSearchMethod from a JSON string"""
         return cls(json.loads(json_str))
 
 

@@ -19,7 +19,7 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
-import ai.smritea.sdk._internal.autogen.model.SearchStrategiesSearchMethod;
+import ai.smritea.sdk._internal.autogen.model.ModelEnumsSearchMethod;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -117,7 +117,7 @@ public class MemorySearchMemoryRequest {
 
   public static final String JSON_PROPERTY_METHOD = "method";
   @javax.annotation.Nullable
-  private SearchStrategiesSearchMethod method;
+  private ModelEnumsSearchMethod method;
 
   public static final String JSON_PROPERTY_QUERY = "query";
   @javax.annotation.Nonnull
@@ -306,7 +306,7 @@ public class MemorySearchMemoryRequest {
   }
 
 
-  public MemorySearchMemoryRequest method(@javax.annotation.Nullable SearchStrategiesSearchMethod method) {
+  public MemorySearchMemoryRequest method(@javax.annotation.Nullable ModelEnumsSearchMethod method) {
     this.method = method;
     return this;
   }
@@ -318,14 +318,14 @@ public class MemorySearchMemoryRequest {
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_METHOD, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public SearchStrategiesSearchMethod getMethod() {
+  public ModelEnumsSearchMethod getMethod() {
     return method;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_METHOD, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMethod(@javax.annotation.Nullable SearchStrategiesSearchMethod method) {
+  public void setMethod(@javax.annotation.Nullable ModelEnumsSearchMethod method) {
     this.method = method;
   }
 

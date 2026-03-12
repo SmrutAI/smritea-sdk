@@ -71,7 +71,7 @@ namespace Smritea.Internal.Autogen.Model
         /// Gets or Sets Method
         /// </summary>
         [DataMember(Name = "method", EmitDefaultValue = false)]
-        public SearchStrategiesSearchMethod? Method { get; set; }
+        public ModelEnumsSearchMethod? Method { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="MemorySearchMemoryRequest" /> class.
         /// </summary>
@@ -92,7 +92,7 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="threshold">0&#x3D;no filtering (pipeline uses RRF scores, not cosine similarity).</param>
         /// <param name="toTime">ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime..</param>
         /// <param name="validAt">ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from &lt;&#x3D; ValidAt AND (active_to is null OR active_to &gt;&#x3D; ValidAt) Mutually exclusive with FromTime/ToTime..</param>
-        public MemorySearchMemoryRequest(string actorId = default, ActorTypeEnum? actorType = default, string appId = default, string conversationId = default, string fromTime = default, int graphDepth = default, int limit = default, SearchStrategiesSearchMethod? method = default, string query = default, decimal threshold = default, string toTime = default, string validAt = default)
+        public MemorySearchMemoryRequest(string actorId = default, ActorTypeEnum? actorType = default, string appId = default, string conversationId = default, string fromTime = default, int graphDepth = default, int limit = default, ModelEnumsSearchMethod? method = default, string query = default, decimal threshold = default, string toTime = default, string validAt = default)
         {
             // to ensure "appId" is required (not null)
             if (appId == null)

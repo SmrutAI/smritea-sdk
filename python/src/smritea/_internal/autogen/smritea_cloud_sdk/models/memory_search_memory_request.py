@@ -20,7 +20,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from smritea._internal.autogen.smritea_cloud_sdk.models.search_strategies_search_method import SearchStrategiesSearchMethod
+from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_search_method import ModelEnumsSearchMethod
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -35,7 +35,7 @@ class MemorySearchMemoryRequest(BaseModel):
     from_time: Optional[StrictStr] = Field(default=None, description="FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime.")
     graph_depth: Optional[StrictInt] = Field(default=None, description="0=use app config, 1-5=override traversal depth")
     limit: Optional[StrictInt] = None
-    method: Optional[SearchStrategiesSearchMethod] = None
+    method: Optional[ModelEnumsSearchMethod] = None
     query: StrictStr
     threshold: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="0=no filtering (pipeline uses RRF scores, not cosine similarity)")
     to_time: Optional[StrictStr] = Field(default=None, description="ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.")

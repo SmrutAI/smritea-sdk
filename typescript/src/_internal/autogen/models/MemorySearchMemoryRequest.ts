@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
-import type { SearchStrategiesSearchMethod } from './SearchStrategiesSearchMethod';
+import type { ModelEnumsSearchMethod } from './ModelEnumsSearchMethod';
 import {
-    SearchStrategiesSearchMethodFromJSON,
-    SearchStrategiesSearchMethodFromJSONTyped,
-    SearchStrategiesSearchMethodToJSON,
-    SearchStrategiesSearchMethodToJSONTyped,
-} from './SearchStrategiesSearchMethod';
+    ModelEnumsSearchMethodFromJSON,
+    ModelEnumsSearchMethodFromJSONTyped,
+    ModelEnumsSearchMethodToJSON,
+    ModelEnumsSearchMethodToJSONTyped,
+} from './ModelEnumsSearchMethod';
 
 /**
  * 
@@ -74,10 +74,10 @@ export interface MemorySearchMemoryRequest {
     limit?: number;
     /**
      * 
-     * @type {SearchStrategiesSearchMethod}
+     * @type {ModelEnumsSearchMethod}
      * @memberof MemorySearchMemoryRequest
      */
-    method?: SearchStrategiesSearchMethod;
+    method?: ModelEnumsSearchMethod;
     /**
      * 
      * @type {string}
@@ -145,7 +145,7 @@ export function MemorySearchMemoryRequestFromJSONTyped(json: any, ignoreDiscrimi
         'fromTime': json['from_time'] == null ? undefined : json['from_time'],
         'graphDepth': json['graph_depth'] == null ? undefined : json['graph_depth'],
         'limit': json['limit'] == null ? undefined : json['limit'],
-        'method': json['method'] == null ? undefined : SearchStrategiesSearchMethodFromJSON(json['method']),
+        'method': json['method'] == null ? undefined : ModelEnumsSearchMethodFromJSON(json['method']),
         'query': json['query'],
         'threshold': json['threshold'] == null ? undefined : json['threshold'],
         'toTime': json['to_time'] == null ? undefined : json['to_time'],
@@ -171,7 +171,7 @@ export function MemorySearchMemoryRequestToJSONTyped(value?: MemorySearchMemoryR
         'from_time': value['fromTime'],
         'graph_depth': value['graphDepth'],
         'limit': value['limit'],
-        'method': SearchStrategiesSearchMethodToJSON(value['method']),
+        'method': ModelEnumsSearchMethodToJSON(value['method']),
         'query': value['query'],
         'threshold': value['threshold'],
         'to_time': value['toTime'],

@@ -28,46 +28,52 @@ using OpenAPIDateConverter = Smritea.Internal.Autogen.Client.OpenAPIDateConverte
 namespace Smritea.Internal.Autogen.Model
 {
     /// <summary>
-    /// Defines search_strategies.SearchMethod
+    /// Defines model_enums.SearchMethod
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum SearchStrategiesSearchMethod
+    public enum ModelEnumsSearchMethod
     {
+        /// <summary>
+        /// Enum SearchMethodInvalid for value: invalid_search_method
+        /// </summary>
+        [EnumMember(Value = "invalid_search_method")]
+        SearchMethodInvalid = 1,
+
         /// <summary>
         /// Enum SearchMethodQuickSearch for value: quick_search
         /// </summary>
         [EnumMember(Value = "quick_search")]
-        SearchMethodQuickSearch = 1,
+        SearchMethodQuickSearch = 2,
 
         /// <summary>
         /// Enum SearchMethodDeepSearch for value: deep_search
         /// </summary>
         [EnumMember(Value = "deep_search")]
-        SearchMethodDeepSearch = 2,
+        SearchMethodDeepSearch = 3,
 
         /// <summary>
         /// Enum SearchMethodContextAwareSearch for value: context_aware_search
         /// </summary>
         [EnumMember(Value = "context_aware_search")]
-        SearchMethodContextAwareSearch = 3,
+        SearchMethodContextAwareSearch = 4,
 
         /// <summary>
         /// Enum SearchMethodGraphProximity for value: graph_proximity
         /// </summary>
         [EnumMember(Value = "graph_proximity")]
-        SearchMethodGraphProximity = 4,
+        SearchMethodGraphProximity = 5,
 
         /// <summary>
         /// Enum SearchMethodDiversified for value: diversified
         /// </summary>
         [EnumMember(Value = "diversified")]
-        SearchMethodDiversified = 5,
+        SearchMethodDiversified = 6,
 
         /// <summary>
         /// Enum SearchMethodSemanticRerank for value: semantic_rerank
         /// </summary>
         [EnumMember(Value = "semantic_rerank")]
-        SearchMethodSemanticRerank = 6
+        SearchMethodSemanticRerank = 7
     }
 
 }

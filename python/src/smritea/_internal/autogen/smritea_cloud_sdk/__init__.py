@@ -41,7 +41,7 @@ __all__ = [
     "MemorySearchMemoriesResponse",
     "MemorySearchMemoryRequest",
     "MemorySearchMemoryResponse",
-    "SearchStrategiesSearchMethod",
+    "ModelEnumsSearchMethod",
 ]
 
 # import apis into sdk package
@@ -71,5 +71,5 @@ from smritea._internal.autogen.smritea_cloud_sdk.models.memory_memory_response i
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memories_response import MemorySearchMemoriesResponse as MemorySearchMemoriesResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memory_request import MemorySearchMemoryRequest as MemorySearchMemoryRequest
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memory_response import MemorySearchMemoryResponse as MemorySearchMemoryResponse
-from smritea._internal.autogen.smritea_cloud_sdk.models.search_strategies_search_method import SearchStrategiesSearchMethod as SearchStrategiesSearchMethod
+from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_search_method import ModelEnumsSearchMethod as ModelEnumsSearchMethod
 

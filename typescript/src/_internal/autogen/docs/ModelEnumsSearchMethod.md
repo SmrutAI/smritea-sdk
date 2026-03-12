@@ -1,5 +1,5 @@
 
-# SearchStrategiesSearchMethod
+# ModelEnumsSearchMethod
 
 
 ## Properties
@@ -10,11 +10,11 @@ Name | Type
 ## Example
 
 ```typescript
-import type { SearchStrategiesSearchMethod } from ''
+import type { ModelEnumsSearchMethod } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-} satisfies SearchStrategiesSearchMethod
+} satisfies ModelEnumsSearchMethod
 
 console.log(example)
 
@@ -23,7 +23,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as SearchStrategiesSearchMethod
+const exampleParsed = JSON.parse(exampleJSON) as ModelEnumsSearchMethod
 console.log(exampleParsed)
 ```
 

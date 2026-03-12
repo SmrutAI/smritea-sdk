@@ -13,7 +13,7 @@ Name | Type
 `fromTime` | string
 `graphDepth` | number
 `limit` | number
-`method` | [SearchStrategiesSearchMethod](SearchStrategiesSearchMethod.md)
+`method` | [ModelEnumsSearchMethod](ModelEnumsSearchMethod.md)
 `query` | string
 `threshold` | number
 `toTime` | string
