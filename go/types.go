@@ -71,6 +71,12 @@ type SearchOptions struct {
 	Threshold      *float32
 	GraphDepth     *int32
 	ConversationID *string
+	// FromTime is an ISO-8601 datetime string — only return memories created at or after this time.
+	FromTime *string
+	// ToTime is an ISO-8601 datetime string — only return memories created at or before this time.
+	ToTime *string
+	// ValidAt is an ISO-8601 datetime string — return memories valid at exactly this point in time.
+	ValidAt *string
 }
 
 // NewSearchOptions returns a new empty SearchOptions ready for fluent configuration.
@@ -100,5 +106,23 @@ func (o *SearchOptions) WithGraphDepth(d int32) *SearchOptions { o.GraphDepth = 
 // WithConversationID sets ConversationID.
 func (o *SearchOptions) WithConversationID(id string) *SearchOptions {
 	o.ConversationID = &id
+	return o
+}
+
+// WithFromTime sets the lower bound for memory creation time filter.
+func (o *SearchOptions) WithFromTime(t string) *SearchOptions {
+	o.FromTime = &t
+	return o
+}
+
+// WithToTime sets the upper bound for memory creation time filter.
+func (o *SearchOptions) WithToTime(t string) *SearchOptions {
+	o.ToTime = &t
+	return o
+}
+
+// WithValidAt sets the point-in-time filter for memory validity.
+func (o *SearchOptions) WithValidAt(t string) *SearchOptions {
+	o.ValidAt = &t
 	return o
 }

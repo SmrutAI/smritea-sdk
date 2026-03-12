@@ -175,7 +175,7 @@ public class SmriteaClient : IDisposable
 
             if (opts.Method is not null)
             {
-                request.Method = Enum.Parse<SearchStrategiesSearchMethod>(
+                request.Method = Enum.Parse<ModelEnumsSearchMethod>(
                     opts.Method, ignoreCase: true);
             }
 
@@ -192,6 +192,21 @@ public class SmriteaClient : IDisposable
             if (opts.ConversationId is not null)
             {
                 request.ConversationId = opts.ConversationId;
+            }
+
+            if (opts.FromTime is not null)
+            {
+                request.FromTime = opts.FromTime;
+            }
+
+            if (opts.ToTime is not null)
+            {
+                request.ToTime = opts.ToTime;
+            }
+
+            if (opts.ValidAt is not null)
+            {
+                request.ValidAt = opts.ValidAt;
             }
         }
 

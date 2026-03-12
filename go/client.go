@@ -105,12 +105,15 @@ func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOp
 		// SearchOptions uses *int32 to match the autogen types directly.
 		req.Limit = opts.Limit
 		if opts.Method != nil {
-			m := autogen.SearchStrategiesSearchMethod(*opts.Method)
+			m := autogen.ModelEnumsSearchMethod(*opts.Method)
 			req.Method = &m
 		}
 		req.Threshold = opts.Threshold
 		req.GraphDepth = opts.GraphDepth
 		req.ConversationId = opts.ConversationID
+		req.FromTime = opts.FromTime
+		req.ToTime = opts.ToTime
+		req.ValidAt = opts.ValidAt
 	}
 
 	return withRetry[[]*SearchResult](ctx, c.maxRetries, func() ([]*SearchResult, error) {

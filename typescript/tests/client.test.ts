@@ -115,6 +115,41 @@ describe('userId convenience mapping', () => {
 });
 
 // ---------------------------------------------------------------------------
+// 1b. Temporal filter pass-through
+// ---------------------------------------------------------------------------
+
+describe('temporal filter fields', () => {
+  it('search() passes fromTime, toTime, and validAt to the autogen API', async () => {
+    const { client, mockApi } = createClientWithMock();
+    mockApi.searchMemories.mockResolvedValue({ memories: [] });
+
+    await client.search('find stuff', {
+      fromTime: '2024-01-01T00:00:00Z',
+      toTime: '2024-12-31T23:59:59Z',
+      validAt: '2024-06-15T12:00:00Z',
+    });
+
+    expect(mockApi.searchMemories).toHaveBeenCalledOnce();
+    const arg = mockApi.searchMemories.mock.calls[0][0];
+    expect(arg.request.fromTime).toBe('2024-01-01T00:00:00Z');
+    expect(arg.request.toTime).toBe('2024-12-31T23:59:59Z');
+    expect(arg.request.validAt).toBe('2024-06-15T12:00:00Z');
+  });
+
+  it('search() omits temporal fields when not provided', async () => {
+    const { client, mockApi } = createClientWithMock();
+    mockApi.searchMemories.mockResolvedValue({ memories: [] });
+
+    await client.search('find stuff');
+
+    const arg = mockApi.searchMemories.mock.calls[0][0];
+    expect(arg.request.fromTime).toBeUndefined();
+    expect(arg.request.toTime).toBeUndefined();
+    expect(arg.request.validAt).toBeUndefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
 // 2. Error mapping
 // ---------------------------------------------------------------------------
 

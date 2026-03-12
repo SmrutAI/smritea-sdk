@@ -8,7 +8,7 @@ import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoriesResponse;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryRequest;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResponse;
-import ai.smritea.sdk._internal.autogen.model.SearchStrategiesSearchMethod;
+import ai.smritea.sdk._internal.autogen.model.ModelEnumsSearchMethod;
 import ai.smritea.sdk.errors.SmriteaAuthError;
 import ai.smritea.sdk.errors.SmriteaDeserializationError;
 import ai.smritea.sdk.errors.SmriteaError;
@@ -170,7 +170,7 @@ public class SmriteaClient {
         request.setLimit(opts.getLimit());
       }
       if (opts.getMethod() != null) {
-        request.setMethod(SearchStrategiesSearchMethod.fromValue(opts.getMethod()));
+        request.setMethod(ModelEnumsSearchMethod.fromValue(opts.getMethod()));
       }
       if (opts.getThreshold() != null) {
         request.setThreshold(BigDecimal.valueOf(opts.getThreshold()));
@@ -180,6 +180,15 @@ public class SmriteaClient {
       }
       if (opts.getConversationId() != null) {
         request.setConversationId(opts.getConversationId());
+      }
+      if (opts.getFromTime() != null) {
+        request.setFromTime(opts.getFromTime());
+      }
+      if (opts.getToTime() != null) {
+        request.setToTime(opts.getToTime());
+      }
+      if (opts.getValidAt() != null) {
+        request.setValidAt(opts.getValidAt());
       }
     }
 

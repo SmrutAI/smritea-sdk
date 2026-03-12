@@ -191,6 +191,27 @@ class TestSearchUserIdConvenience:
         assert call_args.graph_depth == 2
         assert call_args.conversation_id == 'conv-123'
 
+    def test_search_with_temporal_filters(self, client, mock_api):
+        """Test search() with temporal filter parameters."""
+        mock_response = MagicMock()
+        mock_response.memories = []
+        mock_api.search_memories.return_value = mock_response
+
+        result = client.search(
+            'query',
+            user_id='alice',
+            from_time='2024-01-01T00:00:00Z',
+            to_time='2024-12-31T23:59:59Z',
+            valid_at='2024-06-15T12:00:00Z',
+        )
+
+        call_args = mock_api.search_memories.call_args[0][0]
+        assert call_args.actor_id == 'alice'
+        assert call_args.actor_type == 'user'
+        assert call_args.from_time == '2024-01-01T00:00:00Z'
+        assert call_args.to_time == '2024-12-31T23:59:59Z'
+        assert call_args.valid_at == '2024-06-15T12:00:00Z'
+
 
 # ==============================================================================
 # Test 3: Error mapping from ApiException

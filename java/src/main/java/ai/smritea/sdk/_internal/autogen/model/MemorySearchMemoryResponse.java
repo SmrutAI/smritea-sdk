@@ -10,46 +10,32 @@
  * Do not edit the class manually.
  */
 
-
 package ai.smritea.sdk._internal.autogen.model;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
-import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
+import ai.smritea.sdk._internal.autogen.ApiClient;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.math.BigDecimal;
-import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.StringJoiner;
 
-
-import ai.smritea.sdk._internal.autogen.ApiClient;
-/**
- * MemorySearchMemoryResponse
- */
+/** MemorySearchMemoryResponse */
 @JsonPropertyOrder({
   MemorySearchMemoryResponse.JSON_PROPERTY_MEMORY,
   MemorySearchMemoryResponse.JSON_PROPERTY_SCORE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(
+    value = "org.openapitools.codegen.languages.JavaClientCodegen",
+    comments = "Generator version: 7.20.0")
 public class MemorySearchMemoryResponse {
   public static final String JSON_PROPERTY_MEMORY = "memory";
-  @javax.annotation.Nullable
-  private MemoryMemoryResponse memory;
+  @javax.annotation.Nullable private MemoryMemoryResponse memory;
 
   public static final String JSON_PROPERTY_SCORE = "score";
-  @javax.annotation.Nullable
-  private BigDecimal score;
+  @javax.annotation.Nullable private BigDecimal score;
 
-  public MemorySearchMemoryResponse() { 
-  }
+  public MemorySearchMemoryResponse() {}
 
   public MemorySearchMemoryResponse memory(@javax.annotation.Nullable MemoryMemoryResponse memory) {
     this.memory = memory;
@@ -58,6 +44,7 @@ public class MemorySearchMemoryResponse {
 
   /**
    * Get memory
+   *
    * @return memory
    */
   @javax.annotation.Nullable
@@ -67,13 +54,11 @@ public class MemorySearchMemoryResponse {
     return memory;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_MEMORY, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMemory(@javax.annotation.Nullable MemoryMemoryResponse memory) {
     this.memory = memory;
   }
-
 
   public MemorySearchMemoryResponse score(@javax.annotation.Nullable BigDecimal score) {
     this.score = score;
@@ -82,6 +67,7 @@ public class MemorySearchMemoryResponse {
 
   /**
    * Get score
+   *
    * @return score
    */
   @javax.annotation.Nullable
@@ -91,17 +77,13 @@ public class MemorySearchMemoryResponse {
     return score;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_SCORE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setScore(@javax.annotation.Nullable BigDecimal score) {
     this.score = score;
   }
 
-
-  /**
-   * Return true if this memory.SearchMemoryResponse object is equal to o.
-   */
+  /** Return true if this memory.SearchMemoryResponse object is equal to o. */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -111,8 +93,8 @@ public class MemorySearchMemoryResponse {
       return false;
     }
     MemorySearchMemoryResponse memorySearchMemoryResponse = (MemorySearchMemoryResponse) o;
-    return Objects.equals(this.memory, memorySearchMemoryResponse.memory) &&
-        Objects.equals(this.score, memorySearchMemoryResponse.score);
+    return Objects.equals(this.memory, memorySearchMemoryResponse.memory)
+        && Objects.equals(this.score, memorySearchMemoryResponse.score);
   }
 
   @Override
@@ -131,8 +113,7 @@ public class MemorySearchMemoryResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -180,10 +161,15 @@ public class MemorySearchMemoryResponse {
 
     // add `score` to the URL query string
     if (getScore() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sscore%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getScore()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sscore%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getScore()))));
     }
 
     return joiner.toString();
   }
 }
-

@@ -32,6 +32,12 @@ export interface SearchOptions {
   threshold?: number;
   graphDepth?: number;
   conversationId?: string;
+  /** ISO-8601 datetime string — only return memories created at or after this time. */
+  fromTime?: string;
+  /** ISO-8601 datetime string — only return memories created at or before this time. */
+  toTime?: string;
+  /** ISO-8601 datetime string — return memories valid at exactly this point in time. */
+  validAt?: string;
 }
 
 export interface SmriteaClientConfig {

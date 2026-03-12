@@ -11,6 +11,7 @@ import ai.smritea.sdk.errors.SmriteaRateLimitError;
 import ai.smritea.sdk.errors.SmriteaValidationError;
 import ai.smritea.sdk.model.AddOptions;
 import ai.smritea.sdk.model.Memory;
+import ai.smritea.sdk.model.SearchOptions;
 import ai.smritea.sdk.model.SearchResult;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
@@ -108,6 +109,47 @@ class SmriteaClientTest {
 
     assertNotNull(results);
     assertTrue(results.isEmpty());
+  }
+
+  @Test
+  void testSearch_TemporalFilters(WireMockRuntimeInfo wm) {
+    stubFor(
+        post("/api/v1/sdk/memories/search")
+            .withRequestBody(matchingJsonPath("$.from_time", equalTo("2024-01-01T00:00:00Z")))
+            .withRequestBody(matchingJsonPath("$.to_time", equalTo("2024-12-31T23:59:59Z")))
+            .willReturn(
+                okJson(
+                    "{\"memories\":[{\"memory\":{\"id\":\"mem-t1\",\"content\":\"temporal\"},\"score\":0.8}]}")));
+
+    SmriteaClient client = clientFor(wm);
+    List<SearchResult> results =
+        client.search(
+            "temporal",
+            new SearchOptions()
+                .withFromTime("2024-01-01T00:00:00Z")
+                .withToTime("2024-12-31T23:59:59Z"));
+
+    assertNotNull(results);
+    assertEquals(1, results.size());
+    assertEquals("mem-t1", results.get(0).getMemory().getId());
+  }
+
+  @Test
+  void testSearch_ValidAtFilter(WireMockRuntimeInfo wm) {
+    stubFor(
+        post("/api/v1/sdk/memories/search")
+            .withRequestBody(matchingJsonPath("$.valid_at", equalTo("2024-06-15T12:00:00Z")))
+            .willReturn(
+                okJson(
+                    "{\"memories\":[{\"memory\":{\"id\":\"mem-v1\",\"content\":\"valid-at\"},\"score\":0.7}]}")));
+
+    SmriteaClient client = clientFor(wm);
+    List<SearchResult> results =
+        client.search("valid-at", new SearchOptions().withValidAt("2024-06-15T12:00:00Z"));
+
+    assertNotNull(results);
+    assertEquals(1, results.size());
+    assertEquals("mem-v1", results.get(0).getMemory().getId());
   }
 
   // -----------------------------------------------------------------------

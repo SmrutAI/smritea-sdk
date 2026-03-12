@@ -124,6 +124,9 @@ class SmriteaClient:
         threshold: float | None = None,
         graph_depth: int | None = None,
         conversation_id: str | None = None,
+        from_time: str | None = None,
+        to_time: str | None = None,
+        valid_at: str | None = None,
     ) -> list[SearchResult]:
         """Search for memories semantically.
 
@@ -137,6 +140,9 @@ class SmriteaClient:
             threshold: Minimum relevance score filter (0.0–1.0).
             graph_depth: Graph traversal depth override.
             conversation_id: Filter to a specific conversation.
+            from_time: ISO-8601 datetime — only return memories created at or after this time.
+            to_time: ISO-8601 datetime — only return memories created at or before this time.
+            valid_at: ISO-8601 datetime — return memories valid at exactly this point in time.
 
         Returns:
             List of SearchResult objects ordered by relevance score.
@@ -155,6 +161,9 @@ class SmriteaClient:
             threshold=threshold,
             graph_depth=graph_depth,
             conversation_id=conversation_id,
+            from_time=from_time,
+            to_time=to_time,
+            valid_at=valid_at,
         )
         response = self._execute_with_retry(lambda: self._memory_api.search_memories(request))
         return list(response.memories or [])

@@ -35,6 +35,15 @@ public sealed class SearchOptions
     /// <summary>Gets the conversation ID to scope the search to.</summary>
     public string? ConversationId { get; private set; }
 
+    /// <summary>Gets iSO-8601 datetime string — only return memories created at or after this time.</summary>
+    public string? FromTime { get; private set; }
+
+    /// <summary>Gets iSO-8601 datetime string — only return memories created at or before this time.</summary>
+    public string? ToTime { get; private set; }
+
+    /// <summary>Gets iSO-8601 datetime string — return memories valid at exactly this point in time.</summary>
+    public string? ValidAt { get; private set; }
+
     /// <summary>Sets the user ID and forces ActorType to "user".</summary>
     /// <param name="userId">The user identifier to scope the search to.</param>
     /// <returns>The current instance for method chaining.</returns>
@@ -104,6 +113,33 @@ public sealed class SearchOptions
     public SearchOptions WithConversationId(string conversationId)
     {
         this.ConversationId = conversationId;
+        return this;
+    }
+
+    /// <summary>Sets the lower bound of the time range filter (ISO-8601).</summary>
+    /// <param name="fromTime">ISO-8601 datetime string; only memories at or after this time are returned.</param>
+    /// <returns>The current instance for method chaining.</returns>
+    public SearchOptions WithFromTime(string fromTime)
+    {
+        this.FromTime = fromTime;
+        return this;
+    }
+
+    /// <summary>Sets the upper bound of the time range filter (ISO-8601).</summary>
+    /// <param name="toTime">ISO-8601 datetime string; only memories at or before this time are returned.</param>
+    /// <returns>The current instance for method chaining.</returns>
+    public SearchOptions WithToTime(string toTime)
+    {
+        this.ToTime = toTime;
+        return this;
+    }
+
+    /// <summary>Sets a point-in-time filter (ISO-8601). Mutually exclusive with FromTime/ToTime.</summary>
+    /// <param name="validAt">ISO-8601 datetime string; only memories valid at exactly this instant are returned.</param>
+    /// <returns>The current instance for method chaining.</returns>
+    public SearchOptions WithValidAt(string validAt)
+    {
+        this.ValidAt = validAt;
         return this;
     }
 }

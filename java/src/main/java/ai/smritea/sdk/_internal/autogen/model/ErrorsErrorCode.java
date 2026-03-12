@@ -10,92 +10,79 @@
  * Do not edit the class manually.
  */
 
-
 package ai.smritea.sdk._internal.autogen.model;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * Gets or Sets errors.ErrorCode
- */
+/** Gets or Sets errors.ErrorCode */
 public enum ErrorsErrorCode {
-  
   ErrValidation("VALIDATION_ERROR"),
-  
+
   ErrInvalidInput("INVALID_INPUT"),
-  
+
   ErrUnauthorized("UNAUTHORIZED"),
-  
+
   ErrForbidden("FORBIDDEN"),
-  
+
   ErrInvalidToken("INVALID_TOKEN"),
-  
+
   ErrExpiredToken("EXPIRED_TOKEN"),
-  
+
   ErrInvalidAPIKey("INVALID_API_KEY"),
-  
+
   ErrNotFound("NOT_FOUND"),
-  
+
   ErrAlreadyExists("ALREADY_EXISTS"),
-  
+
   ErrConflict("CONFLICT"),
-  
+
   ErrQuotaExceeded("QUOTA_EXCEEDED"),
-  
+
   ErrInsufficientQuota("INSUFFICIENT_QUOTA"),
-  
+
   ErrInternal("INTERNAL_ERROR"),
-  
+
   ErrDatabaseError("DATABASE_ERROR"),
-  
+
   ErrCodeEmailNotVerified("EMAIL_NOT_VERIFIED"),
-  
+
   ErrCodePasswordResetExpired("PASSWORD_RESET_EXPIRED"),
-  
+
   ErrCodeOAuthProviderNotSupported("OAUTH_PROVIDER_NOT_SUPPORTED"),
-  
+
   ErrCodeOAuthStateMismatch("OAUTH_STATE_MISMATCH"),
-  
+
   ErrCodeAccountAlreadyLinked("ACCOUNT_ALREADY_LINKED"),
-  
+
   ErrCodeCannotUnlinkOnlyAuthMethod("CANNOT_UNLINK_ONLY_AUTH_METHOD"),
-  
+
   ErrCodeNotOrgMember("NOT_ORG_MEMBER"),
-  
+
   ErrCodeInsufficientPermission("INSUFFICIENT_PERMISSION"),
-  
+
   ErrCodeOrgSlugTaken("ORG_SLUG_TAKEN"),
-  
+
   ErrCodeNotTeamMember("NOT_TEAM_MEMBER"),
-  
+
   ErrCodeInvitationNotFound("INVITATION_NOT_FOUND"),
-  
+
   ErrCodeInvitationExpired("INVITATION_EXPIRED"),
-  
+
   ErrCodeInvitationAlreadyAccepted("INVITATION_ALREADY_ACCEPTED"),
-  
+
   ErrCodeUserAlreadyExists("USER_ALREADY_EXISTS"),
-  
+
   ErrCodeInvalidEmail("INVALID_EMAIL"),
-  
+
   ErrCodeEmailAlreadyVerified("EMAIL_ALREADY_VERIFIED"),
-  
+
   ErrCodeNoPasswordSet("NO_PASSWORD_SET"),
-  
+
   ErrCodePasswordAlreadySet("PASSWORD_ALREADY_SET"),
-  
+
   ErrCodeRateLimitExceeded("RATE_LIMIT_EXCEEDED"),
-  
+
   ErrCodeAppNameExistsInOrg("APP_NAME_EXISTS_IN_ORG");
 
   private String value;
@@ -137,6 +124,4 @@ public enum ErrorsErrorCode {
 
     return String.format(java.util.Locale.ROOT, "%s=%s", prefix, this.toString());
   }
-
 }
-

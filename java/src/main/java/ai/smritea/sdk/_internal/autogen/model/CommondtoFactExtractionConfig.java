@@ -10,29 +10,19 @@
  * Do not edit the class manually.
  */
 
-
 package ai.smritea.sdk._internal.autogen.model;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
+import ai.smritea.sdk._internal.autogen.ApiClient;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.Objects;
+import java.util.StringJoiner;
 
-
-import ai.smritea.sdk._internal.autogen.ApiClient;
-/**
- * CommondtoFactExtractionConfig
- */
+/** CommondtoFactExtractionConfig */
 @JsonPropertyOrder({
   CommondtoFactExtractionConfig.JSON_PROPERTY_MAX_PASSES,
   CommondtoFactExtractionConfig.JSON_PROPERTY_MAX_TOKENS,
@@ -41,27 +31,23 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   CommondtoFactExtractionConfig.JSON_PROPERTY_STRATEGY,
   CommondtoFactExtractionConfig.JSON_PROPERTY_TEMPERATURE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(
+    value = "org.openapitools.codegen.languages.JavaClientCodegen",
+    comments = "Generator version: 7.20.0")
 public class CommondtoFactExtractionConfig {
   public static final String JSON_PROPERTY_MAX_PASSES = "max_passes";
-  @javax.annotation.Nullable
-  private Integer maxPasses;
+  @javax.annotation.Nullable private Integer maxPasses;
 
   public static final String JSON_PROPERTY_MAX_TOKENS = "max_tokens";
-  @javax.annotation.Nullable
-  private Integer maxTokens;
+  @javax.annotation.Nullable private Integer maxTokens;
 
   public static final String JSON_PROPERTY_MIN_IMPORTANCE = "min_importance";
-  @javax.annotation.Nullable
-  private BigDecimal minImportance;
+  @javax.annotation.Nullable private BigDecimal minImportance;
 
   public static final String JSON_PROPERTY_MODEL = "model";
-  @javax.annotation.Nullable
-  private String model;
+  @javax.annotation.Nullable private String model;
 
-  /**
-   * Strategy is the fact extraction strategy to use. Default: \&quot;llm_fact_extraction\&quot;
-   */
+  /** Strategy is the fact extraction strategy to use. Default: \&quot;llm_fact_extraction\&quot; */
   public enum StrategyEnum {
     LLM_FACT_EXTRACTION(String.valueOf("llm_fact_extraction"));
 
@@ -93,15 +79,12 @@ public class CommondtoFactExtractionConfig {
   }
 
   public static final String JSON_PROPERTY_STRATEGY = "strategy";
-  @javax.annotation.Nullable
-  private StrategyEnum strategy;
+  @javax.annotation.Nullable private StrategyEnum strategy;
 
   public static final String JSON_PROPERTY_TEMPERATURE = "temperature";
-  @javax.annotation.Nullable
-  private BigDecimal temperature;
+  @javax.annotation.Nullable private BigDecimal temperature;
 
-  public CommondtoFactExtractionConfig() { 
-  }
+  public CommondtoFactExtractionConfig() {}
 
   public CommondtoFactExtractionConfig maxPasses(@javax.annotation.Nullable Integer maxPasses) {
     this.maxPasses = maxPasses;
@@ -109,7 +92,11 @@ public class CommondtoFactExtractionConfig {
   }
 
   /**
-   * MaxPasses controls how many extraction passes to perform. -1 &#x3D; explicitly skip fact extraction (sentinel value). 0 &#x3D; not specified (Go zero value), use default. 1-5 &#x3D; run N extraction passes. Default is 1 (single pass) so that fact extraction is enabled by default.
+   * MaxPasses controls how many extraction passes to perform. -1 &#x3D; explicitly skip fact
+   * extraction (sentinel value). 0 &#x3D; not specified (Go zero value), use default. 1-5 &#x3D;
+   * run N extraction passes. Default is 1 (single pass) so that fact extraction is enabled by
+   * default.
+   *
    * @return maxPasses
    */
   @javax.annotation.Nullable
@@ -119,13 +106,11 @@ public class CommondtoFactExtractionConfig {
     return maxPasses;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_MAX_PASSES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMaxPasses(@javax.annotation.Nullable Integer maxPasses) {
     this.maxPasses = maxPasses;
   }
-
 
   public CommondtoFactExtractionConfig maxTokens(@javax.annotation.Nullable Integer maxTokens) {
     this.maxTokens = maxTokens;
@@ -133,7 +118,10 @@ public class CommondtoFactExtractionConfig {
   }
 
   /**
-   * MaxTokens is the maximum completion tokens for LLM responses. 0 &#x3D; not set (use default). TODO(https://linear.app/bityantriki/issue/BIT-83): revert gte&#x3D;0 to gte&#x3D;100 once pedantigo applies defaults to nested structs during Validate()
+   * MaxTokens is the maximum completion tokens for LLM responses. 0 &#x3D; not set (use default).
+   * TODO(https://linear.app/bityantriki/issue/BIT-83): revert gte&#x3D;0 to gte&#x3D;100 once
+   * pedantigo applies defaults to nested structs during Validate()
+   *
    * @return maxTokens
    */
   @javax.annotation.Nullable
@@ -143,21 +131,22 @@ public class CommondtoFactExtractionConfig {
     return maxTokens;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_MAX_TOKENS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMaxTokens(@javax.annotation.Nullable Integer maxTokens) {
     this.maxTokens = maxTokens;
   }
 
-
-  public CommondtoFactExtractionConfig minImportance(@javax.annotation.Nullable BigDecimal minImportance) {
+  public CommondtoFactExtractionConfig minImportance(
+      @javax.annotation.Nullable BigDecimal minImportance) {
     this.minImportance = minImportance;
     return this;
   }
 
   /**
-   * MinImportance is the minimum importance threshold for extracted facts (0.0 to 1.0). Facts below this threshold are filtered out.
+   * MinImportance is the minimum importance threshold for extracted facts (0.0 to 1.0). Facts below
+   * this threshold are filtered out.
+   *
    * @return minImportance
    */
   @javax.annotation.Nullable
@@ -167,13 +156,11 @@ public class CommondtoFactExtractionConfig {
     return minImportance;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_MIN_IMPORTANCE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMinImportance(@javax.annotation.Nullable BigDecimal minImportance) {
     this.minImportance = minImportance;
   }
-
 
   public CommondtoFactExtractionConfig model(@javax.annotation.Nullable String model) {
     this.model = model;
@@ -182,6 +169,7 @@ public class CommondtoFactExtractionConfig {
 
   /**
    * Model is the LLM model to use (empty &#x3D; use provider default).
+   *
    * @return model
    */
   @javax.annotation.Nullable
@@ -191,13 +179,11 @@ public class CommondtoFactExtractionConfig {
     return model;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setModel(@javax.annotation.Nullable String model) {
     this.model = model;
   }
-
 
   public CommondtoFactExtractionConfig strategy(@javax.annotation.Nullable StrategyEnum strategy) {
     this.strategy = strategy;
@@ -206,6 +192,7 @@ public class CommondtoFactExtractionConfig {
 
   /**
    * Strategy is the fact extraction strategy to use. Default: \&quot;llm_fact_extraction\&quot;
+   *
    * @return strategy
    */
   @javax.annotation.Nullable
@@ -215,21 +202,21 @@ public class CommondtoFactExtractionConfig {
     return strategy;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_STRATEGY, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setStrategy(@javax.annotation.Nullable StrategyEnum strategy) {
     this.strategy = strategy;
   }
 
-
-  public CommondtoFactExtractionConfig temperature(@javax.annotation.Nullable BigDecimal temperature) {
+  public CommondtoFactExtractionConfig temperature(
+      @javax.annotation.Nullable BigDecimal temperature) {
     this.temperature = temperature;
     return this;
   }
 
   /**
    * Temperature controls LLM randomness (0.0 &#x3D; deterministic, higher &#x3D; creative).
+   *
    * @return temperature
    */
   @javax.annotation.Nullable
@@ -239,17 +226,13 @@ public class CommondtoFactExtractionConfig {
     return temperature;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_TEMPERATURE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setTemperature(@javax.annotation.Nullable BigDecimal temperature) {
     this.temperature = temperature;
   }
 
-
-  /**
-   * Return true if this commondto.FactExtractionConfig object is equal to o.
-   */
+  /** Return true if this commondto.FactExtractionConfig object is equal to o. */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -259,12 +242,12 @@ public class CommondtoFactExtractionConfig {
       return false;
     }
     CommondtoFactExtractionConfig commondtoFactExtractionConfig = (CommondtoFactExtractionConfig) o;
-    return Objects.equals(this.maxPasses, commondtoFactExtractionConfig.maxPasses) &&
-        Objects.equals(this.maxTokens, commondtoFactExtractionConfig.maxTokens) &&
-        Objects.equals(this.minImportance, commondtoFactExtractionConfig.minImportance) &&
-        Objects.equals(this.model, commondtoFactExtractionConfig.model) &&
-        Objects.equals(this.strategy, commondtoFactExtractionConfig.strategy) &&
-        Objects.equals(this.temperature, commondtoFactExtractionConfig.temperature);
+    return Objects.equals(this.maxPasses, commondtoFactExtractionConfig.maxPasses)
+        && Objects.equals(this.maxTokens, commondtoFactExtractionConfig.maxTokens)
+        && Objects.equals(this.minImportance, commondtoFactExtractionConfig.minImportance)
+        && Objects.equals(this.model, commondtoFactExtractionConfig.model)
+        && Objects.equals(this.strategy, commondtoFactExtractionConfig.strategy)
+        && Objects.equals(this.temperature, commondtoFactExtractionConfig.temperature);
   }
 
   @Override
@@ -287,8 +270,7 @@ public class CommondtoFactExtractionConfig {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -331,35 +313,70 @@ public class CommondtoFactExtractionConfig {
 
     // add `max_passes` to the URL query string
     if (getMaxPasses() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%smax_passes%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMaxPasses()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%smax_passes%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getMaxPasses()))));
     }
 
     // add `max_tokens` to the URL query string
     if (getMaxTokens() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%smax_tokens%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMaxTokens()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%smax_tokens%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getMaxTokens()))));
     }
 
     // add `min_importance` to the URL query string
     if (getMinImportance() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%smin_importance%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMinImportance()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%smin_importance%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getMinImportance()))));
     }
 
     // add `model` to the URL query string
     if (getModel() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%smodel%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getModel()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%smodel%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getModel()))));
     }
 
     // add `strategy` to the URL query string
     if (getStrategy() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sstrategy%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getStrategy()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sstrategy%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getStrategy()))));
     }
 
     // add `temperature` to the URL query string
     if (getTemperature() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%stemperature%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getTemperature()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%stemperature%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getTemperature()))));
     }
 
     return joiner.toString();
   }
 }
-

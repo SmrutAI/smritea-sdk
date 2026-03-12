@@ -10,38 +10,25 @@
  * Do not edit the class manually.
  */
 
-
 package ai.smritea.sdk._internal.autogen.model;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * Gets or Sets model_enums.SearchMethod
- */
+/** Gets or Sets model_enums.SearchMethod */
 public enum ModelEnumsSearchMethod {
-  
   SearchMethodInvalid("invalid_search_method"),
-  
+
   SearchMethodQuickSearch("quick_search"),
-  
+
   SearchMethodDeepSearch("deep_search"),
-  
+
   SearchMethodContextAwareSearch("context_aware_search"),
-  
+
   SearchMethodGraphProximity("graph_proximity"),
-  
+
   SearchMethodDiversified("diversified"),
-  
+
   SearchMethodSemanticRerank("semantic_rerank");
 
   private String value;
@@ -83,6 +70,4 @@ public enum ModelEnumsSearchMethod {
 
     return String.format(java.util.Locale.ROOT, "%s=%s", prefix, this.toString());
   }
-
 }
-

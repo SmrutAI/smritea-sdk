@@ -69,6 +69,9 @@ export class SmriteaClient {
           threshold: options?.threshold,
           graphDepth: options?.graphDepth,
           conversationId: options?.conversationId,
+          fromTime: options?.fromTime,
+          toTime: options?.toTime,
+          validAt: options?.validAt,
         },
       }),
     );

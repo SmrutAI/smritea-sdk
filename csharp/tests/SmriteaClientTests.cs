@@ -125,6 +125,30 @@ public class SmriteaClientTests : IDisposable
         Assert.Empty(results);
     }
 
+    [Fact]
+    public async Task SearchAsync_TemporalFilters_SentInRequest()
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories/search").UsingPost()
+                .WithBody(b => b != null
+                    && b.Contains("\"from_time\":\"2024-01-01T00:00:00Z\"")
+                    && b.Contains("\"to_time\":\"2024-12-31T23:59:59Z\"")
+                    && b.Contains("\"valid_at\":\"2024-06-15T12:00:00Z\"")))
+            .RespondWith(Response.Create().WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody("{\"memories\":[{\"memory\":{\"id\":\"mem-t1\",\"content\":\"temporal\"},\"score\":0.8}]}"));
+
+        using var client = CreateClient();
+        var opts = new SearchOptions()
+            .WithFromTime("2024-01-01T00:00:00Z")
+            .WithToTime("2024-12-31T23:59:59Z")
+            .WithValidAt("2024-06-15T12:00:00Z");
+        var results = await client.SearchAsync("temporal", opts);
+
+        Assert.NotNull(results);
+        Assert.Single(results);
+        Assert.Equal("mem-t1", results[0].Memory!.Id);
+    }
+
     // -----------------------------------------------------------------------
     // Get
     // -----------------------------------------------------------------------

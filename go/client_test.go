@@ -231,6 +231,27 @@ func TestSearchOptions_Builder(t *testing.T) {
 	}
 }
 
+func TestSearchOptions_TemporalFilter_Builder(t *testing.T) {
+	opts := NewSearchOptions().
+		WithFromTime("2024-01-01T00:00:00Z").
+		WithToTime("2024-12-31T23:59:59Z").
+		WithValidAt("2024-06-15T12:00:00Z")
+
+	if opts.FromTime == nil || *opts.FromTime != "2024-01-01T00:00:00Z" {
+		t.Errorf("WithFromTime: got %v, want 2024-01-01T00:00:00Z", opts.FromTime)
+	}
+	if opts.ToTime == nil || *opts.ToTime != "2024-12-31T23:59:59Z" {
+		t.Errorf("WithToTime: got %v, want 2024-12-31T23:59:59Z", opts.ToTime)
+	}
+	if opts.ValidAt == nil || *opts.ValidAt != "2024-06-15T12:00:00Z" {
+		t.Errorf("WithValidAt: got %v, want 2024-06-15T12:00:00Z", opts.ValidAt)
+	}
+	// Unset fields remain nil
+	if opts.Limit != nil {
+		t.Errorf("Limit should be nil, got %v", *opts.Limit)
+	}
+}
+
 func TestAddOptions_Builder_UsedInAdd(t *testing.T) {
 	// Verify fluent builder works end-to-end with Add()
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -397,6 +418,49 @@ func TestSearch_EmptyResult(t *testing.T) {
 	}
 	if len(results) != 0 {
 		t.Errorf("Search empty: got %d results, want 0", len(results))
+	}
+}
+
+func TestSearch_TemporalFilter_PassedThrough(t *testing.T) {
+	// Assert that FromTime, ToTime, and ValidAt set via the fluent builder are
+	// serialised into the outbound request body by the autogen client.
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body map[string]interface{}
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		fromTime, fromTimeOK := body["from_time"].(string)
+		if !fromTimeOK || fromTime != "2024-01-01T00:00:00Z" {
+			http.Error(w, fmt.Sprintf("wrong from_time: %v", body["from_time"]), http.StatusBadRequest)
+			return
+		}
+
+		toTime, toTimeOK := body["to_time"].(string)
+		if !toTimeOK || toTime != "2024-12-31T23:59:59Z" {
+			http.Error(w, fmt.Sprintf("wrong to_time: %v", body["to_time"]), http.StatusBadRequest)
+			return
+		}
+
+		validAt, validAtOK := body["valid_at"].(string)
+		if !validAtOK || validAt != "2024-06-15T12:00:00Z" {
+			http.Error(w, fmt.Sprintf("wrong valid_at: %v", body["valid_at"]), http.StatusBadRequest)
+			return
+		}
+
+		writeJSON(w, http.StatusOK, []byte(`{"memories":[]}`))
+	})
+	client := newTestClient(t, handler, 1)
+
+	opts := NewSearchOptions().
+		WithFromTime("2024-01-01T00:00:00Z").
+		WithToTime("2024-12-31T23:59:59Z").
+		WithValidAt("2024-06-15T12:00:00Z")
+
+	_, err := client.Search(context.Background(), "query", opts)
+	if err != nil {
+		t.Fatalf("Search temporal filter: unexpected error: %v", err)
 	}
 }
 

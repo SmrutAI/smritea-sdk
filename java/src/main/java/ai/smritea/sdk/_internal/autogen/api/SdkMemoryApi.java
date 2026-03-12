@@ -16,61 +16,48 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 import ai.smritea.sdk._internal.autogen.ApiException;
 import ai.smritea.sdk._internal.autogen.ApiResponse;
 import ai.smritea.sdk._internal.autogen.Configuration;
-import ai.smritea.sdk._internal.autogen.Pair;
-
-import ai.smritea.sdk._internal.autogen.model.ErrorsAppError;
 import ai.smritea.sdk._internal.autogen.model.MemoryCreateMemoryRequest;
 import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoriesResponse;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryRequest;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.http.HttpRequest;
-import java.nio.channels.Channels;
-import java.nio.channels.Pipe;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-
-import java.util.ArrayList;
-import java.util.StringJoiner;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(
+    value = "org.openapitools.codegen.languages.JavaClientCodegen",
+    comments = "Generator version: 7.20.0")
 public class SdkMemoryApi {
-  /**
-   * Utility class for extending HttpRequest.Builder functionality.
-   */
+  /** Utility class for extending HttpRequest.Builder functionality. */
   private static class HttpRequestBuilderExtensions {
     /**
-     * Adds additional headers to the provided HttpRequest.Builder. Useful for adding method/endpoint specific headers.
+     * Adds additional headers to the provided HttpRequest.Builder. Useful for adding
+     * method/endpoint specific headers.
      *
      * @param builder the HttpRequest.Builder to which headers will be added
      * @param headers a map of header names and values to add; may be null
      * @return the same HttpRequest.Builder instance with the additional headers set
      */
-    static HttpRequest.Builder withAdditionalHeaders(HttpRequest.Builder builder, Map<String, String> headers) {
-        if (headers != null) {
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
-                builder.header(entry.getKey(), entry.getValue());
-            }
+    static HttpRequest.Builder withAdditionalHeaders(
+        HttpRequest.Builder builder, Map<String, String> headers) {
+      if (headers != null) {
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+          builder.header(entry.getKey(), entry.getValue());
         }
-        return builder;
+      }
+      return builder;
     }
   }
+
   private final HttpClient memberVarHttpClient;
   private final ObjectMapper memberVarObjectMapper;
   private final String memberVarBaseUri;
@@ -93,8 +80,8 @@ public class SdkMemoryApi {
     memberVarAsyncResponseInterceptor = apiClient.getAsyncResponseInterceptor();
   }
 
-
-  protected ApiException getApiException(String operationId, HttpResponse<InputStream> response) throws IOException {
+  protected ApiException getApiException(String operationId, HttpResponse<InputStream> response)
+      throws IOException {
     InputStream responseBody = ApiClient.getResponseBody(response);
     String body = null;
     try {
@@ -122,13 +109,15 @@ public class SdkMemoryApi {
    * @return File
    * @throws ApiException If fail to read file content from response and write to disk
    */
-  public File downloadFileFromResponse(HttpResponse<InputStream> response, InputStream responseBody) throws ApiException {
+  public File downloadFileFromResponse(HttpResponse<InputStream> response, InputStream responseBody)
+      throws ApiException {
     if (responseBody == null) {
       throw new ApiException(new IOException("Response body is empty"));
     }
     try {
       File file = prepareDownloadFile(response);
-      java.nio.file.Files.copy(responseBody, file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+      java.nio.file.Files.copy(
+          responseBody, file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
       return file;
     } catch (IOException e) {
       throw new ApiException(e);
@@ -136,7 +125,7 @@ public class SdkMemoryApi {
   }
 
   /**
-   * <p>Prepare the file for download from the response.</p>
+   * Prepare the file for download from the response.
    *
    * @param response a {@link java.net.http.HttpResponse} object.
    * @return a {@link java.io.File} object.
@@ -144,20 +133,21 @@ public class SdkMemoryApi {
    */
   private File prepareDownloadFile(HttpResponse<InputStream> response) throws IOException {
     String filename = null;
-    java.util.Optional<String> contentDisposition = response.headers().firstValue("Content-Disposition");
+    java.util.Optional<String> contentDisposition =
+        response.headers().firstValue("Content-Disposition");
     if (contentDisposition.isPresent() && !"".equals(contentDisposition.get())) {
       // Get filename from the Content-Disposition header.
-      java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
+      java.util.regex.Pattern pattern =
+          java.util.regex.Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
       java.util.regex.Matcher matcher = pattern.matcher(contentDisposition.get());
-      if (matcher.find())
-        filename = matcher.group(1);
+      if (matcher.find()) filename = matcher.group(1);
     }
     File file = null;
     if (filename != null) {
       java.nio.file.Path tempDir = java.nio.file.Files.createTempDirectory("swagger-gen-native");
       java.nio.file.Path filePath = java.nio.file.Files.createFile(tempDir.resolve(filename));
       file = filePath.toFile();
-      tempDir.toFile().deleteOnExit();   // best effort cleanup
+      tempDir.toFile().deleteOnExit(); // best effort cleanup
       file.deleteOnExit(); // best effort cleanup
     } else {
       file = java.nio.file.Files.createTempFile("download-", "").toFile();
@@ -167,82 +157,83 @@ public class SdkMemoryApi {
   }
 
   /**
-   * Create memory (SDK)
-   * Create a new memory with quota and rate limit enforcement
+   * Create memory (SDK) Create a new memory with quota and rate limit enforcement
+   *
    * @param request Memory creation details (required)
    * @return MemoryMemoryResponse
    * @throws ApiException if fails to make API call
    */
-  public MemoryMemoryResponse createMemory(@javax.annotation.Nonnull MemoryCreateMemoryRequest request) throws ApiException {
+  public MemoryMemoryResponse createMemory(
+      @javax.annotation.Nonnull MemoryCreateMemoryRequest request) throws ApiException {
     return createMemory(request, null);
   }
 
   /**
-   * Create memory (SDK)
-   * Create a new memory with quota and rate limit enforcement
+   * Create memory (SDK) Create a new memory with quota and rate limit enforcement
+   *
    * @param request Memory creation details (required)
    * @param headers Optional headers to include in the request
    * @return MemoryMemoryResponse
    * @throws ApiException if fails to make API call
    */
-  public MemoryMemoryResponse createMemory(@javax.annotation.Nonnull MemoryCreateMemoryRequest request, Map<String, String> headers) throws ApiException {
+  public MemoryMemoryResponse createMemory(
+      @javax.annotation.Nonnull MemoryCreateMemoryRequest request, Map<String, String> headers)
+      throws ApiException {
     ApiResponse<MemoryMemoryResponse> localVarResponse = createMemoryWithHttpInfo(request, headers);
     return localVarResponse.getData();
   }
 
   /**
-   * Create memory (SDK)
-   * Create a new memory with quota and rate limit enforcement
+   * Create memory (SDK) Create a new memory with quota and rate limit enforcement
+   *
    * @param request Memory creation details (required)
    * @return ApiResponse&lt;MemoryMemoryResponse&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<MemoryMemoryResponse> createMemoryWithHttpInfo(@javax.annotation.Nonnull MemoryCreateMemoryRequest request) throws ApiException {
+  public ApiResponse<MemoryMemoryResponse> createMemoryWithHttpInfo(
+      @javax.annotation.Nonnull MemoryCreateMemoryRequest request) throws ApiException {
     return createMemoryWithHttpInfo(request, null);
   }
 
   /**
-   * Create memory (SDK)
-   * Create a new memory with quota and rate limit enforcement
+   * Create memory (SDK) Create a new memory with quota and rate limit enforcement
+   *
    * @param request Memory creation details (required)
    * @param headers Optional headers to include in the request
    * @return ApiResponse&lt;MemoryMemoryResponse&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<MemoryMemoryResponse> createMemoryWithHttpInfo(@javax.annotation.Nonnull MemoryCreateMemoryRequest request, Map<String, String> headers) throws ApiException {
+  public ApiResponse<MemoryMemoryResponse> createMemoryWithHttpInfo(
+      @javax.annotation.Nonnull MemoryCreateMemoryRequest request, Map<String, String> headers)
+      throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = createMemoryRequestBuilder(request, headers);
     try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
+      HttpResponse<InputStream> localVarResponse =
+          memberVarHttpClient.send(
+              localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofInputStream());
       if (memberVarResponseInterceptor != null) {
         memberVarResponseInterceptor.accept(localVarResponse);
       }
       InputStream localVarResponseBody = null;
       try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
+        if (localVarResponse.statusCode() / 100 != 2) {
           throw getApiException("createMemory", localVarResponse);
         }
         localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
         if (localVarResponseBody == null) {
           return new ApiResponse<MemoryMemoryResponse>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
+              localVarResponse.statusCode(), localVarResponse.headers().map(), null);
         }
 
-        
-        
         String responseBody = new String(localVarResponseBody.readAllBytes());
-        MemoryMemoryResponse responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<MemoryMemoryResponse>() {});
-        
+        MemoryMemoryResponse responseValue =
+            responseBody.isBlank()
+                ? null
+                : memberVarObjectMapper.readValue(
+                    responseBody, new TypeReference<MemoryMemoryResponse>() {});
 
         return new ApiResponse<MemoryMemoryResponse>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
+            localVarResponse.statusCode(), localVarResponse.headers().map(), responseValue);
       } finally {
         if (localVarResponseBody != null) {
           localVarResponseBody.close();
@@ -250,17 +241,19 @@ public class SdkMemoryApi {
       }
     } catch (IOException e) {
       throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
+    } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new ApiException(e);
     }
   }
 
-  private HttpRequest.Builder createMemoryRequestBuilder(@javax.annotation.Nonnull MemoryCreateMemoryRequest request, Map<String, String> headers) throws ApiException {
+  private HttpRequest.Builder createMemoryRequestBuilder(
+      @javax.annotation.Nonnull MemoryCreateMemoryRequest request, Map<String, String> headers)
+      throws ApiException {
     // verify the required parameter 'request' is set
     if (request == null) {
-      throw new ApiException(400, "Missing the required parameter 'request' when calling createMemory");
+      throw new ApiException(
+          400, "Missing the required parameter 'request' when calling createMemory");
     }
 
     HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
@@ -274,7 +267,8 @@ public class SdkMemoryApi {
 
     try {
       byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(request);
-      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+      localVarRequestBuilder.method(
+          "POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
     } catch (IOException e) {
       throw new ApiException(e);
     }
@@ -282,7 +276,8 @@ public class SdkMemoryApi {
       localVarRequestBuilder.timeout(memberVarReadTimeout);
     }
     // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    localVarRequestBuilder =
+        HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
     if (memberVarInterceptor != null) {
       memberVarInterceptor.accept(localVarRequestBuilder);
     }
@@ -290,8 +285,8 @@ public class SdkMemoryApi {
   }
 
   /**
-   * Delete memory (SDK)
-   * Delete a memory by ID with rate limit enforcement
+   * Delete memory (SDK) Delete a memory by ID with rate limit enforcement
+   *
    * @param memoryId Memory ID (required)
    * @throws ApiException if fails to make API call
    */
@@ -300,47 +295,50 @@ public class SdkMemoryApi {
   }
 
   /**
-   * Delete memory (SDK)
-   * Delete a memory by ID with rate limit enforcement
+   * Delete memory (SDK) Delete a memory by ID with rate limit enforcement
+   *
    * @param memoryId Memory ID (required)
    * @param headers Optional headers to include in the request
    * @throws ApiException if fails to make API call
    */
-  public void deleteMemory(@javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+  public void deleteMemory(@javax.annotation.Nonnull String memoryId, Map<String, String> headers)
+      throws ApiException {
     deleteMemoryWithHttpInfo(memoryId, headers);
   }
 
   /**
-   * Delete memory (SDK)
-   * Delete a memory by ID with rate limit enforcement
+   * Delete memory (SDK) Delete a memory by ID with rate limit enforcement
+   *
    * @param memoryId Memory ID (required)
    * @return ApiResponse&lt;Void&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> deleteMemoryWithHttpInfo(@javax.annotation.Nonnull String memoryId) throws ApiException {
+  public ApiResponse<Void> deleteMemoryWithHttpInfo(@javax.annotation.Nonnull String memoryId)
+      throws ApiException {
     return deleteMemoryWithHttpInfo(memoryId, null);
   }
 
   /**
-   * Delete memory (SDK)
-   * Delete a memory by ID with rate limit enforcement
+   * Delete memory (SDK) Delete a memory by ID with rate limit enforcement
+   *
    * @param memoryId Memory ID (required)
    * @param headers Optional headers to include in the request
    * @return ApiResponse&lt;Void&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> deleteMemoryWithHttpInfo(@javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+  public ApiResponse<Void> deleteMemoryWithHttpInfo(
+      @javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = deleteMemoryRequestBuilder(memoryId, headers);
     try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
+      HttpResponse<InputStream> localVarResponse =
+          memberVarHttpClient.send(
+              localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofInputStream());
       if (memberVarResponseInterceptor != null) {
         memberVarResponseInterceptor.accept(localVarResponse);
       }
       InputStream localVarResponseBody = null;
       try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
+        if (localVarResponse.statusCode() / 100 != 2) {
           throw getApiException("deleteMemory", localVarResponse);
         }
         localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
@@ -348,10 +346,7 @@ public class SdkMemoryApi {
           localVarResponseBody.readAllBytes();
         }
         return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
+            localVarResponse.statusCode(), localVarResponse.headers().map(), null);
       } finally {
         if (localVarResponseBody != null) {
           localVarResponseBody.close();
@@ -359,23 +354,25 @@ public class SdkMemoryApi {
       }
     } catch (IOException e) {
       throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
+    } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new ApiException(e);
     }
   }
 
-  private HttpRequest.Builder deleteMemoryRequestBuilder(@javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+  private HttpRequest.Builder deleteMemoryRequestBuilder(
+      @javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
     // verify the required parameter 'memoryId' is set
     if (memoryId == null) {
-      throw new ApiException(400, "Missing the required parameter 'memoryId' when calling deleteMemory");
+      throw new ApiException(
+          400, "Missing the required parameter 'memoryId' when calling deleteMemory");
     }
 
     HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
 
-    String localVarPath = "/api/v1/sdk/memories/{memory_id}"
-        .replace("{memory_id}", ApiClient.urlEncode(memoryId.toString()));
+    String localVarPath =
+        "/api/v1/sdk/memories/{memory_id}"
+            .replace("{memory_id}", ApiClient.urlEncode(memoryId.toString()));
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
@@ -386,7 +383,8 @@ public class SdkMemoryApi {
       localVarRequestBuilder.timeout(memberVarReadTimeout);
     }
     // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    localVarRequestBuilder =
+        HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
     if (memberVarInterceptor != null) {
       memberVarInterceptor.accept(localVarRequestBuilder);
     }
@@ -394,82 +392,81 @@ public class SdkMemoryApi {
   }
 
   /**
-   * Get memory by ID (SDK)
-   * Get a single memory by ID with rate limit enforcement
+   * Get memory by ID (SDK) Get a single memory by ID with rate limit enforcement
+   *
    * @param memoryId Memory ID (required)
    * @return MemoryMemoryResponse
    * @throws ApiException if fails to make API call
    */
-  public MemoryMemoryResponse getMemory(@javax.annotation.Nonnull String memoryId) throws ApiException {
+  public MemoryMemoryResponse getMemory(@javax.annotation.Nonnull String memoryId)
+      throws ApiException {
     return getMemory(memoryId, null);
   }
 
   /**
-   * Get memory by ID (SDK)
-   * Get a single memory by ID with rate limit enforcement
+   * Get memory by ID (SDK) Get a single memory by ID with rate limit enforcement
+   *
    * @param memoryId Memory ID (required)
    * @param headers Optional headers to include in the request
    * @return MemoryMemoryResponse
    * @throws ApiException if fails to make API call
    */
-  public MemoryMemoryResponse getMemory(@javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+  public MemoryMemoryResponse getMemory(
+      @javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
     ApiResponse<MemoryMemoryResponse> localVarResponse = getMemoryWithHttpInfo(memoryId, headers);
     return localVarResponse.getData();
   }
 
   /**
-   * Get memory by ID (SDK)
-   * Get a single memory by ID with rate limit enforcement
+   * Get memory by ID (SDK) Get a single memory by ID with rate limit enforcement
+   *
    * @param memoryId Memory ID (required)
    * @return ApiResponse&lt;MemoryMemoryResponse&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<MemoryMemoryResponse> getMemoryWithHttpInfo(@javax.annotation.Nonnull String memoryId) throws ApiException {
+  public ApiResponse<MemoryMemoryResponse> getMemoryWithHttpInfo(
+      @javax.annotation.Nonnull String memoryId) throws ApiException {
     return getMemoryWithHttpInfo(memoryId, null);
   }
 
   /**
-   * Get memory by ID (SDK)
-   * Get a single memory by ID with rate limit enforcement
+   * Get memory by ID (SDK) Get a single memory by ID with rate limit enforcement
+   *
    * @param memoryId Memory ID (required)
    * @param headers Optional headers to include in the request
    * @return ApiResponse&lt;MemoryMemoryResponse&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<MemoryMemoryResponse> getMemoryWithHttpInfo(@javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+  public ApiResponse<MemoryMemoryResponse> getMemoryWithHttpInfo(
+      @javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = getMemoryRequestBuilder(memoryId, headers);
     try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
+      HttpResponse<InputStream> localVarResponse =
+          memberVarHttpClient.send(
+              localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofInputStream());
       if (memberVarResponseInterceptor != null) {
         memberVarResponseInterceptor.accept(localVarResponse);
       }
       InputStream localVarResponseBody = null;
       try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
+        if (localVarResponse.statusCode() / 100 != 2) {
           throw getApiException("getMemory", localVarResponse);
         }
         localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
         if (localVarResponseBody == null) {
           return new ApiResponse<MemoryMemoryResponse>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
+              localVarResponse.statusCode(), localVarResponse.headers().map(), null);
         }
 
-        
-        
         String responseBody = new String(localVarResponseBody.readAllBytes());
-        MemoryMemoryResponse responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<MemoryMemoryResponse>() {});
-        
+        MemoryMemoryResponse responseValue =
+            responseBody.isBlank()
+                ? null
+                : memberVarObjectMapper.readValue(
+                    responseBody, new TypeReference<MemoryMemoryResponse>() {});
 
         return new ApiResponse<MemoryMemoryResponse>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
+            localVarResponse.statusCode(), localVarResponse.headers().map(), responseValue);
       } finally {
         if (localVarResponseBody != null) {
           localVarResponseBody.close();
@@ -477,23 +474,25 @@ public class SdkMemoryApi {
       }
     } catch (IOException e) {
       throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
+    } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new ApiException(e);
     }
   }
 
-  private HttpRequest.Builder getMemoryRequestBuilder(@javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+  private HttpRequest.Builder getMemoryRequestBuilder(
+      @javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
     // verify the required parameter 'memoryId' is set
     if (memoryId == null) {
-      throw new ApiException(400, "Missing the required parameter 'memoryId' when calling getMemory");
+      throw new ApiException(
+          400, "Missing the required parameter 'memoryId' when calling getMemory");
     }
 
     HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
 
-    String localVarPath = "/api/v1/sdk/memories/{memory_id}"
-        .replace("{memory_id}", ApiClient.urlEncode(memoryId.toString()));
+    String localVarPath =
+        "/api/v1/sdk/memories/{memory_id}"
+            .replace("{memory_id}", ApiClient.urlEncode(memoryId.toString()));
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
@@ -504,7 +503,8 @@ public class SdkMemoryApi {
       localVarRequestBuilder.timeout(memberVarReadTimeout);
     }
     // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    localVarRequestBuilder =
+        HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
     if (memberVarInterceptor != null) {
       memberVarInterceptor.accept(localVarRequestBuilder);
     }
@@ -512,82 +512,84 @@ public class SdkMemoryApi {
   }
 
   /**
-   * Search memories (SDK)
-   * Search memories with quota and rate limit enforcement
+   * Search memories (SDK) Search memories with quota and rate limit enforcement
+   *
    * @param request Search request details (required)
    * @return MemorySearchMemoriesResponse
    * @throws ApiException if fails to make API call
    */
-  public MemorySearchMemoriesResponse searchMemories(@javax.annotation.Nonnull MemorySearchMemoryRequest request) throws ApiException {
+  public MemorySearchMemoriesResponse searchMemories(
+      @javax.annotation.Nonnull MemorySearchMemoryRequest request) throws ApiException {
     return searchMemories(request, null);
   }
 
   /**
-   * Search memories (SDK)
-   * Search memories with quota and rate limit enforcement
+   * Search memories (SDK) Search memories with quota and rate limit enforcement
+   *
    * @param request Search request details (required)
    * @param headers Optional headers to include in the request
    * @return MemorySearchMemoriesResponse
    * @throws ApiException if fails to make API call
    */
-  public MemorySearchMemoriesResponse searchMemories(@javax.annotation.Nonnull MemorySearchMemoryRequest request, Map<String, String> headers) throws ApiException {
-    ApiResponse<MemorySearchMemoriesResponse> localVarResponse = searchMemoriesWithHttpInfo(request, headers);
+  public MemorySearchMemoriesResponse searchMemories(
+      @javax.annotation.Nonnull MemorySearchMemoryRequest request, Map<String, String> headers)
+      throws ApiException {
+    ApiResponse<MemorySearchMemoriesResponse> localVarResponse =
+        searchMemoriesWithHttpInfo(request, headers);
     return localVarResponse.getData();
   }
 
   /**
-   * Search memories (SDK)
-   * Search memories with quota and rate limit enforcement
+   * Search memories (SDK) Search memories with quota and rate limit enforcement
+   *
    * @param request Search request details (required)
    * @return ApiResponse&lt;MemorySearchMemoriesResponse&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<MemorySearchMemoriesResponse> searchMemoriesWithHttpInfo(@javax.annotation.Nonnull MemorySearchMemoryRequest request) throws ApiException {
+  public ApiResponse<MemorySearchMemoriesResponse> searchMemoriesWithHttpInfo(
+      @javax.annotation.Nonnull MemorySearchMemoryRequest request) throws ApiException {
     return searchMemoriesWithHttpInfo(request, null);
   }
 
   /**
-   * Search memories (SDK)
-   * Search memories with quota and rate limit enforcement
+   * Search memories (SDK) Search memories with quota and rate limit enforcement
+   *
    * @param request Search request details (required)
    * @param headers Optional headers to include in the request
    * @return ApiResponse&lt;MemorySearchMemoriesResponse&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<MemorySearchMemoriesResponse> searchMemoriesWithHttpInfo(@javax.annotation.Nonnull MemorySearchMemoryRequest request, Map<String, String> headers) throws ApiException {
+  public ApiResponse<MemorySearchMemoriesResponse> searchMemoriesWithHttpInfo(
+      @javax.annotation.Nonnull MemorySearchMemoryRequest request, Map<String, String> headers)
+      throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = searchMemoriesRequestBuilder(request, headers);
     try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
+      HttpResponse<InputStream> localVarResponse =
+          memberVarHttpClient.send(
+              localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofInputStream());
       if (memberVarResponseInterceptor != null) {
         memberVarResponseInterceptor.accept(localVarResponse);
       }
       InputStream localVarResponseBody = null;
       try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
+        if (localVarResponse.statusCode() / 100 != 2) {
           throw getApiException("searchMemories", localVarResponse);
         }
         localVarResponseBody = ApiClient.getResponseBody(localVarResponse);
         if (localVarResponseBody == null) {
           return new ApiResponse<MemorySearchMemoriesResponse>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
+              localVarResponse.statusCode(), localVarResponse.headers().map(), null);
         }
 
-        
-        
         String responseBody = new String(localVarResponseBody.readAllBytes());
-        MemorySearchMemoriesResponse responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<MemorySearchMemoriesResponse>() {});
-        
+        MemorySearchMemoriesResponse responseValue =
+            responseBody.isBlank()
+                ? null
+                : memberVarObjectMapper.readValue(
+                    responseBody, new TypeReference<MemorySearchMemoriesResponse>() {});
 
         return new ApiResponse<MemorySearchMemoriesResponse>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
+            localVarResponse.statusCode(), localVarResponse.headers().map(), responseValue);
       } finally {
         if (localVarResponseBody != null) {
           localVarResponseBody.close();
@@ -595,17 +597,19 @@ public class SdkMemoryApi {
       }
     } catch (IOException e) {
       throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
+    } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new ApiException(e);
     }
   }
 
-  private HttpRequest.Builder searchMemoriesRequestBuilder(@javax.annotation.Nonnull MemorySearchMemoryRequest request, Map<String, String> headers) throws ApiException {
+  private HttpRequest.Builder searchMemoriesRequestBuilder(
+      @javax.annotation.Nonnull MemorySearchMemoryRequest request, Map<String, String> headers)
+      throws ApiException {
     // verify the required parameter 'request' is set
     if (request == null) {
-      throw new ApiException(400, "Missing the required parameter 'request' when calling searchMemories");
+      throw new ApiException(
+          400, "Missing the required parameter 'request' when calling searchMemories");
     }
 
     HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
@@ -619,7 +623,8 @@ public class SdkMemoryApi {
 
     try {
       byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(request);
-      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+      localVarRequestBuilder.method(
+          "POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
     } catch (IOException e) {
       throw new ApiException(e);
     }
@@ -627,11 +632,11 @@ public class SdkMemoryApi {
       localVarRequestBuilder.timeout(memberVarReadTimeout);
     }
     // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
+    localVarRequestBuilder =
+        HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
     if (memberVarInterceptor != null) {
       memberVarInterceptor.accept(localVarRequestBuilder);
     }
     return localVarRequestBuilder;
   }
-
 }

@@ -70,3 +70,9 @@ class SearchOptions(BaseModel):
     threshold: float | None = None
     graph_depth: int | None = None
     conversation_id: str | None = None
+    from_time: str | None = None
+    """ISO-8601 datetime string — only return memories created at or after this time."""
+    to_time: str | None = None
+    """ISO-8601 datetime string — only return memories created at or before this time."""
+    valid_at: str | None = None
+    """ISO-8601 datetime string — return memories valid at exactly this point in time."""
