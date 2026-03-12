@@ -12,28 +12,28 @@
 
 package ai.smritea.sdk._internal.autogen;
 
-import com.fasterxml.jackson.databind.Module.SetupContext;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
-@javax.annotation.Generated(
-    value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    comments = "Generator version: 7.20.0")
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.Module.SetupContext;
+
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class RFC3339JavaTimeModule extends SimpleModule {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public RFC3339JavaTimeModule() {
-    super("RFC3339JavaTimeModule");
-  }
+    public RFC3339JavaTimeModule() {
+        super("RFC3339JavaTimeModule");
+    }
 
-  @Override
-  public void setupModule(SetupContext context) {
-    super.setupModule(context);
+   @Override
+   public void setupModule(SetupContext context) {
+       super.setupModule(context);
 
-    addDeserializer(Instant.class, RFC3339InstantDeserializer.INSTANT);
-    addDeserializer(OffsetDateTime.class, RFC3339InstantDeserializer.OFFSET_DATE_TIME);
-    addDeserializer(ZonedDateTime.class, RFC3339InstantDeserializer.ZONED_DATE_TIME);
-  }
+       addDeserializer(Instant.class, RFC3339InstantDeserializer.INSTANT);
+       addDeserializer(OffsetDateTime.class, RFC3339InstantDeserializer.OFFSET_DATE_TIME);
+       addDeserializer(ZonedDateTime.class, RFC3339InstantDeserializer.ZONED_DATE_TIME);
+   }
+
 }

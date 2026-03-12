@@ -127,6 +127,10 @@
                 <configuration>
                     <!-- Default Google Java Style = 2-space indentation.
                          Matches the Checkstyle basicOffset=2 setting in checkstyle.xml. -->
+                    <!-- NOTE: fmt-maven-plugin 2.29 does not support <excludes>.
+                         Autogen files under _internal/autogen/ are formatted when first generated
+                         and committed in google-java-format style, so subsequent runs produce 0
+                         reformatted files. No conflict with smritea-cloud pre-commit. -->
                 </configuration>
                 <executions>
                     <execution>

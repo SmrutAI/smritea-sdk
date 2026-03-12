@@ -12,6 +12,9 @@
     <RepositoryUrl>https://github.com/SmrutAI/smritea-sdk</RepositoryUrl>
     <RootNamespace>Smritea.Sdk</RootNamespace>
     <AssemblyName>Smritea.Sdk</AssemblyName>
+    <!-- Required by StyleCop.Analyzers: SA0001 fires if XML doc generation is off.
+         SA1600/SA1611/SA1616 are suppressed in .editorconfig for non-critical surfaces. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <!-- Exclude test project files — they compile via their own .csproj -->

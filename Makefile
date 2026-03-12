@@ -16,6 +16,16 @@
 # Example: MAVEN_SETTINGS_FILE=/tmp/mvn-settings.xml make publish-java
 MAVEN_SETTINGS_ARG := $(if $(MAVEN_SETTINGS_FILE),-s $(MAVEN_SETTINGS_FILE),)
 
+# google-java-format standalone JAR — installed by scripts/setup.sh (same role as goimports for Go).
+# Java 16+ requires --add-exports to access internal compiler APIs used by the formatter.
+GJF_JAR := $(HOME)/.local/bin/google-java-format.jar
+GJF_EXPORTS := --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
+               --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED \
+               --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED \
+               --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED \
+               --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
+GJF := java $(GJF_EXPORTS) -jar $(GJF_JAR)
+
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}' | sort
 
@@ -97,12 +107,12 @@ install-csharp: ## Restore C# SDK NuGet dependencies (dotnet restore)
 
 install: install-python install-typescript install-go install-java install-csharp ## Install/sync all SDK dependencies
 
-format-java: ## Auto-format Java SDK with google-java-format via Maven
-	cd java && mvn com.spotify.fmt:fmt-maven-plugin:format
+format-java: ## Auto-format Java SDK with google-java-format (excludes _internal/autogen/)
+	find java/src -name "*.java" -not -path "*/_internal/autogen/*" | xargs $(GJF) --replace
 
-lint-java: ## Lint Java SDK (checkstyle + verify format)
+lint-java: ## Lint Java SDK (checkstyle + verify format, excludes _internal/autogen/)
 	cd java && mvn checkstyle:check
-	cd java && mvn com.spotify.fmt:fmt-maven-plugin:check
+	find java/src -name "*.java" -not -path "*/_internal/autogen/*" | xargs $(GJF) --dry-run --set-exit-if-changed
 
 test-java: ## Run Java SDK tests
 	cd java && mvn test

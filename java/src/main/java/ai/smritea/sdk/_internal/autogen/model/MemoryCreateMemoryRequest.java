@@ -10,18 +10,32 @@
  * Do not edit the class manually.
  */
 
+
 package ai.smritea.sdk._internal.autogen.model;
 
-import ai.smritea.sdk._internal.autogen.ApiClient;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.StringJoiner;
+import java.util.Objects;
+import java.util.Map;
+import java.util.HashMap;
+import ai.smritea.sdk._internal.autogen.model.CommondtoEntityExtractionConfig;
+import ai.smritea.sdk._internal.autogen.model.CommondtoFactExtractionConfig;
+import ai.smritea.sdk._internal.autogen.model.CommondtoPersonaExtractionConfig;
+import ai.smritea.sdk._internal.autogen.model.CommondtoRelativeStandingConfig;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-/** MemoryCreateMemoryRequest */
+
+import ai.smritea.sdk._internal.autogen.ApiClient;
+/**
+ * MemoryCreateMemoryRequest
+ */
 @JsonPropertyOrder({
   MemoryCreateMemoryRequest.JSON_PROPERTY_ACTIVE_FROM,
   MemoryCreateMemoryRequest.JSON_PROPERTY_ACTIVE_TO,
@@ -38,31 +52,32 @@ import java.util.StringJoiner;
   MemoryCreateMemoryRequest.JSON_PROPERTY_PERSONA_EXTRACTION_OVERRIDES,
   MemoryCreateMemoryRequest.JSON_PROPERTY_RELATIVE_STANDING
 })
-@javax.annotation.Generated(
-    value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class MemoryCreateMemoryRequest {
   public static final String JSON_PROPERTY_ACTIVE_FROM = "active_from";
-  @javax.annotation.Nullable private String activeFrom;
+  @javax.annotation.Nullable
+  private String activeFrom;
 
   public static final String JSON_PROPERTY_ACTIVE_TO = "active_to";
-  @javax.annotation.Nullable private String activeTo;
+  @javax.annotation.Nullable
+  private String activeTo;
 
   public static final String JSON_PROPERTY_ACTOR_ID = "actor_id";
-  @javax.annotation.Nullable private String actorId;
+  @javax.annotation.Nullable
+  private String actorId;
 
   public static final String JSON_PROPERTY_ACTOR_NAME = "actor_name";
-  @javax.annotation.Nullable private String actorName;
+  @javax.annotation.Nullable
+  private String actorName;
 
   /**
-   * ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit
-   * for conversation-level or app-level memories.
+   * ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit for conversation-level or app-level memories.
    */
   public enum ActorTypeEnum {
     USER(String.valueOf("user")),
-
+    
     AGENT(String.valueOf("agent")),
-
+    
     SYSTEM(String.valueOf("system"));
 
     private String value;
@@ -93,38 +108,47 @@ public class MemoryCreateMemoryRequest {
   }
 
   public static final String JSON_PROPERTY_ACTOR_TYPE = "actor_type";
-  @javax.annotation.Nullable private ActorTypeEnum actorType;
+  @javax.annotation.Nullable
+  private ActorTypeEnum actorType;
 
   public static final String JSON_PROPERTY_APP_ID = "app_id";
-  @javax.annotation.Nullable private String appId;
+  @javax.annotation.Nullable
+  private String appId;
 
   public static final String JSON_PROPERTY_CONTENT = "content";
-  @javax.annotation.Nullable private String content;
+  @javax.annotation.Nullable
+  private String content;
 
   public static final String JSON_PROPERTY_CONVERSATION_ID = "conversation_id";
-  @javax.annotation.Nullable private String conversationId;
+  @javax.annotation.Nullable
+  private String conversationId;
 
   public static final String JSON_PROPERTY_CONVERSATION_MESSAGE_ID = "conversation_message_id";
-  @javax.annotation.Nullable private String conversationMessageId;
+  @javax.annotation.Nullable
+  private String conversationMessageId;
 
-  public static final String JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES =
-      "entity_extraction_overrides";
-  @javax.annotation.Nullable private CommondtoEntityExtractionConfig entityExtractionOverrides;
+  public static final String JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES = "entity_extraction_overrides";
+  @javax.annotation.Nullable
+  private CommondtoEntityExtractionConfig entityExtractionOverrides;
 
   public static final String JSON_PROPERTY_FACT_EXTRACTION_OVERRIDES = "fact_extraction_overrides";
-  @javax.annotation.Nullable private CommondtoFactExtractionConfig factExtractionOverrides;
+  @javax.annotation.Nullable
+  private CommondtoFactExtractionConfig factExtractionOverrides;
 
   public static final String JSON_PROPERTY_METADATA = "metadata";
-  @javax.annotation.Nullable private Object metadata;
+  @javax.annotation.Nullable
+  private Object metadata;
 
-  public static final String JSON_PROPERTY_PERSONA_EXTRACTION_OVERRIDES =
-      "persona_extraction_overrides";
-  @javax.annotation.Nullable private CommondtoPersonaExtractionConfig personaExtractionOverrides;
+  public static final String JSON_PROPERTY_PERSONA_EXTRACTION_OVERRIDES = "persona_extraction_overrides";
+  @javax.annotation.Nullable
+  private CommondtoPersonaExtractionConfig personaExtractionOverrides;
 
   public static final String JSON_PROPERTY_RELATIVE_STANDING = "relative_standing";
-  @javax.annotation.Nullable private CommondtoRelativeStandingConfig relativeStanding;
+  @javax.annotation.Nullable
+  private CommondtoRelativeStandingConfig relativeStanding;
 
-  public MemoryCreateMemoryRequest() {}
+  public MemoryCreateMemoryRequest() { 
+  }
 
   public MemoryCreateMemoryRequest activeFrom(@javax.annotation.Nullable String activeFrom) {
     this.activeFrom = activeFrom;
@@ -133,7 +157,6 @@ public class MemoryCreateMemoryRequest {
 
   /**
    * ActiveFrom is when this memory becomes contextually valid (defaults to now if omitted)
-   *
    * @return activeFrom
    */
   @javax.annotation.Nullable
@@ -143,11 +166,13 @@ public class MemoryCreateMemoryRequest {
     return activeFrom;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_ACTIVE_FROM, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setActiveFrom(@javax.annotation.Nullable String activeFrom) {
     this.activeFrom = activeFrom;
   }
+
 
   public MemoryCreateMemoryRequest activeTo(@javax.annotation.Nullable String activeTo) {
     this.activeTo = activeTo;
@@ -156,7 +181,6 @@ public class MemoryCreateMemoryRequest {
 
   /**
    * ActiveTo is when this memory stops being valid (optional, nil &#x3D; still valid)
-   *
    * @return activeTo
    */
   @javax.annotation.Nullable
@@ -166,11 +190,13 @@ public class MemoryCreateMemoryRequest {
     return activeTo;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_ACTIVE_TO, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setActiveTo(@javax.annotation.Nullable String activeTo) {
     this.activeTo = activeTo;
   }
+
 
   public MemoryCreateMemoryRequest actorId(@javax.annotation.Nullable String actorId) {
     this.actorId = actorId;
@@ -178,9 +204,7 @@ public class MemoryCreateMemoryRequest {
   }
 
   /**
-   * ActorID is the actor identifier (conditionally required with ActorType). Required for
-   * actor-level memories; omit for conversation-level or app-level memories.
-   *
+   * ActorID is the actor identifier (conditionally required with ActorType). Required for actor-level memories; omit for conversation-level or app-level memories.
    * @return actorId
    */
   @javax.annotation.Nullable
@@ -190,11 +214,13 @@ public class MemoryCreateMemoryRequest {
     return actorId;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_ACTOR_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setActorId(@javax.annotation.Nullable String actorId) {
     this.actorId = actorId;
   }
+
 
   public MemoryCreateMemoryRequest actorName(@javax.annotation.Nullable String actorName) {
     this.actorName = actorName;
@@ -203,7 +229,6 @@ public class MemoryCreateMemoryRequest {
 
   /**
    * ActorName is the name of the actor (optional, max 255 chars)
-   *
    * @return actorName
    */
   @javax.annotation.Nullable
@@ -213,11 +238,13 @@ public class MemoryCreateMemoryRequest {
     return actorName;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_ACTOR_NAME, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setActorName(@javax.annotation.Nullable String actorName) {
     this.actorName = actorName;
   }
+
 
   public MemoryCreateMemoryRequest actorType(@javax.annotation.Nullable ActorTypeEnum actorType) {
     this.actorType = actorType;
@@ -225,9 +252,7 @@ public class MemoryCreateMemoryRequest {
   }
 
   /**
-   * ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit
-   * for conversation-level or app-level memories.
-   *
+   * ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit for conversation-level or app-level memories.
    * @return actorType
    */
   @javax.annotation.Nullable
@@ -237,11 +262,13 @@ public class MemoryCreateMemoryRequest {
     return actorType;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setActorType(@javax.annotation.Nullable ActorTypeEnum actorType) {
     this.actorType = actorType;
   }
+
 
   public MemoryCreateMemoryRequest appId(@javax.annotation.Nullable String appId) {
     this.appId = appId;
@@ -250,7 +277,6 @@ public class MemoryCreateMemoryRequest {
 
   /**
    * AppID is the application identifier (required)
-   *
    * @return appId
    */
   @javax.annotation.Nullable
@@ -260,11 +286,13 @@ public class MemoryCreateMemoryRequest {
     return appId;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_APP_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setAppId(@javax.annotation.Nullable String appId) {
     this.appId = appId;
   }
+
 
   public MemoryCreateMemoryRequest content(@javax.annotation.Nullable String content) {
     this.content = content;
@@ -273,7 +301,6 @@ public class MemoryCreateMemoryRequest {
 
   /**
    * Content is the memory content (required, min 1 char)
-   *
    * @return content
    */
   @javax.annotation.Nullable
@@ -283,21 +310,21 @@ public class MemoryCreateMemoryRequest {
     return content;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setContent(@javax.annotation.Nullable String content) {
     this.content = content;
   }
 
-  public MemoryCreateMemoryRequest conversationId(
-      @javax.annotation.Nullable String conversationId) {
+
+  public MemoryCreateMemoryRequest conversationId(@javax.annotation.Nullable String conversationId) {
     this.conversationId = conversationId;
     return this;
   }
 
   /**
    * ConversationID is the conversation identifier (optional, UUID)
-   *
    * @return conversationId
    */
   @javax.annotation.Nullable
@@ -307,21 +334,21 @@ public class MemoryCreateMemoryRequest {
     return conversationId;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_CONVERSATION_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setConversationId(@javax.annotation.Nullable String conversationId) {
     this.conversationId = conversationId;
   }
 
-  public MemoryCreateMemoryRequest conversationMessageId(
-      @javax.annotation.Nullable String conversationMessageId) {
+
+  public MemoryCreateMemoryRequest conversationMessageId(@javax.annotation.Nullable String conversationMessageId) {
     this.conversationMessageId = conversationMessageId;
     return this;
   }
 
   /**
    * ConversationMessageID is the conversation message identifier (optional, UUID)
-   *
    * @return conversationMessageId
    */
   @javax.annotation.Nullable
@@ -331,22 +358,21 @@ public class MemoryCreateMemoryRequest {
     return conversationMessageId;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_CONVERSATION_MESSAGE_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setConversationMessageId(@javax.annotation.Nullable String conversationMessageId) {
     this.conversationMessageId = conversationMessageId;
   }
 
-  public MemoryCreateMemoryRequest entityExtractionOverrides(
-      @javax.annotation.Nullable CommondtoEntityExtractionConfig entityExtractionOverrides) {
+
+  public MemoryCreateMemoryRequest entityExtractionOverrides(@javax.annotation.Nullable CommondtoEntityExtractionConfig entityExtractionOverrides) {
     this.entityExtractionOverrides = entityExtractionOverrides;
     return this;
   }
 
   /**
-   * EntityExtractionOverrides overrides App-level entity extraction config (nil &#x3D; use App
-   * defaults). Only non-zero fields in overrides replace app-level values.
-   *
+   * EntityExtractionOverrides overrides App-level entity extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values.
    * @return entityExtractionOverrides
    */
   @javax.annotation.Nullable
@@ -356,23 +382,21 @@ public class MemoryCreateMemoryRequest {
     return entityExtractionOverrides;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setEntityExtractionOverrides(
-      @javax.annotation.Nullable CommondtoEntityExtractionConfig entityExtractionOverrides) {
+  public void setEntityExtractionOverrides(@javax.annotation.Nullable CommondtoEntityExtractionConfig entityExtractionOverrides) {
     this.entityExtractionOverrides = entityExtractionOverrides;
   }
 
-  public MemoryCreateMemoryRequest factExtractionOverrides(
-      @javax.annotation.Nullable CommondtoFactExtractionConfig factExtractionOverrides) {
+
+  public MemoryCreateMemoryRequest factExtractionOverrides(@javax.annotation.Nullable CommondtoFactExtractionConfig factExtractionOverrides) {
     this.factExtractionOverrides = factExtractionOverrides;
     return this;
   }
 
   /**
-   * FactExtractionOverrides overrides App-level fact extraction config (nil &#x3D; use App
-   * defaults). Only non-zero fields in overrides replace app-level values.
-   *
+   * FactExtractionOverrides overrides App-level fact extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values.
    * @return factExtractionOverrides
    */
   @javax.annotation.Nullable
@@ -382,12 +406,13 @@ public class MemoryCreateMemoryRequest {
     return factExtractionOverrides;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_FACT_EXTRACTION_OVERRIDES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setFactExtractionOverrides(
-      @javax.annotation.Nullable CommondtoFactExtractionConfig factExtractionOverrides) {
+  public void setFactExtractionOverrides(@javax.annotation.Nullable CommondtoFactExtractionConfig factExtractionOverrides) {
     this.factExtractionOverrides = factExtractionOverrides;
   }
+
 
   public MemoryCreateMemoryRequest metadata(@javax.annotation.Nullable Object metadata) {
     this.metadata = metadata;
@@ -396,7 +421,6 @@ public class MemoryCreateMemoryRequest {
 
   /**
    * Metadata contains flexible memory metadata (optional)
-   *
    * @return metadata
    */
   @javax.annotation.Nullable
@@ -406,23 +430,21 @@ public class MemoryCreateMemoryRequest {
     return metadata;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_METADATA, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMetadata(@javax.annotation.Nullable Object metadata) {
     this.metadata = metadata;
   }
 
-  public MemoryCreateMemoryRequest personaExtractionOverrides(
-      @javax.annotation.Nullable CommondtoPersonaExtractionConfig personaExtractionOverrides) {
+
+  public MemoryCreateMemoryRequest personaExtractionOverrides(@javax.annotation.Nullable CommondtoPersonaExtractionConfig personaExtractionOverrides) {
     this.personaExtractionOverrides = personaExtractionOverrides;
     return this;
   }
 
   /**
-   * PersonaExtractionOverrides overrides App-level persona extraction config (nil &#x3D; use App
-   * defaults). Only non-zero fields in overrides replace app-level values. This is a stub for v1 -
-   * the actual LLM-based persona extraction is deferred to a future task.
-   *
+   * PersonaExtractionOverrides overrides App-level persona extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values. This is a stub for v1 - the actual LLM-based persona extraction is deferred to a future task.
    * @return personaExtractionOverrides
    */
   @javax.annotation.Nullable
@@ -432,23 +454,21 @@ public class MemoryCreateMemoryRequest {
     return personaExtractionOverrides;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_PERSONA_EXTRACTION_OVERRIDES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPersonaExtractionOverrides(
-      @javax.annotation.Nullable CommondtoPersonaExtractionConfig personaExtractionOverrides) {
+  public void setPersonaExtractionOverrides(@javax.annotation.Nullable CommondtoPersonaExtractionConfig personaExtractionOverrides) {
     this.personaExtractionOverrides = personaExtractionOverrides;
   }
 
-  public MemoryCreateMemoryRequest relativeStanding(
-      @javax.annotation.Nullable CommondtoRelativeStandingConfig relativeStanding) {
+
+  public MemoryCreateMemoryRequest relativeStanding(@javax.annotation.Nullable CommondtoRelativeStandingConfig relativeStanding) {
     this.relativeStanding = relativeStanding;
     return this;
   }
 
   /**
-   * RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are
-   * applied (importance&#x3D;1.0, decay_factor&#x3D;0.2, decay_function&#x3D;exponential).
-   *
+   * RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are applied (importance&#x3D;1.0, decay_factor&#x3D;0.2, decay_function&#x3D;exponential).
    * @return relativeStanding
    */
   @javax.annotation.Nullable
@@ -458,14 +478,17 @@ public class MemoryCreateMemoryRequest {
     return relativeStanding;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_RELATIVE_STANDING, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setRelativeStanding(
-      @javax.annotation.Nullable CommondtoRelativeStandingConfig relativeStanding) {
+  public void setRelativeStanding(@javax.annotation.Nullable CommondtoRelativeStandingConfig relativeStanding) {
     this.relativeStanding = relativeStanding;
   }
 
-  /** Return true if this memory.CreateMemoryRequest object is equal to o. */
+
+  /**
+   * Return true if this memory.CreateMemoryRequest object is equal to o.
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -475,43 +498,25 @@ public class MemoryCreateMemoryRequest {
       return false;
     }
     MemoryCreateMemoryRequest memoryCreateMemoryRequest = (MemoryCreateMemoryRequest) o;
-    return Objects.equals(this.activeFrom, memoryCreateMemoryRequest.activeFrom)
-        && Objects.equals(this.activeTo, memoryCreateMemoryRequest.activeTo)
-        && Objects.equals(this.actorId, memoryCreateMemoryRequest.actorId)
-        && Objects.equals(this.actorName, memoryCreateMemoryRequest.actorName)
-        && Objects.equals(this.actorType, memoryCreateMemoryRequest.actorType)
-        && Objects.equals(this.appId, memoryCreateMemoryRequest.appId)
-        && Objects.equals(this.content, memoryCreateMemoryRequest.content)
-        && Objects.equals(this.conversationId, memoryCreateMemoryRequest.conversationId)
-        && Objects.equals(
-            this.conversationMessageId, memoryCreateMemoryRequest.conversationMessageId)
-        && Objects.equals(
-            this.entityExtractionOverrides, memoryCreateMemoryRequest.entityExtractionOverrides)
-        && Objects.equals(
-            this.factExtractionOverrides, memoryCreateMemoryRequest.factExtractionOverrides)
-        && Objects.equals(this.metadata, memoryCreateMemoryRequest.metadata)
-        && Objects.equals(
-            this.personaExtractionOverrides, memoryCreateMemoryRequest.personaExtractionOverrides)
-        && Objects.equals(this.relativeStanding, memoryCreateMemoryRequest.relativeStanding);
+    return Objects.equals(this.activeFrom, memoryCreateMemoryRequest.activeFrom) &&
+        Objects.equals(this.activeTo, memoryCreateMemoryRequest.activeTo) &&
+        Objects.equals(this.actorId, memoryCreateMemoryRequest.actorId) &&
+        Objects.equals(this.actorName, memoryCreateMemoryRequest.actorName) &&
+        Objects.equals(this.actorType, memoryCreateMemoryRequest.actorType) &&
+        Objects.equals(this.appId, memoryCreateMemoryRequest.appId) &&
+        Objects.equals(this.content, memoryCreateMemoryRequest.content) &&
+        Objects.equals(this.conversationId, memoryCreateMemoryRequest.conversationId) &&
+        Objects.equals(this.conversationMessageId, memoryCreateMemoryRequest.conversationMessageId) &&
+        Objects.equals(this.entityExtractionOverrides, memoryCreateMemoryRequest.entityExtractionOverrides) &&
+        Objects.equals(this.factExtractionOverrides, memoryCreateMemoryRequest.factExtractionOverrides) &&
+        Objects.equals(this.metadata, memoryCreateMemoryRequest.metadata) &&
+        Objects.equals(this.personaExtractionOverrides, memoryCreateMemoryRequest.personaExtractionOverrides) &&
+        Objects.equals(this.relativeStanding, memoryCreateMemoryRequest.relativeStanding);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        activeFrom,
-        activeTo,
-        actorId,
-        actorName,
-        actorType,
-        appId,
-        content,
-        conversationId,
-        conversationMessageId,
-        entityExtractionOverrides,
-        factExtractionOverrides,
-        metadata,
-        personaExtractionOverrides,
-        relativeStanding);
+    return Objects.hash(activeFrom, activeTo, actorId, actorName, actorType, appId, content, conversationId, conversationMessageId, entityExtractionOverrides, factExtractionOverrides, metadata, personaExtractionOverrides, relativeStanding);
   }
 
   @Override
@@ -526,26 +531,19 @@ public class MemoryCreateMemoryRequest {
     sb.append("    appId: ").append(toIndentedString(appId)).append("\n");
     sb.append("    content: ").append(toIndentedString(content)).append("\n");
     sb.append("    conversationId: ").append(toIndentedString(conversationId)).append("\n");
-    sb.append("    conversationMessageId: ")
-        .append(toIndentedString(conversationMessageId))
-        .append("\n");
-    sb.append("    entityExtractionOverrides: ")
-        .append(toIndentedString(entityExtractionOverrides))
-        .append("\n");
-    sb.append("    factExtractionOverrides: ")
-        .append(toIndentedString(factExtractionOverrides))
-        .append("\n");
+    sb.append("    conversationMessageId: ").append(toIndentedString(conversationMessageId)).append("\n");
+    sb.append("    entityExtractionOverrides: ").append(toIndentedString(entityExtractionOverrides)).append("\n");
+    sb.append("    factExtractionOverrides: ").append(toIndentedString(factExtractionOverrides)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("    personaExtractionOverrides: ")
-        .append(toIndentedString(personaExtractionOverrides))
-        .append("\n");
+    sb.append("    personaExtractionOverrides: ").append(toIndentedString(personaExtractionOverrides)).append("\n");
     sb.append("    relativeStanding: ").append(toIndentedString(relativeStanding)).append("\n");
     sb.append("}");
     return sb.toString();
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -588,133 +586,67 @@ public class MemoryCreateMemoryRequest {
 
     // add `active_from` to the URL query string
     if (getActiveFrom() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sactive_from%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getActiveFrom()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sactive_from%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActiveFrom()))));
     }
 
     // add `active_to` to the URL query string
     if (getActiveTo() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sactive_to%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getActiveTo()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sactive_to%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActiveTo()))));
     }
 
     // add `actor_id` to the URL query string
     if (getActorId() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sactor_id%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getActorId()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorId()))));
     }
 
     // add `actor_name` to the URL query string
     if (getActorName() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sactor_name%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getActorName()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_name%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorName()))));
     }
 
     // add `actor_type` to the URL query string
     if (getActorType() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sactor_type%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getActorType()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_type%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorType()))));
     }
 
     // add `app_id` to the URL query string
     if (getAppId() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sapp_id%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getAppId()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sapp_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getAppId()))));
     }
 
     // add `content` to the URL query string
     if (getContent() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%scontent%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getContent()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%scontent%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getContent()))));
     }
 
     // add `conversation_id` to the URL query string
     if (getConversationId() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sconversation_id%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getConversationId()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationId()))));
     }
 
     // add `conversation_message_id` to the URL query string
     if (getConversationMessageId() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sconversation_message_id%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getConversationMessageId()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_message_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationMessageId()))));
     }
 
     // add `entity_extraction_overrides` to the URL query string
     if (getEntityExtractionOverrides() != null) {
-      joiner.add(
-          getEntityExtractionOverrides()
-              .toUrlQueryString(prefix + "entity_extraction_overrides" + suffix));
+      joiner.add(getEntityExtractionOverrides().toUrlQueryString(prefix + "entity_extraction_overrides" + suffix));
     }
 
     // add `fact_extraction_overrides` to the URL query string
     if (getFactExtractionOverrides() != null) {
-      joiner.add(
-          getFactExtractionOverrides()
-              .toUrlQueryString(prefix + "fact_extraction_overrides" + suffix));
+      joiner.add(getFactExtractionOverrides().toUrlQueryString(prefix + "fact_extraction_overrides" + suffix));
     }
 
     // add `metadata` to the URL query string
     if (getMetadata() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%smetadata%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getMetadata()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%smetadata%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMetadata()))));
     }
 
     // add `persona_extraction_overrides` to the URL query string
     if (getPersonaExtractionOverrides() != null) {
-      joiner.add(
-          getPersonaExtractionOverrides()
-              .toUrlQueryString(prefix + "persona_extraction_overrides" + suffix));
+      joiner.add(getPersonaExtractionOverrides().toUrlQueryString(prefix + "persona_extraction_overrides" + suffix));
     }
 
     // add `relative_standing` to the URL query string
@@ -725,3 +657,4 @@ public class MemoryCreateMemoryRequest {
     return joiner.toString();
   }
 }
+

@@ -145,6 +145,19 @@ setup_java() {
             return
         fi
     fi
+    # google-java-format standalone JAR — used by format-java / lint-java to format
+    # only hand-written sources, excluding _internal/autogen/ (same as goimports for Go).
+    GJF_VERSION="1.28.0"
+    GJF_JAR="$HOME/.local/bin/google-java-format.jar"
+    mkdir -p "$HOME/.local/bin"
+    if [ ! -f "$GJF_JAR" ]; then
+        _info "Downloading google-java-format ${GJF_VERSION}..."
+        curl -fsSL \
+            "https://github.com/google/google-java-format/releases/download/v${GJF_VERSION}/google-java-format-${GJF_VERSION}-all-deps.jar" \
+            -o "$GJF_JAR"
+    else
+        _ok "google-java-format already at $GJF_JAR"
+    fi
     _info "Downloading Java SDK dependencies..."
     cd "$SDK_ROOT/java" && mvn dependency:resolve -q
     _ok "Java SDK setup complete"

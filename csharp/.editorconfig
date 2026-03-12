@@ -1,5 +1,5 @@
 # C# SDK Editor Config
-root = false
+root = true
 
 [*.cs]
 # Default settings for all C# files
