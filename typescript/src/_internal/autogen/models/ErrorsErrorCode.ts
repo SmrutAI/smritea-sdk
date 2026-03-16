@@ -51,7 +51,10 @@ export const ErrorsErrorCode = {
     ErrCodeNoPasswordSet: 'NO_PASSWORD_SET',
     ErrCodePasswordAlreadySet: 'PASSWORD_ALREADY_SET',
     ErrCodeRateLimitExceeded: 'RATE_LIMIT_EXCEEDED',
-    ErrCodeAppNameExistsInOrg: 'APP_NAME_EXISTS_IN_ORG'
+    ErrCodeAppNameExistsInOrg: 'APP_NAME_EXISTS_IN_ORG',
+    ErrCodeCreditsExhausted: 'CREDITS_EXHAUSTED',
+    ErrCodeInsufficientCredits: 'INSUFFICIENT_CREDITS',
+    ErrCodeCreditsExpired: 'CREDITS_EXPIRED'
 } as const;
 export type ErrorsErrorCode = typeof ErrorsErrorCode[keyof typeof ErrorsErrorCode];
 

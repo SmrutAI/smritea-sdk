@@ -61,6 +61,9 @@ class ErrorsErrorCode(str, Enum):
     ErrCodePasswordAlreadySet = 'PASSWORD_ALREADY_SET'
     ErrCodeRateLimitExceeded = 'RATE_LIMIT_EXCEEDED'
     ErrCodeAppNameExistsInOrg = 'APP_NAME_EXISTS_IN_ORG'
+    ErrCodeCreditsExhausted = 'CREDITS_EXHAUSTED'
+    ErrCodeInsufficientCredits = 'INSUFFICIENT_CREDITS'
+    ErrCodeCreditsExpired = 'CREDITS_EXPIRED'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

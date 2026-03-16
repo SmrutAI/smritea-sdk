@@ -55,6 +55,9 @@ const (
 	ErrCodePasswordAlreadySet ErrorsErrorCode = "PASSWORD_ALREADY_SET"
 	ErrCodeRateLimitExceeded ErrorsErrorCode = "RATE_LIMIT_EXCEEDED"
 	ErrCodeAppNameExistsInOrg ErrorsErrorCode = "APP_NAME_EXISTS_IN_ORG"
+	ErrCodeCreditsExhausted ErrorsErrorCode = "CREDITS_EXHAUSTED"
+	ErrCodeInsufficientCredits ErrorsErrorCode = "INSUFFICIENT_CREDITS"
+	ErrCodeCreditsExpired ErrorsErrorCode = "CREDITS_EXPIRED"
 )
 
 // All allowed values of ErrorsErrorCode enum
@@ -93,6 +96,9 @@ var AllowedErrorsErrorCodeEnumValues = []ErrorsErrorCode{
 	"PASSWORD_ALREADY_SET",
 	"RATE_LIMIT_EXCEEDED",
 	"APP_NAME_EXISTS_IN_ORG",
+	"CREDITS_EXHAUSTED",
+	"INSUFFICIENT_CREDITS",
+	"CREDITS_EXPIRED",
 }
 
 func (v *ErrorsErrorCode) UnmarshalJSON(src []byte) error {

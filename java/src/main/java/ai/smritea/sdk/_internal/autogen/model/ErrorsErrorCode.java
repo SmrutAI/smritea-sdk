@@ -96,7 +96,13 @@ public enum ErrorsErrorCode {
   
   ErrCodeRateLimitExceeded("RATE_LIMIT_EXCEEDED"),
   
-  ErrCodeAppNameExistsInOrg("APP_NAME_EXISTS_IN_ORG");
+  ErrCodeAppNameExistsInOrg("APP_NAME_EXISTS_IN_ORG"),
+  
+  ErrCodeCreditsExhausted("CREDITS_EXHAUSTED"),
+  
+  ErrCodeInsufficientCredits("INSUFFICIENT_CREDITS"),
+  
+  ErrCodeCreditsExpired("CREDITS_EXPIRED");
 
   private String value;
 

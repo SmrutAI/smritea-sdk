@@ -235,7 +235,25 @@ namespace Smritea.Internal.Autogen.Model
         /// Enum ErrCodeAppNameExistsInOrg for value: APP_NAME_EXISTS_IN_ORG
         /// </summary>
         [EnumMember(Value = "APP_NAME_EXISTS_IN_ORG")]
-        ErrCodeAppNameExistsInOrg = 34
+        ErrCodeAppNameExistsInOrg = 34,
+
+        /// <summary>
+        /// Enum ErrCodeCreditsExhausted for value: CREDITS_EXHAUSTED
+        /// </summary>
+        [EnumMember(Value = "CREDITS_EXHAUSTED")]
+        ErrCodeCreditsExhausted = 35,
+
+        /// <summary>
+        /// Enum ErrCodeInsufficientCredits for value: INSUFFICIENT_CREDITS
+        /// </summary>
+        [EnumMember(Value = "INSUFFICIENT_CREDITS")]
+        ErrCodeInsufficientCredits = 36,
+
+        /// <summary>
+        /// Enum ErrCodeCreditsExpired for value: CREDITS_EXPIRED
+        /// </summary>
+        [EnumMember(Value = "CREDITS_EXPIRED")]
+        ErrCodeCreditsExpired = 37
     }
 
 }
