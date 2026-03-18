@@ -25,6 +25,17 @@ repos:
         files: pom\.xml|\.csproj|package\.json|pyproject\.toml|go\.(mod|sum)$
         pass_filenames: false
 
+      # Keep TypeScript package-lock.json in sync with package.json.
+      # When package.json is modified (e.g. version bump, new dep), npm install
+      # regenerates the lock file. This hook auto-stages the updated lock file
+      # so the commit always includes a consistent package-lock.json.
+      - id: ts-lockfile-sync
+        name: Sync TypeScript package-lock.json
+        entry: bash -c 'cd typescript && npm install --silent && git add package-lock.json'
+        language: system
+        files: typescript/package\.json$
+        pass_filenames: false
+
       - id: sdk-format
         name: Format (Python + TypeScript + Go + Java + C#)
         entry: make format
