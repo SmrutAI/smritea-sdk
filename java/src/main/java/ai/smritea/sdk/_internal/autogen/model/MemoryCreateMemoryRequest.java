@@ -324,7 +324,7 @@ public class MemoryCreateMemoryRequest {
   }
 
   /**
-   * ConversationID is the conversation identifier (optional, UUID)
+   * ConversationID is the conversation identifier (optional)
    * @return conversationId
    */
   @javax.annotation.Nullable
@@ -348,7 +348,7 @@ public class MemoryCreateMemoryRequest {
   }
 
   /**
-   * ConversationMessageID is the conversation message identifier (optional, UUID)
+   * ConversationMessageID is the conversation message identifier (optional)
    * @return conversationMessageId
    */
   @javax.annotation.Nullable

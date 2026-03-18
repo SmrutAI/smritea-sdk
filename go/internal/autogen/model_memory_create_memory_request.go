@@ -34,9 +34,9 @@ type MemoryCreateMemoryRequest struct {
 	AppId *string `json:"app_id,omitempty"`
 	// Content is the memory content (required, min 1 char)
 	Content *string `json:"content,omitempty"`
-	// ConversationID is the conversation identifier (optional, UUID)
+	// ConversationID is the conversation identifier (optional)
 	ConversationId *string `json:"conversation_id,omitempty"`
-	// ConversationMessageID is the conversation message identifier (optional, UUID)
+	// ConversationMessageID is the conversation message identifier (optional)
 	ConversationMessageId *string `json:"conversation_message_id,omitempty"`
 	// EntityExtractionOverrides overrides App-level entity extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.
 	EntityExtractionOverrides *CommondtoEntityExtractionConfig `json:"entity_extraction_overrides,omitempty"`

@@ -93,13 +93,13 @@ export interface MemoryCreateMemoryRequest {
      */
     content?: string;
     /**
-     * ConversationID is the conversation identifier (optional, UUID)
+     * ConversationID is the conversation identifier (optional)
      * @type {string}
      * @memberof MemoryCreateMemoryRequest
      */
     conversationId?: string;
     /**
-     * ConversationMessageID is the conversation message identifier (optional, UUID)
+     * ConversationMessageID is the conversation message identifier (optional)
      * @type {string}
      * @memberof MemoryCreateMemoryRequest
      */

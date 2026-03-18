@@ -76,8 +76,8 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="actorType">ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit for conversation-level or app-level memories..</param>
         /// <param name="appId">AppID is the application identifier (required).</param>
         /// <param name="content">Content is the memory content (required, min 1 char).</param>
-        /// <param name="conversationId">ConversationID is the conversation identifier (optional, UUID).</param>
-        /// <param name="conversationMessageId">ConversationMessageID is the conversation message identifier (optional, UUID).</param>
+        /// <param name="conversationId">ConversationID is the conversation identifier (optional).</param>
+        /// <param name="conversationMessageId">ConversationMessageID is the conversation message identifier (optional).</param>
         /// <param name="entityExtractionOverrides">EntityExtractionOverrides overrides App-level entity extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values..</param>
         /// <param name="factExtractionOverrides">FactExtractionOverrides overrides App-level fact extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values..</param>
         /// <param name="metadata">Metadata contains flexible memory metadata (optional).</param>
@@ -144,16 +144,16 @@ namespace Smritea.Internal.Autogen.Model
         public string Content { get; set; }
 
         /// <summary>
-        /// ConversationID is the conversation identifier (optional, UUID)
+        /// ConversationID is the conversation identifier (optional)
         /// </summary>
-        /// <value>ConversationID is the conversation identifier (optional, UUID)</value>
+        /// <value>ConversationID is the conversation identifier (optional)</value>
         [DataMember(Name = "conversation_id", EmitDefaultValue = false)]
         public string ConversationId { get; set; }
 
         /// <summary>
-        /// ConversationMessageID is the conversation message identifier (optional, UUID)
+        /// ConversationMessageID is the conversation message identifier (optional)
         /// </summary>
-        /// <value>ConversationMessageID is the conversation message identifier (optional, UUID)</value>
+        /// <value>ConversationMessageID is the conversation message identifier (optional)</value>
         [DataMember(Name = "conversation_message_id", EmitDefaultValue = false)]
         public string ConversationMessageId { get; set; }
 
