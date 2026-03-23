@@ -19,7 +19,6 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
-import ai.smritea.sdk._internal.autogen.model.ErrorsErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -31,85 +30,56 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import ai.smritea.sdk._internal.autogen.ApiClient;
 /**
- * ErrorsAppError
+ * CommondtoAPIError
  */
 @JsonPropertyOrder({
-  ErrorsAppError.JSON_PROPERTY_CODE,
-  ErrorsAppError.JSON_PROPERTY_DETAILS,
-  ErrorsAppError.JSON_PROPERTY_MESSAGE
+  CommondtoAPIError.JSON_PROPERTY_CODE,
+  CommondtoAPIError.JSON_PROPERTY_MESSAGE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
-public class ErrorsAppError {
+public class CommondtoAPIError {
   public static final String JSON_PROPERTY_CODE = "code";
   @javax.annotation.Nullable
-  private ErrorsErrorCode code;
-
-  public static final String JSON_PROPERTY_DETAILS = "details";
-  @javax.annotation.Nullable
-  private String details;
+  private String code;
 
   public static final String JSON_PROPERTY_MESSAGE = "message";
   @javax.annotation.Nullable
   private String message;
 
-  public ErrorsAppError() { 
+  public CommondtoAPIError() { 
   }
 
-  public ErrorsAppError code(@javax.annotation.Nullable ErrorsErrorCode code) {
+  public CommondtoAPIError code(@javax.annotation.Nullable String code) {
     this.code = code;
     return this;
   }
 
   /**
-   * Get code
+   * Code is a machine-readable error code (e.g., \&quot;validation_error\&quot;, \&quot;not_found\&quot;).
    * @return code
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_CODE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ErrorsErrorCode getCode() {
+  public String getCode() {
     return code;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_CODE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setCode(@javax.annotation.Nullable ErrorsErrorCode code) {
+  public void setCode(@javax.annotation.Nullable String code) {
     this.code = code;
   }
 
 
-  public ErrorsAppError details(@javax.annotation.Nullable String details) {
-    this.details = details;
-    return this;
-  }
-
-  /**
-   * Get details
-   * @return details
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_DETAILS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getDetails() {
-    return details;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_DETAILS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setDetails(@javax.annotation.Nullable String details) {
-    this.details = details;
-  }
-
-
-  public ErrorsAppError message(@javax.annotation.Nullable String message) {
+  public CommondtoAPIError message(@javax.annotation.Nullable String message) {
     this.message = message;
     return this;
   }
 
   /**
-   * Get message
+   * Message is a human-readable description of what went wrong.
    * @return message
    */
   @javax.annotation.Nullable
@@ -128,7 +98,7 @@ public class ErrorsAppError {
 
 
   /**
-   * Return true if this errors.AppError object is equal to o.
+   * Return true if this commondto.APIError object is equal to o.
    */
   @Override
   public boolean equals(Object o) {
@@ -138,23 +108,21 @@ public class ErrorsAppError {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ErrorsAppError errorsAppError = (ErrorsAppError) o;
-    return Objects.equals(this.code, errorsAppError.code) &&
-        Objects.equals(this.details, errorsAppError.details) &&
-        Objects.equals(this.message, errorsAppError.message);
+    CommondtoAPIError commondtoAPIError = (CommondtoAPIError) o;
+    return Objects.equals(this.code, commondtoAPIError.code) &&
+        Objects.equals(this.message, commondtoAPIError.message);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, details, message);
+    return Objects.hash(code, message);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ErrorsAppError {\n");
+    sb.append("class CommondtoAPIError {\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
-    sb.append("    details: ").append(toIndentedString(details)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -206,11 +174,6 @@ public class ErrorsAppError {
     // add `code` to the URL query string
     if (getCode() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%scode%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getCode()))));
-    }
-
-    // add `details` to the URL query string
-    if (getDetails() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sdetails%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getDetails()))));
     }
 
     // add `message` to the URL query string

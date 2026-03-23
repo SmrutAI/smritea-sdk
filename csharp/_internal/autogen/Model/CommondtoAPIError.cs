@@ -28,39 +28,33 @@ using OpenAPIDateConverter = Smritea.Internal.Autogen.Client.OpenAPIDateConverte
 namespace Smritea.Internal.Autogen.Model
 {
     /// <summary>
-    /// ErrorsAppError
+    /// CommondtoAPIError
     /// </summary>
-    [DataContract(Name = "errors.AppError")]
-    public partial class ErrorsAppError : IValidatableObject
+    [DataContract(Name = "commondto.APIError")]
+    public partial class CommondtoAPIError : IValidatableObject
     {
-
         /// <summary>
-        /// Gets or Sets Code
+        /// Initializes a new instance of the <see cref="CommondtoAPIError" /> class.
         /// </summary>
-        [DataMember(Name = "code", EmitDefaultValue = false)]
-        public ErrorsErrorCode? Code { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorsAppError" /> class.
-        /// </summary>
-        /// <param name="code">code.</param>
-        /// <param name="details">details.</param>
-        /// <param name="message">message.</param>
-        public ErrorsAppError(ErrorsErrorCode? code = default, string details = default, string message = default)
+        /// <param name="code">Code is a machine-readable error code (e.g., \&quot;validation_error\&quot;, \&quot;not_found\&quot;)..</param>
+        /// <param name="message">Message is a human-readable description of what went wrong..</param>
+        public CommondtoAPIError(string code = default, string message = default)
         {
             this.Code = code;
-            this.Details = details;
             this.Message = message;
         }
 
         /// <summary>
-        /// Gets or Sets Details
+        /// Code is a machine-readable error code (e.g., \&quot;validation_error\&quot;, \&quot;not_found\&quot;).
         /// </summary>
-        [DataMember(Name = "details", EmitDefaultValue = false)]
-        public string Details { get; set; }
+        /// <value>Code is a machine-readable error code (e.g., \&quot;validation_error\&quot;, \&quot;not_found\&quot;).</value>
+        [DataMember(Name = "code", EmitDefaultValue = false)]
+        public string Code { get; set; }
 
         /// <summary>
-        /// Gets or Sets Message
+        /// Message is a human-readable description of what went wrong.
         /// </summary>
+        /// <value>Message is a human-readable description of what went wrong.</value>
         [DataMember(Name = "message", EmitDefaultValue = false)]
         public string Message { get; set; }
 
@@ -71,9 +65,8 @@ namespace Smritea.Internal.Autogen.Model
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("class ErrorsAppError {\n");
+            sb.Append("class CommondtoAPIError {\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
-            sb.Append("  Details: ").Append(Details).Append("\n");
             sb.Append("  Message: ").Append(Message).Append("\n");
             sb.Append("}\n");
             return sb.ToString();

@@ -1,20 +1,24 @@
 
-# ErrorsErrorCode
+# CommondtoAPIError
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
+`code` | string
+`message` | string
 
 ## Example
 
 ```typescript
-import type { ErrorsErrorCode } from ''
+import type { CommondtoAPIError } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-} satisfies ErrorsErrorCode
+  "code": null,
+  "message": null,
+} satisfies CommondtoAPIError
 
 console.log(example)
 
@@ -23,7 +27,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as ErrorsErrorCode
+const exampleParsed = JSON.parse(exampleJSON) as CommondtoAPIError
 console.log(exampleParsed)
 ```
 

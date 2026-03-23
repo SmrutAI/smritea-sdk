@@ -18,7 +18,7 @@ import ai.smritea.sdk._internal.autogen.ApiResponse;
 import ai.smritea.sdk._internal.autogen.Configuration;
 import ai.smritea.sdk._internal.autogen.Pair;
 
-import ai.smritea.sdk._internal.autogen.model.ErrorsAppError;
+import ai.smritea.sdk._internal.autogen.model.CommondtoAPIError;
 import ai.smritea.sdk._internal.autogen.model.MemoryCreateMemoryRequest;
 import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoriesResponse;

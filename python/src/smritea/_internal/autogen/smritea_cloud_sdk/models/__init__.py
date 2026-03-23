@@ -14,13 +14,12 @@
 """  # noqa: E501
 
 # import models into model package
+from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_api_error import CommondtoAPIError
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_entity_extraction_config import CommondtoEntityExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_fact_extraction_config import CommondtoFactExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_persona_domain_config import CommondtoPersonaDomainConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_persona_extraction_config import CommondtoPersonaExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_relative_standing_config import CommondtoRelativeStandingConfig
-from smritea._internal.autogen.smritea_cloud_sdk.models.errors_app_error import ErrorsAppError
-from smritea._internal.autogen.smritea_cloud_sdk.models.errors_error_code import ErrorsErrorCode
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_create_memory_request import MemoryCreateMemoryRequest
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_memory_response import MemoryMemoryResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memories_response import MemorySearchMemoriesResponse

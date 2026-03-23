@@ -18,20 +18,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from smritea._internal.autogen.smritea_cloud_sdk.models.errors_error_code import ErrorsErrorCode
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ErrorsAppError(BaseModel):
+class CommondtoAPIError(BaseModel):
     """
-    ErrorsAppError
+    CommondtoAPIError
     """ # noqa: E501
-    code: Optional[ErrorsErrorCode] = None
-    details: Optional[StrictStr] = None
-    message: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["code", "details", "message"]
+    code: Optional[StrictStr] = Field(default=None, description="Code is a machine-readable error code (e.g., \"validation_error\", \"not_found\").")
+    message: Optional[StrictStr] = Field(default=None, description="Message is a human-readable description of what went wrong.")
+    __properties: ClassVar[List[str]] = ["code", "message"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +49,7 @@ class ErrorsAppError(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ErrorsAppError from a JSON string"""
+        """Create an instance of CommondtoAPIError from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,7 +74,7 @@ class ErrorsAppError(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ErrorsAppError from a dict"""
+        """Create an instance of CommondtoAPIError from a dict"""
         if obj is None:
             return None
 
@@ -85,7 +83,6 @@ class ErrorsAppError(BaseModel):
 
         _obj = cls.model_validate({
             "code": obj.get("code"),
-            "details": obj.get("details"),
             "message": obj.get("message")
         })
         return _obj

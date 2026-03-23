@@ -15,15 +15,15 @@
 
 import * as runtime from '../runtime';
 import type {
-  ErrorsAppError,
+  CommondtoAPIError,
   MemoryCreateMemoryRequest,
   MemoryMemoryResponse,
   MemorySearchMemoriesResponse,
   MemorySearchMemoryRequest,
 } from '../models/index';
 import {
-    ErrorsAppErrorFromJSON,
-    ErrorsAppErrorToJSON,
+    CommondtoAPIErrorFromJSON,
+    CommondtoAPIErrorToJSON,
     MemoryCreateMemoryRequestFromJSON,
     MemoryCreateMemoryRequestToJSON,
     MemoryMemoryResponseFromJSON,

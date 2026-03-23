@@ -96,11 +96,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '201': "MemoryMemoryResponse",
-            '400': "ErrorsAppError",
-            '401': "ErrorsAppError",
-            '402': "ErrorsAppError",
-            '429': "ErrorsAppError",
-            '500': "ErrorsAppError",
+            '400': "CommondtoAPIError",
+            '401': "CommondtoAPIError",
+            '402': "CommondtoAPIError",
+            '429': "CommondtoAPIError",
+            '500': "CommondtoAPIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -168,11 +168,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '201': "MemoryMemoryResponse",
-            '400': "ErrorsAppError",
-            '401': "ErrorsAppError",
-            '402': "ErrorsAppError",
-            '429': "ErrorsAppError",
-            '500': "ErrorsAppError",
+            '400': "CommondtoAPIError",
+            '401': "CommondtoAPIError",
+            '402': "CommondtoAPIError",
+            '429': "CommondtoAPIError",
+            '500': "CommondtoAPIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -240,11 +240,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '201': "MemoryMemoryResponse",
-            '400': "ErrorsAppError",
-            '401': "ErrorsAppError",
-            '402': "ErrorsAppError",
-            '429': "ErrorsAppError",
-            '500': "ErrorsAppError",
+            '400': "CommondtoAPIError",
+            '401': "CommondtoAPIError",
+            '402': "CommondtoAPIError",
+            '429': "CommondtoAPIError",
+            '500': "CommondtoAPIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -385,11 +385,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': "ErrorsAppError",
-            '401': "ErrorsAppError",
-            '404': "ErrorsAppError",
-            '429': "ErrorsAppError",
-            '500': "ErrorsAppError",
+            '400': "CommondtoAPIError",
+            '401': "CommondtoAPIError",
+            '404': "CommondtoAPIError",
+            '429': "CommondtoAPIError",
+            '500': "CommondtoAPIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -457,11 +457,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': "ErrorsAppError",
-            '401': "ErrorsAppError",
-            '404': "ErrorsAppError",
-            '429': "ErrorsAppError",
-            '500': "ErrorsAppError",
+            '400': "CommondtoAPIError",
+            '401': "CommondtoAPIError",
+            '404': "CommondtoAPIError",
+            '429': "CommondtoAPIError",
+            '500': "CommondtoAPIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -529,11 +529,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': "ErrorsAppError",
-            '401': "ErrorsAppError",
-            '404': "ErrorsAppError",
-            '429': "ErrorsAppError",
-            '500': "ErrorsAppError",
+            '400': "CommondtoAPIError",
+            '401': "CommondtoAPIError",
+            '404': "CommondtoAPIError",
+            '429': "CommondtoAPIError",
+            '500': "CommondtoAPIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -661,11 +661,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "MemoryMemoryResponse",
-            '400': "ErrorsAppError",
-            '401': "ErrorsAppError",
-            '404': "ErrorsAppError",
-            '429': "ErrorsAppError",
-            '500': "ErrorsAppError",
+            '400': "CommondtoAPIError",
+            '401': "CommondtoAPIError",
+            '404': "CommondtoAPIError",
+            '429': "CommondtoAPIError",
+            '500': "CommondtoAPIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -733,11 +733,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "MemoryMemoryResponse",
-            '400': "ErrorsAppError",
-            '401': "ErrorsAppError",
-            '404': "ErrorsAppError",
-            '429': "ErrorsAppError",
-            '500': "ErrorsAppError",
+            '400': "CommondtoAPIError",
+            '401': "CommondtoAPIError",
+            '404': "CommondtoAPIError",
+            '429': "CommondtoAPIError",
+            '500': "CommondtoAPIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -805,11 +805,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "MemoryMemoryResponse",
-            '400': "ErrorsAppError",
-            '401': "ErrorsAppError",
-            '404': "ErrorsAppError",
-            '429': "ErrorsAppError",
-            '500': "ErrorsAppError",
+            '400': "CommondtoAPIError",
+            '401': "CommondtoAPIError",
+            '404': "CommondtoAPIError",
+            '429': "CommondtoAPIError",
+            '500': "CommondtoAPIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -937,11 +937,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "MemorySearchMemoriesResponse",
-            '400': "ErrorsAppError",
-            '401': "ErrorsAppError",
-            '402': "ErrorsAppError",
-            '429': "ErrorsAppError",
-            '500': "ErrorsAppError",
+            '400': "CommondtoAPIError",
+            '401': "CommondtoAPIError",
+            '402': "CommondtoAPIError",
+            '429': "CommondtoAPIError",
+            '500': "CommondtoAPIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1009,11 +1009,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "MemorySearchMemoriesResponse",
-            '400': "ErrorsAppError",
-            '401': "ErrorsAppError",
-            '402': "ErrorsAppError",
-            '429': "ErrorsAppError",
-            '500': "ErrorsAppError",
+            '400': "CommondtoAPIError",
+            '401': "CommondtoAPIError",
+            '402': "CommondtoAPIError",
+            '429': "CommondtoAPIError",
+            '500': "CommondtoAPIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1081,11 +1081,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "MemorySearchMemoriesResponse",
-            '400': "ErrorsAppError",
-            '401': "ErrorsAppError",
-            '402': "ErrorsAppError",
-            '429': "ErrorsAppError",
-            '500': "ErrorsAppError",
+            '400': "CommondtoAPIError",
+            '401': "CommondtoAPIError",
+            '402': "CommondtoAPIError",
+            '429': "CommondtoAPIError",
+            '500': "CommondtoAPIError",
         }
         response_data = self.api_client.call_api(
             *_param,
