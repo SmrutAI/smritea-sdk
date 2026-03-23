@@ -120,18 +120,32 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
             </plugin>
+            <!-- build-helper: register src/autogen/java as an additional source root
+                 so Maven compiles autogen code, but fmt-maven-plugin (which only
+                 sees sourceDirectory = src/main/java) never reformats it. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>add-autogen-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/autogen/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.spotify.fmt</groupId>
                 <artifactId>fmt-maven-plugin</artifactId>
                 <version>2.29</version>
-                <configuration>
-                    <!-- Default Google Java Style = 2-space indentation.
-                         Matches the Checkstyle basicOffset=2 setting in checkstyle.xml. -->
-                    <!-- NOTE: fmt-maven-plugin 2.29 does not support <excludes>.
-                         Autogen files under _internal/autogen/ are formatted when first generated
-                         and committed in google-java-format style, so subsequent runs produce 0
-                         reformatted files. No conflict with smritea-cloud pre-commit. -->
-                </configuration>
                 <executions>
                     <execution>
                         <goals>

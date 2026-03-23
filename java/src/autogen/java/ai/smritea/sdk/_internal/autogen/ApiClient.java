@@ -12,15 +12,15 @@
 
 package ai.smritea.sdk._internal.autogen;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import java.io.IOException;
+import org.openapitools.jackson.nullable.JsonNullableModule;
+
 import java.io.InputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -33,29 +33,28 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import java.util.zip.GZIPInputStream;
-import org.openapitools.jackson.nullable.JsonNullableModule;
+import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Configuration and utility class for API clients.
  *
- * <p>This class can be constructed and modified, then used to instantiate the various API classes.
- * The API classes use the settings in this class to configure themselves, but otherwise do not
- * store a link to this class.
+ * <p>This class can be constructed and modified, then used to instantiate the
+ * various API classes. The API classes use the settings in this class to
+ * configure themselves, but otherwise do not store a link to this class.</p>
  *
- * <p>This class is mutable and not synchronized, so it is not thread-safe. The API classes
- * generated from this are immutable and thread-safe.
+ * <p>This class is mutable and not synchronized, so it is not thread-safe.
+ * The API classes generated from this are immutable and thread-safe.</p>
  *
- * <p>The setter methods of this class return the current object to facilitate a fluent style of
- * configuration.
+ * <p>The setter methods of this class return the current object to facilitate
+ * a fluent style of configuration.</p>
  */
-@javax.annotation.Generated(
-    value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class ApiClient {
 
   protected HttpClient.Builder builder;
@@ -91,14 +90,17 @@ public class ApiClient {
   }
 
   /**
-   * Convert a URL query name/value parameter to a list of encoded {@link Pair} objects.
+   * Convert a URL query name/value parameter to a list of encoded {@link Pair}
+   * objects.
    *
-   * <p>The value can be null, in which case an empty list is returned.
+   * <p>The value can be null, in which case an empty list is returned.</p>
    *
    * @param name The query name parameter.
-   * @param value The query value, which may not be a collection but may be null.
-   * @return A singleton list of the {@link Pair} objects representing the input parameters, which
-   *     is encoded for use in a URL. If the value is null, an empty list is returned.
+   * @param value The query value, which may not be a collection but may be
+   *              null.
+   * @return A singleton list of the {@link Pair} objects representing the input
+   * parameters, which is encoded for use in a URL. If the value is null, an
+   * empty list is returned.
    */
   public static List<Pair> parameterToPairs(String name, Object value) {
     if (name == null || name.isEmpty() || value == null) {
@@ -108,13 +110,16 @@ public class ApiClient {
   }
 
   /**
-   * Convert a URL query name/collection parameter to a list of encoded {@link Pair} objects.
+   * Convert a URL query name/collection parameter to a list of encoded
+   * {@link Pair} objects.
    *
    * @param collectionFormat The swagger collectionFormat string (csv, tsv, etc).
    * @param name The query name parameter.
-   * @param values A collection of values for the given query name, which may be null.
-   * @return A list of {@link Pair} objects representing the input parameters, which is encoded for
-   *     use in a URL. If the values collection is null, an empty list is returned.
+   * @param values A collection of values for the given query name, which may be
+   *               null.
+   * @return A list of {@link Pair} objects representing the input parameters,
+   * which is encoded for use in a URL. If the values collection is null, an
+   * empty list is returned.
    */
   public static List<Pair> parameterToPairs(
       String collectionFormat, String name, Collection<?> values) {
@@ -123,8 +128,7 @@ public class ApiClient {
     }
 
     // get the collection format (default: csv)
-    String format =
-        collectionFormat == null || collectionFormat.isEmpty() ? "csv" : collectionFormat;
+    String format = collectionFormat == null || collectionFormat.isEmpty() ? "csv" : collectionFormat;
 
     // create the params based on the collection format
     if ("multi".equals(format)) {
@@ -134,7 +138,7 @@ public class ApiClient {
     }
 
     String delimiter;
-    switch (format) {
+    switch(format) {
       case "csv":
         delimiter = urlEncode(",");
         break;
@@ -159,7 +163,9 @@ public class ApiClient {
     return Collections.singletonList(new Pair(urlEncode(name), joiner.toString()));
   }
 
-  /** Create an instance of ApiClient. */
+  /**
+   * Create an instance of ApiClient.
+   */
   public ApiClient() {
     this.builder = createDefaultHttpClientBuilder();
     this.mapper = createDefaultObjectMapper();
@@ -221,8 +227,8 @@ public class ApiClient {
   }
 
   /**
-   * Set a custom {@link HttpClient.Builder} object to use when creating the {@link HttpClient} that
-   * is used by the API client.
+   * Set a custom {@link HttpClient.Builder} object to use when creating the
+   * {@link HttpClient} that is used by the API client.
    *
    * @param builder Custom client builder.
    * @return This object.
@@ -235,7 +241,7 @@ public class ApiClient {
   /**
    * Get an {@link HttpClient} based on the current {@link HttpClient.Builder}.
    *
-   * <p>The returned object is immutable and thread-safe.
+   * <p>The returned object is immutable and thread-safe.</p>
    *
    * @return The HTTP client.
    */
@@ -244,7 +250,8 @@ public class ApiClient {
   }
 
   /**
-   * Set a custom {@link ObjectMapper} to serialize and deserialize the request and response bodies.
+   * Set a custom {@link ObjectMapper} to serialize and deserialize the request
+   * and response bodies.
    *
    * @param mapper Custom object mapper.
    * @return This object.
@@ -277,8 +284,8 @@ public class ApiClient {
   /**
    * Set a custom port number for the target service.
    *
-   * @param port The port of the target service. Set this to -1 to reset the value to the default
-   *     for the scheme.
+   * @param port The port of the target service. Set this to -1 to reset the
+   *             value to the default for the scheme.
    * @return This object.
    */
   public ApiClient setPort(int port) {
@@ -289,7 +296,8 @@ public class ApiClient {
   /**
    * Set a custom base path for the target service, for example '/v2'.
    *
-   * @param basePath The base path against which the rest of the path is resolved.
+   * @param basePath The base path against which the rest of the path is
+   *                 resolved.
    * @return This object.
    */
   public ApiClient setBasePath(String basePath) {
@@ -300,7 +308,8 @@ public class ApiClient {
   /**
    * Get the base URI to resolve the endpoint paths against.
    *
-   * @return The complete base URI that the rest of the API parameters are resolved against.
+   * @return The complete base URI that the rest of the API parameters are
+   * resolved against.
    */
   public String getBaseUri() {
     return scheme + "://" + host + (port == -1 ? "" : ":" + port) + basePath;
@@ -312,7 +321,7 @@ public class ApiClient {
    * @param scheme The scheme of the target service
    * @return This object.
    */
-  public ApiClient setScheme(String scheme) {
+  public ApiClient setScheme(String scheme){
     this.scheme = scheme;
     return this;
   }
@@ -320,15 +329,16 @@ public class ApiClient {
   /**
    * Set a custom request interceptor.
    *
-   * <p>A request interceptor is a mechanism for altering each request before it is sent. After the
-   * request has been fully configured but not yet built, the request builder is passed into this
-   * function for further modification, after which it is sent out.
+   * <p>A request interceptor is a mechanism for altering each request before it
+   * is sent. After the request has been fully configured but not yet built, the
+   * request builder is passed into this function for further modification,
+   * after which it is sent out.</p>
    *
-   * <p>This is useful for altering the requests in a custom manner, such as adding headers. It
-   * could also be used for logging and monitoring.
+   * <p>This is useful for altering the requests in a custom manner, such as
+   * adding headers. It could also be used for logging and monitoring.</p>
    *
-   * @param interceptor A function invoked before creating each request. A value of null resets the
-   *     interceptor to a no-op.
+   * @param interceptor A function invoked before creating each request. A value
+   *                    of null resets the interceptor to a no-op.
    * @return This object.
    */
   public ApiClient setRequestInterceptor(Consumer<HttpRequest.Builder> interceptor) {
@@ -348,10 +358,10 @@ public class ApiClient {
   /**
    * Set a custom response interceptor.
    *
-   * <p>This is useful for logging, monitoring or extraction of header variables
+   * <p>This is useful for logging, monitoring or extraction of header variables</p>
    *
-   * @param interceptor A function invoked before creating each request. A value of null resets the
-   *     interceptor to a no-op.
+   * @param interceptor A function invoked before creating each request. A value
+   *                    of null resets the interceptor to a no-op.
    * @return This object.
    */
   public ApiClient setResponseInterceptor(Consumer<HttpResponse<InputStream>> interceptor) {
@@ -359,7 +369,7 @@ public class ApiClient {
     return this;
   }
 
-  /**
+ /**
    * Get the custom response interceptor.
    *
    * @return The custom interceptor that was set, or null if there isn't any.
@@ -369,13 +379,12 @@ public class ApiClient {
   }
 
   /**
-   * Set a custom async response interceptor. Use this interceptor when asyncNative is set to
-   * 'true'.
+   * Set a custom async response interceptor. Use this interceptor when asyncNative is set to 'true'.
    *
-   * <p>This is useful for logging, monitoring or extraction of header variables
+   * <p>This is useful for logging, monitoring or extraction of header variables</p>
    *
-   * @param interceptor A function invoked before creating each request. A value of null resets the
-   *     interceptor to a no-op.
+   * @param interceptor A function invoked before creating each request. A value
+   *                    of null resets the interceptor to a no-op.
    * @return This object.
    */
   public ApiClient setAsyncResponseInterceptor(Consumer<HttpResponse<InputStream>> interceptor) {
@@ -383,9 +392,8 @@ public class ApiClient {
     return this;
   }
 
-  /**
-   * Get the custom async response interceptor. Use this interceptor when asyncNative is set to
-   * 'true'.
+ /**
+   * Get the custom async response interceptor. Use this interceptor when asyncNative is set to 'true'.
    *
    * @return The custom interceptor that was set, or null if there isn't any.
    */
@@ -396,11 +404,12 @@ public class ApiClient {
   /**
    * Set the read timeout for the http client.
    *
-   * <p>This is the value used by default for each request, though it can be overridden on a
-   * per-request basis with a request interceptor.
+   * <p>This is the value used by default for each request, though it can be
+   * overridden on a per-request basis with a request interceptor.</p>
    *
-   * @param readTimeout The read timeout used by default by the http client. Setting this value to
-   *     null resets the timeout to an effectively infinite value.
+   * @param readTimeout The read timeout used by default by the http client.
+   *                    Setting this value to null resets the timeout to an
+   *                    effectively infinite value.
    * @return This object.
    */
   public ApiClient setReadTimeout(Duration readTimeout) {
@@ -411,24 +420,27 @@ public class ApiClient {
   /**
    * Get the read timeout that was set.
    *
-   * @return The read timeout, or null if no timeout was set. Null represents an infinite wait time.
+   * @return The read timeout, or null if no timeout was set. Null represents
+   * an infinite wait time.
    */
   public Duration getReadTimeout() {
     return readTimeout;
   }
-
   /**
    * Sets the connect timeout (in milliseconds) for the http client.
    *
-   * <p>In the case where a new connection needs to be established, if the connection cannot be
-   * established within the given {@code duration}, then {@link
-   * HttpClient#send(HttpRequest,BodyHandler) HttpClient::send} throws an {@link
-   * HttpConnectTimeoutException}, or {@link HttpClient#sendAsync(HttpRequest,BodyHandler)
-   * HttpClient::sendAsync} completes exceptionally with an {@code HttpConnectTimeoutException}. If
-   * a new connection does not need to be established, for example if a connection can be reused
+   * <p> In the case where a new connection needs to be established, if
+   * the connection cannot be established within the given {@code
+   * duration}, then {@link HttpClient#send(HttpRequest,BodyHandler)
+   * HttpClient::send} throws an {@link HttpConnectTimeoutException}, or
+   * {@link HttpClient#sendAsync(HttpRequest,BodyHandler)
+   * HttpClient::sendAsync} completes exceptionally with an
+   * {@code HttpConnectTimeoutException}. If a new connection does not
+   * need to be established, for example if a connection can be reused
    * from a previous request, then this timeout duration has no effect.
    *
    * @param connectTimeout connection timeout in milliseconds
+   *
    * @return This object.
    */
   public ApiClient setConnectTimeout(Duration connectTimeout) {
@@ -447,8 +459,8 @@ public class ApiClient {
   }
 
   /**
-   * Returns the response body InputStream, transparently decoding gzip-compressed payloads when the
-   * server sets {@code Content-Encoding: gzip}.
+   * Returns the response body InputStream, transparently decoding gzip-compressed
+   * payloads when the server sets {@code Content-Encoding: gzip}.
    *
    * @param response HTTP response whose body should be consumed
    * @return Original or decompressed InputStream for the response body
@@ -472,4 +484,5 @@ public class ApiClient {
     }
     return body;
   }
+
 }

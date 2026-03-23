@@ -200,16 +200,16 @@ sync-autogen-go: _require-swagger-json ## Regenerate Go autogen from OpenAPI spe
 	@echo "  ✓ Go autogen synced"
 
 sync-autogen-java: _require-swagger-json ## Regenerate Java autogen from OpenAPI spec
-	@echo "Generating Java SDK -> java/src/main/java/ai/smritea/sdk/_internal/autogen ..."
-	@rm -rf java/src/main/java/ai/smritea/sdk/_internal/autogen
-	@mkdir -p java/src/main/java/ai/smritea/sdk/_internal/autogen
+	@echo "Generating Java SDK -> java/src/autogen/java/ai/smritea/sdk/_internal/autogen ..."
+	@rm -rf java/src/autogen/java/ai/smritea/sdk/_internal/autogen
+	@mkdir -p java/src/autogen/java/ai/smritea/sdk/_internal/autogen
 	@openapi-generator-cli generate \
 		--config openapitools.json \
 		-i $(SWAGGER_JSON) \
 		-g java \
 		-o /tmp/smritea-public-sdk-java \
 		--additional-properties=library=native,hideGenerationTimestamp=true,invokerPackage=ai.smritea.sdk._internal.autogen,apiPackage=ai.smritea.sdk._internal.autogen.api,modelPackage=ai.smritea.sdk._internal.autogen.model
-	@cp -r /tmp/smritea-public-sdk-java/src/main/java/ai/smritea/sdk/_internal/autogen/. java/src/main/java/ai/smritea/sdk/_internal/autogen/
+	@cp -r /tmp/smritea-public-sdk-java/src/main/java/ai/smritea/sdk/_internal/autogen/. java/src/autogen/java/ai/smritea/sdk/_internal/autogen/
 	@rm -rf /tmp/smritea-public-sdk-java
 	@echo "  ✓ Java autogen synced"
 

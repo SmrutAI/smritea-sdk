@@ -10,19 +10,30 @@
  * Do not edit the class manually.
  */
 
+
 package ai.smritea.sdk._internal.autogen.model;
 
-import ai.smritea.sdk._internal.autogen.ApiClient;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.StringJoiner;
+import java.util.Objects;
+import java.util.Map;
+import java.util.HashMap;
+import ai.smritea.sdk._internal.autogen.model.ModelEnumsSearchMethod;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigDecimal;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-/** MemorySearchMemoryRequest */
+
+import ai.smritea.sdk._internal.autogen.ApiClient;
+/**
+ * MemorySearchMemoryRequest
+ */
 @JsonPropertyOrder({
   MemorySearchMemoryRequest.JSON_PROPERTY_ACTOR_ID,
   MemorySearchMemoryRequest.JSON_PROPERTY_ACTOR_TYPE,
@@ -37,22 +48,20 @@ import java.util.StringJoiner;
   MemorySearchMemoryRequest.JSON_PROPERTY_TO_TIME,
   MemorySearchMemoryRequest.JSON_PROPERTY_VALID_AT
 })
-@javax.annotation.Generated(
-    value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class MemorySearchMemoryRequest {
   public static final String JSON_PROPERTY_ACTOR_ID = "actor_id";
-  @javax.annotation.Nullable private String actorId;
+  @javax.annotation.Nullable
+  private String actorId;
 
   /**
-   * ActorType filters search to messages from a specific actor type (optional). Values:
-   * \&quot;user\&quot;, \&quot;agent\&quot;, \&quot;system\&quot;
+   * ActorType filters search to messages from a specific actor type (optional). Values: \&quot;user\&quot;, \&quot;agent\&quot;, \&quot;system\&quot;
    */
   public enum ActorTypeEnum {
     USER(String.valueOf("user")),
-
+    
     AGENT(String.valueOf("agent")),
-
+    
     SYSTEM(String.valueOf("system"));
 
     private String value;
@@ -83,39 +92,51 @@ public class MemorySearchMemoryRequest {
   }
 
   public static final String JSON_PROPERTY_ACTOR_TYPE = "actor_type";
-  @javax.annotation.Nullable private ActorTypeEnum actorType;
+  @javax.annotation.Nullable
+  private ActorTypeEnum actorType;
 
   public static final String JSON_PROPERTY_APP_ID = "app_id";
-  @javax.annotation.Nonnull private String appId;
+  @javax.annotation.Nonnull
+  private String appId;
 
   public static final String JSON_PROPERTY_CONVERSATION_ID = "conversation_id";
-  @javax.annotation.Nullable private String conversationId;
+  @javax.annotation.Nullable
+  private String conversationId;
 
   public static final String JSON_PROPERTY_FROM_TIME = "from_time";
-  @javax.annotation.Nullable private String fromTime;
+  @javax.annotation.Nullable
+  private String fromTime;
 
   public static final String JSON_PROPERTY_GRAPH_DEPTH = "graph_depth";
-  @javax.annotation.Nullable private Integer graphDepth;
+  @javax.annotation.Nullable
+  private Integer graphDepth;
 
   public static final String JSON_PROPERTY_LIMIT = "limit";
-  @javax.annotation.Nullable private Integer limit;
+  @javax.annotation.Nullable
+  private Integer limit;
 
   public static final String JSON_PROPERTY_METHOD = "method";
-  @javax.annotation.Nullable private ModelEnumsSearchMethod method;
+  @javax.annotation.Nullable
+  private ModelEnumsSearchMethod method;
 
   public static final String JSON_PROPERTY_QUERY = "query";
-  @javax.annotation.Nonnull private String query;
+  @javax.annotation.Nonnull
+  private String query;
 
   public static final String JSON_PROPERTY_THRESHOLD = "threshold";
-  @javax.annotation.Nullable private BigDecimal threshold;
+  @javax.annotation.Nullable
+  private BigDecimal threshold;
 
   public static final String JSON_PROPERTY_TO_TIME = "to_time";
-  @javax.annotation.Nullable private String toTime;
+  @javax.annotation.Nullable
+  private String toTime;
 
   public static final String JSON_PROPERTY_VALID_AT = "valid_at";
-  @javax.annotation.Nullable private String validAt;
+  @javax.annotation.Nullable
+  private String validAt;
 
-  public MemorySearchMemoryRequest() {}
+  public MemorySearchMemoryRequest() { 
+  }
 
   public MemorySearchMemoryRequest actorId(@javax.annotation.Nullable String actorId) {
     this.actorId = actorId;
@@ -124,7 +145,6 @@ public class MemorySearchMemoryRequest {
 
   /**
    * Get actorId
-   *
    * @return actorId
    */
   @javax.annotation.Nullable
@@ -134,11 +154,13 @@ public class MemorySearchMemoryRequest {
     return actorId;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_ACTOR_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setActorId(@javax.annotation.Nullable String actorId) {
     this.actorId = actorId;
   }
+
 
   public MemorySearchMemoryRequest actorType(@javax.annotation.Nullable ActorTypeEnum actorType) {
     this.actorType = actorType;
@@ -146,9 +168,7 @@ public class MemorySearchMemoryRequest {
   }
 
   /**
-   * ActorType filters search to messages from a specific actor type (optional). Values:
-   * \&quot;user\&quot;, \&quot;agent\&quot;, \&quot;system\&quot;
-   *
+   * ActorType filters search to messages from a specific actor type (optional). Values: \&quot;user\&quot;, \&quot;agent\&quot;, \&quot;system\&quot;
    * @return actorType
    */
   @javax.annotation.Nullable
@@ -158,11 +178,13 @@ public class MemorySearchMemoryRequest {
     return actorType;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setActorType(@javax.annotation.Nullable ActorTypeEnum actorType) {
     this.actorType = actorType;
   }
+
 
   public MemorySearchMemoryRequest appId(@javax.annotation.Nonnull String appId) {
     this.appId = appId;
@@ -171,7 +193,6 @@ public class MemorySearchMemoryRequest {
 
   /**
    * Get appId
-   *
    * @return appId
    */
   @javax.annotation.Nonnull
@@ -181,22 +202,21 @@ public class MemorySearchMemoryRequest {
     return appId;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_APP_ID, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setAppId(@javax.annotation.Nonnull String appId) {
     this.appId = appId;
   }
 
-  public MemorySearchMemoryRequest conversationId(
-      @javax.annotation.Nullable String conversationId) {
+
+  public MemorySearchMemoryRequest conversationId(@javax.annotation.Nullable String conversationId) {
     this.conversationId = conversationId;
     return this;
   }
 
   /**
-   * ConversationID filters search to a specific conversation (optional). If omitted, searches
-   * across all actor&#39;s memories.
-   *
+   * ConversationID filters search to a specific conversation (optional). If omitted, searches across all actor&#39;s memories.
    * @return conversationId
    */
   @javax.annotation.Nullable
@@ -206,11 +226,13 @@ public class MemorySearchMemoryRequest {
     return conversationId;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_CONVERSATION_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setConversationId(@javax.annotation.Nullable String conversationId) {
     this.conversationId = conversationId;
   }
+
 
   public MemorySearchMemoryRequest fromTime(@javax.annotation.Nullable String fromTime) {
     this.fromTime = fromTime;
@@ -218,9 +240,7 @@ public class MemorySearchMemoryRequest {
   }
 
   /**
-   * FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format).
-   * Must be used together with ToTime.
-   *
+   * FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime.
    * @return fromTime
    */
   @javax.annotation.Nullable
@@ -230,11 +250,13 @@ public class MemorySearchMemoryRequest {
     return fromTime;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_FROM_TIME, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setFromTime(@javax.annotation.Nullable String fromTime) {
     this.fromTime = fromTime;
   }
+
 
   public MemorySearchMemoryRequest graphDepth(@javax.annotation.Nullable Integer graphDepth) {
     this.graphDepth = graphDepth;
@@ -243,7 +265,6 @@ public class MemorySearchMemoryRequest {
 
   /**
    * 0&#x3D;use app config, 1-5&#x3D;override traversal depth
-   *
    * @return graphDepth
    */
   @javax.annotation.Nullable
@@ -253,11 +274,13 @@ public class MemorySearchMemoryRequest {
     return graphDepth;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_GRAPH_DEPTH, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setGraphDepth(@javax.annotation.Nullable Integer graphDepth) {
     this.graphDepth = graphDepth;
   }
+
 
   public MemorySearchMemoryRequest limit(@javax.annotation.Nullable Integer limit) {
     this.limit = limit;
@@ -266,7 +289,6 @@ public class MemorySearchMemoryRequest {
 
   /**
    * Get limit
-   *
    * @return limit
    */
   @javax.annotation.Nullable
@@ -276,21 +298,21 @@ public class MemorySearchMemoryRequest {
     return limit;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_LIMIT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setLimit(@javax.annotation.Nullable Integer limit) {
     this.limit = limit;
   }
 
-  public MemorySearchMemoryRequest method(
-      @javax.annotation.Nullable ModelEnumsSearchMethod method) {
+
+  public MemorySearchMemoryRequest method(@javax.annotation.Nullable ModelEnumsSearchMethod method) {
     this.method = method;
     return this;
   }
 
   /**
    * Get method
-   *
    * @return method
    */
   @javax.annotation.Nullable
@@ -300,11 +322,13 @@ public class MemorySearchMemoryRequest {
     return method;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_METHOD, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMethod(@javax.annotation.Nullable ModelEnumsSearchMethod method) {
     this.method = method;
   }
+
 
   public MemorySearchMemoryRequest query(@javax.annotation.Nonnull String query) {
     this.query = query;
@@ -313,7 +337,6 @@ public class MemorySearchMemoryRequest {
 
   /**
    * Get query
-   *
    * @return query
    */
   @javax.annotation.Nonnull
@@ -323,11 +346,13 @@ public class MemorySearchMemoryRequest {
     return query;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_QUERY, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setQuery(@javax.annotation.Nonnull String query) {
     this.query = query;
   }
+
 
   public MemorySearchMemoryRequest threshold(@javax.annotation.Nullable BigDecimal threshold) {
     this.threshold = threshold;
@@ -336,7 +361,6 @@ public class MemorySearchMemoryRequest {
 
   /**
    * 0&#x3D;no filtering (pipeline uses RRF scores, not cosine similarity)
-   *
    * @return threshold
    */
   @javax.annotation.Nullable
@@ -346,11 +370,13 @@ public class MemorySearchMemoryRequest {
     return threshold;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_THRESHOLD, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setThreshold(@javax.annotation.Nullable BigDecimal threshold) {
     this.threshold = threshold;
   }
+
 
   public MemorySearchMemoryRequest toTime(@javax.annotation.Nullable String toTime) {
     this.toTime = toTime;
@@ -358,9 +384,7 @@ public class MemorySearchMemoryRequest {
   }
 
   /**
-   * ToTime is the end of the time range filter (ISO 8601 format). Must be used together with
-   * FromTime.
-   *
+   * ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.
    * @return toTime
    */
   @javax.annotation.Nullable
@@ -370,11 +394,13 @@ public class MemorySearchMemoryRequest {
     return toTime;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_TO_TIME, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setToTime(@javax.annotation.Nullable String toTime) {
     this.toTime = toTime;
   }
+
 
   public MemorySearchMemoryRequest validAt(@javax.annotation.Nullable String validAt) {
     this.validAt = validAt;
@@ -382,10 +408,7 @@ public class MemorySearchMemoryRequest {
   }
 
   /**
-   * ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid
-   * if: active_from &lt;&#x3D; ValidAt AND (active_to is null OR active_to &gt;&#x3D; ValidAt)
-   * Mutually exclusive with FromTime/ToTime.
-   *
+   * ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from &lt;&#x3D; ValidAt AND (active_to is null OR active_to &gt;&#x3D; ValidAt) Mutually exclusive with FromTime/ToTime.
    * @return validAt
    */
   @javax.annotation.Nullable
@@ -395,13 +418,17 @@ public class MemorySearchMemoryRequest {
     return validAt;
   }
 
+
   @JsonProperty(value = JSON_PROPERTY_VALID_AT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setValidAt(@javax.annotation.Nullable String validAt) {
     this.validAt = validAt;
   }
 
-  /** Return true if this memory.SearchMemoryRequest object is equal to o. */
+
+  /**
+   * Return true if this memory.SearchMemoryRequest object is equal to o.
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -411,35 +438,23 @@ public class MemorySearchMemoryRequest {
       return false;
     }
     MemorySearchMemoryRequest memorySearchMemoryRequest = (MemorySearchMemoryRequest) o;
-    return Objects.equals(this.actorId, memorySearchMemoryRequest.actorId)
-        && Objects.equals(this.actorType, memorySearchMemoryRequest.actorType)
-        && Objects.equals(this.appId, memorySearchMemoryRequest.appId)
-        && Objects.equals(this.conversationId, memorySearchMemoryRequest.conversationId)
-        && Objects.equals(this.fromTime, memorySearchMemoryRequest.fromTime)
-        && Objects.equals(this.graphDepth, memorySearchMemoryRequest.graphDepth)
-        && Objects.equals(this.limit, memorySearchMemoryRequest.limit)
-        && Objects.equals(this.method, memorySearchMemoryRequest.method)
-        && Objects.equals(this.query, memorySearchMemoryRequest.query)
-        && Objects.equals(this.threshold, memorySearchMemoryRequest.threshold)
-        && Objects.equals(this.toTime, memorySearchMemoryRequest.toTime)
-        && Objects.equals(this.validAt, memorySearchMemoryRequest.validAt);
+    return Objects.equals(this.actorId, memorySearchMemoryRequest.actorId) &&
+        Objects.equals(this.actorType, memorySearchMemoryRequest.actorType) &&
+        Objects.equals(this.appId, memorySearchMemoryRequest.appId) &&
+        Objects.equals(this.conversationId, memorySearchMemoryRequest.conversationId) &&
+        Objects.equals(this.fromTime, memorySearchMemoryRequest.fromTime) &&
+        Objects.equals(this.graphDepth, memorySearchMemoryRequest.graphDepth) &&
+        Objects.equals(this.limit, memorySearchMemoryRequest.limit) &&
+        Objects.equals(this.method, memorySearchMemoryRequest.method) &&
+        Objects.equals(this.query, memorySearchMemoryRequest.query) &&
+        Objects.equals(this.threshold, memorySearchMemoryRequest.threshold) &&
+        Objects.equals(this.toTime, memorySearchMemoryRequest.toTime) &&
+        Objects.equals(this.validAt, memorySearchMemoryRequest.validAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        actorId,
-        actorType,
-        appId,
-        conversationId,
-        fromTime,
-        graphDepth,
-        limit,
-        method,
-        query,
-        threshold,
-        toTime,
-        validAt);
+    return Objects.hash(actorId, actorType, appId, conversationId, fromTime, graphDepth, limit, method, query, threshold, toTime, validAt);
   }
 
   @Override
@@ -463,7 +478,8 @@ public class MemorySearchMemoryRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -506,136 +522,65 @@ public class MemorySearchMemoryRequest {
 
     // add `actor_id` to the URL query string
     if (getActorId() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sactor_id%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getActorId()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorId()))));
     }
 
     // add `actor_type` to the URL query string
     if (getActorType() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sactor_type%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getActorType()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_type%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorType()))));
     }
 
     // add `app_id` to the URL query string
     if (getAppId() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sapp_id%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getAppId()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sapp_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getAppId()))));
     }
 
     // add `conversation_id` to the URL query string
     if (getConversationId() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sconversation_id%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getConversationId()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationId()))));
     }
 
     // add `from_time` to the URL query string
     if (getFromTime() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sfrom_time%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getFromTime()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sfrom_time%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getFromTime()))));
     }
 
     // add `graph_depth` to the URL query string
     if (getGraphDepth() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sgraph_depth%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getGraphDepth()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sgraph_depth%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getGraphDepth()))));
     }
 
     // add `limit` to the URL query string
     if (getLimit() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%slimit%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getLimit()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%slimit%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getLimit()))));
     }
 
     // add `method` to the URL query string
     if (getMethod() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%smethod%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getMethod()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%smethod%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMethod()))));
     }
 
     // add `query` to the URL query string
     if (getQuery() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%squery%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getQuery()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%squery%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getQuery()))));
     }
 
     // add `threshold` to the URL query string
     if (getThreshold() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sthreshold%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getThreshold()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sthreshold%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getThreshold()))));
     }
 
     // add `to_time` to the URL query string
     if (getToTime() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%sto_time%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getToTime()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%sto_time%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getToTime()))));
     }
 
     // add `valid_at` to the URL query string
     if (getValidAt() != null) {
-      joiner.add(
-          String.format(
-              java.util.Locale.ROOT,
-              "%svalid_at%s=%s",
-              prefix,
-              suffix,
-              ApiClient.urlEncode(ApiClient.valueToString(getValidAt()))));
+      joiner.add(String.format(java.util.Locale.ROOT, "%svalid_at%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getValidAt()))));
     }
 
     return joiner.toString();
   }
 }
+
