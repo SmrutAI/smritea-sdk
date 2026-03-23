@@ -10,29 +10,16 @@
  * Do not edit the class manually.
  */
 
-
 package ai.smritea.sdk._internal.autogen.model;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
-import ai.smritea.sdk._internal.autogen.model.CommondtoRelativeStandingConfig;
+import ai.smritea.sdk._internal.autogen.ApiClient;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.Objects;
+import java.util.StringJoiner;
 
-
-import ai.smritea.sdk._internal.autogen.ApiClient;
-/**
- * MemoryMemoryResponse
- */
+/** MemoryMemoryResponse */
 @JsonPropertyOrder({
   MemoryMemoryResponse.JSON_PROPERTY_ACTIVE_FROM,
   MemoryMemoryResponse.JSON_PROPERTY_ACTIVE_TO,
@@ -49,66 +36,53 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   MemoryMemoryResponse.JSON_PROPERTY_RELATIVE_STANDING,
   MemoryMemoryResponse.JSON_PROPERTY_UPDATED_AT
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(
+    value = "org.openapitools.codegen.languages.JavaClientCodegen",
+    comments = "Generator version: 7.20.0")
 public class MemoryMemoryResponse {
   public static final String JSON_PROPERTY_ACTIVE_FROM = "active_from";
-  @javax.annotation.Nullable
-  private String activeFrom;
+  @javax.annotation.Nullable private String activeFrom;
 
   public static final String JSON_PROPERTY_ACTIVE_TO = "active_to";
-  @javax.annotation.Nullable
-  private String activeTo;
+  @javax.annotation.Nullable private String activeTo;
 
   public static final String JSON_PROPERTY_ACTOR_ID = "actor_id";
-  @javax.annotation.Nullable
-  private String actorId;
+  @javax.annotation.Nullable private String actorId;
 
   public static final String JSON_PROPERTY_ACTOR_NAME = "actor_name";
-  @javax.annotation.Nullable
-  private String actorName;
+  @javax.annotation.Nullable private String actorName;
 
   public static final String JSON_PROPERTY_ACTOR_TYPE = "actor_type";
-  @javax.annotation.Nullable
-  private String actorType;
+  @javax.annotation.Nullable private String actorType;
 
   public static final String JSON_PROPERTY_APP_ID = "app_id";
-  @javax.annotation.Nullable
-  private String appId;
+  @javax.annotation.Nullable private String appId;
 
   public static final String JSON_PROPERTY_CONTENT = "content";
-  @javax.annotation.Nullable
-  private String content;
+  @javax.annotation.Nullable private String content;
 
   public static final String JSON_PROPERTY_CONVERSATION_ID = "conversation_id";
-  @javax.annotation.Nullable
-  private String conversationId;
+  @javax.annotation.Nullable private String conversationId;
 
   public static final String JSON_PROPERTY_CONVERSATION_MESSAGE_ID = "conversation_message_id";
-  @javax.annotation.Nullable
-  private String conversationMessageId;
+  @javax.annotation.Nullable private String conversationMessageId;
 
   public static final String JSON_PROPERTY_CREATED_AT = "created_at";
-  @javax.annotation.Nullable
-  private String createdAt;
+  @javax.annotation.Nullable private String createdAt;
 
   public static final String JSON_PROPERTY_ID = "id";
-  @javax.annotation.Nullable
-  private String id;
+  @javax.annotation.Nullable private String id;
 
   public static final String JSON_PROPERTY_METADATA = "metadata";
-  @javax.annotation.Nullable
-  private Object metadata;
+  @javax.annotation.Nullable private Object metadata;
 
   public static final String JSON_PROPERTY_RELATIVE_STANDING = "relative_standing";
-  @javax.annotation.Nullable
-  private CommondtoRelativeStandingConfig relativeStanding;
+  @javax.annotation.Nullable private CommondtoRelativeStandingConfig relativeStanding;
 
   public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
-  @javax.annotation.Nullable
-  private String updatedAt;
+  @javax.annotation.Nullable private String updatedAt;
 
-  public MemoryMemoryResponse() { 
-  }
+  public MemoryMemoryResponse() {}
 
   public MemoryMemoryResponse activeFrom(@javax.annotation.Nullable String activeFrom) {
     this.activeFrom = activeFrom;
@@ -117,6 +91,7 @@ public class MemoryMemoryResponse {
 
   /**
    * Get activeFrom
+   *
    * @return activeFrom
    */
   @javax.annotation.Nullable
@@ -126,13 +101,11 @@ public class MemoryMemoryResponse {
     return activeFrom;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ACTIVE_FROM, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setActiveFrom(@javax.annotation.Nullable String activeFrom) {
     this.activeFrom = activeFrom;
   }
-
 
   public MemoryMemoryResponse activeTo(@javax.annotation.Nullable String activeTo) {
     this.activeTo = activeTo;
@@ -141,6 +114,7 @@ public class MemoryMemoryResponse {
 
   /**
    * Get activeTo
+   *
    * @return activeTo
    */
   @javax.annotation.Nullable
@@ -150,13 +124,11 @@ public class MemoryMemoryResponse {
     return activeTo;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ACTIVE_TO, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setActiveTo(@javax.annotation.Nullable String activeTo) {
     this.activeTo = activeTo;
   }
-
 
   public MemoryMemoryResponse actorId(@javax.annotation.Nullable String actorId) {
     this.actorId = actorId;
@@ -165,6 +137,7 @@ public class MemoryMemoryResponse {
 
   /**
    * Get actorId
+   *
    * @return actorId
    */
   @javax.annotation.Nullable
@@ -174,13 +147,11 @@ public class MemoryMemoryResponse {
     return actorId;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ACTOR_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setActorId(@javax.annotation.Nullable String actorId) {
     this.actorId = actorId;
   }
-
 
   public MemoryMemoryResponse actorName(@javax.annotation.Nullable String actorName) {
     this.actorName = actorName;
@@ -189,6 +160,7 @@ public class MemoryMemoryResponse {
 
   /**
    * Get actorName
+   *
    * @return actorName
    */
   @javax.annotation.Nullable
@@ -198,13 +170,11 @@ public class MemoryMemoryResponse {
     return actorName;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ACTOR_NAME, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setActorName(@javax.annotation.Nullable String actorName) {
     this.actorName = actorName;
   }
-
 
   public MemoryMemoryResponse actorType(@javax.annotation.Nullable String actorType) {
     this.actorType = actorType;
@@ -213,6 +183,7 @@ public class MemoryMemoryResponse {
 
   /**
    * Get actorType
+   *
    * @return actorType
    */
   @javax.annotation.Nullable
@@ -222,13 +193,11 @@ public class MemoryMemoryResponse {
     return actorType;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setActorType(@javax.annotation.Nullable String actorType) {
     this.actorType = actorType;
   }
-
 
   public MemoryMemoryResponse appId(@javax.annotation.Nullable String appId) {
     this.appId = appId;
@@ -237,6 +206,7 @@ public class MemoryMemoryResponse {
 
   /**
    * Get appId
+   *
    * @return appId
    */
   @javax.annotation.Nullable
@@ -246,13 +216,11 @@ public class MemoryMemoryResponse {
     return appId;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_APP_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setAppId(@javax.annotation.Nullable String appId) {
     this.appId = appId;
   }
-
 
   public MemoryMemoryResponse content(@javax.annotation.Nullable String content) {
     this.content = content;
@@ -261,6 +229,7 @@ public class MemoryMemoryResponse {
 
   /**
    * Get content
+   *
    * @return content
    */
   @javax.annotation.Nullable
@@ -270,13 +239,11 @@ public class MemoryMemoryResponse {
     return content;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setContent(@javax.annotation.Nullable String content) {
     this.content = content;
   }
-
 
   public MemoryMemoryResponse conversationId(@javax.annotation.Nullable String conversationId) {
     this.conversationId = conversationId;
@@ -285,6 +252,7 @@ public class MemoryMemoryResponse {
 
   /**
    * Get conversationId
+   *
    * @return conversationId
    */
   @javax.annotation.Nullable
@@ -294,21 +262,21 @@ public class MemoryMemoryResponse {
     return conversationId;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CONVERSATION_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setConversationId(@javax.annotation.Nullable String conversationId) {
     this.conversationId = conversationId;
   }
 
-
-  public MemoryMemoryResponse conversationMessageId(@javax.annotation.Nullable String conversationMessageId) {
+  public MemoryMemoryResponse conversationMessageId(
+      @javax.annotation.Nullable String conversationMessageId) {
     this.conversationMessageId = conversationMessageId;
     return this;
   }
 
   /**
    * Get conversationMessageId
+   *
    * @return conversationMessageId
    */
   @javax.annotation.Nullable
@@ -318,13 +286,11 @@ public class MemoryMemoryResponse {
     return conversationMessageId;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CONVERSATION_MESSAGE_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setConversationMessageId(@javax.annotation.Nullable String conversationMessageId) {
     this.conversationMessageId = conversationMessageId;
   }
-
 
   public MemoryMemoryResponse createdAt(@javax.annotation.Nullable String createdAt) {
     this.createdAt = createdAt;
@@ -333,6 +299,7 @@ public class MemoryMemoryResponse {
 
   /**
    * Get createdAt
+   *
    * @return createdAt
    */
   @javax.annotation.Nullable
@@ -342,13 +309,11 @@ public class MemoryMemoryResponse {
     return createdAt;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setCreatedAt(@javax.annotation.Nullable String createdAt) {
     this.createdAt = createdAt;
   }
-
 
   public MemoryMemoryResponse id(@javax.annotation.Nullable String id) {
     this.id = id;
@@ -357,6 +322,7 @@ public class MemoryMemoryResponse {
 
   /**
    * Get id
+   *
    * @return id
    */
   @javax.annotation.Nullable
@@ -366,13 +332,11 @@ public class MemoryMemoryResponse {
     return id;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setId(@javax.annotation.Nullable String id) {
     this.id = id;
   }
-
 
   public MemoryMemoryResponse metadata(@javax.annotation.Nullable Object metadata) {
     this.metadata = metadata;
@@ -381,6 +345,7 @@ public class MemoryMemoryResponse {
 
   /**
    * Get metadata
+   *
    * @return metadata
    */
   @javax.annotation.Nullable
@@ -390,21 +355,21 @@ public class MemoryMemoryResponse {
     return metadata;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_METADATA, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMetadata(@javax.annotation.Nullable Object metadata) {
     this.metadata = metadata;
   }
 
-
-  public MemoryMemoryResponse relativeStanding(@javax.annotation.Nullable CommondtoRelativeStandingConfig relativeStanding) {
+  public MemoryMemoryResponse relativeStanding(
+      @javax.annotation.Nullable CommondtoRelativeStandingConfig relativeStanding) {
     this.relativeStanding = relativeStanding;
     return this;
   }
 
   /**
    * Get relativeStanding
+   *
    * @return relativeStanding
    */
   @javax.annotation.Nullable
@@ -414,13 +379,12 @@ public class MemoryMemoryResponse {
     return relativeStanding;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_RELATIVE_STANDING, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setRelativeStanding(@javax.annotation.Nullable CommondtoRelativeStandingConfig relativeStanding) {
+  public void setRelativeStanding(
+      @javax.annotation.Nullable CommondtoRelativeStandingConfig relativeStanding) {
     this.relativeStanding = relativeStanding;
   }
-
 
   public MemoryMemoryResponse updatedAt(@javax.annotation.Nullable String updatedAt) {
     this.updatedAt = updatedAt;
@@ -429,6 +393,7 @@ public class MemoryMemoryResponse {
 
   /**
    * Get updatedAt
+   *
    * @return updatedAt
    */
   @javax.annotation.Nullable
@@ -438,17 +403,13 @@ public class MemoryMemoryResponse {
     return updatedAt;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_UPDATED_AT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setUpdatedAt(@javax.annotation.Nullable String updatedAt) {
     this.updatedAt = updatedAt;
   }
 
-
-  /**
-   * Return true if this memory.MemoryResponse object is equal to o.
-   */
+  /** Return true if this memory.MemoryResponse object is equal to o. */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -458,25 +419,39 @@ public class MemoryMemoryResponse {
       return false;
     }
     MemoryMemoryResponse memoryMemoryResponse = (MemoryMemoryResponse) o;
-    return Objects.equals(this.activeFrom, memoryMemoryResponse.activeFrom) &&
-        Objects.equals(this.activeTo, memoryMemoryResponse.activeTo) &&
-        Objects.equals(this.actorId, memoryMemoryResponse.actorId) &&
-        Objects.equals(this.actorName, memoryMemoryResponse.actorName) &&
-        Objects.equals(this.actorType, memoryMemoryResponse.actorType) &&
-        Objects.equals(this.appId, memoryMemoryResponse.appId) &&
-        Objects.equals(this.content, memoryMemoryResponse.content) &&
-        Objects.equals(this.conversationId, memoryMemoryResponse.conversationId) &&
-        Objects.equals(this.conversationMessageId, memoryMemoryResponse.conversationMessageId) &&
-        Objects.equals(this.createdAt, memoryMemoryResponse.createdAt) &&
-        Objects.equals(this.id, memoryMemoryResponse.id) &&
-        Objects.equals(this.metadata, memoryMemoryResponse.metadata) &&
-        Objects.equals(this.relativeStanding, memoryMemoryResponse.relativeStanding) &&
-        Objects.equals(this.updatedAt, memoryMemoryResponse.updatedAt);
+    return Objects.equals(this.activeFrom, memoryMemoryResponse.activeFrom)
+        && Objects.equals(this.activeTo, memoryMemoryResponse.activeTo)
+        && Objects.equals(this.actorId, memoryMemoryResponse.actorId)
+        && Objects.equals(this.actorName, memoryMemoryResponse.actorName)
+        && Objects.equals(this.actorType, memoryMemoryResponse.actorType)
+        && Objects.equals(this.appId, memoryMemoryResponse.appId)
+        && Objects.equals(this.content, memoryMemoryResponse.content)
+        && Objects.equals(this.conversationId, memoryMemoryResponse.conversationId)
+        && Objects.equals(this.conversationMessageId, memoryMemoryResponse.conversationMessageId)
+        && Objects.equals(this.createdAt, memoryMemoryResponse.createdAt)
+        && Objects.equals(this.id, memoryMemoryResponse.id)
+        && Objects.equals(this.metadata, memoryMemoryResponse.metadata)
+        && Objects.equals(this.relativeStanding, memoryMemoryResponse.relativeStanding)
+        && Objects.equals(this.updatedAt, memoryMemoryResponse.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(activeFrom, activeTo, actorId, actorName, actorType, appId, content, conversationId, conversationMessageId, createdAt, id, metadata, relativeStanding, updatedAt);
+    return Objects.hash(
+        activeFrom,
+        activeTo,
+        actorId,
+        actorName,
+        actorType,
+        appId,
+        content,
+        conversationId,
+        conversationMessageId,
+        createdAt,
+        id,
+        metadata,
+        relativeStanding,
+        updatedAt);
   }
 
   @Override
@@ -491,7 +466,9 @@ public class MemoryMemoryResponse {
     sb.append("    appId: ").append(toIndentedString(appId)).append("\n");
     sb.append("    content: ").append(toIndentedString(content)).append("\n");
     sb.append("    conversationId: ").append(toIndentedString(conversationId)).append("\n");
-    sb.append("    conversationMessageId: ").append(toIndentedString(conversationMessageId)).append("\n");
+    sb.append("    conversationMessageId: ")
+        .append(toIndentedString(conversationMessageId))
+        .append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
@@ -502,8 +479,7 @@ public class MemoryMemoryResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -546,62 +522,134 @@ public class MemoryMemoryResponse {
 
     // add `active_from` to the URL query string
     if (getActiveFrom() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactive_from%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActiveFrom()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sactive_from%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getActiveFrom()))));
     }
 
     // add `active_to` to the URL query string
     if (getActiveTo() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactive_to%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActiveTo()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sactive_to%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getActiveTo()))));
     }
 
     // add `actor_id` to the URL query string
     if (getActorId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorId()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sactor_id%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getActorId()))));
     }
 
     // add `actor_name` to the URL query string
     if (getActorName() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_name%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorName()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sactor_name%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getActorName()))));
     }
 
     // add `actor_type` to the URL query string
     if (getActorType() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_type%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorType()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sactor_type%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getActorType()))));
     }
 
     // add `app_id` to the URL query string
     if (getAppId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sapp_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getAppId()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sapp_id%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getAppId()))));
     }
 
     // add `content` to the URL query string
     if (getContent() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%scontent%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getContent()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%scontent%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getContent()))));
     }
 
     // add `conversation_id` to the URL query string
     if (getConversationId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationId()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sconversation_id%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getConversationId()))));
     }
 
     // add `conversation_message_id` to the URL query string
     if (getConversationMessageId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_message_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationMessageId()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sconversation_message_id%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getConversationMessageId()))));
     }
 
     // add `created_at` to the URL query string
     if (getCreatedAt() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%screated_at%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getCreatedAt()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%screated_at%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getCreatedAt()))));
     }
 
     // add `id` to the URL query string
     if (getId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sid%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%sid%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getId()))));
     }
 
     // add `metadata` to the URL query string
     if (getMetadata() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%smetadata%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMetadata()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%smetadata%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getMetadata()))));
     }
 
     // add `relative_standing` to the URL query string
@@ -611,10 +659,15 @@ public class MemoryMemoryResponse {
 
     // add `updated_at` to the URL query string
     if (getUpdatedAt() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%supdated_at%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getUpdatedAt()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%supdated_at%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getUpdatedAt()))));
     }
 
     return joiner.toString();
   }
 }
-

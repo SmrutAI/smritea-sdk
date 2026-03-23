@@ -10,44 +10,28 @@
  * Do not edit the class manually.
  */
 
-
 package ai.smritea.sdk._internal.autogen.model;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
+import ai.smritea.sdk._internal.autogen.ApiClient;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.Objects;
+import java.util.StringJoiner;
 
-
-import ai.smritea.sdk._internal.autogen.ApiClient;
-/**
- * CommondtoAPIError
- */
-@JsonPropertyOrder({
-  CommondtoAPIError.JSON_PROPERTY_CODE,
-  CommondtoAPIError.JSON_PROPERTY_MESSAGE
-})
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
+/** CommondtoAPIError */
+@JsonPropertyOrder({CommondtoAPIError.JSON_PROPERTY_CODE, CommondtoAPIError.JSON_PROPERTY_MESSAGE})
+@javax.annotation.Generated(
+    value = "org.openapitools.codegen.languages.JavaClientCodegen",
+    comments = "Generator version: 7.20.0")
 public class CommondtoAPIError {
   public static final String JSON_PROPERTY_CODE = "code";
-  @javax.annotation.Nullable
-  private String code;
+  @javax.annotation.Nullable private String code;
 
   public static final String JSON_PROPERTY_MESSAGE = "message";
-  @javax.annotation.Nullable
-  private String message;
+  @javax.annotation.Nullable private String message;
 
-  public CommondtoAPIError() { 
-  }
+  public CommondtoAPIError() {}
 
   public CommondtoAPIError code(@javax.annotation.Nullable String code) {
     this.code = code;
@@ -55,7 +39,9 @@ public class CommondtoAPIError {
   }
 
   /**
-   * Code is a machine-readable error code (e.g., \&quot;validation_error\&quot;, \&quot;not_found\&quot;).
+   * Code is a machine-readable error code (e.g., \&quot;validation_error\&quot;,
+   * \&quot;not_found\&quot;).
+   *
    * @return code
    */
   @javax.annotation.Nullable
@@ -65,13 +51,11 @@ public class CommondtoAPIError {
     return code;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_CODE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setCode(@javax.annotation.Nullable String code) {
     this.code = code;
   }
-
 
   public CommondtoAPIError message(@javax.annotation.Nullable String message) {
     this.message = message;
@@ -80,6 +64,7 @@ public class CommondtoAPIError {
 
   /**
    * Message is a human-readable description of what went wrong.
+   *
    * @return message
    */
   @javax.annotation.Nullable
@@ -89,17 +74,13 @@ public class CommondtoAPIError {
     return message;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMessage(@javax.annotation.Nullable String message) {
     this.message = message;
   }
 
-
-  /**
-   * Return true if this commondto.APIError object is equal to o.
-   */
+  /** Return true if this commondto.APIError object is equal to o. */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -109,8 +90,8 @@ public class CommondtoAPIError {
       return false;
     }
     CommondtoAPIError commondtoAPIError = (CommondtoAPIError) o;
-    return Objects.equals(this.code, commondtoAPIError.code) &&
-        Objects.equals(this.message, commondtoAPIError.message);
+    return Objects.equals(this.code, commondtoAPIError.code)
+        && Objects.equals(this.message, commondtoAPIError.message);
   }
 
   @Override
@@ -129,8 +110,7 @@ public class CommondtoAPIError {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -173,15 +153,26 @@ public class CommondtoAPIError {
 
     // add `code` to the URL query string
     if (getCode() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%scode%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getCode()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%scode%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getCode()))));
     }
 
     // add `message` to the URL query string
     if (getMessage() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%smessage%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMessage()))));
+      joiner.add(
+          String.format(
+              java.util.Locale.ROOT,
+              "%smessage%s=%s",
+              prefix,
+              suffix,
+              ApiClient.urlEncode(ApiClient.valueToString(getMessage()))));
     }
 
     return joiner.toString();
   }
 }
-

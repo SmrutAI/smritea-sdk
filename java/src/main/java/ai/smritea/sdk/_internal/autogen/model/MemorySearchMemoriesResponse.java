@@ -10,44 +10,29 @@
  * Do not edit the class manually.
  */
 
-
 package ai.smritea.sdk._internal.autogen.model;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
-import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
 
-
-import ai.smritea.sdk._internal.autogen.ApiClient;
-/**
- * MemorySearchMemoriesResponse
- */
-@JsonPropertyOrder({
-  MemorySearchMemoriesResponse.JSON_PROPERTY_MEMORIES
-})
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
+/** MemorySearchMemoriesResponse */
+@JsonPropertyOrder({MemorySearchMemoriesResponse.JSON_PROPERTY_MEMORIES})
+@javax.annotation.Generated(
+    value = "org.openapitools.codegen.languages.JavaClientCodegen",
+    comments = "Generator version: 7.20.0")
 public class MemorySearchMemoriesResponse {
   public static final String JSON_PROPERTY_MEMORIES = "memories";
-  @javax.annotation.Nullable
-  private List<MemorySearchMemoryResponse> memories = new ArrayList<>();
+  @javax.annotation.Nullable private List<MemorySearchMemoryResponse> memories = new ArrayList<>();
 
-  public MemorySearchMemoriesResponse() { 
-  }
+  public MemorySearchMemoriesResponse() {}
 
-  public MemorySearchMemoriesResponse memories(@javax.annotation.Nullable List<MemorySearchMemoryResponse> memories) {
+  public MemorySearchMemoriesResponse memories(
+      @javax.annotation.Nullable List<MemorySearchMemoryResponse> memories) {
     this.memories = memories;
     return this;
   }
@@ -62,6 +47,7 @@ public class MemorySearchMemoriesResponse {
 
   /**
    * Get memories
+   *
    * @return memories
    */
   @javax.annotation.Nullable
@@ -71,17 +57,13 @@ public class MemorySearchMemoriesResponse {
     return memories;
   }
 
-
   @JsonProperty(value = JSON_PROPERTY_MEMORIES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMemories(@javax.annotation.Nullable List<MemorySearchMemoryResponse> memories) {
     this.memories = memories;
   }
 
-
-  /**
-   * Return true if this memory.SearchMemoriesResponse object is equal to o.
-   */
+  /** Return true if this memory.SearchMemoriesResponse object is equal to o. */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -109,8 +91,7 @@ public class MemorySearchMemoriesResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -155,8 +136,23 @@ public class MemorySearchMemoriesResponse {
     if (getMemories() != null) {
       for (int i = 0; i < getMemories().size(); i++) {
         if (getMemories().get(i) != null) {
-          joiner.add(getMemories().get(i).toUrlQueryString(String.format(java.util.Locale.ROOT, "%smemories%s%s", prefix, suffix,
-          "".equals(suffix) ? "" : String.format(java.util.Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix))));
+          joiner.add(
+              getMemories()
+                  .get(i)
+                  .toUrlQueryString(
+                      String.format(
+                          java.util.Locale.ROOT,
+                          "%smemories%s%s",
+                          prefix,
+                          suffix,
+                          "".equals(suffix)
+                              ? ""
+                              : String.format(
+                                  java.util.Locale.ROOT,
+                                  "%s%d%s",
+                                  containerPrefix,
+                                  i,
+                                  containerSuffix))));
         }
       }
     }
@@ -164,4 +160,3 @@ public class MemorySearchMemoriesResponse {
     return joiner.toString();
   }
 }
-

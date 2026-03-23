@@ -1,4 +1,4 @@
-.PHONY: test-python test-typescript test-go test-java test-csharp test build-python build-typescript build-go build-java build-csharp \
+.PHONY: test-python test-typescript test-go test-java test-csharp test build-python build-typescript build-go build-java build-csharp build \
         publish-python publish-typescript publish-java publish-csharp publish clean help \
         format-python format-typescript format-go format-java format-csharp format \
         lint-python lint-typescript lint-go lint-java lint-csharp lint \
@@ -145,6 +145,8 @@ publish-csharp: build-csharp ## Publish C# SDK to NuGet
 format: format-python format-typescript format-go format-java format-csharp ## Auto-format all SDKs
 
 lint: lint-python lint-typescript lint-go lint-java lint-csharp ## Lint all SDKs
+
+build: build-python build-typescript build-go build-java build-csharp ## Build all SDKs
 
 clean: ## Clean build artifacts
 	rm -rf python/dist
