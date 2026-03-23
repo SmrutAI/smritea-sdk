@@ -12,7 +12,6 @@
 
 package ai.smritea.sdk._internal.autogen.model;
 
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 

@@ -2,7 +2,9 @@
         publish-python publish-typescript publish-java publish-csharp publish clean help \
         format-python format-typescript format-go format-java format-csharp format \
         lint-python lint-typescript lint-go lint-java lint-csharp lint \
-        install-python install-typescript install-go install-java install-csharp install
+        install-python install-typescript install-go install-java install-csharp install \
+        sync-autogen sync-autogen-python sync-autogen-typescript sync-autogen-go sync-autogen-java sync-autogen-csharp \
+        _require-swagger-json
 
 # Publishing tokens — sourced from environment variables:
 #   PYPI_TOKEN            : PyPI API token (starts with pypi-)
@@ -147,6 +149,83 @@ format: format-python format-typescript format-go format-java format-csharp ## A
 lint: lint-python lint-typescript lint-go lint-java lint-csharp ## Lint all SDKs
 
 build: build-python build-typescript build-go build-java build-csharp ## Build all SDKs
+
+# ---------------------------------------------------------------------------
+# Autogen sync — regenerate _internal/autogen from an OpenAPI spec
+# Usage: make sync-autogen SWAGGER_JSON=/path/to/swagger.json
+# ---------------------------------------------------------------------------
+SWAGGER_JSON ?=
+
+_require-swagger-json:
+	@test -n "$(SWAGGER_JSON)" || { echo "ERROR: SWAGGER_JSON is required. Usage: make sync-autogen SWAGGER_JSON=/path/to/spec.json"; exit 1; }
+
+sync-autogen: sync-autogen-python sync-autogen-typescript sync-autogen-go sync-autogen-java sync-autogen-csharp ## Regenerate all autogen clients from OpenAPI spec
+
+sync-autogen-python: _require-swagger-json ## Regenerate Python autogen from OpenAPI spec
+	@echo "Generating Python SDK -> python/src/smritea/_internal/autogen ..."
+	@rm -rf python/src/smritea/_internal/autogen
+	@openapi-generator-cli generate \
+		--config openapitools.json \
+		-i $(SWAGGER_JSON) \
+		-g python \
+		-o /tmp/smritea-public-sdk-py \
+		--additional-properties=packageName=smritea._internal.autogen.smritea_cloud_sdk
+	@cp -r /tmp/smritea-public-sdk-py/smritea/_internal/autogen python/src/smritea/_internal/autogen
+	@rm -rf /tmp/smritea-public-sdk-py
+	@echo "  ✓ Python autogen synced"
+
+sync-autogen-typescript: _require-swagger-json ## Regenerate TypeScript autogen from OpenAPI spec
+	@echo "Generating TypeScript SDK -> typescript/src/_internal/autogen ..."
+	@rm -rf typescript/src/_internal/autogen
+	@mkdir -p typescript/src/_internal/autogen
+	@openapi-generator-cli generate \
+		--config openapitools.json \
+		-i $(SWAGGER_JSON) \
+		-g typescript-fetch \
+		-o typescript/src/_internal/autogen
+	@echo "  ✓ TypeScript autogen synced"
+
+sync-autogen-go: _require-swagger-json ## Regenerate Go autogen from OpenAPI spec
+	@echo "Generating Go SDK -> go/internal/autogen ..."
+	@rm -rf go/internal/autogen
+	@mkdir -p go/internal/autogen
+	@openapi-generator-cli generate \
+		--config openapitools.json \
+		-i $(SWAGGER_JSON) \
+		-g go \
+		-o /tmp/smritea-public-sdk-go \
+		--additional-properties=packageName=autogen,withGoMod=false
+	@cp /tmp/smritea-public-sdk-go/*.go go/internal/autogen/
+	@rm -rf /tmp/smritea-public-sdk-go
+	@echo "  ✓ Go autogen synced"
+
+sync-autogen-java: _require-swagger-json ## Regenerate Java autogen from OpenAPI spec
+	@echo "Generating Java SDK -> java/src/main/java/ai/smritea/sdk/_internal/autogen ..."
+	@rm -rf java/src/main/java/ai/smritea/sdk/_internal/autogen
+	@mkdir -p java/src/main/java/ai/smritea/sdk/_internal/autogen
+	@openapi-generator-cli generate \
+		--config openapitools.json \
+		-i $(SWAGGER_JSON) \
+		-g java \
+		-o /tmp/smritea-public-sdk-java \
+		--additional-properties=library=native,hideGenerationTimestamp=true,invokerPackage=ai.smritea.sdk._internal.autogen,apiPackage=ai.smritea.sdk._internal.autogen.api,modelPackage=ai.smritea.sdk._internal.autogen.model
+	@cp -r /tmp/smritea-public-sdk-java/src/main/java/ai/smritea/sdk/_internal/autogen/. java/src/main/java/ai/smritea/sdk/_internal/autogen/
+	@rm -rf /tmp/smritea-public-sdk-java
+	@echo "  ✓ Java autogen synced"
+
+sync-autogen-csharp: _require-swagger-json ## Regenerate C# autogen from OpenAPI spec
+	@echo "Generating C# SDK -> csharp/_internal/autogen ..."
+	@rm -rf csharp/_internal/autogen
+	@mkdir -p csharp/_internal/autogen
+	@openapi-generator-cli generate \
+		--config openapitools.json \
+		-i $(SWAGGER_JSON) \
+		-g csharp \
+		-o /tmp/smritea-public-sdk-csharp \
+		--additional-properties=packageName=Smritea.Internal.Autogen,optionalProjectFile=false,optionalAssemblyInfo=false,library=httpclient,nullableReferenceTypes=true
+	@cp -r /tmp/smritea-public-sdk-csharp/src/Smritea.Internal.Autogen/. csharp/_internal/autogen/
+	@rm -rf /tmp/smritea-public-sdk-csharp
+	@echo "  ✓ C# autogen synced"
 
 clean: ## Clean build artifacts
 	rm -rf python/dist
