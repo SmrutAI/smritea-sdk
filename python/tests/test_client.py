@@ -176,7 +176,6 @@ class TestSearchUserIdConvenience:
             'query',
             user_id='alice',
             limit=10,
-            method='quick_search',
             threshold=0.5,
             graph_depth=2,
             conversation_id='conv-123',
@@ -186,7 +185,6 @@ class TestSearchUserIdConvenience:
         assert call_args.actor_id == 'alice'
         assert call_args.actor_type == 'user'
         assert call_args.limit == 10
-        assert call_args.method == 'quick_search'
         assert call_args.threshold == 0.5
         assert call_args.graph_depth == 2
         assert call_args.conversation_id == 'conv-123'

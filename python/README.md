@@ -101,7 +101,6 @@ results = client.search(
     "dietary restrictions",
     user_id="alice",
     limit=5,
-    method="deep_search",  # "quick_search" | "deep_search" | "context_aware_search"
     threshold=0.7,          # min relevance score 0.0–1.0
 )
 for r in results:
@@ -110,12 +109,6 @@ for r in results:
 
 Results are ordered by relevance (descending). Each result exposes `score` (0.0–1.0) and all `Memory` fields directly.
 
-| Search method | When to use |
-|---|---|
-| `quick_search` | Low-latency, keyword + vector hybrid |
-| `deep_search` | Higher recall, traverses the memory graph |
-| `context_aware_search` | Reranks results using conversation context |
-
 | Parameter | Default | Description |
 |---|---|---|
 | `query` | required | Search text |
@@ -123,7 +116,6 @@ Results are ordered by relevance (descending). Each result exposes `score` (0.0�
 | `actor_id` | `None` | Filter by actor ID |
 | `actor_type` | `None` | Filter by actor type |
 | `limit` | app default | Max results to return |
-| `method` | app default | Search strategy |
 | `threshold` | `None` | Min relevance score 0.0–1.0 |
 | `graph_depth` | `None` | Graph traversal depth override |
 | `conversation_id` | `None` | Conversation context |

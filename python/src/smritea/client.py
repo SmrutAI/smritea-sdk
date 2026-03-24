@@ -120,7 +120,6 @@ class SmriteaClient:
         actor_id: str | None = None,
         actor_type: str | None = None,
         limit: int | None = None,
-        method: str | None = None,
         threshold: float | None = None,
         graph_depth: int | None = None,
         conversation_id: str | None = None,
@@ -136,7 +135,6 @@ class SmriteaClient:
             actor_id: Explicit actor filter.
             actor_type: Actor type filter.
             limit: Maximum number of results. None = use app default.
-            method: Search method (e.g. 'quick_search', 'deep_search').
             threshold: Minimum relevance score filter (0.0–1.0).
             graph_depth: Graph traversal depth override.
             conversation_id: Filter to a specific conversation.
@@ -157,7 +155,6 @@ class SmriteaClient:
             actor_id=actor_id,
             actor_type=actor_type,
             limit=limit,
-            method=method,
             threshold=threshold,
             graph_depth=graph_depth,
             conversation_id=conversation_id,

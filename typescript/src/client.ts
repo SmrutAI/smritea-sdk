@@ -65,7 +65,6 @@ export class SmriteaClient {
           actorId,
           actorType,
           limit: options?.limit,
-          method: options?.method as never,
           threshold: options?.threshold,
           graphDepth: options?.graphDepth,
           conversationId: options?.conversationId,

@@ -66,7 +66,6 @@ class SearchOptions(BaseModel):
     actor_id: str | None = None
     actor_type: str | None = None
     limit: int | None = None
-    method: str | None = None
     threshold: float | None = None
     graph_depth: int | None = None
     conversation_id: str | None = None

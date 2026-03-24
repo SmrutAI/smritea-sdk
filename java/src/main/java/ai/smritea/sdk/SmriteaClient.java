@@ -8,7 +8,6 @@ import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoriesResponse;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryRequest;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResponse;
-import ai.smritea.sdk._internal.autogen.model.ModelEnumsSearchMethod;
 import ai.smritea.sdk.errors.SmriteaAuthError;
 import ai.smritea.sdk.errors.SmriteaDeserializationError;
 import ai.smritea.sdk.errors.SmriteaError;
@@ -147,7 +146,7 @@ public class SmriteaClient {
    * when no memories match.
    *
    * @param query the search query text
-   * @param opts optional parameters controlling actor scoping, result count, search method, etc.
+   * @param opts optional parameters controlling actor scoping, result count, threshold, etc.
    * @return a list of SearchResult instances, never null
    * @throws SmriteaError on any API error
    */
@@ -168,9 +167,6 @@ public class SmriteaClient {
       }
       if (opts.getLimit() != null) {
         request.setLimit(opts.getLimit());
-      }
-      if (opts.getMethod() != null) {
-        request.setMethod(ModelEnumsSearchMethod.fromValue(opts.getMethod()));
       }
       if (opts.getThreshold() != null) {
         request.setThreshold(BigDecimal.valueOf(opts.getThreshold()));

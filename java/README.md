@@ -126,7 +126,6 @@ List<SearchResult> results = client.search("dietary restrictions",
     new SearchOptions()
         .withUserId("alice")
         .withLimit(5)
-        .withMethod("deep_search")      // "quick_search" | "deep_search" | "context_aware_search"
         .withThreshold(0.7f));           // min relevance score 0.0–1.0
 for (SearchResult r : results) {
     System.out.println(r.getScore() + "  " + r.getContent());
@@ -135,12 +134,6 @@ for (SearchResult r : results) {
 
 Results are ordered by relevance (descending). Each result exposes `getScore()` (0.0–1.0) and all `Memory` fields via getter methods.
 
-| Search method | When to use |
-|---|---|
-| `quick_search` | Low-latency, keyword + vector hybrid |
-| `deep_search` | Higher recall, traverses the memory graph |
-| `context_aware_search` | Reranks results using conversation context |
-
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `query` | `String` | required | Search text |
@@ -148,7 +141,6 @@ Results are ordered by relevance (descending). Each result exposes `getScore()` 
 | `withActorId(v)` | `String` | `null` | Filter by actor ID |
 | `withActorType(v)` | `String` | `null` | Filter by actor type |
 | `withLimit(v)` | `Integer` | app default | Max results to return |
-| `withMethod(v)` | `String` | app default | Search strategy |
 | `withThreshold(v)` | `Float` | `null` | Min relevance score 0.0–1.0 |
 | `withGraphDepth(v)` | `Integer` | `null` | Graph traversal depth override |
 | `withConversationId(v)` | `String` | `null` | Conversation context |

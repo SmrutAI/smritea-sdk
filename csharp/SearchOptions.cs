@@ -7,7 +7,7 @@ namespace Smritea.Sdk;
 /// <summary>
 /// Builder-style options for the SearchAsync method.
 /// Use fluent <c>With*</c> methods for ergonomic construction:
-/// <code>new SearchOptions().WithLimit(10).WithMethod("hybrid")</code>
+/// <code>new SearchOptions().WithLimit(10).WithThreshold(0.7f)</code>
 /// </summary>
 public sealed class SearchOptions
 {
@@ -22,9 +22,6 @@ public sealed class SearchOptions
 
     /// <summary>Gets the maximum number of results to return.</summary>
     public int? Limit { get; private set; }
-
-    /// <summary>Gets the search method (e.g. "hybrid", "semantic", "keyword").</summary>
-    public string? Method { get; private set; }
 
     /// <summary>Gets the minimum similarity threshold (0.0–1.0).</summary>
     public float? Threshold { get; private set; }
@@ -77,15 +74,6 @@ public sealed class SearchOptions
     public SearchOptions WithLimit(int limit)
     {
         this.Limit = limit;
-        return this;
-    }
-
-    /// <summary>Sets the search method.</summary>
-    /// <param name="method">The search method to use (e.g. "hybrid", "semantic", "keyword").</param>
-    /// <returns>The current instance for method chaining.</returns>
-    public SearchOptions WithMethod(string method)
-    {
-        this.Method = method;
         return this;
     }
 

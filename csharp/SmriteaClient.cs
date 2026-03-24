@@ -173,12 +173,6 @@ public class SmriteaClient : IDisposable
                 request.Limit = opts.Limit.Value;
             }
 
-            if (opts.Method is not null)
-            {
-                request.Method = Enum.Parse<ModelEnumsSearchMethod>(
-                    opts.Method, ignoreCase: true);
-            }
-
             if (opts.Threshold is not null)
             {
                 request.Threshold = (decimal)opts.Threshold.Value;

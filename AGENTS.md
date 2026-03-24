@@ -50,7 +50,7 @@ Every SDK implementation MUST expose exactly this surface:
 | Method   | Signature                                                                                                                        |
 |----------|----------------------------------------------------------------------------------------------------------------------------------|
 | `add`    | `(content, *, user_id?, actor_id?, actor_type?, actor_name?, metadata?, conversation_id?) → Memory`                              |
-| `search` | `(query, *, user_id?, actor_id?, actor_type?, limit?, method?, threshold?, graph_depth?, conversation_id?) → list[SearchResult]` |
+| `search` | `(query, *, user_id?, actor_id?, actor_type?, limit?, threshold?, graph_depth?, conversation_id?, from_time?, to_time?, valid_at?) → list[SearchResult]` |
 | `get`    | `(memory_id) → Memory`                                                                                                           |
 | `delete` | `(memory_id) → void`                                                                                                             |
 

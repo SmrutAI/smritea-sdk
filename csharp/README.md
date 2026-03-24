@@ -103,19 +103,12 @@ var results = await client.SearchAsync("dietary restrictions",
     new SearchOptions()
         .WithUserId("alice")
         .WithLimit(5)
-        .WithMethod("deep_search")     // "quick_search" | "deep_search" | "context_aware_search"
         .WithThreshold(0.7f));         // min relevance score 0.0–1.0
 foreach (var r in results)
     Console.WriteLine($"{r.Score}  {r.Content}");
 ```
 
 Results are ordered by relevance (descending). Each result exposes `Score` (0.0–1.0) and all `Memory` properties directly.
-
-| Search method | When to use |
-|---|---|
-| `quick_search` | Low-latency, keyword + vector hybrid |
-| `deep_search` | Higher recall, traverses the memory graph |
-| `context_aware_search` | Reranks results using conversation context |
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
@@ -124,7 +117,6 @@ Results are ordered by relevance (descending). Each result exposes `Score` (0.0�
 | `ActorId` | `string?` | `null` | Filter by actor ID |
 | `ActorType` | `string?` | `null` | Filter by actor type |
 | `Limit` | `int?` | app default | Max results to return |
-| `Method` | `string?` | app default | Search strategy |
 | `Threshold` | `float?` | `null` | Min relevance score 0.0–1.0 |
 | `GraphDepth` | `int?` | `null` | Graph traversal depth override |
 | `ConversationId` | `string?` | `null` | Conversation context |

@@ -6,7 +6,6 @@ public final class SearchOptions {
   private String actorId;
   private String actorType;
   private Integer limit;
-  private String method;
   private Float threshold;
   private Integer graphDepth;
   private String conversationId;
@@ -58,17 +57,6 @@ public final class SearchOptions {
    */
   public SearchOptions withLimit(Integer limit) {
     this.limit = limit;
-    return this;
-  }
-
-  /**
-   * Sets the search method (e.g. "hybrid", "semantic", "keyword").
-   *
-   * @param method the search method
-   * @return this instance for chaining
-   */
-  public SearchOptions withMethod(String method) {
-    this.method = method;
     return this;
   }
 
@@ -156,11 +144,6 @@ public final class SearchOptions {
   /** Returns the result limit. */
   public Integer getLimit() {
     return limit;
-  }
-
-  /** Returns the search method. */
-  public String getMethod() {
-    return method;
   }
 
   /** Returns the score threshold. */

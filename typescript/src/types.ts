@@ -28,7 +28,6 @@ export interface SearchOptions {
   actorId?: string;
   actorType?: 'user' | 'agent' | 'system';
   limit?: number;
-  method?: string;
   threshold?: number;
   graphDepth?: number;
   conversationId?: string;

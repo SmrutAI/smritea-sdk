@@ -60,14 +60,13 @@ func (o *AddOptions) WithConversationID(id string) *AddOptions { o.ConversationI
 //
 // Use NewSearchOptions() with fluent With* methods for ergonomic construction:
 //
-//	opts := smritea.NewSearchOptions().WithLimit(10).WithMethod("hybrid")
+//	opts := smritea.NewSearchOptions().WithLimit(10).WithThreshold(0.7)
 //	results, err := client.Search(ctx, "query", opts)
 type SearchOptions struct {
 	UserID         *string
 	ActorID        *string
 	ActorType      *string
 	Limit          *int32
-	Method         *string
 	Threshold      *float32
 	GraphDepth     *int32
 	ConversationID *string
@@ -93,9 +92,6 @@ func (o *SearchOptions) WithActorType(t string) *SearchOptions { o.ActorType = &
 
 // WithLimit sets the maximum number of results.
 func (o *SearchOptions) WithLimit(n int32) *SearchOptions { o.Limit = &n; return o }
-
-// WithMethod sets the search method.
-func (o *SearchOptions) WithMethod(m string) *SearchOptions { o.Method = &m; return o }
 
 // WithThreshold sets the minimum similarity threshold.
 func (o *SearchOptions) WithThreshold(t float32) *SearchOptions { o.Threshold = &t; return o }

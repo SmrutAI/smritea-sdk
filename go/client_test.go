@@ -214,13 +214,10 @@ func TestAddOptions_Builder(t *testing.T) {
 }
 
 func TestSearchOptions_Builder(t *testing.T) {
-	opts := NewSearchOptions().WithLimit(10).WithMethod("hybrid").WithThreshold(0.8)
+	opts := NewSearchOptions().WithLimit(10).WithThreshold(0.8)
 
 	if opts.Limit == nil || *opts.Limit != 10 {
 		t.Errorf("WithLimit: got %v, want 10", opts.Limit)
-	}
-	if opts.Method == nil || *opts.Method != "hybrid" {
-		t.Errorf("WithMethod: got %v, want hybrid", opts.Method)
 	}
 	if opts.Threshold == nil || *opts.Threshold != 0.8 {
 		t.Errorf("WithThreshold: got %v, want 0.8", opts.Threshold)
