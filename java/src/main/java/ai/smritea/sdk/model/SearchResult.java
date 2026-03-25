@@ -1,10 +1,19 @@
 package ai.smritea.sdk.model;
 
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResult;
 
-/** Wraps a memory with its search relevance score. Delegates to the auto-generated type. */
+/**
+ * A single search result containing a memory and its relevance score. Delegates to the
+ * auto-generated types directly, matching the Python/TypeScript/Go SDKs which re-export autogen
+ * types as-is.
+ *
+ * <p>The memory field is a {@link MemorySearchMemoryResult} — the lean search-specific type that
+ * excludes internal/operational fields (appId, createdAt, updatedAt, conversationMessageId). This
+ * is distinct from {@link Memory} which wraps the full CRUD response type returned by get/add.
+ */
 public final class SearchResult {
-  private final Memory memory;
+  private final MemorySearchMemoryResult memory;
   private final Double score;
 
   /**
@@ -15,24 +24,23 @@ public final class SearchResult {
    * @param inner the autogen response object
    */
   public SearchResult(MemorySearchMemoryResponse inner) {
-    this.memory = inner.getMemory() != null ? new Memory(inner.getMemory()) : null;
+    this.memory = inner.getMemory();
     this.score = inner.getScore() != null ? inner.getScore().doubleValue() : null;
   }
 
   /**
-   * Creates a new SearchResult from an already-wrapped Memory and score. Primarily useful for
-   * tests.
+   * Creates a new SearchResult from an autogen memory and score. Primarily useful for tests.
    *
-   * @param memory the matched memory
+   * @param memory the matched search memory result
    * @param score the relevance score
    */
-  public SearchResult(Memory memory, Double score) {
+  public SearchResult(MemorySearchMemoryResult memory, Double score) {
     this.memory = memory;
     this.score = score;
   }
 
-  /** Returns the matched memory. */
-  public Memory getMemory() {
+  /** Returns the matched memory (lean search-specific type). */
+  public MemorySearchMemoryResult getMemory() {
     return memory;
   }
 

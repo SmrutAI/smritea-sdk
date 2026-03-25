@@ -38,7 +38,7 @@ namespace Smritea.Internal.Autogen.Model
         /// </summary>
         /// <param name="memory">memory.</param>
         /// <param name="score">score.</param>
-        public MemorySearchMemoryResponse(MemoryMemoryResponse memory = default, decimal score = default)
+        public MemorySearchMemoryResponse(MemorySearchMemoryResult memory = default, decimal score = default)
         {
             this.Memory = memory;
             this.Score = score;
@@ -48,7 +48,7 @@ namespace Smritea.Internal.Autogen.Model
         /// Gets or Sets Memory
         /// </summary>
         [DataMember(Name = "memory", EmitDefaultValue = false)]
-        public MemoryMemoryResponse Memory { get; set; }
+        public MemorySearchMemoryResult Memory { get; set; }
 
         /// <summary>
         /// Gets or Sets Score

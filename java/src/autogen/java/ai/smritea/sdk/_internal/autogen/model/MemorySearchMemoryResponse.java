@@ -19,7 +19,7 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
-import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -42,7 +42,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 public class MemorySearchMemoryResponse {
   public static final String JSON_PROPERTY_MEMORY = "memory";
   @javax.annotation.Nullable
-  private MemoryMemoryResponse memory;
+  private MemorySearchMemoryResult memory;
 
   public static final String JSON_PROPERTY_SCORE = "score";
   @javax.annotation.Nullable
@@ -51,7 +51,7 @@ public class MemorySearchMemoryResponse {
   public MemorySearchMemoryResponse() { 
   }
 
-  public MemorySearchMemoryResponse memory(@javax.annotation.Nullable MemoryMemoryResponse memory) {
+  public MemorySearchMemoryResponse memory(@javax.annotation.Nullable MemorySearchMemoryResult memory) {
     this.memory = memory;
     return this;
   }
@@ -63,14 +63,14 @@ public class MemorySearchMemoryResponse {
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_MEMORY, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public MemoryMemoryResponse getMemory() {
+  public MemorySearchMemoryResult getMemory() {
     return memory;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_MEMORY, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMemory(@javax.annotation.Nullable MemoryMemoryResponse memory) {
+  public void setMemory(@javax.annotation.Nullable MemorySearchMemoryResult memory) {
     this.memory = memory;
   }
 

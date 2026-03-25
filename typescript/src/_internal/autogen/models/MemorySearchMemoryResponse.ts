@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
-import type { MemoryMemoryResponse } from './MemoryMemoryResponse';
+import type { MemorySearchMemoryResult } from './MemorySearchMemoryResult';
 import {
-    MemoryMemoryResponseFromJSON,
-    MemoryMemoryResponseFromJSONTyped,
-    MemoryMemoryResponseToJSON,
-    MemoryMemoryResponseToJSONTyped,
-} from './MemoryMemoryResponse';
+    MemorySearchMemoryResultFromJSON,
+    MemorySearchMemoryResultFromJSONTyped,
+    MemorySearchMemoryResultToJSON,
+    MemorySearchMemoryResultToJSONTyped,
+} from './MemorySearchMemoryResult';
 
 /**
  * 
@@ -29,10 +29,10 @@ import {
 export interface MemorySearchMemoryResponse {
     /**
      * 
-     * @type {MemoryMemoryResponse}
+     * @type {MemorySearchMemoryResult}
      * @memberof MemorySearchMemoryResponse
      */
-    memory?: MemoryMemoryResponse;
+    memory?: MemorySearchMemoryResult;
     /**
      * 
      * @type {number}
@@ -58,7 +58,7 @@ export function MemorySearchMemoryResponseFromJSONTyped(json: any, ignoreDiscrim
     }
     return {
         
-        'memory': json['memory'] == null ? undefined : MemoryMemoryResponseFromJSON(json['memory']),
+        'memory': json['memory'] == null ? undefined : MemorySearchMemoryResultFromJSON(json['memory']),
         'score': json['score'] == null ? undefined : json['score'],
     };
 }
@@ -74,7 +74,7 @@ export function MemorySearchMemoryResponseToJSONTyped(value?: MemorySearchMemory
 
     return {
         
-        'memory': MemoryMemoryResponseToJSON(value['memory']),
+        'memory': MemorySearchMemoryResultToJSON(value['memory']),
         'score': value['score'],
     };
 }

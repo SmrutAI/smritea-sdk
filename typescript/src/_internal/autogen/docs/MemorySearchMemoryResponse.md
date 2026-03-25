@@ -6,7 +6,7 @@
 
 Name | Type
 ------------ | -------------
-`memory` | [MemoryMemoryResponse](MemoryMemoryResponse.md)
+`memory` | [MemorySearchMemoryResult](MemorySearchMemoryResult.md)
 `score` | number
 
 ## Example

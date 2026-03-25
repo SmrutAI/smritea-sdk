@@ -20,7 +20,7 @@ var _ MappedNullable = &MemorySearchMemoryResponse{}
 
 // MemorySearchMemoryResponse struct for MemorySearchMemoryResponse
 type MemorySearchMemoryResponse struct {
-	Memory *MemoryMemoryResponse `json:"memory,omitempty"`
+	Memory *MemorySearchMemoryResult `json:"memory,omitempty"`
 	Score *float32 `json:"score,omitempty"`
 }
 
@@ -42,9 +42,9 @@ func NewMemorySearchMemoryResponseWithDefaults() *MemorySearchMemoryResponse {
 }
 
 // GetMemory returns the Memory field value if set, zero value otherwise.
-func (o *MemorySearchMemoryResponse) GetMemory() MemoryMemoryResponse {
+func (o *MemorySearchMemoryResponse) GetMemory() MemorySearchMemoryResult {
 	if o == nil || IsNil(o.Memory) {
-		var ret MemoryMemoryResponse
+		var ret MemorySearchMemoryResult
 		return ret
 	}
 	return *o.Memory
@@ -52,7 +52,7 @@ func (o *MemorySearchMemoryResponse) GetMemory() MemoryMemoryResponse {
 
 // GetMemoryOk returns a tuple with the Memory field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *MemorySearchMemoryResponse) GetMemoryOk() (*MemoryMemoryResponse, bool) {
+func (o *MemorySearchMemoryResponse) GetMemoryOk() (*MemorySearchMemoryResult, bool) {
 	if o == nil || IsNil(o.Memory) {
 		return nil, false
 	}
@@ -68,8 +68,8 @@ func (o *MemorySearchMemoryResponse) HasMemory() bool {
 	return false
 }
 
-// SetMemory gets a reference to the given MemoryMemoryResponse and assigns it to the Memory field.
-func (o *MemorySearchMemoryResponse) SetMemory(v MemoryMemoryResponse) {
+// SetMemory gets a reference to the given MemorySearchMemoryResult and assigns it to the Memory field.
+func (o *MemorySearchMemoryResponse) SetMemory(v MemorySearchMemoryResult) {
 	o.Memory = &v
 }
 

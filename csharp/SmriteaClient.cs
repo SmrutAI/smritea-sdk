@@ -126,7 +126,7 @@ public class SmriteaClient : IDisposable
                             "Server returned null for CreateMemory. The response body could not be deserialized.");
                     }
 
-                    return new Memory(resp);
+                    return resp;
                 }
                 catch (ApiException e)
                 {
@@ -216,13 +216,7 @@ public class SmriteaClient : IDisposable
                         return Array.Empty<SearchResult>();
                     }
 
-                    var results = new List<SearchResult>(memories.Count);
-                    foreach (var m in memories)
-                    {
-                        results.Add(new SearchResult(m));
-                    }
-
-                    return results;
+                    return memories.AsReadOnly();
                 }
                 catch (ApiException e)
                 {
@@ -253,7 +247,7 @@ public class SmriteaClient : IDisposable
                             "Server returned null for GetMemory. The response body could not be deserialized.");
                     }
 
-                    return new Memory(resp);
+                    return resp;
                 }
                 catch (ApiException e)
                 {

@@ -20,7 +20,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from smritea._internal.autogen.smritea_cloud_sdk.models.memory_memory_response import MemoryMemoryResponse
+from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memory_result import MemorySearchMemoryResult
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,7 @@ class MemorySearchMemoryResponse(BaseModel):
     """
     MemorySearchMemoryResponse
     """ # noqa: E501
-    memory: Optional[MemoryMemoryResponse] = None
+    memory: Optional[MemorySearchMemoryResult] = None
     score: Optional[Union[StrictFloat, StrictInt]] = None
     __properties: ClassVar[List[str]] = ["memory", "score"]
 
@@ -86,7 +86,7 @@ class MemorySearchMemoryResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "memory": MemoryMemoryResponse.from_dict(obj["memory"]) if obj.get("memory") is not None else None,
+            "memory": MemorySearchMemoryResult.from_dict(obj["memory"]) if obj.get("memory") is not None else None,
             "score": obj.get("score")
         })
         return _obj

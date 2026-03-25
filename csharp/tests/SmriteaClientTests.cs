@@ -106,8 +106,8 @@ public class SmriteaClientTests : IDisposable
         Assert.NotNull(results);
         Assert.Single(results);
         Assert.Equal("mem-1", results[0].Memory!.Id);
-        Assert.Equal("found", results[0].Content);
-        Assert.Equal(0.9, results[0].Score, 3);
+        Assert.Equal("found", results[0].Memory!.Content);
+        Assert.Equal(0.9m, results[0].Score!, 3);
     }
 
     [Fact]

@@ -12,6 +12,11 @@ dotnet_diagnostic.SA1600.severity = none
 dotnet_diagnostic.SA1611.severity = none
 dotnet_diagnostic.SA1616.severity = none
 
+# Global using aliases must be at file scope (before any namespace declaration).
+# SA1200 does not apply to global using directives — suppress it for the alias file.
+[GlobalUsings.cs]
+dotnet_diagnostic.SA1200.severity = none
+
 # Suppress all analyzers for auto-generated code
 [_internal/autogen/**/*.cs]
 generated_code = true
