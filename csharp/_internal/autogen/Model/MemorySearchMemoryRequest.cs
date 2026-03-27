@@ -72,6 +72,13 @@ namespace Smritea.Internal.Autogen.Model
         /// </summary>
         [DataMember(Name = "method", EmitDefaultValue = false)]
         public ModelEnumsSearchMethod? Method { get; set; }
+
+        /// <summary>
+        /// RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.
+        /// </summary>
+        /// <value>RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.</value>
+        [DataMember(Name = "reranker_type", EmitDefaultValue = false)]
+        public ModelEnumsRerankerType? RerankerType { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="MemorySearchMemoryRequest" /> class.
         /// </summary>
@@ -89,10 +96,11 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="limit">limit.</param>
         /// <param name="method">method.</param>
         /// <param name="query">query (required).</param>
+        /// <param name="rerankerType">RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method..</param>
         /// <param name="threshold">0&#x3D;no filtering (pipeline uses RRF scores, not cosine similarity).</param>
         /// <param name="toTime">ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime..</param>
         /// <param name="validAt">ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from &lt;&#x3D; ValidAt AND (active_to is null OR active_to &gt;&#x3D; ValidAt) Mutually exclusive with FromTime/ToTime..</param>
-        public MemorySearchMemoryRequest(string actorId = default, ActorTypeEnum? actorType = default, string appId = default, string conversationId = default, string fromTime = default, int graphDepth = default, int limit = default, ModelEnumsSearchMethod? method = default, string query = default, decimal threshold = default, string toTime = default, string validAt = default)
+        public MemorySearchMemoryRequest(string actorId = default, ActorTypeEnum? actorType = default, string appId = default, string conversationId = default, string fromTime = default, int graphDepth = default, int limit = default, ModelEnumsSearchMethod? method = default, string query = default, ModelEnumsRerankerType? rerankerType = default, decimal threshold = default, string toTime = default, string validAt = default)
         {
             // to ensure "appId" is required (not null)
             if (appId == null)
@@ -113,6 +121,7 @@ namespace Smritea.Internal.Autogen.Model
             this.GraphDepth = graphDepth;
             this.Limit = limit;
             this.Method = method;
+            this.RerankerType = rerankerType;
             this.Threshold = threshold;
             this.ToTime = toTime;
             this.ValidAt = validAt;
@@ -201,6 +210,7 @@ namespace Smritea.Internal.Autogen.Model
             sb.Append("  Limit: ").Append(Limit).Append("\n");
             sb.Append("  Method: ").Append(Method).Append("\n");
             sb.Append("  Query: ").Append(Query).Append("\n");
+            sb.Append("  RerankerType: ").Append(RerankerType).Append("\n");
             sb.Append("  Threshold: ").Append(Threshold).Append("\n");
             sb.Append("  ToTime: ").Append(ToTime).Append("\n");
             sb.Append("  ValidAt: ").Append(ValidAt).Append("\n");

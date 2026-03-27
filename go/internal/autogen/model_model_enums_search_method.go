@@ -25,9 +25,6 @@ const (
 	SearchMethodQuickSearch ModelEnumsSearchMethod = "quick_search"
 	SearchMethodDeepSearch ModelEnumsSearchMethod = "deep_search"
 	SearchMethodContextAwareSearch ModelEnumsSearchMethod = "context_aware_search"
-	SearchMethodGraphProximity ModelEnumsSearchMethod = "graph_proximity"
-	SearchMethodDiversified ModelEnumsSearchMethod = "diversified"
-	SearchMethodSemanticRerank ModelEnumsSearchMethod = "semantic_rerank"
 )
 
 // All allowed values of ModelEnumsSearchMethod enum
@@ -36,9 +33,6 @@ var AllowedModelEnumsSearchMethodEnumValues = []ModelEnumsSearchMethod{
 	"quick_search",
 	"deep_search",
 	"context_aware_search",
-	"graph_proximity",
-	"diversified",
-	"semantic_rerank",
 }
 
 func (v *ModelEnumsSearchMethod) UnmarshalJSON(src []byte) error {

@@ -26,5 +26,6 @@ from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memories_r
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memory_request import MemorySearchMemoryRequest
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memory_response import MemorySearchMemoryResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memory_result import MemorySearchMemoryResult
+from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_reranker_type import ModelEnumsRerankerType
 from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_search_method import ModelEnumsSearchMethod
 

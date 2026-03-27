@@ -20,6 +20,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_reranker_type import ModelEnumsRerankerType
 from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_search_method import ModelEnumsSearchMethod
 from typing import Optional, Set
 from typing_extensions import Self
@@ -37,10 +38,11 @@ class MemorySearchMemoryRequest(BaseModel):
     limit: Optional[StrictInt] = None
     method: Optional[ModelEnumsSearchMethod] = None
     query: StrictStr
+    reranker_type: Optional[ModelEnumsRerankerType] = Field(default=None, description="RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.")
     threshold: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="0=no filtering (pipeline uses RRF scores, not cosine similarity)")
     to_time: Optional[StrictStr] = Field(default=None, description="ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.")
     valid_at: Optional[StrictStr] = Field(default=None, description="ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from <= ValidAt AND (active_to is null OR active_to >= ValidAt) Mutually exclusive with FromTime/ToTime.")
-    __properties: ClassVar[List[str]] = ["actor_id", "actor_type", "app_id", "conversation_id", "from_time", "graph_depth", "limit", "method", "query", "threshold", "to_time", "valid_at"]
+    __properties: ClassVar[List[str]] = ["actor_id", "actor_type", "app_id", "conversation_id", "from_time", "graph_depth", "limit", "method", "query", "reranker_type", "threshold", "to_time", "valid_at"]
 
     @field_validator('actor_type')
     def actor_type_validate_enum(cls, value):
@@ -112,6 +114,7 @@ class MemorySearchMemoryRequest(BaseModel):
             "limit": obj.get("limit"),
             "method": obj.get("method"),
             "query": obj.get("query"),
+            "reranker_type": obj.get("reranker_type"),
             "threshold": obj.get("threshold"),
             "to_time": obj.get("to_time"),
             "valid_at": obj.get("valid_at")

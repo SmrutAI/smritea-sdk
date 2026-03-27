@@ -20,6 +20,13 @@ import {
     ModelEnumsSearchMethodToJSON,
     ModelEnumsSearchMethodToJSONTyped,
 } from './ModelEnumsSearchMethod';
+import type { ModelEnumsRerankerType } from './ModelEnumsRerankerType';
+import {
+    ModelEnumsRerankerTypeFromJSON,
+    ModelEnumsRerankerTypeFromJSONTyped,
+    ModelEnumsRerankerTypeToJSON,
+    ModelEnumsRerankerTypeToJSONTyped,
+} from './ModelEnumsRerankerType';
 
 /**
  * 
@@ -85,6 +92,13 @@ export interface MemorySearchMemoryRequest {
      */
     query: string;
     /**
+     * RerankerType overrides the reranker for this request (optional).
+     * If nil, uses app config reranker. Only applies to deep_search method.
+     * @type {ModelEnumsRerankerType}
+     * @memberof MemorySearchMemoryRequest
+     */
+    rerankerType?: ModelEnumsRerankerType;
+    /**
      * 0=no filtering (pipeline uses RRF scores, not cosine similarity)
      * @type {number}
      * @memberof MemorySearchMemoryRequest
@@ -147,6 +161,7 @@ export function MemorySearchMemoryRequestFromJSONTyped(json: any, ignoreDiscrimi
         'limit': json['limit'] == null ? undefined : json['limit'],
         'method': json['method'] == null ? undefined : ModelEnumsSearchMethodFromJSON(json['method']),
         'query': json['query'],
+        'rerankerType': json['reranker_type'] == null ? undefined : ModelEnumsRerankerTypeFromJSON(json['reranker_type']),
         'threshold': json['threshold'] == null ? undefined : json['threshold'],
         'toTime': json['to_time'] == null ? undefined : json['to_time'],
         'validAt': json['valid_at'] == null ? undefined : json['valid_at'],
@@ -173,6 +188,7 @@ export function MemorySearchMemoryRequestToJSONTyped(value?: MemorySearchMemoryR
         'limit': value['limit'],
         'method': ModelEnumsSearchMethodToJSON(value['method']),
         'query': value['query'],
+        'reranker_type': ModelEnumsRerankerTypeToJSON(value['rerankerType']),
         'threshold': value['threshold'],
         'to_time': value['toTime'],
         'valid_at': value['validAt'],

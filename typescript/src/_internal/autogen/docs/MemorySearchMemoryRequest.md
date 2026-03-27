@@ -15,6 +15,7 @@ Name | Type
 `limit` | number
 `method` | [ModelEnumsSearchMethod](ModelEnumsSearchMethod.md)
 `query` | string
+`rerankerType` | [ModelEnumsRerankerType](ModelEnumsRerankerType.md)
 `threshold` | number
 `toTime` | string
 `validAt` | string
@@ -35,6 +36,7 @@ const example = {
   "limit": null,
   "method": null,
   "query": null,
+  "rerankerType": null,
   "threshold": null,
   "toTime": null,
   "validAt": null,

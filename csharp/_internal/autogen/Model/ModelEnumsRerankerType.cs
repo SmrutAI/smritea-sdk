@@ -28,34 +28,52 @@ using OpenAPIDateConverter = Smritea.Internal.Autogen.Client.OpenAPIDateConverte
 namespace Smritea.Internal.Autogen.Model
 {
     /// <summary>
-    /// Defines model_enums.SearchMethod
+    /// Defines model_enums.RerankerType
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum ModelEnumsSearchMethod
+    public enum ModelEnumsRerankerType
     {
         /// <summary>
-        /// Enum SearchMethodInvalid for value: invalid_search_method
+        /// Enum RerankerNone for value: none
         /// </summary>
-        [EnumMember(Value = "invalid_search_method")]
-        SearchMethodInvalid = 1,
+        [EnumMember(Value = "none")]
+        RerankerNone = 1,
 
         /// <summary>
-        /// Enum SearchMethodQuickSearch for value: quick_search
+        /// Enum RerankerRRF for value: rrf
         /// </summary>
-        [EnumMember(Value = "quick_search")]
-        SearchMethodQuickSearch = 2,
+        [EnumMember(Value = "rrf")]
+        RerankerRRF = 2,
 
         /// <summary>
-        /// Enum SearchMethodDeepSearch for value: deep_search
+        /// Enum RerankerMMR for value: mmr
         /// </summary>
-        [EnumMember(Value = "deep_search")]
-        SearchMethodDeepSearch = 3,
+        [EnumMember(Value = "mmr")]
+        RerankerMMR = 3,
 
         /// <summary>
-        /// Enum SearchMethodContextAwareSearch for value: context_aware_search
+        /// Enum RerankerTemporal for value: temporal
         /// </summary>
-        [EnumMember(Value = "context_aware_search")]
-        SearchMethodContextAwareSearch = 4
+        [EnumMember(Value = "temporal")]
+        RerankerTemporal = 4,
+
+        /// <summary>
+        /// Enum RerankerCrossEncoder for value: cross_encoder
+        /// </summary>
+        [EnumMember(Value = "cross_encoder")]
+        RerankerCrossEncoder = 5,
+
+        /// <summary>
+        /// Enum RerankerNodeDistance for value: node_distance
+        /// </summary>
+        [EnumMember(Value = "node_distance")]
+        RerankerNodeDistance = 6,
+
+        /// <summary>
+        /// Enum RerankerRRFTemporal for value: rrf_temporal
+        /// </summary>
+        [EnumMember(Value = "rrf_temporal")]
+        RerankerRRFTemporal = 7
     }
 
 }

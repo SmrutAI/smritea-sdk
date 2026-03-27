@@ -19,6 +19,7 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
+import ai.smritea.sdk._internal.autogen.model.ModelEnumsRerankerType;
 import ai.smritea.sdk._internal.autogen.model.ModelEnumsSearchMethod;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -44,6 +45,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   MemorySearchMemoryRequest.JSON_PROPERTY_LIMIT,
   MemorySearchMemoryRequest.JSON_PROPERTY_METHOD,
   MemorySearchMemoryRequest.JSON_PROPERTY_QUERY,
+  MemorySearchMemoryRequest.JSON_PROPERTY_RERANKER_TYPE,
   MemorySearchMemoryRequest.JSON_PROPERTY_THRESHOLD,
   MemorySearchMemoryRequest.JSON_PROPERTY_TO_TIME,
   MemorySearchMemoryRequest.JSON_PROPERTY_VALID_AT
@@ -122,6 +124,10 @@ public class MemorySearchMemoryRequest {
   public static final String JSON_PROPERTY_QUERY = "query";
   @javax.annotation.Nonnull
   private String query;
+
+  public static final String JSON_PROPERTY_RERANKER_TYPE = "reranker_type";
+  @javax.annotation.Nullable
+  private ModelEnumsRerankerType rerankerType;
 
   public static final String JSON_PROPERTY_THRESHOLD = "threshold";
   @javax.annotation.Nullable
@@ -354,6 +360,30 @@ public class MemorySearchMemoryRequest {
   }
 
 
+  public MemorySearchMemoryRequest rerankerType(@javax.annotation.Nullable ModelEnumsRerankerType rerankerType) {
+    this.rerankerType = rerankerType;
+    return this;
+  }
+
+  /**
+   * RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.
+   * @return rerankerType
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_RERANKER_TYPE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public ModelEnumsRerankerType getRerankerType() {
+    return rerankerType;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_RERANKER_TYPE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setRerankerType(@javax.annotation.Nullable ModelEnumsRerankerType rerankerType) {
+    this.rerankerType = rerankerType;
+  }
+
+
   public MemorySearchMemoryRequest threshold(@javax.annotation.Nullable BigDecimal threshold) {
     this.threshold = threshold;
     return this;
@@ -447,6 +477,7 @@ public class MemorySearchMemoryRequest {
         Objects.equals(this.limit, memorySearchMemoryRequest.limit) &&
         Objects.equals(this.method, memorySearchMemoryRequest.method) &&
         Objects.equals(this.query, memorySearchMemoryRequest.query) &&
+        Objects.equals(this.rerankerType, memorySearchMemoryRequest.rerankerType) &&
         Objects.equals(this.threshold, memorySearchMemoryRequest.threshold) &&
         Objects.equals(this.toTime, memorySearchMemoryRequest.toTime) &&
         Objects.equals(this.validAt, memorySearchMemoryRequest.validAt);
@@ -454,7 +485,7 @@ public class MemorySearchMemoryRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(actorId, actorType, appId, conversationId, fromTime, graphDepth, limit, method, query, threshold, toTime, validAt);
+    return Objects.hash(actorId, actorType, appId, conversationId, fromTime, graphDepth, limit, method, query, rerankerType, threshold, toTime, validAt);
   }
 
   @Override
@@ -470,6 +501,7 @@ public class MemorySearchMemoryRequest {
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
     sb.append("    method: ").append(toIndentedString(method)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
+    sb.append("    rerankerType: ").append(toIndentedString(rerankerType)).append("\n");
     sb.append("    threshold: ").append(toIndentedString(threshold)).append("\n");
     sb.append("    toTime: ").append(toIndentedString(toTime)).append("\n");
     sb.append("    validAt: ").append(toIndentedString(validAt)).append("\n");
@@ -563,6 +595,11 @@ public class MemorySearchMemoryRequest {
     // add `query` to the URL query string
     if (getQuery() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%squery%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getQuery()))));
+    }
+
+    // add `reranker_type` to the URL query string
+    if (getRerankerType() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sreranker_type%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getRerankerType()))));
     }
 
     // add `threshold` to the URL query string

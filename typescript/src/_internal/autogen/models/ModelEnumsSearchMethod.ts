@@ -21,10 +21,7 @@ export const ModelEnumsSearchMethod = {
     SearchMethodInvalid: 'invalid_search_method',
     SearchMethodQuickSearch: 'quick_search',
     SearchMethodDeepSearch: 'deep_search',
-    SearchMethodContextAwareSearch: 'context_aware_search',
-    SearchMethodGraphProximity: 'graph_proximity',
-    SearchMethodDiversified: 'diversified',
-    SearchMethodSemanticRerank: 'semantic_rerank'
+    SearchMethodContextAwareSearch: 'context_aware_search'
 } as const;
 export type ModelEnumsSearchMethod = typeof ModelEnumsSearchMethod[keyof typeof ModelEnumsSearchMethod];
 

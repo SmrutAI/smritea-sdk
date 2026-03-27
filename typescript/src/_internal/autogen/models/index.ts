@@ -12,4 +12,5 @@ export * from './MemorySearchMemoriesResponse';
 export * from './MemorySearchMemoryRequest';
 export * from './MemorySearchMemoryResponse';
 export * from './MemorySearchMemoryResult';
+export * from './ModelEnumsRerankerType';
 export * from './ModelEnumsSearchMethod';

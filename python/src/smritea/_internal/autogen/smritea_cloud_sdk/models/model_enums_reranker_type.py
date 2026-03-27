@@ -19,22 +19,25 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class ModelEnumsSearchMethod(str, Enum):
+class ModelEnumsRerankerType(str, Enum):
     """
-    ModelEnumsSearchMethod
+    ModelEnumsRerankerType
     """
 
     """
     allowed enum values
     """
-    SearchMethodInvalid = 'invalid_search_method'
-    SearchMethodQuickSearch = 'quick_search'
-    SearchMethodDeepSearch = 'deep_search'
-    SearchMethodContextAwareSearch = 'context_aware_search'
+    RerankerNone = 'none'
+    RerankerRRF = 'rrf'
+    RerankerMMR = 'mmr'
+    RerankerTemporal = 'temporal'
+    RerankerCrossEncoder = 'cross_encoder'
+    RerankerNodeDistance = 'node_distance'
+    RerankerRRFTemporal = 'rrf_temporal'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ModelEnumsSearchMethod from a JSON string"""
+        """Create an instance of ModelEnumsRerankerType from a JSON string"""
         return cls(json.loads(json_str))
 
 

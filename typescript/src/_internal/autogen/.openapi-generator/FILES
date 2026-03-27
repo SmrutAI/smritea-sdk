@@ -13,6 +13,7 @@ docs/MemorySearchMemoriesResponse.md
 docs/MemorySearchMemoryRequest.md
 docs/MemorySearchMemoryResponse.md
 docs/MemorySearchMemoryResult.md
+docs/ModelEnumsRerankerType.md
 docs/ModelEnumsSearchMethod.md
 docs/SDKMemoryApi.md
 index.ts
@@ -28,6 +29,7 @@ models/MemorySearchMemoriesResponse.ts
 models/MemorySearchMemoryRequest.ts
 models/MemorySearchMemoryResponse.ts
 models/MemorySearchMemoryResult.ts
+models/ModelEnumsRerankerType.ts
 models/ModelEnumsSearchMethod.ts
 models/index.ts
 runtime.ts

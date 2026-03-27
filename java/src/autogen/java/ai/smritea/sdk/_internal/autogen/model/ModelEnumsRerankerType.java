@@ -26,21 +26,27 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Gets or Sets model_enums.SearchMethod
+ * Gets or Sets model_enums.RerankerType
  */
-public enum ModelEnumsSearchMethod {
+public enum ModelEnumsRerankerType {
   
-  SearchMethodInvalid("invalid_search_method"),
+  RerankerNone("none"),
   
-  SearchMethodQuickSearch("quick_search"),
+  RerankerRRF("rrf"),
   
-  SearchMethodDeepSearch("deep_search"),
+  RerankerMMR("mmr"),
   
-  SearchMethodContextAwareSearch("context_aware_search");
+  RerankerTemporal("temporal"),
+  
+  RerankerCrossEncoder("cross_encoder"),
+  
+  RerankerNodeDistance("node_distance"),
+  
+  RerankerRRFTemporal("rrf_temporal");
 
   private String value;
 
-  ModelEnumsSearchMethod(String value) {
+  ModelEnumsRerankerType(String value) {
     this.value = value;
   }
 
@@ -55,8 +61,8 @@ public enum ModelEnumsSearchMethod {
   }
 
   @JsonCreator
-  public static ModelEnumsSearchMethod fromValue(String value) {
-    for (ModelEnumsSearchMethod b : ModelEnumsSearchMethod.values()) {
+  public static ModelEnumsRerankerType fromValue(String value) {
+    for (ModelEnumsRerankerType b : ModelEnumsRerankerType.values()) {
       if (b.value.equals(value)) {
         return b;
       }

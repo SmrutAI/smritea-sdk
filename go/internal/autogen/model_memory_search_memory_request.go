@@ -35,6 +35,8 @@ type MemorySearchMemoryRequest struct {
 	Limit *int32 `json:"limit,omitempty"`
 	Method *ModelEnumsSearchMethod `json:"method,omitempty"`
 	Query string `json:"query"`
+	// RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.
+	RerankerType *ModelEnumsRerankerType `json:"reranker_type,omitempty"`
 	// 0=no filtering (pipeline uses RRF scores, not cosine similarity)
 	Threshold *float32 `json:"threshold,omitempty"`
 	// ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.
@@ -336,6 +338,38 @@ func (o *MemorySearchMemoryRequest) SetQuery(v string) {
 	o.Query = v
 }
 
+// GetRerankerType returns the RerankerType field value if set, zero value otherwise.
+func (o *MemorySearchMemoryRequest) GetRerankerType() ModelEnumsRerankerType {
+	if o == nil || IsNil(o.RerankerType) {
+		var ret ModelEnumsRerankerType
+		return ret
+	}
+	return *o.RerankerType
+}
+
+// GetRerankerTypeOk returns a tuple with the RerankerType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MemorySearchMemoryRequest) GetRerankerTypeOk() (*ModelEnumsRerankerType, bool) {
+	if o == nil || IsNil(o.RerankerType) {
+		return nil, false
+	}
+	return o.RerankerType, true
+}
+
+// HasRerankerType returns a boolean if a field has been set.
+func (o *MemorySearchMemoryRequest) HasRerankerType() bool {
+	if o != nil && !IsNil(o.RerankerType) {
+		return true
+	}
+
+	return false
+}
+
+// SetRerankerType gets a reference to the given ModelEnumsRerankerType and assigns it to the RerankerType field.
+func (o *MemorySearchMemoryRequest) SetRerankerType(v ModelEnumsRerankerType) {
+	o.RerankerType = &v
+}
+
 // GetThreshold returns the Threshold field value if set, zero value otherwise.
 func (o *MemorySearchMemoryRequest) GetThreshold() float32 {
 	if o == nil || IsNil(o.Threshold) {
@@ -465,6 +499,9 @@ func (o MemorySearchMemoryRequest) ToMap() (map[string]interface{}, error) {
 		toSerialize["method"] = o.Method
 	}
 	toSerialize["query"] = o.Query
+	if !IsNil(o.RerankerType) {
+		toSerialize["reranker_type"] = o.RerankerType
+	}
 	if !IsNil(o.Threshold) {
 		toSerialize["threshold"] = o.Threshold
 	}
