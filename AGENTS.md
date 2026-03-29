@@ -47,18 +47,20 @@ file, with `_internal/autogen` (or `internal/autogen` for Go) excluded from lint
 
 Every SDK implementation MUST expose exactly this surface:
 
-| Method   | Signature                                                                                                                        |
-|----------|----------------------------------------------------------------------------------------------------------------------------------|
-| `add`    | `(content, *, user_id?, actor_id?, actor_type?, actor_name?, metadata?, conversation_id?) → Memory`                              |
-| `search` | `(query, *, user_id?, actor_id?, actor_type?, limit?, threshold?, graph_depth?, conversation_id?, from_time?, to_time?, valid_at?) → list[SearchResult]` |
-| `get`    | `(memory_id) → Memory`                                                                                                           |
-| `delete` | `(memory_id) → void`                                                                                                             |
-
-**`user_id` convenience param**: When provided, it sets `actor_id` and forces `actor_type="user"`.
-This is the 80 % use case and must behave identically across all languages.
+| Method   | Signature                                                                                                    |
+|----------|--------------------------------------------------------------------------------------------------------------|
+| `add`    | `(content, *, scope?, metadata?) → Memory`                                                                   |
+| `search` | `(query, *, scope?, limit?, threshold?, graph_depth?, from_time?, to_time?, valid_at?) → list[SearchResult]` |
+| `get`    | `(memory_id) → Memory`                                                                                       |
+| `delete` | `(memory_id) → void`                                                                                         |
 
 **`app_id` on constructor**: Set once, injected automatically into every request.
 Callers must never pass it per-call.
+
+**`scope` object**: Groups actor and conversation context fields (`actor_id`, `actor_type`,
+`actor_name`, `conversation_id`, `conversation_message_id`, `source_type`). All fields are
+optional. In `add()`, all 6 scope fields are mapped. In `search()`, only `actor_id`,
+`actor_type`, and `conversation_id` are sent as filters.
 
 ---
 

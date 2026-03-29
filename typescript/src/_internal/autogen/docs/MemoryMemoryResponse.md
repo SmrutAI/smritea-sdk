@@ -8,17 +8,13 @@ Name | Type
 ------------ | -------------
 `activeFrom` | string
 `activeTo` | string
-`actorId` | string
-`actorName` | string
-`actorType` | string
 `appId` | string
 `content` | string
-`conversationId` | string
-`conversationMessageId` | string
 `createdAt` | string
 `id` | string
 `metadata` | object
 `relativeStanding` | [CommondtoRelativeStandingConfig](CommondtoRelativeStandingConfig.md)
+`scope` | [CommondtoMemoryScope](CommondtoMemoryScope.md)
 `updatedAt` | string
 
 ## Example
@@ -30,17 +26,13 @@ import type { MemoryMemoryResponse } from ''
 const example = {
   "activeFrom": null,
   "activeTo": null,
-  "actorId": null,
-  "actorName": null,
-  "actorType": null,
   "appId": null,
   "content": null,
-  "conversationId": null,
-  "conversationMessageId": null,
   "createdAt": null,
   "id": null,
   "metadata": null,
   "relativeStanding": null,
+  "scope": null,
   "updatedAt": null,
 } satisfies MemoryMemoryResponse
 

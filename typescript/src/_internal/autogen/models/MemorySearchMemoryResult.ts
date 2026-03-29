@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { CommondtoMemoryScope } from './CommondtoMemoryScope';
+import {
+    CommondtoMemoryScopeFromJSON,
+    CommondtoMemoryScopeFromJSONTyped,
+    CommondtoMemoryScopeToJSON,
+    CommondtoMemoryScopeToJSONTyped,
+} from './CommondtoMemoryScope';
+
 /**
  * 
  * @export
@@ -33,35 +41,11 @@ export interface MemorySearchMemoryResult {
      */
     activeTo?: string;
     /**
-     * ActorID identifies whose memory this is.
-     * @type {string}
-     * @memberof MemorySearchMemoryResult
-     */
-    actorId?: string;
-    /**
-     * ActorName is the human-readable name of the actor.
-     * @type {string}
-     * @memberof MemorySearchMemoryResult
-     */
-    actorName?: string;
-    /**
-     * ActorType is the type of actor (user|agent|system).
-     * @type {MemorySearchMemoryResultActorTypeEnum}
-     * @memberof MemorySearchMemoryResult
-     */
-    actorType?: MemorySearchMemoryResultActorTypeEnum;
-    /**
      * Content is the memory text — the core payload for search consumers.
      * @type {string}
      * @memberof MemorySearchMemoryResult
      */
     content?: string;
-    /**
-     * ConversationID is the conversation this memory belongs to (optional).
-     * @type {string}
-     * @memberof MemorySearchMemoryResult
-     */
-    conversationId?: string;
     /**
      * ID is the memory identifier, needed for follow-up operations (update/delete).
      * @type {string}
@@ -74,19 +58,13 @@ export interface MemorySearchMemoryResult {
      * @memberof MemorySearchMemoryResult
      */
     metadata?: object;
+    /**
+     * Scope contains the memory's actor, conversation, and source context.
+     * @type {CommondtoMemoryScope}
+     * @memberof MemorySearchMemoryResult
+     */
+    scope?: CommondtoMemoryScope;
 }
-
-
-/**
- * @export
- */
-export const MemorySearchMemoryResultActorTypeEnum = {
-    User: 'user',
-    Agent: 'agent',
-    System: 'system'
-} as const;
-export type MemorySearchMemoryResultActorTypeEnum = typeof MemorySearchMemoryResultActorTypeEnum[keyof typeof MemorySearchMemoryResultActorTypeEnum];
-
 
 /**
  * Check if a given object implements the MemorySearchMemoryResult interface.
@@ -107,13 +85,10 @@ export function MemorySearchMemoryResultFromJSONTyped(json: any, ignoreDiscrimin
         
         'activeFrom': json['active_from'] == null ? undefined : json['active_from'],
         'activeTo': json['active_to'] == null ? undefined : json['active_to'],
-        'actorId': json['actor_id'] == null ? undefined : json['actor_id'],
-        'actorName': json['actor_name'] == null ? undefined : json['actor_name'],
-        'actorType': json['actor_type'] == null ? undefined : json['actor_type'],
         'content': json['content'] == null ? undefined : json['content'],
-        'conversationId': json['conversation_id'] == null ? undefined : json['conversation_id'],
         'id': json['id'] == null ? undefined : json['id'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
+        'scope': json['scope'] == null ? undefined : CommondtoMemoryScopeFromJSON(json['scope']),
     };
 }
 
@@ -130,13 +105,10 @@ export function MemorySearchMemoryResultToJSONTyped(value?: MemorySearchMemoryRe
         
         'active_from': value['activeFrom'],
         'active_to': value['activeTo'],
-        'actor_id': value['actorId'],
-        'actor_name': value['actorName'],
-        'actor_type': value['actorType'],
         'content': value['content'],
-        'conversation_id': value['conversationId'],
         'id': value['id'],
         'metadata': value['metadata'],
+        'scope': CommondtoMemoryScopeToJSON(value['scope']),
     };
 }
 

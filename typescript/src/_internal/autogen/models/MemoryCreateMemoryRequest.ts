@@ -27,6 +27,13 @@ import {
     CommondtoRelativeStandingConfigToJSON,
     CommondtoRelativeStandingConfigToJSONTyped,
 } from './CommondtoRelativeStandingConfig';
+import type { CommondtoMemoryScope } from './CommondtoMemoryScope';
+import {
+    CommondtoMemoryScopeFromJSON,
+    CommondtoMemoryScopeFromJSONTyped,
+    CommondtoMemoryScopeToJSON,
+    CommondtoMemoryScopeToJSONTyped,
+} from './CommondtoMemoryScope';
 import type { CommondtoFactExtractionConfig } from './CommondtoFactExtractionConfig';
 import {
     CommondtoFactExtractionConfigFromJSON,
@@ -61,26 +68,6 @@ export interface MemoryCreateMemoryRequest {
      */
     activeTo?: string;
     /**
-     * ActorID is the actor identifier (conditionally required with ActorType).
-     * Required for actor-level memories; omit for conversation-level or app-level memories.
-     * @type {string}
-     * @memberof MemoryCreateMemoryRequest
-     */
-    actorId?: string;
-    /**
-     * ActorName is the name of the actor (optional, max 255 chars)
-     * @type {string}
-     * @memberof MemoryCreateMemoryRequest
-     */
-    actorName?: string;
-    /**
-     * ActorType is the type of the actor (user|agent|system).
-     * Required when ActorID is present; omit for conversation-level or app-level memories.
-     * @type {MemoryCreateMemoryRequestActorTypeEnum}
-     * @memberof MemoryCreateMemoryRequest
-     */
-    actorType?: MemoryCreateMemoryRequestActorTypeEnum;
-    /**
      * AppID is the application identifier (required)
      * @type {string}
      * @memberof MemoryCreateMemoryRequest
@@ -92,18 +79,6 @@ export interface MemoryCreateMemoryRequest {
      * @memberof MemoryCreateMemoryRequest
      */
     content?: string;
-    /**
-     * ConversationID is the conversation identifier (optional)
-     * @type {string}
-     * @memberof MemoryCreateMemoryRequest
-     */
-    conversationId?: string;
-    /**
-     * ConversationMessageID is the conversation message identifier (optional)
-     * @type {string}
-     * @memberof MemoryCreateMemoryRequest
-     */
-    conversationMessageId?: string;
     /**
      * EntityExtractionOverrides overrides App-level entity extraction config (nil = use App defaults).
      * Only non-zero fields in overrides replace app-level values.
@@ -139,19 +114,14 @@ export interface MemoryCreateMemoryRequest {
      * @memberof MemoryCreateMemoryRequest
      */
     relativeStanding?: CommondtoRelativeStandingConfig;
+    /**
+     * Scope groups actor, conversation, and source context fields.
+     * ActorID and ActorType within scope follow the same cross-field rules as before.
+     * @type {CommondtoMemoryScope}
+     * @memberof MemoryCreateMemoryRequest
+     */
+    scope?: CommondtoMemoryScope;
 }
-
-
-/**
- * @export
- */
-export const MemoryCreateMemoryRequestActorTypeEnum = {
-    User: 'user',
-    Agent: 'agent',
-    System: 'system'
-} as const;
-export type MemoryCreateMemoryRequestActorTypeEnum = typeof MemoryCreateMemoryRequestActorTypeEnum[keyof typeof MemoryCreateMemoryRequestActorTypeEnum];
-
 
 /**
  * Check if a given object implements the MemoryCreateMemoryRequest interface.
@@ -172,18 +142,14 @@ export function MemoryCreateMemoryRequestFromJSONTyped(json: any, ignoreDiscrimi
         
         'activeFrom': json['active_from'] == null ? undefined : json['active_from'],
         'activeTo': json['active_to'] == null ? undefined : json['active_to'],
-        'actorId': json['actor_id'] == null ? undefined : json['actor_id'],
-        'actorName': json['actor_name'] == null ? undefined : json['actor_name'],
-        'actorType': json['actor_type'] == null ? undefined : json['actor_type'],
         'appId': json['app_id'] == null ? undefined : json['app_id'],
         'content': json['content'] == null ? undefined : json['content'],
-        'conversationId': json['conversation_id'] == null ? undefined : json['conversation_id'],
-        'conversationMessageId': json['conversation_message_id'] == null ? undefined : json['conversation_message_id'],
         'entityExtractionOverrides': json['entity_extraction_overrides'] == null ? undefined : CommondtoEntityExtractionConfigFromJSON(json['entity_extraction_overrides']),
         'factExtractionOverrides': json['fact_extraction_overrides'] == null ? undefined : CommondtoFactExtractionConfigFromJSON(json['fact_extraction_overrides']),
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'personaExtractionOverrides': json['persona_extraction_overrides'] == null ? undefined : CommondtoPersonaExtractionConfigFromJSON(json['persona_extraction_overrides']),
         'relativeStanding': json['relative_standing'] == null ? undefined : CommondtoRelativeStandingConfigFromJSON(json['relative_standing']),
+        'scope': json['scope'] == null ? undefined : CommondtoMemoryScopeFromJSON(json['scope']),
     };
 }
 
@@ -200,18 +166,14 @@ export function MemoryCreateMemoryRequestToJSONTyped(value?: MemoryCreateMemoryR
         
         'active_from': value['activeFrom'],
         'active_to': value['activeTo'],
-        'actor_id': value['actorId'],
-        'actor_name': value['actorName'],
-        'actor_type': value['actorType'],
         'app_id': value['appId'],
         'content': value['content'],
-        'conversation_id': value['conversationId'],
-        'conversation_message_id': value['conversationMessageId'],
         'entity_extraction_overrides': CommondtoEntityExtractionConfigToJSON(value['entityExtractionOverrides']),
         'fact_extraction_overrides': CommondtoFactExtractionConfigToJSON(value['factExtractionOverrides']),
         'metadata': value['metadata'],
         'persona_extraction_overrides': CommondtoPersonaExtractionConfigToJSON(value['personaExtractionOverrides']),
         'relative_standing': CommondtoRelativeStandingConfigToJSON(value['relativeStanding']),
+        'scope': CommondtoMemoryScopeToJSON(value['scope']),
     };
 }
 

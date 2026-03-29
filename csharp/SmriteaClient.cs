@@ -67,8 +67,6 @@ public class SmriteaClient : IDisposable
     /// <summary>
     /// Stores a new memory with the given content. The optional <paramref name="opts"/>
     /// control which actor the memory is attributed to, metadata, and conversation scoping.
-    /// When <see cref="AddOptions.UserId"/> is set it takes precedence over
-    /// <see cref="AddOptions.ActorId"/> and forces actor_type="user".
     /// </summary>
     /// <param name="content">The memory content text to store.</param>
     /// <param name="opts">Optional add options for actor attribution, metadata, and conversation scoping.</param>
@@ -84,33 +82,47 @@ public class SmriteaClient : IDisposable
 
         if (opts is not null)
         {
-            var actorId = opts.UserId ?? opts.ActorId;
-            var actorType = opts.UserId is not null ? "user" : opts.ActorType;
-
-            if (actorId is not null)
+            if (opts.Scope is not null)
             {
-                request.ActorId = actorId;
-            }
+                var scope = new CommondtoMemoryScope();
+                if (opts.Scope.ActorId is not null)
+                {
+                    scope.ActorId = opts.Scope.ActorId;
+                }
 
-            if (actorType is not null)
-            {
-                request.ActorType = Enum.Parse<MemoryCreateMemoryRequest.ActorTypeEnum>(
-                    actorType, ignoreCase: true);
-            }
+                if (opts.Scope.ActorType is not null)
+                {
+                    scope.ActorType = Enum.Parse<CommondtoMemoryScope.ActorTypeEnum>(
+                        opts.Scope.ActorType, ignoreCase: true);
+                }
 
-            if (opts.ActorName is not null)
-            {
-                request.ActorName = opts.ActorName;
+                if (opts.Scope.ActorName is not null)
+                {
+                    scope.ActorName = opts.Scope.ActorName;
+                }
+
+                if (opts.Scope.ConversationId is not null)
+                {
+                    scope.ConversationId = opts.Scope.ConversationId;
+                }
+
+                if (opts.Scope.ConversationMessageId is not null)
+                {
+                    scope.ConversationMessageId = opts.Scope.ConversationMessageId;
+                }
+
+                if (opts.Scope.SourceType is not null)
+                {
+                    scope.SourceType = Enum.Parse<CommondtoMemoryScope.SourceTypeEnum>(
+                        opts.Scope.SourceType, ignoreCase: true);
+                }
+
+                request.Scope = scope;
             }
 
             if (opts.Metadata is not null)
             {
                 request.Metadata = opts.Metadata;
-            }
-
-            if (opts.ConversationId is not null)
-            {
-                request.ConversationId = opts.ConversationId;
             }
         }
 
@@ -154,18 +166,26 @@ public class SmriteaClient : IDisposable
 
         if (opts is not null)
         {
-            var actorId = opts.UserId ?? opts.ActorId;
-            var actorType = opts.UserId is not null ? "user" : opts.ActorType;
-
-            if (actorId is not null)
+            if (opts.Scope is not null)
             {
-                request.ActorId = actorId;
-            }
+                var scope = new CommondtoMemoryScope();
+                if (opts.Scope.ActorId is not null)
+                {
+                    scope.ActorId = opts.Scope.ActorId;
+                }
 
-            if (actorType is not null)
-            {
-                request.ActorType = Enum.Parse<MemorySearchMemoryRequest.ActorTypeEnum>(
-                    actorType, ignoreCase: true);
+                if (opts.Scope.ActorType is not null)
+                {
+                    scope.ActorType = Enum.Parse<CommondtoMemoryScope.ActorTypeEnum>(
+                        opts.Scope.ActorType, ignoreCase: true);
+                }
+
+                if (opts.Scope.ConversationId is not null)
+                {
+                    scope.ConversationId = opts.Scope.ConversationId;
+                }
+
+                request.Scope = scope;
             }
 
             if (opts.Limit is not null)
@@ -181,11 +201,6 @@ public class SmriteaClient : IDisposable
             if (opts.GraphDepth is not null)
             {
                 request.GraphDepth = opts.GraphDepth.Value;
-            }
-
-            if (opts.ConversationId is not null)
-            {
-                request.ConversationId = opts.ConversationId;
             }
 
             if (opts.FromTime is not null)

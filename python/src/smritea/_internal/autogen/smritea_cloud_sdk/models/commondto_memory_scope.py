@@ -18,23 +18,42 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_memory_scope import CommondtoMemoryScope
 from typing import Optional, Set
 from typing_extensions import Self
 
-class MemorySearchMemoryResult(BaseModel):
+class CommondtoMemoryScope(BaseModel):
     """
-    MemorySearchMemoryResult
+    CommondtoMemoryScope
     """ # noqa: E501
-    active_from: Optional[StrictStr] = Field(default=None, description="ActiveFrom is when this fact became true (event timestamp, not DB insertion time).")
-    active_to: Optional[StrictStr] = Field(default=None, description="ActiveTo is when this fact stopped being true (nil = still valid). Unique to smritea — enables temporal reasoning (e.g., \"worked at X until Y\").")
-    content: Optional[StrictStr] = Field(default=None, description="Content is the memory text — the core payload for search consumers.")
-    id: Optional[StrictStr] = Field(default=None, description="ID is the memory identifier, needed for follow-up operations (update/delete).")
-    metadata: Optional[Dict[str, Any]] = Field(default=None, description="Metadata contains caller-defined key-value pairs (omitted when empty).")
-    scope: Optional[CommondtoMemoryScope] = Field(default=None, description="Scope contains the memory's actor, conversation, and source context.")
-    __properties: ClassVar[List[str]] = ["active_from", "active_to", "content", "id", "metadata", "scope"]
+    actor_id: Optional[StrictStr] = None
+    actor_name: Optional[StrictStr] = None
+    actor_type: Optional[StrictStr] = None
+    conversation_id: Optional[StrictStr] = None
+    conversation_message_id: Optional[StrictStr] = None
+    source_type: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["actor_id", "actor_name", "actor_type", "conversation_id", "conversation_message_id", "source_type"]
+
+    @field_validator('actor_type')
+    def actor_type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['user', 'agent', 'system']):
+            raise ValueError("must be one of enum values ('user', 'agent', 'system')")
+        return value
+
+    @field_validator('source_type')
+    def source_type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['conversation', 'document', 'api']):
+            raise ValueError("must be one of enum values ('conversation', 'document', 'api')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +73,7 @@ class MemorySearchMemoryResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of MemorySearchMemoryResult from a JSON string"""
+        """Create an instance of CommondtoMemoryScope from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,14 +94,11 @@ class MemorySearchMemoryResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of scope
-        if self.scope:
-            _dict['scope'] = self.scope.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of MemorySearchMemoryResult from a dict"""
+        """Create an instance of CommondtoMemoryScope from a dict"""
         if obj is None:
             return None
 
@@ -90,12 +106,12 @@ class MemorySearchMemoryResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "active_from": obj.get("active_from"),
-            "active_to": obj.get("active_to"),
-            "content": obj.get("content"),
-            "id": obj.get("id"),
-            "metadata": obj.get("metadata"),
-            "scope": CommondtoMemoryScope.from_dict(obj["scope"]) if obj.get("scope") is not None else None
+            "actor_id": obj.get("actor_id"),
+            "actor_name": obj.get("actor_name"),
+            "actor_type": obj.get("actor_type"),
+            "conversation_id": obj.get("conversation_id"),
+            "conversation_message_id": obj.get("conversation_message_id"),
+            "source_type": obj.get("source_type")
         })
         return _obj
 

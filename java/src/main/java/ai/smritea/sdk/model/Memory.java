@@ -1,10 +1,20 @@
 package ai.smritea.sdk.model;
 
+import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
 import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
 import java.util.Map;
 
 /**
  * Public-facing Memory type. Delegates to the auto-generated {@link MemoryMemoryResponse}.
+ *
+ * <p>Scope fields (actor, conversation, source) are accessed via the nested {@link #getScope()}
+ * object, matching the Python/TypeScript/Go/C# SDKs:
+ *
+ * <pre>{@code
+ * Memory mem = client.add("hello", opts);
+ * String actorId = mem.getScope().getActorId();
+ * String actorType = mem.getScope().getActorType();
+ * }</pre>
  *
  * <p>Use the {@link Builder} to construct instances in tests — avoids error-prone positional args.
  * In production, instances are created internally by {@code SmriteaClient} from deserialized
@@ -53,19 +63,21 @@ public final class Memory {
     return inner.getContent();
   }
 
-  /** Returns the actor ID who created this memory. */
-  public String getActorId() {
-    return inner.getActorId();
-  }
-
-  /** Returns the type of actor (e.g. "user", "agent"). */
-  public String getActorType() {
-    return inner.getActorType();
-  }
-
-  /** Returns the display name of the actor. */
-  public String getActorName() {
-    return inner.getActorName();
+  /**
+   * Returns the scope containing actor and conversation context, or null if not set. Access scope
+   * fields via the returned object:
+   *
+   * <pre>{@code
+   * MemoryScope scope = mem.getScope();
+   * if (scope != null) {
+   *     String actorId = scope.getActorId();
+   *     String actorType = scope.getActorType();
+   * }
+   * }</pre>
+   */
+  public MemoryScope getScope() {
+    CommondtoMemoryScope scope = inner.getScope();
+    return scope != null ? new MemoryScope(scope) : null;
   }
 
   /**
@@ -79,16 +91,6 @@ public final class Memory {
       return (Map<String, Object>) raw;
     }
     return null;
-  }
-
-  /** Returns the conversation ID this memory belongs to. */
-  public String getConversationId() {
-    return inner.getConversationId();
-  }
-
-  /** Returns the specific message ID within the conversation. */
-  public String getConversationMessageId() {
-    return inner.getConversationMessageId();
   }
 
   /** Returns the ISO-8601 timestamp for when this memory becomes active. */
@@ -117,6 +119,7 @@ public final class Memory {
    */
   public static final class Builder {
     private final MemoryMemoryResponse delegate;
+    private CommondtoMemoryScope scope;
 
     private Builder(String id, String appId, String content, String createdAt, String updatedAt) {
       delegate = new MemoryMemoryResponse();
@@ -127,18 +130,25 @@ public final class Memory {
       delegate.setUpdatedAt(updatedAt);
     }
 
+    private CommondtoMemoryScope ensureScope() {
+      if (scope == null) {
+        scope = new CommondtoMemoryScope();
+      }
+      return scope;
+    }
+
     public Builder actorId(String actorId) {
-      delegate.setActorId(actorId);
+      ensureScope().setActorId(actorId);
       return this;
     }
 
     public Builder actorType(String actorType) {
-      delegate.setActorType(actorType);
+      ensureScope().setActorType(CommondtoMemoryScope.ActorTypeEnum.fromValue(actorType));
       return this;
     }
 
     public Builder actorName(String actorName) {
-      delegate.setActorName(actorName);
+      ensureScope().setActorName(actorName);
       return this;
     }
 
@@ -148,12 +158,12 @@ public final class Memory {
     }
 
     public Builder conversationId(String conversationId) {
-      delegate.setConversationId(conversationId);
+      ensureScope().setConversationId(conversationId);
       return this;
     }
 
     public Builder conversationMessageId(String conversationMessageId) {
-      delegate.setConversationMessageId(conversationMessageId);
+      ensureScope().setConversationMessageId(conversationMessageId);
       return this;
     }
 
@@ -169,6 +179,9 @@ public final class Memory {
 
     /** Builds an immutable {@link Memory} instance. */
     public Memory build() {
+      if (scope != null) {
+        delegate.setScope(scope);
+      }
       return new Memory(delegate);
     }
   }

@@ -38,33 +38,25 @@ namespace Smritea.Internal.Autogen.Model
         /// </summary>
         /// <param name="activeFrom">activeFrom.</param>
         /// <param name="activeTo">activeTo.</param>
-        /// <param name="actorId">actorId.</param>
-        /// <param name="actorName">actorName.</param>
-        /// <param name="actorType">actorType.</param>
         /// <param name="appId">appId.</param>
         /// <param name="content">content.</param>
-        /// <param name="conversationId">conversationId.</param>
-        /// <param name="conversationMessageId">conversationMessageId.</param>
         /// <param name="createdAt">createdAt.</param>
         /// <param name="id">id.</param>
         /// <param name="metadata">metadata.</param>
         /// <param name="relativeStanding">relativeStanding.</param>
+        /// <param name="scope">Scope contains the memory&#39;s actor, conversation, and source context..</param>
         /// <param name="updatedAt">updatedAt.</param>
-        public MemoryMemoryResponse(string activeFrom = default, string activeTo = default, string actorId = default, string actorName = default, string actorType = default, string appId = default, string content = default, string conversationId = default, string conversationMessageId = default, string createdAt = default, string id = default, Object metadata = default, CommondtoRelativeStandingConfig relativeStanding = default, string updatedAt = default)
+        public MemoryMemoryResponse(string activeFrom = default, string activeTo = default, string appId = default, string content = default, string createdAt = default, string id = default, Object metadata = default, CommondtoRelativeStandingConfig relativeStanding = default, CommondtoMemoryScope scope = default, string updatedAt = default)
         {
             this.ActiveFrom = activeFrom;
             this.ActiveTo = activeTo;
-            this.ActorId = actorId;
-            this.ActorName = actorName;
-            this.ActorType = actorType;
             this.AppId = appId;
             this.Content = content;
-            this.ConversationId = conversationId;
-            this.ConversationMessageId = conversationMessageId;
             this.CreatedAt = createdAt;
             this.Id = id;
             this.Metadata = metadata;
             this.RelativeStanding = relativeStanding;
+            this.Scope = scope;
             this.UpdatedAt = updatedAt;
         }
 
@@ -81,24 +73,6 @@ namespace Smritea.Internal.Autogen.Model
         public string ActiveTo { get; set; }
 
         /// <summary>
-        /// Gets or Sets ActorId
-        /// </summary>
-        [DataMember(Name = "actor_id", EmitDefaultValue = false)]
-        public string ActorId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ActorName
-        /// </summary>
-        [DataMember(Name = "actor_name", EmitDefaultValue = false)]
-        public string ActorName { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ActorType
-        /// </summary>
-        [DataMember(Name = "actor_type", EmitDefaultValue = false)]
-        public string ActorType { get; set; }
-
-        /// <summary>
         /// Gets or Sets AppId
         /// </summary>
         [DataMember(Name = "app_id", EmitDefaultValue = false)]
@@ -109,18 +83,6 @@ namespace Smritea.Internal.Autogen.Model
         /// </summary>
         [DataMember(Name = "content", EmitDefaultValue = false)]
         public string Content { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ConversationId
-        /// </summary>
-        [DataMember(Name = "conversation_id", EmitDefaultValue = false)]
-        public string ConversationId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ConversationMessageId
-        /// </summary>
-        [DataMember(Name = "conversation_message_id", EmitDefaultValue = false)]
-        public string ConversationMessageId { get; set; }
 
         /// <summary>
         /// Gets or Sets CreatedAt
@@ -147,6 +109,13 @@ namespace Smritea.Internal.Autogen.Model
         public CommondtoRelativeStandingConfig RelativeStanding { get; set; }
 
         /// <summary>
+        /// Scope contains the memory&#39;s actor, conversation, and source context.
+        /// </summary>
+        /// <value>Scope contains the memory&#39;s actor, conversation, and source context.</value>
+        [DataMember(Name = "scope", EmitDefaultValue = false)]
+        public CommondtoMemoryScope Scope { get; set; }
+
+        /// <summary>
         /// Gets or Sets UpdatedAt
         /// </summary>
         [DataMember(Name = "updated_at", EmitDefaultValue = false)]
@@ -162,17 +131,13 @@ namespace Smritea.Internal.Autogen.Model
             sb.Append("class MemoryMemoryResponse {\n");
             sb.Append("  ActiveFrom: ").Append(ActiveFrom).Append("\n");
             sb.Append("  ActiveTo: ").Append(ActiveTo).Append("\n");
-            sb.Append("  ActorId: ").Append(ActorId).Append("\n");
-            sb.Append("  ActorName: ").Append(ActorName).Append("\n");
-            sb.Append("  ActorType: ").Append(ActorType).Append("\n");
             sb.Append("  AppId: ").Append(AppId).Append("\n");
             sb.Append("  Content: ").Append(Content).Append("\n");
-            sb.Append("  ConversationId: ").Append(ConversationId).Append("\n");
-            sb.Append("  ConversationMessageId: ").Append(ConversationMessageId).Append("\n");
             sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Metadata: ").Append(Metadata).Append("\n");
             sb.Append("  RelativeStanding: ").Append(RelativeStanding).Append("\n");
+            sb.Append("  Scope: ").Append(Scope).Append("\n");
             sb.Append("  UpdatedAt: ").Append(UpdatedAt).Append("\n");
             sb.Append("}\n");
             return sb.ToString();

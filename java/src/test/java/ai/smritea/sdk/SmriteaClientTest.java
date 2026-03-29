@@ -11,6 +11,7 @@ import ai.smritea.sdk.errors.SmriteaRateLimitError;
 import ai.smritea.sdk.errors.SmriteaValidationError;
 import ai.smritea.sdk.model.AddOptions;
 import ai.smritea.sdk.model.Memory;
+import ai.smritea.sdk.model.MemoryScope;
 import ai.smritea.sdk.model.SearchOptions;
 import ai.smritea.sdk.model.SearchResult;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
@@ -46,16 +47,20 @@ class SmriteaClientTest {
   }
 
   @Test
-  void testAdd_UserIdShorthand(WireMockRuntimeInfo wm) {
+  void testAdd_ActorIdWithUserType(WireMockRuntimeInfo wm) {
     stubFor(
         post("/api/v1/sdk/memories")
-            .withRequestBody(matchingJsonPath("$.actor_id", equalTo("user-42")))
-            .withRequestBody(matchingJsonPath("$.actor_type", equalTo("user")))
+            .withRequestBody(matchingJsonPath("$.scope.actor_id", equalTo("user-42")))
+            .withRequestBody(matchingJsonPath("$.scope.actor_type", equalTo("user")))
             .willReturn(
                 okJson("{\"id\":\"mem-2\",\"content\":\"content\",\"app_id\":\"app-test\"}")));
 
     SmriteaClient client = clientFor(wm);
-    Memory mem = client.add("content", new AddOptions().withUserId("user-42"));
+    Memory mem =
+        client.add(
+            "content",
+            new AddOptions()
+                .withScope(MemoryScope.builder().actorId("user-42").actorType("user").build()));
 
     assertNotNull(mem);
     assertEquals("mem-2", mem.getId());
@@ -65,14 +70,17 @@ class SmriteaClientTest {
   void testAdd_ExplicitActorIdAndType(WireMockRuntimeInfo wm) {
     stubFor(
         post("/api/v1/sdk/memories")
-            .withRequestBody(matchingJsonPath("$.actor_id", equalTo("agent-7")))
-            .withRequestBody(matchingJsonPath("$.actor_type", equalTo("agent")))
+            .withRequestBody(matchingJsonPath("$.scope.actor_id", equalTo("agent-7")))
+            .withRequestBody(matchingJsonPath("$.scope.actor_type", equalTo("agent")))
             .willReturn(
                 okJson("{\"id\":\"mem-3\",\"content\":\"content\",\"app_id\":\"app-test\"}")));
 
     SmriteaClient client = clientFor(wm);
     Memory mem =
-        client.add("content", new AddOptions().withActorId("agent-7").withActorType("agent"));
+        client.add(
+            "content",
+            new AddOptions()
+                .withScope(MemoryScope.builder().actorId("agent-7").actorType("agent").build()));
 
     assertNotNull(mem);
     assertEquals("mem-3", mem.getId());

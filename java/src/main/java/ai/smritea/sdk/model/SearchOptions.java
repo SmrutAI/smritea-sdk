@@ -1,14 +1,21 @@
 package ai.smritea.sdk.model;
 
-/** Builder-style options for searching memories. */
+/**
+ * Builder-style options for searching memories.
+ *
+ * <p>Usage example:
+ *
+ * <pre>{@code
+ * new SearchOptions()
+ *     .withScope(MemoryScope.builder().actorId("alice").actorType("user").build())
+ *     .withLimit(10);
+ * }</pre>
+ */
 public final class SearchOptions {
-  private String userId;
-  private String actorId;
-  private String actorType;
+  private MemoryScope scope;
   private Integer limit;
   private Float threshold;
   private Integer graphDepth;
-  private String conversationId;
   private String fromTime;
   private String toTime;
   private String validAt;
@@ -17,35 +24,13 @@ public final class SearchOptions {
   public SearchOptions() {}
 
   /**
-   * Sets the user ID to scope the search.
+   * Sets the memory scope (actor and conversation context).
    *
-   * @param userId the user ID
+   * @param scope the memory scope
    * @return this instance for chaining
    */
-  public SearchOptions withUserId(String userId) {
-    this.userId = userId;
-    return this;
-  }
-
-  /**
-   * Sets the actor ID to scope the search.
-   *
-   * @param actorId the actor ID
-   * @return this instance for chaining
-   */
-  public SearchOptions withActorId(String actorId) {
-    this.actorId = actorId;
-    return this;
-  }
-
-  /**
-   * Sets the actor type to scope the search.
-   *
-   * @param actorType the actor type
-   * @return this instance for chaining
-   */
-  public SearchOptions withActorType(String actorType) {
-    this.actorType = actorType;
+  public SearchOptions withScope(MemoryScope scope) {
+    this.scope = scope;
     return this;
   }
 
@@ -83,17 +68,6 @@ public final class SearchOptions {
   }
 
   /**
-   * Sets the conversation ID to scope the search.
-   *
-   * @param conversationId the conversation ID
-   * @return this instance for chaining
-   */
-  public SearchOptions withConversationId(String conversationId) {
-    this.conversationId = conversationId;
-    return this;
-  }
-
-  /**
    * Sets the start of the time range filter (ISO 8601 format). Must be used together with toTime.
    *
    * @param fromTime the start of the time range (ISO 8601)
@@ -126,19 +100,9 @@ public final class SearchOptions {
     return this;
   }
 
-  /** Returns the user ID. */
-  public String getUserId() {
-    return userId;
-  }
-
-  /** Returns the actor ID. */
-  public String getActorId() {
-    return actorId;
-  }
-
-  /** Returns the actor type. */
-  public String getActorType() {
-    return actorType;
+  /** Returns the memory scope. */
+  public MemoryScope getScope() {
+    return scope;
   }
 
   /** Returns the result limit. */
@@ -154,11 +118,6 @@ public final class SearchOptions {
   /** Returns the graph depth. */
   public Integer getGraphDepth() {
     return graphDepth;
-  }
-
-  /** Returns the conversation ID. */
-  public String getConversationId() {
-    return conversationId;
   }
 
   /** Returns the start of the time range filter. */

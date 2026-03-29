@@ -27,6 +27,13 @@ import {
     ModelEnumsRerankerTypeToJSON,
     ModelEnumsRerankerTypeToJSONTyped,
 } from './ModelEnumsRerankerType';
+import type { CommondtoMemoryScope } from './CommondtoMemoryScope';
+import {
+    CommondtoMemoryScopeFromJSON,
+    CommondtoMemoryScopeFromJSONTyped,
+    CommondtoMemoryScopeToJSON,
+    CommondtoMemoryScopeToJSONTyped,
+} from './CommondtoMemoryScope';
 
 /**
  * 
@@ -39,27 +46,7 @@ export interface MemorySearchMemoryRequest {
      * @type {string}
      * @memberof MemorySearchMemoryRequest
      */
-    actorId?: string;
-    /**
-     * ActorType filters search to messages from a specific actor type (optional).
-     * Values: "user", "agent", "system"
-     * @type {MemorySearchMemoryRequestActorTypeEnum}
-     * @memberof MemorySearchMemoryRequest
-     */
-    actorType?: MemorySearchMemoryRequestActorTypeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof MemorySearchMemoryRequest
-     */
     appId: string;
-    /**
-     * ConversationID filters search to a specific conversation (optional).
-     * If omitted, searches across all actor's memories.
-     * @type {string}
-     * @memberof MemorySearchMemoryRequest
-     */
-    conversationId?: string;
     /**
      * FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format).
      * Must be used together with ToTime.
@@ -99,6 +86,13 @@ export interface MemorySearchMemoryRequest {
      */
     rerankerType?: ModelEnumsRerankerType;
     /**
+     * Scope groups actor, conversation, and source filtering fields.
+     * Zero-value fields mean "no filter" (searches across all).
+     * @type {CommondtoMemoryScope}
+     * @memberof MemorySearchMemoryRequest
+     */
+    scope?: CommondtoMemoryScope;
+    /**
      * 0=no filtering (pipeline uses RRF scores, not cosine similarity)
      * @type {number}
      * @memberof MemorySearchMemoryRequest
@@ -122,16 +116,6 @@ export interface MemorySearchMemoryRequest {
 }
 
 
-/**
- * @export
- */
-export const MemorySearchMemoryRequestActorTypeEnum = {
-    User: 'user',
-    Agent: 'agent',
-    System: 'system'
-} as const;
-export type MemorySearchMemoryRequestActorTypeEnum = typeof MemorySearchMemoryRequestActorTypeEnum[keyof typeof MemorySearchMemoryRequestActorTypeEnum];
-
 
 /**
  * Check if a given object implements the MemorySearchMemoryRequest interface.
@@ -152,16 +136,14 @@ export function MemorySearchMemoryRequestFromJSONTyped(json: any, ignoreDiscrimi
     }
     return {
         
-        'actorId': json['actor_id'] == null ? undefined : json['actor_id'],
-        'actorType': json['actor_type'] == null ? undefined : json['actor_type'],
         'appId': json['app_id'],
-        'conversationId': json['conversation_id'] == null ? undefined : json['conversation_id'],
         'fromTime': json['from_time'] == null ? undefined : json['from_time'],
         'graphDepth': json['graph_depth'] == null ? undefined : json['graph_depth'],
         'limit': json['limit'] == null ? undefined : json['limit'],
         'method': json['method'] == null ? undefined : ModelEnumsSearchMethodFromJSON(json['method']),
         'query': json['query'],
         'rerankerType': json['reranker_type'] == null ? undefined : ModelEnumsRerankerTypeFromJSON(json['reranker_type']),
+        'scope': json['scope'] == null ? undefined : CommondtoMemoryScopeFromJSON(json['scope']),
         'threshold': json['threshold'] == null ? undefined : json['threshold'],
         'toTime': json['to_time'] == null ? undefined : json['to_time'],
         'validAt': json['valid_at'] == null ? undefined : json['valid_at'],
@@ -179,16 +161,14 @@ export function MemorySearchMemoryRequestToJSONTyped(value?: MemorySearchMemoryR
 
     return {
         
-        'actor_id': value['actorId'],
-        'actor_type': value['actorType'],
         'app_id': value['appId'],
-        'conversation_id': value['conversationId'],
         'from_time': value['fromTime'],
         'graph_depth': value['graphDepth'],
         'limit': value['limit'],
         'method': ModelEnumsSearchMethodToJSON(value['method']),
         'query': value['query'],
         'reranker_type': ModelEnumsRerankerTypeToJSON(value['rerankerType']),
+        'scope': CommondtoMemoryScopeToJSON(value['scope']),
         'threshold': value['threshold'],
         'to_time': value['toTime'],
         'valid_at': value['validAt'],

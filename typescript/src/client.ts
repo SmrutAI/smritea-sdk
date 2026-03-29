@@ -28,9 +28,6 @@ export class SmriteaClient {
   }
 
   async add(content: string, options?: AddOptions): Promise<Memory> {
-    const actorId = options?.userId ?? options?.actorId;
-    const actorType = options?.userId !== undefined ? 'user' : options?.actorType;
-
     if (options?.metadata !== undefined) {
       const m = options.metadata;
       if (typeof m !== 'object' || m === null || Array.isArray(m)) {
@@ -43,31 +40,38 @@ export class SmriteaClient {
         request: {
           appId: this.appId,
           content,
-          actorId,
-          actorType,
-          actorName: options?.actorName,
+          scope: options?.scope
+            ? {
+                actorId: options.scope.actorId,
+                actorType: options.scope.actorType,
+                actorName: options.scope.actorName,
+                conversationId: options.scope.conversationId,
+                conversationMessageId: options.scope.conversationMessageId,
+                sourceType: options.scope.sourceType,
+              }
+            : undefined,
           metadata: options?.metadata as never,
-          conversationId: options?.conversationId,
         },
       }),
     );
   }
 
   async search(query: string, options?: SearchOptions): Promise<SearchResult[]> {
-    const actorId = options?.userId ?? options?.actorId;
-    const actorType = options?.userId !== undefined ? 'user' : options?.actorType;
-
     const response = await this.withRetry(() =>
       this.api.searchMemories({
         request: {
           appId: this.appId,
           query,
-          actorId,
-          actorType,
+          scope: options?.scope
+            ? {
+                actorId: options.scope.actorId,
+                actorType: options.scope.actorType,
+                conversationId: options.scope.conversationId,
+              }
+            : undefined,
           limit: options?.limit,
           threshold: options?.threshold,
           graphDepth: options?.graphDepth,
-          conversationId: options?.conversationId,
           fromTime: options?.fromTime,
           toTime: options?.toTime,
           validAt: options?.validAt,
@@ -85,7 +89,7 @@ export class SmriteaClient {
     await this.withRetry(() => this.api.deleteMemory({ memoryId }));
   }
 
-  async getAll(options?: { userId?: string; limit?: number; offset?: number }): Promise<Memory[]> {
+  async getAll(options?: { limit?: number; offset?: number }): Promise<Memory[]> {
     void options; // parameter reserved for future use
     throw new Error(
       'getAll() is not yet available. The list memories endpoint is pending ' +

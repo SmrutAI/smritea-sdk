@@ -10,6 +10,7 @@ from smritea._internal.autogen.smritea_cloud_sdk import ApiClient, Configuration
 from smritea._internal.autogen.smritea_cloud_sdk.api.sdk_memory_api import SDKMemoryApi
 from smritea._internal.autogen.smritea_cloud_sdk.exceptions import ApiException
 from smritea._internal.autogen.smritea_cloud_sdk.models import (
+    CommondtoMemoryScope,
     MemoryCreateMemoryRequest,
     MemorySearchMemoryRequest,
 )
@@ -21,7 +22,7 @@ from smritea.exceptions import (
     SmriteaRateLimitError,
     SmriteaValidationError,
 )
-from smritea.types import Memory, SearchResult
+from smritea.types import Memory, MemoryScope, SearchResult
 
 _T = TypeVar("_T")
 _RETRY_CAP_SECONDS = 30.0
@@ -33,8 +34,9 @@ class SmriteaClient:
     Example::
 
         client = SmriteaClient(api_key='sk-...', app_id='app_xyz')
-        client.add('I love hiking', user_id='alice')
-        results = client.search('outdoor activities', user_id='alice')
+        client.add('I love hiking', scope=MemoryScope(actor_id='alice', actor_type='user'))
+        scope = MemoryScope(actor_id='alice', actor_type='user')
+        results = client.search('outdoor activities', scope=scope)
     """
 
     def __init__(
@@ -69,46 +71,41 @@ class SmriteaClient:
         self,
         content: str,
         *,
-        user_id: str | None = None,
-        actor_id: str | None = None,
-        actor_type: str | None = None,
-        actor_name: str | None = None,
+        scope: MemoryScope | None = None,
         metadata: dict[str, Any] | None = None,
-        conversation_id: str | None = None,
     ) -> Memory:
         """Add a new memory.
 
         Args:
             content: The memory content to store.
-            user_id: Convenience shorthand — sets actor_id and actor_type='user'.
-            actor_id: Explicit actor ID (used when user_id is not provided).
-            actor_type: Actor type ('user', 'agent', 'system').
-                Defaults to None (server uses app default).
-            actor_name: Optional display name for the actor.
+            scope: Optional MemoryScope object for actor and conversation context.
             metadata: Optional key-value metadata.
-            conversation_id: Optional conversation context.
 
         Returns:
             The created Memory object.
         """
-        # user_id convenience: overrides actor_id and forces actor_type='user'
-        if user_id is not None:
-            actor_id = user_id
-            actor_type = "user"
-
         if metadata is not None and not isinstance(metadata, dict):
             raise SmriteaValidationError(
                 f"metadata must be a dictionary, got {type(metadata).__name__}", 400
             )
 
+        # Build autogen scope from the MemoryScope object
+        autogen_scope = None
+        if scope is not None:
+            autogen_scope = CommondtoMemoryScope(
+                actor_id=scope.actor_id,
+                actor_type=scope.actor_type,
+                actor_name=scope.actor_name,
+                conversation_id=scope.conversation_id,
+                conversation_message_id=scope.conversation_message_id,
+                source_type=scope.source_type,
+            )
+
         request = MemoryCreateMemoryRequest(
             app_id=self._app_id,
             content=content,
-            actor_id=actor_id,
-            actor_type=actor_type,
-            actor_name=actor_name,
+            scope=autogen_scope,
             metadata=metadata,
-            conversation_id=conversation_id,
         )
         return self._execute_with_retry(lambda: self._memory_api.create_memory(request))
 
@@ -116,13 +113,10 @@ class SmriteaClient:
         self,
         query: str,
         *,
-        user_id: str | None = None,
-        actor_id: str | None = None,
-        actor_type: str | None = None,
+        scope: MemoryScope | None = None,
         limit: int | None = None,
         threshold: float | None = None,
         graph_depth: int | None = None,
-        conversation_id: str | None = None,
         from_time: str | None = None,
         to_time: str | None = None,
         valid_at: str | None = None,
@@ -131,13 +125,10 @@ class SmriteaClient:
 
         Args:
             query: Natural language search query.
-            user_id: Convenience shorthand — sets actor_id and actor_type='user'.
-            actor_id: Explicit actor filter.
-            actor_type: Actor type filter.
+            scope: Optional MemoryScope object for actor and conversation context.
             limit: Maximum number of results. None = use app default.
             threshold: Minimum relevance score filter (0.0–1.0).
             graph_depth: Graph traversal depth override.
-            conversation_id: Filter to a specific conversation.
             from_time: ISO-8601 datetime — only return memories created at or after this time.
             to_time: ISO-8601 datetime — only return memories created at or before this time.
             valid_at: ISO-8601 datetime — return memories valid at exactly this point in time.
@@ -145,19 +136,22 @@ class SmriteaClient:
         Returns:
             List of SearchResult objects ordered by relevance score.
         """
-        if user_id is not None:
-            actor_id = user_id
-            actor_type = "user"
+        # Build autogen scope from the MemoryScope object
+        autogen_scope = None
+        if scope is not None:
+            autogen_scope = CommondtoMemoryScope(
+                actor_id=scope.actor_id,
+                actor_type=scope.actor_type,
+                conversation_id=scope.conversation_id,
+            )
 
         request = MemorySearchMemoryRequest(
             app_id=self._app_id,
             query=query,
-            actor_id=actor_id,
-            actor_type=actor_type,
+            scope=autogen_scope,
             limit=limit,
             threshold=threshold,
             graph_depth=graph_depth,
-            conversation_id=conversation_id,
             from_time=from_time,
             to_time=to_time,
             valid_at=valid_at,
@@ -193,7 +187,6 @@ class SmriteaClient:
     def get_all(
         self,
         *,
-        user_id: str | None = None,
         limit: int = 50,
         offset: int = 0,
     ) -> list[Memory]:

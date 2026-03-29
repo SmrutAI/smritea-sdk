@@ -3,6 +3,7 @@ package ai.smritea.sdk;
 import ai.smritea.sdk._internal.autogen.ApiClient;
 import ai.smritea.sdk._internal.autogen.ApiException;
 import ai.smritea.sdk._internal.autogen.api.SdkMemoryApi;
+import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
 import ai.smritea.sdk._internal.autogen.model.MemoryCreateMemoryRequest;
 import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoriesResponse;
@@ -17,6 +18,7 @@ import ai.smritea.sdk.errors.SmriteaRateLimitError;
 import ai.smritea.sdk.errors.SmriteaValidationError;
 import ai.smritea.sdk.model.AddOptions;
 import ai.smritea.sdk.model.Memory;
+import ai.smritea.sdk.model.MemoryScope;
 import ai.smritea.sdk.model.SearchOptions;
 import ai.smritea.sdk.model.SearchResult;
 import java.math.BigDecimal;
@@ -91,8 +93,7 @@ public class SmriteaClient {
   }
 
   /**
-   * Stores a new memory with the given content. When {@code opts.getUserId()} is set it takes
-   * precedence over {@code opts.getActorId()} and forces actor_type="user".
+   * Stores a new memory with the given content.
    *
    * @param content the memory content text
    * @param opts optional parameters controlling actor attribution, metadata, and conversation
@@ -105,24 +106,33 @@ public class SmriteaClient {
     request.setContent(content);
 
     if (opts != null) {
-      // resolveActor: if userId is set, use it as actorId and force actorType="user"
-      String actorId = opts.getUserId() != null ? opts.getUserId() : opts.getActorId();
-      String actorType = opts.getUserId() != null ? "user" : opts.getActorType();
-
-      if (actorId != null) {
-        request.setActorId(actorId);
-      }
-      if (actorType != null) {
-        request.setActorType(MemoryCreateMemoryRequest.ActorTypeEnum.fromValue(actorType));
-      }
-      if (opts.getActorName() != null) {
-        request.setActorName(opts.getActorName());
+      MemoryScope scope = opts.getScope();
+      if (scope != null) {
+        CommondtoMemoryScope autogenScope = new CommondtoMemoryScope();
+        if (scope.getActorId() != null) {
+          autogenScope.setActorId(scope.getActorId());
+        }
+        if (scope.getActorType() != null) {
+          autogenScope.setActorType(
+              CommondtoMemoryScope.ActorTypeEnum.fromValue(scope.getActorType()));
+        }
+        if (scope.getActorName() != null) {
+          autogenScope.setActorName(scope.getActorName());
+        }
+        if (scope.getConversationId() != null) {
+          autogenScope.setConversationId(scope.getConversationId());
+        }
+        if (scope.getConversationMessageId() != null) {
+          autogenScope.setConversationMessageId(scope.getConversationMessageId());
+        }
+        if (scope.getSourceType() != null) {
+          autogenScope.setSourceType(
+              CommondtoMemoryScope.SourceTypeEnum.fromValue(scope.getSourceType()));
+        }
+        request.setScope(autogenScope);
       }
       if (opts.getMetadata() != null) {
         request.setMetadata(opts.getMetadata());
-      }
-      if (opts.getConversationId() != null) {
-        request.setConversationId(opts.getConversationId());
       }
     }
 
@@ -156,14 +166,20 @@ public class SmriteaClient {
     request.setQuery(query);
 
     if (opts != null) {
-      String actorId = opts.getUserId() != null ? opts.getUserId() : opts.getActorId();
-      String actorType = opts.getUserId() != null ? "user" : opts.getActorType();
-
-      if (actorId != null) {
-        request.setActorId(actorId);
-      }
-      if (actorType != null) {
-        request.setActorType(MemorySearchMemoryRequest.ActorTypeEnum.fromValue(actorType));
+      MemoryScope scope = opts.getScope();
+      if (scope != null) {
+        CommondtoMemoryScope autogenScope = new CommondtoMemoryScope();
+        if (scope.getActorId() != null) {
+          autogenScope.setActorId(scope.getActorId());
+        }
+        if (scope.getActorType() != null) {
+          autogenScope.setActorType(
+              CommondtoMemoryScope.ActorTypeEnum.fromValue(scope.getActorType()));
+        }
+        if (scope.getConversationId() != null) {
+          autogenScope.setConversationId(scope.getConversationId());
+        }
+        request.setScope(autogenScope);
       }
       if (opts.getLimit() != null) {
         request.setLimit(opts.getLimit());
@@ -173,9 +189,6 @@ public class SmriteaClient {
       }
       if (opts.getGraphDepth() != null) {
         request.setGraphDepth(opts.getGraphDepth());
-      }
-      if (opts.getConversationId() != null) {
-        request.setConversationId(opts.getConversationId());
       }
       if (opts.getFromTime() != null) {
         request.setFromTime(opts.getFromTime());

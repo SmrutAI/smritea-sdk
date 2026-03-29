@@ -6,16 +6,14 @@
 
 Name | Type
 ------------ | -------------
-`actorId` | string
-`actorType` | string
 `appId` | string
-`conversationId` | string
 `fromTime` | string
 `graphDepth` | number
 `limit` | number
 `method` | [ModelEnumsSearchMethod](ModelEnumsSearchMethod.md)
 `query` | string
 `rerankerType` | [ModelEnumsRerankerType](ModelEnumsRerankerType.md)
+`scope` | [CommondtoMemoryScope](CommondtoMemoryScope.md)
 `threshold` | number
 `toTime` | string
 `validAt` | string
@@ -27,16 +25,14 @@ import type { MemorySearchMemoryRequest } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "actorId": null,
-  "actorType": null,
   "appId": null,
-  "conversationId": null,
   "fromTime": null,
   "graphDepth": null,
   "limit": null,
   "method": null,
   "query": null,
   "rerankerType": null,
+  "scope": null,
   "threshold": null,
   "toTime": null,
   "validAt": null,

@@ -21,7 +21,6 @@ type ModelEnumsRerankerType string
 
 // List of model_enums.RerankerType
 const (
-	RerankerNone ModelEnumsRerankerType = "none"
 	RerankerRRF ModelEnumsRerankerType = "rrf"
 	RerankerMMR ModelEnumsRerankerType = "mmr"
 	RerankerTemporal ModelEnumsRerankerType = "temporal"
@@ -32,7 +31,6 @@ const (
 
 // All allowed values of ModelEnumsRerankerType enum
 var AllowedModelEnumsRerankerTypeEnumValues = []ModelEnumsRerankerType{
-	"none",
 	"rrf",
 	"mmr",
 	"temporal",

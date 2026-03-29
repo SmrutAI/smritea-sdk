@@ -58,8 +58,7 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 
 // Add stores a new memory with the given content. The optional AddOptions
 // control which actor the memory is attributed to, metadata, and conversation
-// scoping. When opts.UserID is set it takes precedence over opts.ActorID and
-// forces actor_type="user".
+// scoping.
 func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOptions) (*Memory, error) {
 	req := autogen.MemoryCreateMemoryRequest{
 		AppId:   &c.appID,
@@ -67,11 +66,16 @@ func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOption
 	}
 
 	if opts != nil {
-		actorID, actorType := resolveActor(opts.UserID, opts.ActorID, opts.ActorType)
-		req.ActorId = actorID
-		req.ActorType = actorType
-		req.ActorName = opts.ActorName
-		req.ConversationId = opts.ConversationID
+		if opts.Scope != nil {
+			req.Scope = &autogen.CommondtoMemoryScope{
+				ActorId:               opts.Scope.ActorID,
+				ActorType:             opts.Scope.ActorType,
+				ActorName:             opts.Scope.ActorName,
+				ConversationId:        opts.Scope.ConversationID,
+				ConversationMessageId: opts.Scope.ConversationMessageID,
+				SourceType:            opts.Scope.SourceType,
+			}
+		}
 		if opts.Metadata != nil {
 			req.Metadata = opts.Metadata
 		}
@@ -99,14 +103,17 @@ func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOp
 	}
 
 	if opts != nil {
-		actorID, actorType := resolveActor(opts.UserID, opts.ActorID, opts.ActorType)
-		req.ActorId = actorID
-		req.ActorType = actorType
+		if opts.Scope != nil {
+			req.Scope = &autogen.CommondtoMemoryScope{
+				ActorId:        opts.Scope.ActorID,
+				ActorType:      opts.Scope.ActorType,
+				ConversationId: opts.Scope.ConversationID,
+			}
+		}
 		// SearchOptions uses *int32 to match the autogen types directly.
 		req.Limit = opts.Limit
 		req.Threshold = opts.Threshold
 		req.GraphDepth = opts.GraphDepth
-		req.ConversationId = opts.ConversationID
 		req.FromTime = opts.FromTime
 		req.ToTime = opts.ToTime
 		req.ValidAt = opts.ValidAt
@@ -160,17 +167,6 @@ func (c *SmriteaClient) Delete(ctx context.Context, memoryID string) error {
 func (c *SmriteaClient) GetAll(_ context.Context) ([]*Memory, error) {
 	return nil, errors.New("smritea: GetAll() is not yet available. " +
 		"The list memories endpoint is pending server-side implementation")
-}
-
-// resolveActor applies the user_id convenience shorthand. When userID is
-// non-nil it is used as the actor ID and the type is forced to "user".
-// Otherwise actorID and actorType are returned unchanged.
-func resolveActor(userID, actorID, actorType *string) (*string, *string) {
-	if userID != nil {
-		t := "user"
-		return userID, &t
-	}
-	return actorID, actorType
 }
 
 // withRetry executes fn up to maxRetries+1 times, retrying only on

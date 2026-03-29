@@ -141,75 +141,24 @@ func TestRetryDelay_ZeroRetryAfter(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// resolveActor tests
-// ---------------------------------------------------------------------------
-
-func TestResolveActor_UserIDSet(t *testing.T) {
-	// userID non-nil takes precedence, forces actorType="user"
-	gotID, gotType := resolveActor(strPtr("u1"), strPtr("a1"), strPtr("agent"))
-
-	if gotID == nil {
-		t.Fatal("expected non-nil actorID, got nil")
-	}
-	if *gotID != "u1" {
-		t.Errorf("actorID = %q, want %q", *gotID, "u1")
-	}
-	if gotType == nil {
-		t.Fatal("expected non-nil actorType, got nil")
-	}
-	if *gotType != "user" {
-		t.Errorf("actorType = %q, want %q", *gotType, "user")
-	}
-}
-
-func TestResolveActor_NoUserID(t *testing.T) {
-	// userID nil → passthrough
-	gotID, gotType := resolveActor(nil, strPtr("a1"), strPtr("agent"))
-
-	if gotID == nil {
-		t.Fatal("expected non-nil actorID, got nil")
-	}
-	if *gotID != "a1" {
-		t.Errorf("actorID = %q, want %q", *gotID, "a1")
-	}
-	if gotType == nil {
-		t.Fatal("expected non-nil actorType, got nil")
-	}
-	if *gotType != "agent" {
-		t.Errorf("actorType = %q, want %q", *gotType, "agent")
-	}
-}
-
-func TestResolveActor_AllNil(t *testing.T) {
-	gotID, gotType := resolveActor(nil, nil, nil)
-
-	if gotID != nil {
-		t.Errorf("expected nil actorID, got %q", *gotID)
-	}
-	if gotType != nil {
-		t.Errorf("expected nil actorType, got %q", *gotType)
-	}
-}
-
-// ---------------------------------------------------------------------------
 // Fluent option builder tests
 // ---------------------------------------------------------------------------
 
 func TestAddOptions_Builder(t *testing.T) {
-	opts := NewAddOptions().WithUserID("u1").WithActorName("Alice").WithConversationID("conv-1")
+	scope := NewScope().WithActorID("u1").WithActorType("user").WithActorName("Alice").WithConversationID("conv-1")
+	opts := NewAddOptions().WithScope(scope)
 
-	if opts.UserID == nil || *opts.UserID != "u1" {
-		t.Errorf("WithUserID: got %v, want u1", opts.UserID)
+	if opts.Scope == nil || opts.Scope.ActorID == nil || *opts.Scope.ActorID != "u1" {
+		t.Errorf("WithActorID: got %v, want u1", opts.Scope.ActorID)
 	}
-	if opts.ActorName == nil || *opts.ActorName != "Alice" {
-		t.Errorf("WithActorName: got %v, want Alice", opts.ActorName)
+	if opts.Scope == nil || opts.Scope.ActorType == nil || *opts.Scope.ActorType != "user" {
+		t.Errorf("WithActorType: got %v, want user", opts.Scope.ActorType)
 	}
-	if opts.ConversationID == nil || *opts.ConversationID != "conv-1" {
-		t.Errorf("WithConversationID: got %v, want conv-1", opts.ConversationID)
+	if opts.Scope == nil || opts.Scope.ActorName == nil || *opts.Scope.ActorName != "Alice" {
+		t.Errorf("WithActorName: got %v, want Alice", opts.Scope.ActorName)
 	}
-	// Unset fields remain nil
-	if opts.ActorID != nil {
-		t.Errorf("ActorID should be nil, got %v", *opts.ActorID)
+	if opts.Scope == nil || opts.Scope.ConversationID == nil || *opts.Scope.ConversationID != "conv-1" {
+		t.Errorf("WithConversationID: got %v, want conv-1", opts.Scope.ConversationID)
 	}
 }
 
@@ -257,8 +206,13 @@ func TestAddOptions_Builder_UsedInAdd(t *testing.T) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		actorID, actorIDOK := body["actor_id"].(string)       // nolint:not-an-error — type assertion bool, not error
-		actorType, actorTypeOK := body["actor_type"].(string) // nolint:not-an-error — type assertion bool, not error
+		scopeMap, scopeOK := body["scope"].(map[string]interface{})
+		if !scopeOK {
+			http.Error(w, "missing scope", http.StatusBadRequest)
+			return
+		}
+		actorID, actorIDOK := scopeMap["actor_id"].(string)
+		actorType, actorTypeOK := scopeMap["actor_type"].(string)
 		if !actorIDOK || actorID != "user-42" || !actorTypeOK || actorType != "user" {
 			http.Error(w, "wrong actor fields", http.StatusBadRequest)
 			return
@@ -267,7 +221,7 @@ func TestAddOptions_Builder_UsedInAdd(t *testing.T) {
 	})
 	client := newTestClient(t, handler, 1)
 
-	mem, err := client.Add(context.Background(), "content", NewAddOptions().WithUserID("user-42"))
+	mem, err := client.Add(context.Background(), "content", NewAddOptions().WithScope(NewScope().WithActorID("user-42").WithActorType("user")))
 	if err != nil {
 		t.Fatalf("Add with builder opts: unexpected error: %v", err)
 	}
@@ -319,34 +273,6 @@ func TestAdd_Success(t *testing.T) {
 	}
 }
 
-func TestAdd_UserIDShorthand(t *testing.T) {
-	// When UserID is set it must become actor_id and actor_type must be "user".
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var body map[string]interface{}
-		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		actorID, actorIDOK := body["actor_id"].(string)
-		actorType, actorTypeOK := body["actor_type"].(string)
-		if !actorIDOK || actorID != "user-42" {
-			http.Error(w, "wrong actor_id", http.StatusBadRequest)
-			return
-		}
-		if !actorTypeOK || actorType != "user" {
-			http.Error(w, "wrong actor_type", http.StatusBadRequest)
-			return
-		}
-		writeJSON(w, http.StatusOK, memJSON("mem-2", "content"))
-	})
-	client := newTestClient(t, handler, 1)
-
-	_, err := client.Add(context.Background(), "content", &AddOptions{UserID: strPtr("user-42")})
-	if err != nil {
-		t.Fatalf("Add UserID shorthand: unexpected error: %v", err)
-	}
-}
-
 func TestAdd_ExplicitActorIDAndType(t *testing.T) {
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var body map[string]interface{}
@@ -354,8 +280,13 @@ func TestAdd_ExplicitActorIDAndType(t *testing.T) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		actorID, actorIDOK := body["actor_id"].(string)
-		actorType, actorTypeOK := body["actor_type"].(string)
+		scopeMap, scopeOK := body["scope"].(map[string]interface{})
+		if !scopeOK {
+			http.Error(w, "missing scope", http.StatusBadRequest)
+			return
+		}
+		actorID, actorIDOK := scopeMap["actor_id"].(string)
+		actorType, actorTypeOK := scopeMap["actor_type"].(string)
 		if !actorIDOK || actorID != "agent-7" || !actorTypeOK || actorType != "agent" {
 			http.Error(w, "wrong actor fields", http.StatusBadRequest)
 			return
@@ -365,8 +296,10 @@ func TestAdd_ExplicitActorIDAndType(t *testing.T) {
 	client := newTestClient(t, handler, 1)
 
 	_, err := client.Add(context.Background(), "content", &AddOptions{
-		ActorID:   strPtr("agent-7"),
-		ActorType: strPtr("agent"),
+		Scope: &Scope{
+			ActorID:   strPtr("agent-7"),
+			ActorType: strPtr("agent"),
+		},
 	})
 	if err != nil {
 		t.Fatalf("Add explicit actor: unexpected error: %v", err)

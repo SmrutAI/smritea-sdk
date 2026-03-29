@@ -1,32 +1,32 @@
 
-# MemorySearchMemoryResult
+# CommondtoMemoryScope
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`activeFrom` | string
-`activeTo` | string
-`content` | string
-`id` | string
-`metadata` | object
-`scope` | [CommondtoMemoryScope](CommondtoMemoryScope.md)
+`actorId` | string
+`actorName` | string
+`actorType` | string
+`conversationId` | string
+`conversationMessageId` | string
+`sourceType` | string
 
 ## Example
 
 ```typescript
-import type { MemorySearchMemoryResult } from ''
+import type { CommondtoMemoryScope } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "activeFrom": null,
-  "activeTo": null,
-  "content": null,
-  "id": null,
-  "metadata": null,
-  "scope": null,
-} satisfies MemorySearchMemoryResult
+  "actorId": null,
+  "actorName": null,
+  "actorType": null,
+  "conversationId": null,
+  "conversationMessageId": null,
+  "sourceType": null,
+} satisfies CommondtoMemoryScope
 
 console.log(example)
 
@@ -35,7 +35,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as MemorySearchMemoryResult
+const exampleParsed = JSON.parse(exampleJSON) as CommondtoMemoryScope
 console.log(exampleParsed)
 ```
 

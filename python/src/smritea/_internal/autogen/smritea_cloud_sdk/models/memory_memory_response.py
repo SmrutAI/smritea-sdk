@@ -18,8 +18,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_memory_scope import CommondtoMemoryScope
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_relative_standing_config import CommondtoRelativeStandingConfig
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,19 +31,15 @@ class MemoryMemoryResponse(BaseModel):
     """ # noqa: E501
     active_from: Optional[StrictStr] = None
     active_to: Optional[StrictStr] = None
-    actor_id: Optional[StrictStr] = None
-    actor_name: Optional[StrictStr] = None
-    actor_type: Optional[StrictStr] = None
     app_id: Optional[StrictStr] = None
     content: Optional[StrictStr] = None
-    conversation_id: Optional[StrictStr] = None
-    conversation_message_id: Optional[StrictStr] = None
     created_at: Optional[StrictStr] = None
     id: Optional[StrictStr] = None
     metadata: Optional[Dict[str, Any]] = None
     relative_standing: Optional[CommondtoRelativeStandingConfig] = None
+    scope: Optional[CommondtoMemoryScope] = Field(default=None, description="Scope contains the memory's actor, conversation, and source context.")
     updated_at: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["active_from", "active_to", "actor_id", "actor_name", "actor_type", "app_id", "content", "conversation_id", "conversation_message_id", "created_at", "id", "metadata", "relative_standing", "updated_at"]
+    __properties: ClassVar[List[str]] = ["active_from", "active_to", "app_id", "content", "created_at", "id", "metadata", "relative_standing", "scope", "updated_at"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,6 +83,9 @@ class MemoryMemoryResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of relative_standing
         if self.relative_standing:
             _dict['relative_standing'] = self.relative_standing.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of scope
+        if self.scope:
+            _dict['scope'] = self.scope.to_dict()
         return _dict
 
     @classmethod
@@ -100,17 +100,13 @@ class MemoryMemoryResponse(BaseModel):
         _obj = cls.model_validate({
             "active_from": obj.get("active_from"),
             "active_to": obj.get("active_to"),
-            "actor_id": obj.get("actor_id"),
-            "actor_name": obj.get("actor_name"),
-            "actor_type": obj.get("actor_type"),
             "app_id": obj.get("app_id"),
             "content": obj.get("content"),
-            "conversation_id": obj.get("conversation_id"),
-            "conversation_message_id": obj.get("conversation_message_id"),
             "created_at": obj.get("created_at"),
             "id": obj.get("id"),
             "metadata": obj.get("metadata"),
             "relative_standing": CommondtoRelativeStandingConfig.from_dict(obj["relative_standing"]) if obj.get("relative_standing") is not None else None,
+            "scope": CommondtoMemoryScope.from_dict(obj["scope"]) if obj.get("scope") is not None else None,
             "updated_at": obj.get("updated_at")
         })
         return _obj

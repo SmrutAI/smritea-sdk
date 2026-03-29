@@ -34,71 +34,30 @@ namespace Smritea.Internal.Autogen.Model
     public partial class MemoryCreateMemoryRequest : IValidatableObject
     {
         /// <summary>
-        /// ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit for conversation-level or app-level memories.
-        /// </summary>
-        /// <value>ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit for conversation-level or app-level memories.</value>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum ActorTypeEnum
-        {
-            /// <summary>
-            /// Enum User for value: user
-            /// </summary>
-            [EnumMember(Value = "user")]
-            User = 1,
-
-            /// <summary>
-            /// Enum Agent for value: agent
-            /// </summary>
-            [EnumMember(Value = "agent")]
-            Agent = 2,
-
-            /// <summary>
-            /// Enum System for value: system
-            /// </summary>
-            [EnumMember(Value = "system")]
-            System = 3
-        }
-
-
-        /// <summary>
-        /// ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit for conversation-level or app-level memories.
-        /// </summary>
-        /// <value>ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit for conversation-level or app-level memories.</value>
-        [DataMember(Name = "actor_type", EmitDefaultValue = false)]
-        public ActorTypeEnum? ActorType { get; set; }
-        /// <summary>
         /// Initializes a new instance of the <see cref="MemoryCreateMemoryRequest" /> class.
         /// </summary>
         /// <param name="activeFrom">ActiveFrom is when this memory becomes contextually valid (defaults to now if omitted).</param>
         /// <param name="activeTo">ActiveTo is when this memory stops being valid (optional, nil &#x3D; still valid).</param>
-        /// <param name="actorId">ActorID is the actor identifier (conditionally required with ActorType). Required for actor-level memories; omit for conversation-level or app-level memories..</param>
-        /// <param name="actorName">ActorName is the name of the actor (optional, max 255 chars).</param>
-        /// <param name="actorType">ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit for conversation-level or app-level memories..</param>
         /// <param name="appId">AppID is the application identifier (required).</param>
         /// <param name="content">Content is the memory content (required, min 1 char).</param>
-        /// <param name="conversationId">ConversationID is the conversation identifier (optional).</param>
-        /// <param name="conversationMessageId">ConversationMessageID is the conversation message identifier (optional).</param>
         /// <param name="entityExtractionOverrides">EntityExtractionOverrides overrides App-level entity extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values..</param>
         /// <param name="factExtractionOverrides">FactExtractionOverrides overrides App-level fact extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values..</param>
         /// <param name="metadata">Metadata contains flexible memory metadata (optional).</param>
         /// <param name="personaExtractionOverrides">PersonaExtractionOverrides overrides App-level persona extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values. This is a stub for v1 - the actual LLM-based persona extraction is deferred to a future task..</param>
         /// <param name="relativeStanding">RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are applied (importance&#x3D;1.0, decay_factor&#x3D;0.2, decay_function&#x3D;exponential)..</param>
-        public MemoryCreateMemoryRequest(string activeFrom = default, string activeTo = default, string actorId = default, string actorName = default, ActorTypeEnum? actorType = default, string appId = default, string content = default, string conversationId = default, string conversationMessageId = default, CommondtoEntityExtractionConfig entityExtractionOverrides = default, CommondtoFactExtractionConfig factExtractionOverrides = default, Object metadata = default, CommondtoPersonaExtractionConfig personaExtractionOverrides = default, CommondtoRelativeStandingConfig relativeStanding = default)
+        /// <param name="scope">Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before..</param>
+        public MemoryCreateMemoryRequest(string activeFrom = default, string activeTo = default, string appId = default, string content = default, CommondtoEntityExtractionConfig entityExtractionOverrides = default, CommondtoFactExtractionConfig factExtractionOverrides = default, Object metadata = default, CommondtoPersonaExtractionConfig personaExtractionOverrides = default, CommondtoRelativeStandingConfig relativeStanding = default, CommondtoMemoryScope scope = default)
         {
             this.ActiveFrom = activeFrom;
             this.ActiveTo = activeTo;
-            this.ActorId = actorId;
-            this.ActorName = actorName;
-            this.ActorType = actorType;
             this.AppId = appId;
             this.Content = content;
-            this.ConversationId = conversationId;
-            this.ConversationMessageId = conversationMessageId;
             this.EntityExtractionOverrides = entityExtractionOverrides;
             this.FactExtractionOverrides = factExtractionOverrides;
             this.Metadata = metadata;
             this.PersonaExtractionOverrides = personaExtractionOverrides;
             this.RelativeStanding = relativeStanding;
+            this.Scope = scope;
         }
 
         /// <summary>
@@ -116,20 +75,6 @@ namespace Smritea.Internal.Autogen.Model
         public string ActiveTo { get; set; }
 
         /// <summary>
-        /// ActorID is the actor identifier (conditionally required with ActorType). Required for actor-level memories; omit for conversation-level or app-level memories.
-        /// </summary>
-        /// <value>ActorID is the actor identifier (conditionally required with ActorType). Required for actor-level memories; omit for conversation-level or app-level memories.</value>
-        [DataMember(Name = "actor_id", EmitDefaultValue = false)]
-        public string ActorId { get; set; }
-
-        /// <summary>
-        /// ActorName is the name of the actor (optional, max 255 chars)
-        /// </summary>
-        /// <value>ActorName is the name of the actor (optional, max 255 chars)</value>
-        [DataMember(Name = "actor_name", EmitDefaultValue = false)]
-        public string ActorName { get; set; }
-
-        /// <summary>
         /// AppID is the application identifier (required)
         /// </summary>
         /// <value>AppID is the application identifier (required)</value>
@@ -142,20 +87,6 @@ namespace Smritea.Internal.Autogen.Model
         /// <value>Content is the memory content (required, min 1 char)</value>
         [DataMember(Name = "content", EmitDefaultValue = false)]
         public string Content { get; set; }
-
-        /// <summary>
-        /// ConversationID is the conversation identifier (optional)
-        /// </summary>
-        /// <value>ConversationID is the conversation identifier (optional)</value>
-        [DataMember(Name = "conversation_id", EmitDefaultValue = false)]
-        public string ConversationId { get; set; }
-
-        /// <summary>
-        /// ConversationMessageID is the conversation message identifier (optional)
-        /// </summary>
-        /// <value>ConversationMessageID is the conversation message identifier (optional)</value>
-        [DataMember(Name = "conversation_message_id", EmitDefaultValue = false)]
-        public string ConversationMessageId { get; set; }
 
         /// <summary>
         /// EntityExtractionOverrides overrides App-level entity extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values.
@@ -193,6 +124,13 @@ namespace Smritea.Internal.Autogen.Model
         public CommondtoRelativeStandingConfig RelativeStanding { get; set; }
 
         /// <summary>
+        /// Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before.
+        /// </summary>
+        /// <value>Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before.</value>
+        [DataMember(Name = "scope", EmitDefaultValue = false)]
+        public CommondtoMemoryScope Scope { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -202,18 +140,14 @@ namespace Smritea.Internal.Autogen.Model
             sb.Append("class MemoryCreateMemoryRequest {\n");
             sb.Append("  ActiveFrom: ").Append(ActiveFrom).Append("\n");
             sb.Append("  ActiveTo: ").Append(ActiveTo).Append("\n");
-            sb.Append("  ActorId: ").Append(ActorId).Append("\n");
-            sb.Append("  ActorName: ").Append(ActorName).Append("\n");
-            sb.Append("  ActorType: ").Append(ActorType).Append("\n");
             sb.Append("  AppId: ").Append(AppId).Append("\n");
             sb.Append("  Content: ").Append(Content).Append("\n");
-            sb.Append("  ConversationId: ").Append(ConversationId).Append("\n");
-            sb.Append("  ConversationMessageId: ").Append(ConversationMessageId).Append("\n");
             sb.Append("  EntityExtractionOverrides: ").Append(EntityExtractionOverrides).Append("\n");
             sb.Append("  FactExtractionOverrides: ").Append(FactExtractionOverrides).Append("\n");
             sb.Append("  Metadata: ").Append(Metadata).Append("\n");
             sb.Append("  PersonaExtractionOverrides: ").Append(PersonaExtractionOverrides).Append("\n");
             sb.Append("  RelativeStanding: ").Append(RelativeStanding).Append("\n");
+            sb.Append("  Scope: ").Append(Scope).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

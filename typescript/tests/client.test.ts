@@ -63,54 +63,54 @@ function makeResponseError(
 }
 
 // ---------------------------------------------------------------------------
-// 1. userId convenience mapping
+// 1. actor scope mapping
 // ---------------------------------------------------------------------------
 
-describe('userId convenience mapping', () => {
-  it('add() maps userId to actorId with actorType "user"', async () => {
+describe('actor scope mapping', () => {
+  it('add() passes actorId and actorType as user scope', async () => {
     const { client, mockApi } = createClientWithMock();
     mockApi.createMemory.mockResolvedValue({ id: 'mem-1' });
 
-    await client.add('hello world', { userId: 'alice' });
+    await client.add('hello world', { scope: { actorId: 'alice', actorType: 'user' } });
 
     expect(mockApi.createMemory).toHaveBeenCalledOnce();
     const arg = mockApi.createMemory.mock.calls[0][0];
-    expect(arg.request.actorId).toBe('alice');
-    expect(arg.request.actorType).toBe('user');
+    expect(arg.request.scope?.actorId).toBe('alice');
+    expect(arg.request.scope?.actorType).toBe('user');
   });
 
-  it('add() passes actorId and actorType through when userId is not set', async () => {
+  it('add() passes actorId and actorType through for non-user actors', async () => {
     const { client, mockApi } = createClientWithMock();
     mockApi.createMemory.mockResolvedValue({ id: 'mem-1' });
 
-    await client.add('hello world', { actorId: 'bot-1', actorType: 'agent' });
+    await client.add('hello world', { scope: { actorId: 'bot-1', actorType: 'agent' } });
 
     const arg = mockApi.createMemory.mock.calls[0][0];
-    expect(arg.request.actorId).toBe('bot-1');
-    expect(arg.request.actorType).toBe('agent');
+    expect(arg.request.scope?.actorId).toBe('bot-1');
+    expect(arg.request.scope?.actorType).toBe('agent');
   });
 
-  it('search() maps userId to actorId with actorType "user"', async () => {
+  it('search() passes actorId and actorType as user scope', async () => {
     const { client, mockApi } = createClientWithMock();
     mockApi.searchMemories.mockResolvedValue({ memories: [] });
 
-    await client.search('find stuff', { userId: 'alice' });
+    await client.search('find stuff', { scope: { actorId: 'alice', actorType: 'user' } });
 
     expect(mockApi.searchMemories).toHaveBeenCalledOnce();
     const arg = mockApi.searchMemories.mock.calls[0][0];
-    expect(arg.request.actorId).toBe('alice');
-    expect(arg.request.actorType).toBe('user');
+    expect(arg.request.scope?.actorId).toBe('alice');
+    expect(arg.request.scope?.actorType).toBe('user');
   });
 
-  it('search() passes actorId and actorType through when userId is not set', async () => {
+  it('search() passes actorId and actorType through for non-user actors', async () => {
     const { client, mockApi } = createClientWithMock();
     mockApi.searchMemories.mockResolvedValue({ memories: [] });
 
-    await client.search('find stuff', { actorId: 'bot-1', actorType: 'agent' });
+    await client.search('find stuff', { scope: { actorId: 'bot-1', actorType: 'agent' } });
 
     const arg = mockApi.searchMemories.mock.calls[0][0];
-    expect(arg.request.actorId).toBe('bot-1');
-    expect(arg.request.actorType).toBe('agent');
+    expect(arg.request.scope?.actorId).toBe('bot-1');
+    expect(arg.request.scope?.actorType).toBe('agent');
   });
 });
 

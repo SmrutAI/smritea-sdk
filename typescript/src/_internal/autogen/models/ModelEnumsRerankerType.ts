@@ -18,7 +18,6 @@
  * @export
  */
 export const ModelEnumsRerankerType = {
-    RerankerNone: 'none',
     RerankerRRF: 'rrf',
     RerankerMMR: 'mmr',
     RerankerTemporal: 'temporal',

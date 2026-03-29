@@ -46,10 +46,10 @@ client = SmriteaClient(
 )
 
 # Store something about a user
-client.add("Alice is a vegetarian and loves hiking", user_id="alice")
+client.add("Alice is a vegetarian and loves hiking", actor_id="alice", actor_type="user")
 
 # Retrieve it later in a different session
-results = client.search("What are Alice's food preferences?", user_id="alice")
+results = client.search("What are Alice's food preferences?", actor_id="alice", actor_type="user")
 for r in results:
     print(f"{r.score:.2f}  {r.content}")
 ```
@@ -65,10 +65,10 @@ const client = new SmriteaClient({
 });
 
 // Store something about a user
-await client.add('Alice is a vegetarian and loves hiking', { userId: 'alice' });
+await client.add('Alice is a vegetarian and loves hiking', { actorId: 'alice', actorType: 'user' });
 
 // Retrieve it later
-const results = await client.search("What are Alice's food preferences?", { userId: 'alice' });
+const results = await client.search("What are Alice's food preferences?", { actorId: 'alice', actorType: 'user' });
 for (const r of results) {
   console.log(r.score?.toFixed(2), r.content);
 }
@@ -96,14 +96,12 @@ func main() {
     ctx := context.Background()
 
     // Store something about a user
-    client.Add(ctx, "Alice is a vegetarian and loves hiking", &smritea.AddOptions{
-        UserID: strPtr("alice"),
-    })
+    client.Add(ctx, "Alice is a vegetarian and loves hiking",
+        smritea.NewAddOptions().WithActorID("alice").WithActorType("user"))
 
     // Retrieve it later
-    results, _ := client.Search(ctx, "What are Alice's food preferences?", &smritea.SearchOptions{
-        UserID: strPtr("alice"),
-    })
+    results, _ := client.Search(ctx, "What are Alice's food preferences?",
+        smritea.NewSearchOptions().WithActorID("alice").WithActorType("user"))
     for _, r := range results {
         fmt.Printf("%v  %v\n", r.Score, r.Memory.Content)
     }
@@ -125,11 +123,11 @@ SmriteaClient client = new SmriteaClient(
 
 // Store something about a user
 Memory mem = client.add("Alice is a vegetarian and loves hiking",
-    new AddOptions().withUserId("alice"));
+    new AddOptions().withActorId("alice").withActorType("user"));
 
 // Retrieve it later
 List<SearchResult> results = client.search("What are Alice's food preferences?",
-    new SearchOptions().withUserId("alice"));
+    new SearchOptions().withActorId("alice").withActorType("user"));
 for (SearchResult r : results) {
     System.out.printf("%.2f  %s%n", r.getScore(), r.getContent());
 }
@@ -147,11 +145,11 @@ var client = new SmriteaClient(
 
 // Store something about a user
 var mem = await client.AddAsync("Alice is a vegetarian and loves hiking",
-    new AddOptions { UserId = "alice" });
+    new AddOptions().WithActorId("alice").WithActorType("user"));
 
 // Retrieve it later
 var results = await client.SearchAsync("What are Alice's food preferences?",
-    new SearchOptions { UserId = "alice" });
+    new SearchOptions().WithActorId("alice").WithActorType("user"));
 foreach (var r in results)
     Console.WriteLine($"{r.Score:F2}  {r.Content}");
 ```
@@ -166,9 +164,10 @@ foreach (var r in results)
 # Python
 memory = client.add(
     "User prefers concise replies",
-    user_id="alice",  # shorthand for actor_id + actor_type="user"
-    metadata={"source": "chat"},  # optional arbitrary key-value pairs
-    conversation_id="conv_123",  # optional — links memory to a conversation
+    actor_id="alice",              # explicit actor ID
+    actor_type="user",             # "user" | "agent" | "system"
+    metadata={"source": "chat"},   # optional arbitrary key-value pairs
+    conversation_id="conv_123",    # optional — links memory to a conversation
 )
 print(memory.id)  # mem_...
 ```
@@ -176,24 +175,21 @@ print(memory.id)  # mem_...
 ```typescript
 // TypeScript
 const memory = await client.add('User prefers concise replies', {
-  userId: 'alice',
+  actorId: 'alice',
+  actorType: 'user',
   metadata: { source: 'chat' },
   conversationId: 'conv_123',
 });
 console.log(memory.id); // mem_...
 ```
 
-`user_id` / `userId` is a shorthand that sets `actor_id` and forces `actor_type="user"`. For agent or system memories,
-use `actor_id` + `actor_type` directly.
-
 **Full signature**
 
 | Parameter (Python) | Parameter (TypeScript) | Parameter (Go) | Parameter (Java) | Parameter (C#) | Default  | Description                             |
 |--------------------|------------------------|----------------|------------------|----------------|----------|-----------------------------------------|
 | `content`          | `content`              | `content`      | `content`        | `content`      | required | Memory text                             |
-| `user_id`          | `userId`               | `UserID`       | `userId`         | `UserId`       | `None`   | Shorthand: actor_id + actor_type="user" |
-| `actor_id`         | `actorId`              | `ActorID`      | `actorId`        | `ActorId`      | `None`   | Explicit actor ID                       |
-| `actor_type`       | `actorType`            | `ActorType`    | `actorType`      | `ActorType`    | `"user"` | `"user"` \| `"agent"` \| `"system"`     |
+| `actor_id`         | `actorId`              | `ActorID`      | `actorId`        | `ActorId`      | `None`   | Actor ID                                |
+| `actor_type`       | `actorType`            | `ActorType`    | `actorType`      | `ActorType`    | `None`   | `"user"` \| `"agent"` \| `"system"`     |
 | `actor_name`       | `actorName`            | `ActorName`    | `actorName`      | `ActorName`    | `None`   | Display name                            |
 | `metadata`         | `metadata`             | `Metadata`     | `metadata`       | `Metadata`     | `None`   | Arbitrary key-value dict / object       |
 | `conversation_id`  | `conversationId`       | `ConversationID` | `conversationId` | `ConversationId` | `None` | Conversation context                    |
@@ -206,7 +202,8 @@ use `actor_id` + `actor_type` directly.
 # Python
 results = client.search(
     "dietary restrictions",
-    user_id="alice",
+    actor_id="alice",
+    actor_type="user",
     limit=5,
     method="deep_search",   # optional: "quick_search" | "deep_search" | "context_aware_search"
     threshold=0.7,           # optional: min relevance score (0.0–1.0)
@@ -218,7 +215,8 @@ for r in results:
 ```typescript
 // TypeScript
 const results = await client.search('dietary restrictions', {
-  userId: 'alice',
+  actorId: 'alice',
+  actorType: 'user',
   limit: 5,
   method: 'deep_search',
   threshold: 0.7,
@@ -241,7 +239,6 @@ Results are ordered by relevance (descending). Each result exposes `score` (floa
 | Parameter (Python) | Parameter (TypeScript) | Parameter (Go) | Parameter (Java) | Parameter (C#) | Default     | Description                    |
 |--------------------|------------------------|----------------|------------------|----------------|-------------|--------------------------------|
 | `query`            | `query`                | `query`        | `query`          | `query`        | required    | Search text                    |
-| `user_id`          | `userId`               | `UserID`       | `userId`         | `UserId`       | `None`      | Filter to this user's memories |
 | `actor_id`         | `actorId`              | `ActorID`      | `actorId`        | `ActorId`      | `None`      | Filter by actor ID             |
 | `actor_type`       | `actorType`            | `ActorType`    | `actorType`      | `ActorType`    | `None`      | Filter by actor type           |
 | `limit`            | `limit`                | `Limit`        | `limit`          | `Limit`        | app default | Max results to return          |
@@ -300,7 +297,7 @@ Raises / throws `SmriteaNotFoundError` if the ID does not exist.
 
 ```python
 # Workaround until get_all is available
-results = client.search("", user_id="alice", limit=100)
+results = client.search("", actor_id="alice", actor_type="user", limit=100)
 ```
 
 ---
@@ -322,7 +319,7 @@ from smritea import (
 )
 
 try:
-    results = client.search("preferences", user_id="alice")
+    results = client.search("preferences", actor_id="alice", actor_type="user")
 except SmriteaAuthError:
     print("Check your API key")
 except SmriteaRateLimitError as e:

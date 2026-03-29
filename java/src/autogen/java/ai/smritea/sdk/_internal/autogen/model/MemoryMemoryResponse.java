@@ -19,6 +19,7 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
+import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
 import ai.smritea.sdk._internal.autogen.model.CommondtoRelativeStandingConfig;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -36,17 +37,13 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 @JsonPropertyOrder({
   MemoryMemoryResponse.JSON_PROPERTY_ACTIVE_FROM,
   MemoryMemoryResponse.JSON_PROPERTY_ACTIVE_TO,
-  MemoryMemoryResponse.JSON_PROPERTY_ACTOR_ID,
-  MemoryMemoryResponse.JSON_PROPERTY_ACTOR_NAME,
-  MemoryMemoryResponse.JSON_PROPERTY_ACTOR_TYPE,
   MemoryMemoryResponse.JSON_PROPERTY_APP_ID,
   MemoryMemoryResponse.JSON_PROPERTY_CONTENT,
-  MemoryMemoryResponse.JSON_PROPERTY_CONVERSATION_ID,
-  MemoryMemoryResponse.JSON_PROPERTY_CONVERSATION_MESSAGE_ID,
   MemoryMemoryResponse.JSON_PROPERTY_CREATED_AT,
   MemoryMemoryResponse.JSON_PROPERTY_ID,
   MemoryMemoryResponse.JSON_PROPERTY_METADATA,
   MemoryMemoryResponse.JSON_PROPERTY_RELATIVE_STANDING,
+  MemoryMemoryResponse.JSON_PROPERTY_SCOPE,
   MemoryMemoryResponse.JSON_PROPERTY_UPDATED_AT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
@@ -59,18 +56,6 @@ public class MemoryMemoryResponse {
   @javax.annotation.Nullable
   private String activeTo;
 
-  public static final String JSON_PROPERTY_ACTOR_ID = "actor_id";
-  @javax.annotation.Nullable
-  private String actorId;
-
-  public static final String JSON_PROPERTY_ACTOR_NAME = "actor_name";
-  @javax.annotation.Nullable
-  private String actorName;
-
-  public static final String JSON_PROPERTY_ACTOR_TYPE = "actor_type";
-  @javax.annotation.Nullable
-  private String actorType;
-
   public static final String JSON_PROPERTY_APP_ID = "app_id";
   @javax.annotation.Nullable
   private String appId;
@@ -78,14 +63,6 @@ public class MemoryMemoryResponse {
   public static final String JSON_PROPERTY_CONTENT = "content";
   @javax.annotation.Nullable
   private String content;
-
-  public static final String JSON_PROPERTY_CONVERSATION_ID = "conversation_id";
-  @javax.annotation.Nullable
-  private String conversationId;
-
-  public static final String JSON_PROPERTY_CONVERSATION_MESSAGE_ID = "conversation_message_id";
-  @javax.annotation.Nullable
-  private String conversationMessageId;
 
   public static final String JSON_PROPERTY_CREATED_AT = "created_at";
   @javax.annotation.Nullable
@@ -102,6 +79,10 @@ public class MemoryMemoryResponse {
   public static final String JSON_PROPERTY_RELATIVE_STANDING = "relative_standing";
   @javax.annotation.Nullable
   private CommondtoRelativeStandingConfig relativeStanding;
+
+  public static final String JSON_PROPERTY_SCOPE = "scope";
+  @javax.annotation.Nullable
+  private CommondtoMemoryScope scope;
 
   public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
   @javax.annotation.Nullable
@@ -158,78 +139,6 @@ public class MemoryMemoryResponse {
   }
 
 
-  public MemoryMemoryResponse actorId(@javax.annotation.Nullable String actorId) {
-    this.actorId = actorId;
-    return this;
-  }
-
-  /**
-   * Get actorId
-   * @return actorId
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getActorId() {
-    return actorId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setActorId(@javax.annotation.Nullable String actorId) {
-    this.actorId = actorId;
-  }
-
-
-  public MemoryMemoryResponse actorName(@javax.annotation.Nullable String actorName) {
-    this.actorName = actorName;
-    return this;
-  }
-
-  /**
-   * Get actorName
-   * @return actorName
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_NAME, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getActorName() {
-    return actorName;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_NAME, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setActorName(@javax.annotation.Nullable String actorName) {
-    this.actorName = actorName;
-  }
-
-
-  public MemoryMemoryResponse actorType(@javax.annotation.Nullable String actorType) {
-    this.actorType = actorType;
-    return this;
-  }
-
-  /**
-   * Get actorType
-   * @return actorType
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getActorType() {
-    return actorType;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setActorType(@javax.annotation.Nullable String actorType) {
-    this.actorType = actorType;
-  }
-
-
   public MemoryMemoryResponse appId(@javax.annotation.Nullable String appId) {
     this.appId = appId;
     return this;
@@ -275,54 +184,6 @@ public class MemoryMemoryResponse {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setContent(@javax.annotation.Nullable String content) {
     this.content = content;
-  }
-
-
-  public MemoryMemoryResponse conversationId(@javax.annotation.Nullable String conversationId) {
-    this.conversationId = conversationId;
-    return this;
-  }
-
-  /**
-   * Get conversationId
-   * @return conversationId
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getConversationId() {
-    return conversationId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setConversationId(@javax.annotation.Nullable String conversationId) {
-    this.conversationId = conversationId;
-  }
-
-
-  public MemoryMemoryResponse conversationMessageId(@javax.annotation.Nullable String conversationMessageId) {
-    this.conversationMessageId = conversationMessageId;
-    return this;
-  }
-
-  /**
-   * Get conversationMessageId
-   * @return conversationMessageId
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_MESSAGE_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getConversationMessageId() {
-    return conversationMessageId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_MESSAGE_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setConversationMessageId(@javax.annotation.Nullable String conversationMessageId) {
-    this.conversationMessageId = conversationMessageId;
   }
 
 
@@ -422,6 +283,30 @@ public class MemoryMemoryResponse {
   }
 
 
+  public MemoryMemoryResponse scope(@javax.annotation.Nullable CommondtoMemoryScope scope) {
+    this.scope = scope;
+    return this;
+  }
+
+  /**
+   * Scope contains the memory&#39;s actor, conversation, and source context.
+   * @return scope
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SCOPE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public CommondtoMemoryScope getScope() {
+    return scope;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SCOPE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setScope(@javax.annotation.Nullable CommondtoMemoryScope scope) {
+    this.scope = scope;
+  }
+
+
   public MemoryMemoryResponse updatedAt(@javax.annotation.Nullable String updatedAt) {
     this.updatedAt = updatedAt;
     return this;
@@ -460,23 +345,19 @@ public class MemoryMemoryResponse {
     MemoryMemoryResponse memoryMemoryResponse = (MemoryMemoryResponse) o;
     return Objects.equals(this.activeFrom, memoryMemoryResponse.activeFrom) &&
         Objects.equals(this.activeTo, memoryMemoryResponse.activeTo) &&
-        Objects.equals(this.actorId, memoryMemoryResponse.actorId) &&
-        Objects.equals(this.actorName, memoryMemoryResponse.actorName) &&
-        Objects.equals(this.actorType, memoryMemoryResponse.actorType) &&
         Objects.equals(this.appId, memoryMemoryResponse.appId) &&
         Objects.equals(this.content, memoryMemoryResponse.content) &&
-        Objects.equals(this.conversationId, memoryMemoryResponse.conversationId) &&
-        Objects.equals(this.conversationMessageId, memoryMemoryResponse.conversationMessageId) &&
         Objects.equals(this.createdAt, memoryMemoryResponse.createdAt) &&
         Objects.equals(this.id, memoryMemoryResponse.id) &&
         Objects.equals(this.metadata, memoryMemoryResponse.metadata) &&
         Objects.equals(this.relativeStanding, memoryMemoryResponse.relativeStanding) &&
+        Objects.equals(this.scope, memoryMemoryResponse.scope) &&
         Objects.equals(this.updatedAt, memoryMemoryResponse.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(activeFrom, activeTo, actorId, actorName, actorType, appId, content, conversationId, conversationMessageId, createdAt, id, metadata, relativeStanding, updatedAt);
+    return Objects.hash(activeFrom, activeTo, appId, content, createdAt, id, metadata, relativeStanding, scope, updatedAt);
   }
 
   @Override
@@ -485,17 +366,13 @@ public class MemoryMemoryResponse {
     sb.append("class MemoryMemoryResponse {\n");
     sb.append("    activeFrom: ").append(toIndentedString(activeFrom)).append("\n");
     sb.append("    activeTo: ").append(toIndentedString(activeTo)).append("\n");
-    sb.append("    actorId: ").append(toIndentedString(actorId)).append("\n");
-    sb.append("    actorName: ").append(toIndentedString(actorName)).append("\n");
-    sb.append("    actorType: ").append(toIndentedString(actorType)).append("\n");
     sb.append("    appId: ").append(toIndentedString(appId)).append("\n");
     sb.append("    content: ").append(toIndentedString(content)).append("\n");
-    sb.append("    conversationId: ").append(toIndentedString(conversationId)).append("\n");
-    sb.append("    conversationMessageId: ").append(toIndentedString(conversationMessageId)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("    relativeStanding: ").append(toIndentedString(relativeStanding)).append("\n");
+    sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -554,21 +431,6 @@ public class MemoryMemoryResponse {
       joiner.add(String.format(java.util.Locale.ROOT, "%sactive_to%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActiveTo()))));
     }
 
-    // add `actor_id` to the URL query string
-    if (getActorId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorId()))));
-    }
-
-    // add `actor_name` to the URL query string
-    if (getActorName() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_name%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorName()))));
-    }
-
-    // add `actor_type` to the URL query string
-    if (getActorType() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_type%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorType()))));
-    }
-
     // add `app_id` to the URL query string
     if (getAppId() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%sapp_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getAppId()))));
@@ -577,16 +439,6 @@ public class MemoryMemoryResponse {
     // add `content` to the URL query string
     if (getContent() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%scontent%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getContent()))));
-    }
-
-    // add `conversation_id` to the URL query string
-    if (getConversationId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationId()))));
-    }
-
-    // add `conversation_message_id` to the URL query string
-    if (getConversationMessageId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_message_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationMessageId()))));
     }
 
     // add `created_at` to the URL query string
@@ -607,6 +459,11 @@ public class MemoryMemoryResponse {
     // add `relative_standing` to the URL query string
     if (getRelativeStanding() != null) {
       joiner.add(getRelativeStanding().toUrlQueryString(prefix + "relative_standing" + suffix));
+    }
+
+    // add `scope` to the URL query string
+    if (getScope() != null) {
+      joiner.add(getScope().toUrlQueryString(prefix + "scope" + suffix));
     }
 
     // add `updated_at` to the URL query string

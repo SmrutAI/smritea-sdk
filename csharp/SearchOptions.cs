@@ -7,18 +7,12 @@ namespace Smritea.Sdk;
 /// <summary>
 /// Builder-style options for the SearchAsync method.
 /// Use fluent <c>With*</c> methods for ergonomic construction:
-/// <code>new SearchOptions().WithLimit(10).WithThreshold(0.7f)</code>
+/// <code>new SearchOptions().WithScope(new Scope().WithActorId("alice")).WithLimit(10)</code>
 /// </summary>
 public sealed class SearchOptions
 {
-    /// <summary>Gets the user ID (convenience shorthand that forces ActorType="user").</summary>
-    public string? UserId { get; private set; }
-
-    /// <summary>Gets the actor ID.</summary>
-    public string? ActorId { get; private set; }
-
-    /// <summary>Gets the actor type.</summary>
-    public string? ActorType { get; private set; }
+    /// <summary>Gets the scope containing actor and conversation context.</summary>
+    public Scope? Scope { get; private set; }
 
     /// <summary>Gets the maximum number of results to return.</summary>
     public int? Limit { get; private set; }
@@ -29,9 +23,6 @@ public sealed class SearchOptions
     /// <summary>Gets the graph traversal depth for graph-augmented search.</summary>
     public int? GraphDepth { get; private set; }
 
-    /// <summary>Gets the conversation ID to scope the search to.</summary>
-    public string? ConversationId { get; private set; }
-
     /// <summary>Gets iSO-8601 datetime string — only return memories created at or after this time.</summary>
     public string? FromTime { get; private set; }
 
@@ -41,30 +32,12 @@ public sealed class SearchOptions
     /// <summary>Gets iSO-8601 datetime string — return memories valid at exactly this point in time.</summary>
     public string? ValidAt { get; private set; }
 
-    /// <summary>Sets the user ID and forces ActorType to "user".</summary>
-    /// <param name="userId">The user identifier to scope the search to.</param>
+    /// <summary>Sets the scope containing actor and conversation context.</summary>
+    /// <param name="scope">The scope object grouping actor and conversation fields.</param>
     /// <returns>The current instance for method chaining.</returns>
-    public SearchOptions WithUserId(string userId)
+    public SearchOptions WithScope(Scope scope)
     {
-        this.UserId = userId;
-        return this;
-    }
-
-    /// <summary>Sets the actor ID.</summary>
-    /// <param name="actorId">The actor identifier to scope the search to.</param>
-    /// <returns>The current instance for method chaining.</returns>
-    public SearchOptions WithActorId(string actorId)
-    {
-        this.ActorId = actorId;
-        return this;
-    }
-
-    /// <summary>Sets the actor type.</summary>
-    /// <param name="actorType">The actor type to filter by (e.g. "user", "agent").</param>
-    /// <returns>The current instance for method chaining.</returns>
-    public SearchOptions WithActorType(string actorType)
-    {
-        this.ActorType = actorType;
+        this.Scope = scope;
         return this;
     }
 
@@ -92,15 +65,6 @@ public sealed class SearchOptions
     public SearchOptions WithGraphDepth(int graphDepth)
     {
         this.GraphDepth = graphDepth;
-        return this;
-    }
-
-    /// <summary>Sets the conversation ID to scope the search to a specific conversation.</summary>
-    /// <param name="conversationId">The conversation identifier to filter results by.</param>
-    /// <returns>The current instance for method chaining.</returns>
-    public SearchOptions WithConversationId(string conversationId)
-    {
-        this.ConversationId = conversationId;
         return this;
     }
 

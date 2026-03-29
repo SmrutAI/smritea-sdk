@@ -11,26 +11,26 @@ export type {
   MemorySearchMemoryResponse as SearchResult,
 } from './_internal/autogen/models/index.js';
 
-export interface AddOptions {
-  /** Shorthand: sets actor_id and actor_type="user". Takes precedence if actorId also set. */
-  userId?: string;
-  /** Explicit actor ID. Use when actor_type is not "user". */
+export interface Scope {
+  /** Actor ID for scoping. */
   actorId?: string;
   actorType?: 'user' | 'agent' | 'system';
   actorName?: string;
-  metadata?: Record<string, unknown>;
   conversationId?: string;
+  conversationMessageId?: string;
+  sourceType?: 'conversation' | 'document' | 'api';
+}
+
+export interface AddOptions {
+  scope?: Scope;
+  metadata?: Record<string, unknown>;
 }
 
 export interface SearchOptions {
-  /** Shorthand: sets actor_id and actor_type="user" filter. */
-  userId?: string;
-  actorId?: string;
-  actorType?: 'user' | 'agent' | 'system';
+  scope?: Scope;
   limit?: number;
   threshold?: number;
   graphDepth?: number;
-  conversationId?: string;
   /** ISO-8601 datetime string — only return memories created at or after this time. */
   fromTime?: string;
   /** ISO-8601 datetime string — only return memories created at or before this time. */

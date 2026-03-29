@@ -33,39 +33,6 @@ namespace Smritea.Internal.Autogen.Model
     [DataContract(Name = "memory.SearchMemoryRequest")]
     public partial class MemorySearchMemoryRequest : IValidatableObject
     {
-        /// <summary>
-        /// ActorType filters search to messages from a specific actor type (optional). Values: \&quot;user\&quot;, \&quot;agent\&quot;, \&quot;system\&quot;
-        /// </summary>
-        /// <value>ActorType filters search to messages from a specific actor type (optional). Values: \&quot;user\&quot;, \&quot;agent\&quot;, \&quot;system\&quot;</value>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum ActorTypeEnum
-        {
-            /// <summary>
-            /// Enum User for value: user
-            /// </summary>
-            [EnumMember(Value = "user")]
-            User = 1,
-
-            /// <summary>
-            /// Enum Agent for value: agent
-            /// </summary>
-            [EnumMember(Value = "agent")]
-            Agent = 2,
-
-            /// <summary>
-            /// Enum System for value: system
-            /// </summary>
-            [EnumMember(Value = "system")]
-            System = 3
-        }
-
-
-        /// <summary>
-        /// ActorType filters search to messages from a specific actor type (optional). Values: \&quot;user\&quot;, \&quot;agent\&quot;, \&quot;system\&quot;
-        /// </summary>
-        /// <value>ActorType filters search to messages from a specific actor type (optional). Values: \&quot;user\&quot;, \&quot;agent\&quot;, \&quot;system\&quot;</value>
-        [DataMember(Name = "actor_type", EmitDefaultValue = false)]
-        public ActorTypeEnum? ActorType { get; set; }
 
         /// <summary>
         /// Gets or Sets Method
@@ -87,20 +54,18 @@ namespace Smritea.Internal.Autogen.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="MemorySearchMemoryRequest" /> class.
         /// </summary>
-        /// <param name="actorId">actorId.</param>
-        /// <param name="actorType">ActorType filters search to messages from a specific actor type (optional). Values: \&quot;user\&quot;, \&quot;agent\&quot;, \&quot;system\&quot;.</param>
         /// <param name="appId">appId (required).</param>
-        /// <param name="conversationId">ConversationID filters search to a specific conversation (optional). If omitted, searches across all actor&#39;s memories..</param>
         /// <param name="fromTime">FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime..</param>
         /// <param name="graphDepth">0&#x3D;use app config, 1-5&#x3D;override traversal depth.</param>
         /// <param name="limit">limit.</param>
         /// <param name="method">method.</param>
         /// <param name="query">query (required).</param>
         /// <param name="rerankerType">RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method..</param>
+        /// <param name="scope">Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \&quot;no filter\&quot; (searches across all)..</param>
         /// <param name="threshold">0&#x3D;no filtering (pipeline uses RRF scores, not cosine similarity).</param>
         /// <param name="toTime">ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime..</param>
         /// <param name="validAt">ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from &lt;&#x3D; ValidAt AND (active_to is null OR active_to &gt;&#x3D; ValidAt) Mutually exclusive with FromTime/ToTime..</param>
-        public MemorySearchMemoryRequest(string actorId = default, ActorTypeEnum? actorType = default, string appId = default, string conversationId = default, string fromTime = default, int graphDepth = default, int limit = default, ModelEnumsSearchMethod? method = default, string query = default, ModelEnumsRerankerType? rerankerType = default, decimal threshold = default, string toTime = default, string validAt = default)
+        public MemorySearchMemoryRequest(string appId = default, string fromTime = default, int graphDepth = default, int limit = default, ModelEnumsSearchMethod? method = default, string query = default, ModelEnumsRerankerType? rerankerType = default, CommondtoMemoryScope scope = default, decimal threshold = default, string toTime = default, string validAt = default)
         {
             // to ensure "appId" is required (not null)
             if (appId == null)
@@ -114,37 +79,22 @@ namespace Smritea.Internal.Autogen.Model
                 throw new ArgumentNullException("query is a required property for MemorySearchMemoryRequest and cannot be null");
             }
             this.Query = query;
-            this.ActorId = actorId;
-            this.ActorType = actorType;
-            this.ConversationId = conversationId;
             this.FromTime = fromTime;
             this.GraphDepth = graphDepth;
             this.Limit = limit;
             this.Method = method;
             this.RerankerType = rerankerType;
+            this.Scope = scope;
             this.Threshold = threshold;
             this.ToTime = toTime;
             this.ValidAt = validAt;
         }
 
         /// <summary>
-        /// Gets or Sets ActorId
-        /// </summary>
-        [DataMember(Name = "actor_id", EmitDefaultValue = false)]
-        public string ActorId { get; set; }
-
-        /// <summary>
         /// Gets or Sets AppId
         /// </summary>
         [DataMember(Name = "app_id", IsRequired = true, EmitDefaultValue = true)]
         public string AppId { get; set; }
-
-        /// <summary>
-        /// ConversationID filters search to a specific conversation (optional). If omitted, searches across all actor&#39;s memories.
-        /// </summary>
-        /// <value>ConversationID filters search to a specific conversation (optional). If omitted, searches across all actor&#39;s memories.</value>
-        [DataMember(Name = "conversation_id", EmitDefaultValue = false)]
-        public string ConversationId { get; set; }
 
         /// <summary>
         /// FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime.
@@ -171,6 +121,13 @@ namespace Smritea.Internal.Autogen.Model
         /// </summary>
         [DataMember(Name = "query", IsRequired = true, EmitDefaultValue = true)]
         public string Query { get; set; }
+
+        /// <summary>
+        /// Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \&quot;no filter\&quot; (searches across all).
+        /// </summary>
+        /// <value>Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \&quot;no filter\&quot; (searches across all).</value>
+        [DataMember(Name = "scope", EmitDefaultValue = false)]
+        public CommondtoMemoryScope Scope { get; set; }
 
         /// <summary>
         /// 0&#x3D;no filtering (pipeline uses RRF scores, not cosine similarity)
@@ -201,16 +158,14 @@ namespace Smritea.Internal.Autogen.Model
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("class MemorySearchMemoryRequest {\n");
-            sb.Append("  ActorId: ").Append(ActorId).Append("\n");
-            sb.Append("  ActorType: ").Append(ActorType).Append("\n");
             sb.Append("  AppId: ").Append(AppId).Append("\n");
-            sb.Append("  ConversationId: ").Append(ConversationId).Append("\n");
             sb.Append("  FromTime: ").Append(FromTime).Append("\n");
             sb.Append("  GraphDepth: ").Append(GraphDepth).Append("\n");
             sb.Append("  Limit: ").Append(Limit).Append("\n");
             sb.Append("  Method: ").Append(Method).Append("\n");
             sb.Append("  Query: ").Append(Query).Append("\n");
             sb.Append("  RerankerType: ").Append(RerankerType).Append("\n");
+            sb.Append("  Scope: ").Append(Scope).Append("\n");
             sb.Append("  Threshold: ").Append(Threshold).Append("\n");
             sb.Append("  ToTime: ").Append(ToTime).Append("\n");
             sb.Append("  ValidAt: ").Append(ValidAt).Append("\n");

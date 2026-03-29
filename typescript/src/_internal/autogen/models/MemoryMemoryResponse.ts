@@ -20,6 +20,13 @@ import {
     CommondtoRelativeStandingConfigToJSON,
     CommondtoRelativeStandingConfigToJSONTyped,
 } from './CommondtoRelativeStandingConfig';
+import type { CommondtoMemoryScope } from './CommondtoMemoryScope';
+import {
+    CommondtoMemoryScopeFromJSON,
+    CommondtoMemoryScopeFromJSONTyped,
+    CommondtoMemoryScopeToJSON,
+    CommondtoMemoryScopeToJSONTyped,
+} from './CommondtoMemoryScope';
 
 /**
  * 
@@ -44,24 +51,6 @@ export interface MemoryMemoryResponse {
      * @type {string}
      * @memberof MemoryMemoryResponse
      */
-    actorId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MemoryMemoryResponse
-     */
-    actorName?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MemoryMemoryResponse
-     */
-    actorType?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MemoryMemoryResponse
-     */
     appId?: string;
     /**
      * 
@@ -69,18 +58,6 @@ export interface MemoryMemoryResponse {
      * @memberof MemoryMemoryResponse
      */
     content?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MemoryMemoryResponse
-     */
-    conversationId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MemoryMemoryResponse
-     */
-    conversationMessageId?: string;
     /**
      * 
      * @type {string}
@@ -105,6 +82,12 @@ export interface MemoryMemoryResponse {
      * @memberof MemoryMemoryResponse
      */
     relativeStanding?: CommondtoRelativeStandingConfig;
+    /**
+     * Scope contains the memory's actor, conversation, and source context.
+     * @type {CommondtoMemoryScope}
+     * @memberof MemoryMemoryResponse
+     */
+    scope?: CommondtoMemoryScope;
     /**
      * 
      * @type {string}
@@ -132,17 +115,13 @@ export function MemoryMemoryResponseFromJSONTyped(json: any, ignoreDiscriminator
         
         'activeFrom': json['active_from'] == null ? undefined : json['active_from'],
         'activeTo': json['active_to'] == null ? undefined : json['active_to'],
-        'actorId': json['actor_id'] == null ? undefined : json['actor_id'],
-        'actorName': json['actor_name'] == null ? undefined : json['actor_name'],
-        'actorType': json['actor_type'] == null ? undefined : json['actor_type'],
         'appId': json['app_id'] == null ? undefined : json['app_id'],
         'content': json['content'] == null ? undefined : json['content'],
-        'conversationId': json['conversation_id'] == null ? undefined : json['conversation_id'],
-        'conversationMessageId': json['conversation_message_id'] == null ? undefined : json['conversation_message_id'],
         'createdAt': json['created_at'] == null ? undefined : json['created_at'],
         'id': json['id'] == null ? undefined : json['id'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'relativeStanding': json['relative_standing'] == null ? undefined : CommondtoRelativeStandingConfigFromJSON(json['relative_standing']),
+        'scope': json['scope'] == null ? undefined : CommondtoMemoryScopeFromJSON(json['scope']),
         'updatedAt': json['updated_at'] == null ? undefined : json['updated_at'],
     };
 }
@@ -160,17 +139,13 @@ export function MemoryMemoryResponseToJSONTyped(value?: MemoryMemoryResponse | n
         
         'active_from': value['activeFrom'],
         'active_to': value['activeTo'],
-        'actor_id': value['actorId'],
-        'actor_name': value['actorName'],
-        'actor_type': value['actorType'],
         'app_id': value['appId'],
         'content': value['content'],
-        'conversation_id': value['conversationId'],
-        'conversation_message_id': value['conversationMessageId'],
         'created_at': value['createdAt'],
         'id': value['id'],
         'metadata': value['metadata'],
         'relative_standing': CommondtoRelativeStandingConfigToJSON(value['relativeStanding']),
+        'scope': CommondtoMemoryScopeToJSON(value['scope']),
         'updated_at': value['updatedAt'],
     };
 }

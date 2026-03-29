@@ -30,7 +30,7 @@ from smritea._internal.autogen.smritea_cloud_sdk.models import (
 # Regenerated from smritea-cloud via: cd ../smritea-cloud && make generate-public-sdk
 # ---------------------------------------------------------------------------
 
-__all__ = ["Memory", "SearchResult", "MemorySearchMemoriesResponse"]
+__all__ = ["Memory", "SearchResult", "MemorySearchMemoriesResponse", "MemoryScope"]
 
 
 # ---------------------------------------------------------------------------
@@ -39,36 +39,31 @@ __all__ = ["Memory", "SearchResult", "MemorySearchMemoriesResponse"]
 # ---------------------------------------------------------------------------
 
 
-class AddOptions(BaseModel):
-    """Options for SmriteaClient.add().
+class MemoryScope(BaseModel):
+    """Scope fields for actor and conversation context."""
 
-    ``user_id`` is a convenience shorthand: sets ``actor_id`` and forces
-    ``actor_type="user"``.  If both ``user_id`` and ``actor_id`` are provided,
-    ``user_id`` takes precedence.
-    """
-
-    user_id: str | None = None
     actor_id: str | None = None
     actor_type: str | None = None
     actor_name: str | None = None
-    metadata: dict[str, Any] | None = None
     conversation_id: str | None = None
+    conversation_message_id: str | None = None
+    source_type: str | None = None
+
+
+class AddOptions(BaseModel):
+    """Options for SmriteaClient.add()."""
+
+    scope: MemoryScope | None = None
+    metadata: dict[str, Any] | None = None
 
 
 class SearchOptions(BaseModel):
-    """Options for SmriteaClient.search().
+    """Options for SmriteaClient.search()."""
 
-    ``user_id`` is a convenience shorthand: sets ``actor_id`` and forces
-    ``actor_type="user"``.
-    """
-
-    user_id: str | None = None
-    actor_id: str | None = None
-    actor_type: str | None = None
+    scope: MemoryScope | None = None
     limit: int | None = None
     threshold: float | None = None
     graph_depth: int | None = None
-    conversation_id: str | None = None
     from_time: str | None = None
     """ISO-8601 datetime string — only return memories created at or after this time."""
     to_time: str | None = None

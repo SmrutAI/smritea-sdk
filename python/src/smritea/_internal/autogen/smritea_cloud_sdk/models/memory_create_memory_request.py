@@ -18,10 +18,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_entity_extraction_config import CommondtoEntityExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_fact_extraction_config import CommondtoFactExtractionConfig
+from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_memory_scope import CommondtoMemoryScope
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_persona_extraction_config import CommondtoPersonaExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_relative_standing_config import CommondtoRelativeStandingConfig
 from typing import Optional, Set
@@ -33,29 +34,15 @@ class MemoryCreateMemoryRequest(BaseModel):
     """ # noqa: E501
     active_from: Optional[StrictStr] = Field(default=None, description="ActiveFrom is when this memory becomes contextually valid (defaults to now if omitted)")
     active_to: Optional[StrictStr] = Field(default=None, description="ActiveTo is when this memory stops being valid (optional, nil = still valid)")
-    actor_id: Optional[StrictStr] = Field(default=None, description="ActorID is the actor identifier (conditionally required with ActorType). Required for actor-level memories; omit for conversation-level or app-level memories.")
-    actor_name: Optional[StrictStr] = Field(default=None, description="ActorName is the name of the actor (optional, max 255 chars)")
-    actor_type: Optional[StrictStr] = Field(default=None, description="ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit for conversation-level or app-level memories.")
     app_id: Optional[StrictStr] = Field(default=None, description="AppID is the application identifier (required)")
     content: Optional[StrictStr] = Field(default=None, description="Content is the memory content (required, min 1 char)")
-    conversation_id: Optional[StrictStr] = Field(default=None, description="ConversationID is the conversation identifier (optional)")
-    conversation_message_id: Optional[StrictStr] = Field(default=None, description="ConversationMessageID is the conversation message identifier (optional)")
     entity_extraction_overrides: Optional[CommondtoEntityExtractionConfig] = Field(default=None, description="EntityExtractionOverrides overrides App-level entity extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.")
     fact_extraction_overrides: Optional[CommondtoFactExtractionConfig] = Field(default=None, description="FactExtractionOverrides overrides App-level fact extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Metadata contains flexible memory metadata (optional)")
     persona_extraction_overrides: Optional[CommondtoPersonaExtractionConfig] = Field(default=None, description="PersonaExtractionOverrides overrides App-level persona extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values. This is a stub for v1 - the actual LLM-based persona extraction is deferred to a future task.")
     relative_standing: Optional[CommondtoRelativeStandingConfig] = Field(default=None, description="RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are applied (importance=1.0, decay_factor=0.2, decay_function=exponential).")
-    __properties: ClassVar[List[str]] = ["active_from", "active_to", "actor_id", "actor_name", "actor_type", "app_id", "content", "conversation_id", "conversation_message_id", "entity_extraction_overrides", "fact_extraction_overrides", "metadata", "persona_extraction_overrides", "relative_standing"]
-
-    @field_validator('actor_type')
-    def actor_type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['user', 'agent', 'system']):
-            raise ValueError("must be one of enum values ('user', 'agent', 'system')")
-        return value
+    scope: Optional[CommondtoMemoryScope] = Field(default=None, description="Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before.")
+    __properties: ClassVar[List[str]] = ["active_from", "active_to", "app_id", "content", "entity_extraction_overrides", "fact_extraction_overrides", "metadata", "persona_extraction_overrides", "relative_standing", "scope"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -108,6 +95,9 @@ class MemoryCreateMemoryRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of relative_standing
         if self.relative_standing:
             _dict['relative_standing'] = self.relative_standing.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of scope
+        if self.scope:
+            _dict['scope'] = self.scope.to_dict()
         return _dict
 
     @classmethod
@@ -122,18 +112,14 @@ class MemoryCreateMemoryRequest(BaseModel):
         _obj = cls.model_validate({
             "active_from": obj.get("active_from"),
             "active_to": obj.get("active_to"),
-            "actor_id": obj.get("actor_id"),
-            "actor_name": obj.get("actor_name"),
-            "actor_type": obj.get("actor_type"),
             "app_id": obj.get("app_id"),
             "content": obj.get("content"),
-            "conversation_id": obj.get("conversation_id"),
-            "conversation_message_id": obj.get("conversation_message_id"),
             "entity_extraction_overrides": CommondtoEntityExtractionConfig.from_dict(obj["entity_extraction_overrides"]) if obj.get("entity_extraction_overrides") is not None else None,
             "fact_extraction_overrides": CommondtoFactExtractionConfig.from_dict(obj["fact_extraction_overrides"]) if obj.get("fact_extraction_overrides") is not None else None,
             "metadata": obj.get("metadata"),
             "persona_extraction_overrides": CommondtoPersonaExtractionConfig.from_dict(obj["persona_extraction_overrides"]) if obj.get("persona_extraction_overrides") is not None else None,
-            "relative_standing": CommondtoRelativeStandingConfig.from_dict(obj["relative_standing"]) if obj.get("relative_standing") is not None else None
+            "relative_standing": CommondtoRelativeStandingConfig.from_dict(obj["relative_standing"]) if obj.get("relative_standing") is not None else None,
+            "scope": CommondtoMemoryScope.from_dict(obj["scope"]) if obj.get("scope") is not None else None
         })
         return _obj
 

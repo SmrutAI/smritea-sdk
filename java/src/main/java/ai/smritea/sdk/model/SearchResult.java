@@ -1,5 +1,6 @@
 package ai.smritea.sdk.model;
 
+import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResult;
 
@@ -47,6 +48,25 @@ public final class SearchResult {
   /** Returns the relevance score. */
   public Double getScore() {
     return score;
+  }
+
+  /**
+   * Returns the scope containing actor and conversation context, or null if not set. Access scope
+   * fields via the returned object:
+   *
+   * <pre>{@code
+   * MemoryScope scope = result.getScope();
+   * if (scope != null) {
+   *     String actorId = scope.getActorId();
+   * }
+   * }</pre>
+   */
+  public MemoryScope getScope() {
+    if (memory == null) {
+      return null;
+    }
+    CommondtoMemoryScope scope = memory.getScope();
+    return scope != null ? new MemoryScope(scope) : null;
   }
 
   /** Convenience delegate: returns the memory content. */

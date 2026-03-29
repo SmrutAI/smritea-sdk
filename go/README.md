@@ -52,11 +52,11 @@ func main() {
 
     // Store something about a user
     client.Add(ctx, "Alice is a vegetarian and loves hiking",
-        smritea.NewAddOptions().WithUserID("alice"))
+        smritea.NewAddOptions().WithActorID("alice").WithActorType("user"))
 
     // Retrieve it later
     results, _ := client.Search(ctx, "What are Alice's food preferences?",
-        smritea.NewSearchOptions().WithUserID("alice"))
+        smritea.NewSearchOptions().WithActorID("alice").WithActorType("user"))
     for _, r := range results {
         fmt.Printf("%v  %v\n", r.Score, r.Memory.Content)
     }
@@ -87,19 +87,17 @@ client := smritea.NewClient(smritea.ClientConfig{
 ```go
 memory, err := client.Add(ctx, "User prefers concise replies",
     smritea.NewAddOptions().
-        WithUserID("alice").                                           // shorthand for ActorID + ActorType="user"
+        WithActorID("alice").                                          // explicit actor ID
+        WithActorType("user").                                         // "user" | "agent" | "system"
         WithMetadata(map[string]interface{}{"source": "chat"}).       // optional
         WithConversationID("conv_123"))                                // optional
 fmt.Println(memory.Id) // mem_...
 ```
 
-`UserID` is a shorthand — sets `ActorID` and forces `ActorType="user"`. For agent or system memories use `ActorID` + `ActorType` directly.
-
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `content` | `string` | required | Memory text |
-| `UserID` | `*string` | `nil` | Shorthand: ActorID + ActorType="user" |
-| `ActorID` | `*string` | `nil` | Explicit actor ID |
+| `ActorID` | `*string` | `nil` | Actor ID |
 | `ActorType` | `*string` | `nil` | `"user"` \| `"agent"` \| `"system"` |
 | `ActorName` | `*string` | `nil` | Display name |
 | `Metadata` | `map[string]interface{}` | `nil` | Arbitrary key-value map |
@@ -112,7 +110,8 @@ fmt.Println(memory.Id) // mem_...
 ```go
 results, err := client.Search(ctx, "dietary restrictions",
     smritea.NewSearchOptions().
-        WithUserID("alice").
+        WithActorID("alice").
+        WithActorType("user").
         WithLimit(5).
         WithThreshold(0.7))          // min relevance score 0.0–1.0
 for _, r := range results {
@@ -125,7 +124,6 @@ Results are ordered by relevance (descending). Each result exposes `Score` (0.0�
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `query` | `string` | required | Search text |
-| `UserID` | `*string` | `nil` | Filter to this user's memories |
 | `ActorID` | `*string` | `nil` | Filter by actor ID |
 | `ActorType` | `*string` | `nil` | Filter by actor type |
 | `Limit` | `*int32` | app default | Max results to return |
@@ -161,7 +159,7 @@ err := client.Delete(ctx, "mem_abc123")
 
 ```go
 results, _ := client.Search(ctx, "",
-    smritea.NewSearchOptions().WithUserID("alice").WithLimit(100))
+    smritea.NewSearchOptions().WithActorID("alice").WithActorType("user").WithLimit(100))
 ```
 
 ---
@@ -177,7 +175,7 @@ import (
 )
 
 results, err := client.Search(ctx, "preferences",
-    smritea.NewSearchOptions().WithUserID("alice"))
+    smritea.NewSearchOptions().WithActorID("alice").WithActorType("user"))
 if err != nil {
     var authErr *smritea.SmriteaAuthError
     var rateLimitErr *smritea.SmriteaRateLimitError

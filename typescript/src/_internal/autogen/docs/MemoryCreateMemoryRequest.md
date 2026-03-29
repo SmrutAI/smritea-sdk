@@ -8,18 +8,14 @@ Name | Type
 ------------ | -------------
 `activeFrom` | string
 `activeTo` | string
-`actorId` | string
-`actorName` | string
-`actorType` | string
 `appId` | string
 `content` | string
-`conversationId` | string
-`conversationMessageId` | string
 `entityExtractionOverrides` | [CommondtoEntityExtractionConfig](CommondtoEntityExtractionConfig.md)
 `factExtractionOverrides` | [CommondtoFactExtractionConfig](CommondtoFactExtractionConfig.md)
 `metadata` | object
 `personaExtractionOverrides` | [CommondtoPersonaExtractionConfig](CommondtoPersonaExtractionConfig.md)
 `relativeStanding` | [CommondtoRelativeStandingConfig](CommondtoRelativeStandingConfig.md)
+`scope` | [CommondtoMemoryScope](CommondtoMemoryScope.md)
 
 ## Example
 
@@ -30,18 +26,14 @@ import type { MemoryCreateMemoryRequest } from ''
 const example = {
   "activeFrom": null,
   "activeTo": null,
-  "actorId": null,
-  "actorName": null,
-  "actorType": null,
   "appId": null,
   "content": null,
-  "conversationId": null,
-  "conversationMessageId": null,
   "entityExtractionOverrides": null,
   "factExtractionOverrides": null,
   "metadata": null,
   "personaExtractionOverrides": null,
   "relativeStanding": null,
+  "scope": null,
 } satisfies MemoryCreateMemoryRequest
 
 console.log(example)

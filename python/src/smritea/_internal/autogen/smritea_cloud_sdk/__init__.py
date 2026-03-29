@@ -32,6 +32,7 @@ __all__ = [
     "CommondtoAPIError",
     "CommondtoEntityExtractionConfig",
     "CommondtoFactExtractionConfig",
+    "CommondtoMemoryScope",
     "CommondtoPersonaDomainConfig",
     "CommondtoPersonaExtractionConfig",
     "CommondtoRelativeStandingConfig",
@@ -63,6 +64,7 @@ from smritea._internal.autogen.smritea_cloud_sdk.exceptions import ApiException 
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_api_error import CommondtoAPIError as CommondtoAPIError
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_entity_extraction_config import CommondtoEntityExtractionConfig as CommondtoEntityExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_fact_extraction_config import CommondtoFactExtractionConfig as CommondtoFactExtractionConfig
+from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_memory_scope import CommondtoMemoryScope as CommondtoMemoryScope
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_persona_domain_config import CommondtoPersonaDomainConfig as CommondtoPersonaDomainConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_persona_extraction_config import CommondtoPersonaExtractionConfig as CommondtoPersonaExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_relative_standing_config import CommondtoRelativeStandingConfig as CommondtoRelativeStandingConfig

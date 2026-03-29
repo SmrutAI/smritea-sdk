@@ -56,16 +56,16 @@ public class SmriteaClientTests : IDisposable
     }
 
     [Fact]
-    public async Task AddAsync_UserIdShorthand_SetsActorFields()
+    public async Task AddAsync_ActorIdWithUserType_SetsActorFields()
     {
         _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost()
-                .WithBody(b => b != null && b.Contains("\"actor_id\":\"user-42\"") && b.Contains("\"actor_type\":\"user\"")))
+                .WithBody(b => b != null && b.Contains("\"scope\"") && b.Contains("\"actor_id\":\"user-42\"") && b.Contains("\"actor_type\":\"user\"")))
             .RespondWith(Response.Create().WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
                 .WithBody("{\"id\":\"mem-2\",\"content\":\"content\",\"app_id\":\"app-test\"}"));
 
         using var client = CreateClient();
-        var mem = await client.AddAsync("content", new AddOptions().WithUserId("user-42"));
+        var mem = await client.AddAsync("content", new AddOptions().WithScope(new Scope().WithActorId("user-42").WithActorType("user")));
 
         Assert.NotNull(mem);
         Assert.Equal("mem-2", mem.Id);
@@ -75,14 +75,14 @@ public class SmriteaClientTests : IDisposable
     public async Task AddAsync_ExplicitActorIdAndType()
     {
         _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost()
-                .WithBody(b => b != null && b.Contains("\"actor_id\":\"agent-7\"") && b.Contains("\"actor_type\":\"agent\"")))
+                .WithBody(b => b != null && b.Contains("\"scope\"") && b.Contains("\"actor_id\":\"agent-7\"") && b.Contains("\"actor_type\":\"agent\"")))
             .RespondWith(Response.Create().WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
                 .WithBody("{\"id\":\"mem-3\",\"content\":\"content\",\"app_id\":\"app-test\"}"));
 
         using var client = CreateClient();
         var mem = await client.AddAsync("content",
-            new AddOptions().WithActorId("agent-7").WithActorType("agent"));
+            new AddOptions().WithScope(new Scope().WithActorId("agent-7").WithActorType("agent")));
 
         Assert.NotNull(mem);
         Assert.Equal("mem-3", mem.Id);

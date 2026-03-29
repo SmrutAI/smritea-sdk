@@ -27,7 +27,6 @@ class ModelEnumsRerankerType(str, Enum):
     """
     allowed enum values
     """
-    RerankerNone = 'none'
     RerankerRRF = 'rrf'
     RerankerMMR = 'mmr'
     RerankerTemporal = 'temporal'

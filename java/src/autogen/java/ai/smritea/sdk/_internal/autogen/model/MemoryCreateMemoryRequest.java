@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.HashMap;
 import ai.smritea.sdk._internal.autogen.model.CommondtoEntityExtractionConfig;
 import ai.smritea.sdk._internal.autogen.model.CommondtoFactExtractionConfig;
+import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
 import ai.smritea.sdk._internal.autogen.model.CommondtoPersonaExtractionConfig;
 import ai.smritea.sdk._internal.autogen.model.CommondtoRelativeStandingConfig;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -39,18 +40,14 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 @JsonPropertyOrder({
   MemoryCreateMemoryRequest.JSON_PROPERTY_ACTIVE_FROM,
   MemoryCreateMemoryRequest.JSON_PROPERTY_ACTIVE_TO,
-  MemoryCreateMemoryRequest.JSON_PROPERTY_ACTOR_ID,
-  MemoryCreateMemoryRequest.JSON_PROPERTY_ACTOR_NAME,
-  MemoryCreateMemoryRequest.JSON_PROPERTY_ACTOR_TYPE,
   MemoryCreateMemoryRequest.JSON_PROPERTY_APP_ID,
   MemoryCreateMemoryRequest.JSON_PROPERTY_CONTENT,
-  MemoryCreateMemoryRequest.JSON_PROPERTY_CONVERSATION_ID,
-  MemoryCreateMemoryRequest.JSON_PROPERTY_CONVERSATION_MESSAGE_ID,
   MemoryCreateMemoryRequest.JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES,
   MemoryCreateMemoryRequest.JSON_PROPERTY_FACT_EXTRACTION_OVERRIDES,
   MemoryCreateMemoryRequest.JSON_PROPERTY_METADATA,
   MemoryCreateMemoryRequest.JSON_PROPERTY_PERSONA_EXTRACTION_OVERRIDES,
-  MemoryCreateMemoryRequest.JSON_PROPERTY_RELATIVE_STANDING
+  MemoryCreateMemoryRequest.JSON_PROPERTY_RELATIVE_STANDING,
+  MemoryCreateMemoryRequest.JSON_PROPERTY_SCOPE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class MemoryCreateMemoryRequest {
@@ -62,55 +59,6 @@ public class MemoryCreateMemoryRequest {
   @javax.annotation.Nullable
   private String activeTo;
 
-  public static final String JSON_PROPERTY_ACTOR_ID = "actor_id";
-  @javax.annotation.Nullable
-  private String actorId;
-
-  public static final String JSON_PROPERTY_ACTOR_NAME = "actor_name";
-  @javax.annotation.Nullable
-  private String actorName;
-
-  /**
-   * ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit for conversation-level or app-level memories.
-   */
-  public enum ActorTypeEnum {
-    USER(String.valueOf("user")),
-    
-    AGENT(String.valueOf("agent")),
-    
-    SYSTEM(String.valueOf("system"));
-
-    private String value;
-
-    ActorTypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ActorTypeEnum fromValue(String value) {
-      for (ActorTypeEnum b : ActorTypeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  public static final String JSON_PROPERTY_ACTOR_TYPE = "actor_type";
-  @javax.annotation.Nullable
-  private ActorTypeEnum actorType;
-
   public static final String JSON_PROPERTY_APP_ID = "app_id";
   @javax.annotation.Nullable
   private String appId;
@@ -118,14 +66,6 @@ public class MemoryCreateMemoryRequest {
   public static final String JSON_PROPERTY_CONTENT = "content";
   @javax.annotation.Nullable
   private String content;
-
-  public static final String JSON_PROPERTY_CONVERSATION_ID = "conversation_id";
-  @javax.annotation.Nullable
-  private String conversationId;
-
-  public static final String JSON_PROPERTY_CONVERSATION_MESSAGE_ID = "conversation_message_id";
-  @javax.annotation.Nullable
-  private String conversationMessageId;
 
   public static final String JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES = "entity_extraction_overrides";
   @javax.annotation.Nullable
@@ -146,6 +86,10 @@ public class MemoryCreateMemoryRequest {
   public static final String JSON_PROPERTY_RELATIVE_STANDING = "relative_standing";
   @javax.annotation.Nullable
   private CommondtoRelativeStandingConfig relativeStanding;
+
+  public static final String JSON_PROPERTY_SCOPE = "scope";
+  @javax.annotation.Nullable
+  private CommondtoMemoryScope scope;
 
   public MemoryCreateMemoryRequest() { 
   }
@@ -198,78 +142,6 @@ public class MemoryCreateMemoryRequest {
   }
 
 
-  public MemoryCreateMemoryRequest actorId(@javax.annotation.Nullable String actorId) {
-    this.actorId = actorId;
-    return this;
-  }
-
-  /**
-   * ActorID is the actor identifier (conditionally required with ActorType). Required for actor-level memories; omit for conversation-level or app-level memories.
-   * @return actorId
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getActorId() {
-    return actorId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setActorId(@javax.annotation.Nullable String actorId) {
-    this.actorId = actorId;
-  }
-
-
-  public MemoryCreateMemoryRequest actorName(@javax.annotation.Nullable String actorName) {
-    this.actorName = actorName;
-    return this;
-  }
-
-  /**
-   * ActorName is the name of the actor (optional, max 255 chars)
-   * @return actorName
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_NAME, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getActorName() {
-    return actorName;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_NAME, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setActorName(@javax.annotation.Nullable String actorName) {
-    this.actorName = actorName;
-  }
-
-
-  public MemoryCreateMemoryRequest actorType(@javax.annotation.Nullable ActorTypeEnum actorType) {
-    this.actorType = actorType;
-    return this;
-  }
-
-  /**
-   * ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit for conversation-level or app-level memories.
-   * @return actorType
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ActorTypeEnum getActorType() {
-    return actorType;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setActorType(@javax.annotation.Nullable ActorTypeEnum actorType) {
-    this.actorType = actorType;
-  }
-
-
   public MemoryCreateMemoryRequest appId(@javax.annotation.Nullable String appId) {
     this.appId = appId;
     return this;
@@ -315,54 +187,6 @@ public class MemoryCreateMemoryRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setContent(@javax.annotation.Nullable String content) {
     this.content = content;
-  }
-
-
-  public MemoryCreateMemoryRequest conversationId(@javax.annotation.Nullable String conversationId) {
-    this.conversationId = conversationId;
-    return this;
-  }
-
-  /**
-   * ConversationID is the conversation identifier (optional)
-   * @return conversationId
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getConversationId() {
-    return conversationId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setConversationId(@javax.annotation.Nullable String conversationId) {
-    this.conversationId = conversationId;
-  }
-
-
-  public MemoryCreateMemoryRequest conversationMessageId(@javax.annotation.Nullable String conversationMessageId) {
-    this.conversationMessageId = conversationMessageId;
-    return this;
-  }
-
-  /**
-   * ConversationMessageID is the conversation message identifier (optional)
-   * @return conversationMessageId
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_MESSAGE_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getConversationMessageId() {
-    return conversationMessageId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_MESSAGE_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setConversationMessageId(@javax.annotation.Nullable String conversationMessageId) {
-    this.conversationMessageId = conversationMessageId;
   }
 
 
@@ -486,6 +310,30 @@ public class MemoryCreateMemoryRequest {
   }
 
 
+  public MemoryCreateMemoryRequest scope(@javax.annotation.Nullable CommondtoMemoryScope scope) {
+    this.scope = scope;
+    return this;
+  }
+
+  /**
+   * Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before.
+   * @return scope
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SCOPE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public CommondtoMemoryScope getScope() {
+    return scope;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SCOPE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setScope(@javax.annotation.Nullable CommondtoMemoryScope scope) {
+    this.scope = scope;
+  }
+
+
   /**
    * Return true if this memory.CreateMemoryRequest object is equal to o.
    */
@@ -500,23 +348,19 @@ public class MemoryCreateMemoryRequest {
     MemoryCreateMemoryRequest memoryCreateMemoryRequest = (MemoryCreateMemoryRequest) o;
     return Objects.equals(this.activeFrom, memoryCreateMemoryRequest.activeFrom) &&
         Objects.equals(this.activeTo, memoryCreateMemoryRequest.activeTo) &&
-        Objects.equals(this.actorId, memoryCreateMemoryRequest.actorId) &&
-        Objects.equals(this.actorName, memoryCreateMemoryRequest.actorName) &&
-        Objects.equals(this.actorType, memoryCreateMemoryRequest.actorType) &&
         Objects.equals(this.appId, memoryCreateMemoryRequest.appId) &&
         Objects.equals(this.content, memoryCreateMemoryRequest.content) &&
-        Objects.equals(this.conversationId, memoryCreateMemoryRequest.conversationId) &&
-        Objects.equals(this.conversationMessageId, memoryCreateMemoryRequest.conversationMessageId) &&
         Objects.equals(this.entityExtractionOverrides, memoryCreateMemoryRequest.entityExtractionOverrides) &&
         Objects.equals(this.factExtractionOverrides, memoryCreateMemoryRequest.factExtractionOverrides) &&
         Objects.equals(this.metadata, memoryCreateMemoryRequest.metadata) &&
         Objects.equals(this.personaExtractionOverrides, memoryCreateMemoryRequest.personaExtractionOverrides) &&
-        Objects.equals(this.relativeStanding, memoryCreateMemoryRequest.relativeStanding);
+        Objects.equals(this.relativeStanding, memoryCreateMemoryRequest.relativeStanding) &&
+        Objects.equals(this.scope, memoryCreateMemoryRequest.scope);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(activeFrom, activeTo, actorId, actorName, actorType, appId, content, conversationId, conversationMessageId, entityExtractionOverrides, factExtractionOverrides, metadata, personaExtractionOverrides, relativeStanding);
+    return Objects.hash(activeFrom, activeTo, appId, content, entityExtractionOverrides, factExtractionOverrides, metadata, personaExtractionOverrides, relativeStanding, scope);
   }
 
   @Override
@@ -525,18 +369,14 @@ public class MemoryCreateMemoryRequest {
     sb.append("class MemoryCreateMemoryRequest {\n");
     sb.append("    activeFrom: ").append(toIndentedString(activeFrom)).append("\n");
     sb.append("    activeTo: ").append(toIndentedString(activeTo)).append("\n");
-    sb.append("    actorId: ").append(toIndentedString(actorId)).append("\n");
-    sb.append("    actorName: ").append(toIndentedString(actorName)).append("\n");
-    sb.append("    actorType: ").append(toIndentedString(actorType)).append("\n");
     sb.append("    appId: ").append(toIndentedString(appId)).append("\n");
     sb.append("    content: ").append(toIndentedString(content)).append("\n");
-    sb.append("    conversationId: ").append(toIndentedString(conversationId)).append("\n");
-    sb.append("    conversationMessageId: ").append(toIndentedString(conversationMessageId)).append("\n");
     sb.append("    entityExtractionOverrides: ").append(toIndentedString(entityExtractionOverrides)).append("\n");
     sb.append("    factExtractionOverrides: ").append(toIndentedString(factExtractionOverrides)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("    personaExtractionOverrides: ").append(toIndentedString(personaExtractionOverrides)).append("\n");
     sb.append("    relativeStanding: ").append(toIndentedString(relativeStanding)).append("\n");
+    sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -594,21 +434,6 @@ public class MemoryCreateMemoryRequest {
       joiner.add(String.format(java.util.Locale.ROOT, "%sactive_to%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActiveTo()))));
     }
 
-    // add `actor_id` to the URL query string
-    if (getActorId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorId()))));
-    }
-
-    // add `actor_name` to the URL query string
-    if (getActorName() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_name%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorName()))));
-    }
-
-    // add `actor_type` to the URL query string
-    if (getActorType() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_type%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorType()))));
-    }
-
     // add `app_id` to the URL query string
     if (getAppId() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%sapp_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getAppId()))));
@@ -617,16 +442,6 @@ public class MemoryCreateMemoryRequest {
     // add `content` to the URL query string
     if (getContent() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%scontent%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getContent()))));
-    }
-
-    // add `conversation_id` to the URL query string
-    if (getConversationId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationId()))));
-    }
-
-    // add `conversation_message_id` to the URL query string
-    if (getConversationMessageId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_message_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationMessageId()))));
     }
 
     // add `entity_extraction_overrides` to the URL query string
@@ -652,6 +467,11 @@ public class MemoryCreateMemoryRequest {
     // add `relative_standing` to the URL query string
     if (getRelativeStanding() != null) {
       joiner.add(getRelativeStanding().toUrlQueryString(prefix + "relative_standing" + suffix));
+    }
+
+    // add `scope` to the URL query string
+    if (getScope() != null) {
+      joiner.add(getScope().toUrlQueryString(prefix + "scope" + suffix));
     }
 
     return joiner.toString();

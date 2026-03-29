@@ -4,6 +4,7 @@ apis/index.ts
 docs/CommondtoAPIError.md
 docs/CommondtoEntityExtractionConfig.md
 docs/CommondtoFactExtractionConfig.md
+docs/CommondtoMemoryScope.md
 docs/CommondtoPersonaDomainConfig.md
 docs/CommondtoPersonaExtractionConfig.md
 docs/CommondtoRelativeStandingConfig.md
@@ -20,6 +21,7 @@ index.ts
 models/CommondtoAPIError.ts
 models/CommondtoEntityExtractionConfig.ts
 models/CommondtoFactExtractionConfig.ts
+models/CommondtoMemoryScope.ts
 models/CommondtoPersonaDomainConfig.ts
 models/CommondtoPersonaExtractionConfig.ts
 models/CommondtoRelativeStandingConfig.ts

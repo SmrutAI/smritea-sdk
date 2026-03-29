@@ -18,8 +18,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_memory_scope import CommondtoMemoryScope
 from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_reranker_type import ModelEnumsRerankerType
 from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_search_method import ModelEnumsSearchMethod
 from typing import Optional, Set
@@ -29,30 +30,18 @@ class MemorySearchMemoryRequest(BaseModel):
     """
     MemorySearchMemoryRequest
     """ # noqa: E501
-    actor_id: Optional[StrictStr] = None
-    actor_type: Optional[StrictStr] = Field(default=None, description="ActorType filters search to messages from a specific actor type (optional). Values: \"user\", \"agent\", \"system\"")
     app_id: StrictStr
-    conversation_id: Optional[StrictStr] = Field(default=None, description="ConversationID filters search to a specific conversation (optional). If omitted, searches across all actor's memories.")
     from_time: Optional[StrictStr] = Field(default=None, description="FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime.")
     graph_depth: Optional[StrictInt] = Field(default=None, description="0=use app config, 1-5=override traversal depth")
     limit: Optional[StrictInt] = None
     method: Optional[ModelEnumsSearchMethod] = None
     query: StrictStr
     reranker_type: Optional[ModelEnumsRerankerType] = Field(default=None, description="RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.")
+    scope: Optional[CommondtoMemoryScope] = Field(default=None, description="Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \"no filter\" (searches across all).")
     threshold: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="0=no filtering (pipeline uses RRF scores, not cosine similarity)")
     to_time: Optional[StrictStr] = Field(default=None, description="ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.")
     valid_at: Optional[StrictStr] = Field(default=None, description="ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from <= ValidAt AND (active_to is null OR active_to >= ValidAt) Mutually exclusive with FromTime/ToTime.")
-    __properties: ClassVar[List[str]] = ["actor_id", "actor_type", "app_id", "conversation_id", "from_time", "graph_depth", "limit", "method", "query", "reranker_type", "threshold", "to_time", "valid_at"]
-
-    @field_validator('actor_type')
-    def actor_type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['user', 'agent', 'system']):
-            raise ValueError("must be one of enum values ('user', 'agent', 'system')")
-        return value
+    __properties: ClassVar[List[str]] = ["app_id", "from_time", "graph_depth", "limit", "method", "query", "reranker_type", "scope", "threshold", "to_time", "valid_at"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -93,6 +82,9 @@ class MemorySearchMemoryRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of scope
+        if self.scope:
+            _dict['scope'] = self.scope.to_dict()
         return _dict
 
     @classmethod
@@ -105,16 +97,14 @@ class MemorySearchMemoryRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "actor_id": obj.get("actor_id"),
-            "actor_type": obj.get("actor_type"),
             "app_id": obj.get("app_id"),
-            "conversation_id": obj.get("conversation_id"),
             "from_time": obj.get("from_time"),
             "graph_depth": obj.get("graph_depth"),
             "limit": obj.get("limit"),
             "method": obj.get("method"),
             "query": obj.get("query"),
             "reranker_type": obj.get("reranker_type"),
+            "scope": CommondtoMemoryScope.from_dict(obj["scope"]) if obj.get("scope") is not None else None,
             "threshold": obj.get("threshold"),
             "to_time": obj.get("to_time"),
             "valid_at": obj.get("valid_at")

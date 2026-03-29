@@ -58,11 +58,11 @@ SmriteaClient client = new SmriteaClient(
 
 // Store something about a user
 Memory mem = client.add("Alice is a vegetarian and loves hiking",
-    new AddOptions().withUserId("alice"));
+    new AddOptions().withActorId("alice").withActorType("user"));
 
 // Retrieve it later
 List<SearchResult> results = client.search("What are Alice's food preferences?",
-    new SearchOptions().withUserId("alice"));
+    new SearchOptions().withActorId("alice").withActorType("user"));
 for (SearchResult r : results) {
     System.out.printf("%.2f  %s%n", r.getScore(), r.getContent());
 }
@@ -99,19 +99,17 @@ All methods are **synchronous** and return values directly. For async use, wrap 
 ```java
 Memory memory = client.add("User prefers concise replies",
     new AddOptions()
-        .withUserId("alice")                                    // shorthand for actorId + actorType="user"
+        .withActorId("alice")                                   // explicit actor ID
+        .withActorType("user")                                  // "user" | "agent" | "system"
         .withMetadata(Map.of("source", "chat"))                 // optional
         .withConversationId("conv_123"));                       // optional
 System.out.println(memory.getId()); // mem_...
 ```
 
-`userId` is a shorthand — sets `actorId` and forces `actorType="user"`. For agent or system memories use `actorId` + `actorType` directly.
-
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `content` | `String` | required | Memory text |
-| `withUserId(v)` | `String` | `null` | Shorthand: actorId + actorType="user" |
-| `withActorId(v)` | `String` | `null` | Explicit actor ID |
+| `withActorId(v)` | `String` | `null` | Actor ID |
 | `withActorType(v)` | `String` | `null` | `"user"` \| `"agent"` \| `"system"` |
 | `withActorName(v)` | `String` | `null` | Display name |
 | `withMetadata(v)` | `Map<String, Object>` | `null` | Arbitrary key-value map |
@@ -124,7 +122,8 @@ System.out.println(memory.getId()); // mem_...
 ```java
 List<SearchResult> results = client.search("dietary restrictions",
     new SearchOptions()
-        .withUserId("alice")
+        .withActorId("alice")
+        .withActorType("user")
         .withLimit(5)
         .withThreshold(0.7f));           // min relevance score 0.0–1.0
 for (SearchResult r : results) {
@@ -137,7 +136,6 @@ Results are ordered by relevance (descending). Each result exposes `getScore()` 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `query` | `String` | required | Search text |
-| `withUserId(v)` | `String` | `null` | Filter to this user's memories |
 | `withActorId(v)` | `String` | `null` | Filter by actor ID |
 | `withActorType(v)` | `String` | `null` | Filter by actor type |
 | `withLimit(v)` | `Integer` | app default | Max results to return |
@@ -173,7 +171,8 @@ client.delete("mem_abc123");
 
 ```java
 List<SearchResult> results = client.search("", new SearchOptions()
-    .withUserId("alice")
+    .withActorId("alice")
+    .withActorType("user")
     .withLimit(100));
 ```
 
@@ -189,7 +188,7 @@ import ai.smritea.sdk.errors.SmriteaError;
 
 try {
     List<SearchResult> results = client.search("preferences",
-        new SearchOptions().withUserId("alice"));
+        new SearchOptions().withActorId("alice").withActorType("user"));
 } catch (SmriteaAuthError e) {
     System.out.println("Check your API key");
 } catch (SmriteaRateLimitError e) {

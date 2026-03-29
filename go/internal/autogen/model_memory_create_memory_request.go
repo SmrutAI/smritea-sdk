@@ -24,20 +24,10 @@ type MemoryCreateMemoryRequest struct {
 	ActiveFrom *string `json:"active_from,omitempty"`
 	// ActiveTo is when this memory stops being valid (optional, nil = still valid)
 	ActiveTo *string `json:"active_to,omitempty"`
-	// ActorID is the actor identifier (conditionally required with ActorType). Required for actor-level memories; omit for conversation-level or app-level memories.
-	ActorId *string `json:"actor_id,omitempty"`
-	// ActorName is the name of the actor (optional, max 255 chars)
-	ActorName *string `json:"actor_name,omitempty"`
-	// ActorType is the type of the actor (user|agent|system). Required when ActorID is present; omit for conversation-level or app-level memories.
-	ActorType *string `json:"actor_type,omitempty"`
 	// AppID is the application identifier (required)
 	AppId *string `json:"app_id,omitempty"`
 	// Content is the memory content (required, min 1 char)
 	Content *string `json:"content,omitempty"`
-	// ConversationID is the conversation identifier (optional)
-	ConversationId *string `json:"conversation_id,omitempty"`
-	// ConversationMessageID is the conversation message identifier (optional)
-	ConversationMessageId *string `json:"conversation_message_id,omitempty"`
 	// EntityExtractionOverrides overrides App-level entity extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.
 	EntityExtractionOverrides *CommondtoEntityExtractionConfig `json:"entity_extraction_overrides,omitempty"`
 	// FactExtractionOverrides overrides App-level fact extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.
@@ -48,6 +38,8 @@ type MemoryCreateMemoryRequest struct {
 	PersonaExtractionOverrides *CommondtoPersonaExtractionConfig `json:"persona_extraction_overrides,omitempty"`
 	// RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are applied (importance=1.0, decay_factor=0.2, decay_function=exponential).
 	RelativeStanding *CommondtoRelativeStandingConfig `json:"relative_standing,omitempty"`
+	// Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before.
+	Scope *CommondtoMemoryScope `json:"scope,omitempty"`
 }
 
 // NewMemoryCreateMemoryRequest instantiates a new MemoryCreateMemoryRequest object
@@ -131,102 +123,6 @@ func (o *MemoryCreateMemoryRequest) SetActiveTo(v string) {
 	o.ActiveTo = &v
 }
 
-// GetActorId returns the ActorId field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryRequest) GetActorId() string {
-	if o == nil || IsNil(o.ActorId) {
-		var ret string
-		return ret
-	}
-	return *o.ActorId
-}
-
-// GetActorIdOk returns a tuple with the ActorId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryRequest) GetActorIdOk() (*string, bool) {
-	if o == nil || IsNil(o.ActorId) {
-		return nil, false
-	}
-	return o.ActorId, true
-}
-
-// HasActorId returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryRequest) HasActorId() bool {
-	if o != nil && !IsNil(o.ActorId) {
-		return true
-	}
-
-	return false
-}
-
-// SetActorId gets a reference to the given string and assigns it to the ActorId field.
-func (o *MemoryCreateMemoryRequest) SetActorId(v string) {
-	o.ActorId = &v
-}
-
-// GetActorName returns the ActorName field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryRequest) GetActorName() string {
-	if o == nil || IsNil(o.ActorName) {
-		var ret string
-		return ret
-	}
-	return *o.ActorName
-}
-
-// GetActorNameOk returns a tuple with the ActorName field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryRequest) GetActorNameOk() (*string, bool) {
-	if o == nil || IsNil(o.ActorName) {
-		return nil, false
-	}
-	return o.ActorName, true
-}
-
-// HasActorName returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryRequest) HasActorName() bool {
-	if o != nil && !IsNil(o.ActorName) {
-		return true
-	}
-
-	return false
-}
-
-// SetActorName gets a reference to the given string and assigns it to the ActorName field.
-func (o *MemoryCreateMemoryRequest) SetActorName(v string) {
-	o.ActorName = &v
-}
-
-// GetActorType returns the ActorType field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryRequest) GetActorType() string {
-	if o == nil || IsNil(o.ActorType) {
-		var ret string
-		return ret
-	}
-	return *o.ActorType
-}
-
-// GetActorTypeOk returns a tuple with the ActorType field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryRequest) GetActorTypeOk() (*string, bool) {
-	if o == nil || IsNil(o.ActorType) {
-		return nil, false
-	}
-	return o.ActorType, true
-}
-
-// HasActorType returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryRequest) HasActorType() bool {
-	if o != nil && !IsNil(o.ActorType) {
-		return true
-	}
-
-	return false
-}
-
-// SetActorType gets a reference to the given string and assigns it to the ActorType field.
-func (o *MemoryCreateMemoryRequest) SetActorType(v string) {
-	o.ActorType = &v
-}
-
 // GetAppId returns the AppId field value if set, zero value otherwise.
 func (o *MemoryCreateMemoryRequest) GetAppId() string {
 	if o == nil || IsNil(o.AppId) {
@@ -289,70 +185,6 @@ func (o *MemoryCreateMemoryRequest) HasContent() bool {
 // SetContent gets a reference to the given string and assigns it to the Content field.
 func (o *MemoryCreateMemoryRequest) SetContent(v string) {
 	o.Content = &v
-}
-
-// GetConversationId returns the ConversationId field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryRequest) GetConversationId() string {
-	if o == nil || IsNil(o.ConversationId) {
-		var ret string
-		return ret
-	}
-	return *o.ConversationId
-}
-
-// GetConversationIdOk returns a tuple with the ConversationId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryRequest) GetConversationIdOk() (*string, bool) {
-	if o == nil || IsNil(o.ConversationId) {
-		return nil, false
-	}
-	return o.ConversationId, true
-}
-
-// HasConversationId returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryRequest) HasConversationId() bool {
-	if o != nil && !IsNil(o.ConversationId) {
-		return true
-	}
-
-	return false
-}
-
-// SetConversationId gets a reference to the given string and assigns it to the ConversationId field.
-func (o *MemoryCreateMemoryRequest) SetConversationId(v string) {
-	o.ConversationId = &v
-}
-
-// GetConversationMessageId returns the ConversationMessageId field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryRequest) GetConversationMessageId() string {
-	if o == nil || IsNil(o.ConversationMessageId) {
-		var ret string
-		return ret
-	}
-	return *o.ConversationMessageId
-}
-
-// GetConversationMessageIdOk returns a tuple with the ConversationMessageId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryRequest) GetConversationMessageIdOk() (*string, bool) {
-	if o == nil || IsNil(o.ConversationMessageId) {
-		return nil, false
-	}
-	return o.ConversationMessageId, true
-}
-
-// HasConversationMessageId returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryRequest) HasConversationMessageId() bool {
-	if o != nil && !IsNil(o.ConversationMessageId) {
-		return true
-	}
-
-	return false
-}
-
-// SetConversationMessageId gets a reference to the given string and assigns it to the ConversationMessageId field.
-func (o *MemoryCreateMemoryRequest) SetConversationMessageId(v string) {
-	o.ConversationMessageId = &v
 }
 
 // GetEntityExtractionOverrides returns the EntityExtractionOverrides field value if set, zero value otherwise.
@@ -515,6 +347,38 @@ func (o *MemoryCreateMemoryRequest) SetRelativeStanding(v CommondtoRelativeStand
 	o.RelativeStanding = &v
 }
 
+// GetScope returns the Scope field value if set, zero value otherwise.
+func (o *MemoryCreateMemoryRequest) GetScope() CommondtoMemoryScope {
+	if o == nil || IsNil(o.Scope) {
+		var ret CommondtoMemoryScope
+		return ret
+	}
+	return *o.Scope
+}
+
+// GetScopeOk returns a tuple with the Scope field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MemoryCreateMemoryRequest) GetScopeOk() (*CommondtoMemoryScope, bool) {
+	if o == nil || IsNil(o.Scope) {
+		return nil, false
+	}
+	return o.Scope, true
+}
+
+// HasScope returns a boolean if a field has been set.
+func (o *MemoryCreateMemoryRequest) HasScope() bool {
+	if o != nil && !IsNil(o.Scope) {
+		return true
+	}
+
+	return false
+}
+
+// SetScope gets a reference to the given CommondtoMemoryScope and assigns it to the Scope field.
+func (o *MemoryCreateMemoryRequest) SetScope(v CommondtoMemoryScope) {
+	o.Scope = &v
+}
+
 func (o MemoryCreateMemoryRequest) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -531,26 +395,11 @@ func (o MemoryCreateMemoryRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ActiveTo) {
 		toSerialize["active_to"] = o.ActiveTo
 	}
-	if !IsNil(o.ActorId) {
-		toSerialize["actor_id"] = o.ActorId
-	}
-	if !IsNil(o.ActorName) {
-		toSerialize["actor_name"] = o.ActorName
-	}
-	if !IsNil(o.ActorType) {
-		toSerialize["actor_type"] = o.ActorType
-	}
 	if !IsNil(o.AppId) {
 		toSerialize["app_id"] = o.AppId
 	}
 	if !IsNil(o.Content) {
 		toSerialize["content"] = o.Content
-	}
-	if !IsNil(o.ConversationId) {
-		toSerialize["conversation_id"] = o.ConversationId
-	}
-	if !IsNil(o.ConversationMessageId) {
-		toSerialize["conversation_message_id"] = o.ConversationMessageId
 	}
 	if !IsNil(o.EntityExtractionOverrides) {
 		toSerialize["entity_extraction_overrides"] = o.EntityExtractionOverrides
@@ -566,6 +415,9 @@ func (o MemoryCreateMemoryRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.RelativeStanding) {
 		toSerialize["relative_standing"] = o.RelativeStanding
+	}
+	if !IsNil(o.Scope) {
+		toSerialize["scope"] = o.Scope
 	}
 	return toSerialize, nil
 }

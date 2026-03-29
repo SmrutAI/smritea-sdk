@@ -41,10 +41,10 @@ client = SmriteaClient(
 )
 
 # Store something about a user
-client.add("Alice is a vegetarian and loves hiking", user_id="alice")
+client.add("Alice is a vegetarian and loves hiking", actor_id="alice", actor_type="user")
 
 # Retrieve it later in a different session
-results = client.search("What are Alice's food preferences?", user_id="alice")
+results = client.search("What are Alice's food preferences?", actor_id="alice", actor_type="user")
 for r in results:
     print(f"{r.score:.2f}  {r.content}")
 ```
@@ -73,21 +73,19 @@ client = SmriteaClient(
 ```python
 memory = client.add(
     "User prefers concise replies",
-    user_id="alice",               # shorthand for actor_id + actor_type="user"
+    actor_id="alice",              # explicit actor ID
+    actor_type="user",             # "user" | "agent" | "system"
     metadata={"source": "chat"},   # optional
     conversation_id="conv_123",    # optional
 )
 print(memory.id)  # mem_...
 ```
 
-`user_id` is a shorthand — sets `actor_id` and forces `actor_type="user"`. For agent or system memories use `actor_id` + `actor_type` directly.
-
 | Parameter | Default | Description |
 |---|---|---|
 | `content` | required | Memory text |
-| `user_id` | `None` | Shorthand: actor_id + actor_type="user" |
-| `actor_id` | `None` | Explicit actor ID |
-| `actor_type` | `"user"` | `"user"` \| `"agent"` \| `"system"` |
+| `actor_id` | `None` | Actor ID |
+| `actor_type` | `None` | `"user"` \| `"agent"` \| `"system"` |
 | `actor_name` | `None` | Display name |
 | `metadata` | `None` | Arbitrary key-value dict |
 | `conversation_id` | `None` | Conversation context |
@@ -99,7 +97,8 @@ print(memory.id)  # mem_...
 ```python
 results = client.search(
     "dietary restrictions",
-    user_id="alice",
+    actor_id="alice",
+    actor_type="user",
     limit=5,
     threshold=0.7,          # min relevance score 0.0–1.0
 )
@@ -112,7 +111,6 @@ Results are ordered by relevance (descending). Each result exposes `score` (0.0�
 | Parameter | Default | Description |
 |---|---|---|
 | `query` | required | Search text |
-| `user_id` | `None` | Filter to this user's memories |
 | `actor_id` | `None` | Filter by actor ID |
 | `actor_type` | `None` | Filter by actor type |
 | `limit` | app default | Max results to return |
@@ -147,7 +145,7 @@ client.delete("mem_abc123")
 > Use `search()` with a broad query as a workaround:
 
 ```python
-results = client.search("", user_id="alice", limit=100)
+results = client.search("", actor_id="alice", actor_type="user", limit=100)
 ```
 
 ---
@@ -166,7 +164,7 @@ from smritea import (
 )
 
 try:
-    results = client.search("preferences", user_id="alice")
+    results = client.search("preferences", actor_id="alice", actor_type="user")
 except SmriteaAuthError:
     print("Check your API key")
 except SmriteaRateLimitError as e:

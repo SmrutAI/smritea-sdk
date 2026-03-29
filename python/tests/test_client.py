@@ -17,6 +17,7 @@ from smritea.exceptions import (
     SmriteaRateLimitError,
     SmriteaValidationError,
 )
+from smritea.types import MemoryScope
 from smritea._internal.autogen.smritea_cloud_sdk.exceptions import ApiException
 
 
@@ -34,59 +35,42 @@ def client(mock_api):
 
 
 # ==============================================================================
-# Test 1: user_id convenience mapping for add()
+# Test 1: actor scope for add()
 # ==============================================================================
 
 
-class TestAddUserIdConvenience:
-    """Test user_id convenience parameter for client.add()."""
+class TestAddActorScope:
+    """Test actor_id/actor_type scope parameters for client.add()."""
 
-    def test_add_with_user_id(self, client, mock_api):
-        """When user_id='alice' is passed, actor_id='alice' and actor_type='user'."""
+    def test_add_with_actor_id_and_type_user(self, client, mock_api):
+        """When actor_id='alice' and actor_type='user' are passed, scope is built correctly."""
         mock_memory = MagicMock()
         mock_api.create_memory.return_value = mock_memory
 
-        result = client.add('test content', user_id='alice')
+        result = client.add('test content', scope=MemoryScope(actor_id='alice', actor_type='user'))
 
         assert result is mock_memory
         mock_api.create_memory.assert_called_once()
         call_args = mock_api.create_memory.call_args[0][0]
-        assert call_args.actor_id == 'alice'
-        assert call_args.actor_type == 'user'
+        assert call_args.scope.actor_id == 'alice'
+        assert call_args.scope.actor_type == 'user'
         assert call_args.content == 'test content'
         assert call_args.app_id == 'app-123'
 
     def test_add_with_explicit_actor_id_and_type(self, client, mock_api):
-        """When actor_id and actor_type are passed without user_id, they pass through unchanged."""
+        """When actor_id and actor_type are passed, they pass through unchanged."""
         mock_memory = MagicMock()
         mock_api.create_memory.return_value = mock_memory
 
         result = client.add(
             'test content',
-            actor_id='bot-1',
-            actor_type='agent',
+            scope=MemoryScope(actor_id='bot-1', actor_type='agent'),
         )
 
         assert result is mock_memory
         call_args = mock_api.create_memory.call_args[0][0]
-        assert call_args.actor_id == 'bot-1'
-        assert call_args.actor_type == 'agent'
-
-    def test_add_user_id_overrides_actor_id(self, client, mock_api):
-        """user_id takes precedence and overrides actor_id."""
-        mock_memory = MagicMock()
-        mock_api.create_memory.return_value = mock_memory
-
-        result = client.add(
-            'test content',
-            user_id='alice',
-            actor_id='ignored-id',
-            actor_type='ignored-type',
-        )
-
-        call_args = mock_api.create_memory.call_args[0][0]
-        assert call_args.actor_id == 'alice'
-        assert call_args.actor_type == 'user'
+        assert call_args.scope.actor_id == 'bot-1'
+        assert call_args.scope.actor_type == 'agent'
 
     def test_add_with_all_parameters(self, client, mock_api):
         """Test add() with all optional parameters."""
@@ -95,76 +79,61 @@ class TestAddUserIdConvenience:
 
         result = client.add(
             'test content',
-            user_id='alice',
-            actor_name='Alice Smith',
+            scope=MemoryScope(
+                actor_id='alice',
+                actor_type='user',
+                actor_name='Alice Smith',
+                conversation_id='conv-123',
+            ),
             metadata={'key': 'value'},
-            conversation_id='conv-123',
         )
 
         assert result is mock_memory
         call_args = mock_api.create_memory.call_args[0][0]
-        assert call_args.actor_id == 'alice'
-        assert call_args.actor_type == 'user'
-        assert call_args.actor_name == 'Alice Smith'
+        assert call_args.scope.actor_id == 'alice'
+        assert call_args.scope.actor_type == 'user'
+        assert call_args.scope.actor_name == 'Alice Smith'
         assert call_args.metadata == {'key': 'value'}
-        assert call_args.conversation_id == 'conv-123'
+        assert call_args.scope.conversation_id == 'conv-123'
 
 
 # ==============================================================================
-# Test 2: user_id convenience mapping for search()
+# Test 2: actor scope for search()
 # ==============================================================================
 
 
-class TestSearchUserIdConvenience:
-    """Test user_id convenience parameter for client.search()."""
+class TestSearchActorScope:
+    """Test actor_id/actor_type scope parameters for client.search()."""
 
-    def test_search_with_user_id(self, client, mock_api):
-        """When user_id='alice' is passed, actor_id='alice' and actor_type='user'."""
+    def test_search_with_actor_id_and_type_user(self, client, mock_api):
+        """When actor_id='alice' and actor_type='user' are passed, scope is built correctly."""
         mock_response = MagicMock()
         mock_response.memories = []
         mock_api.search_memories.return_value = mock_response
 
-        result = client.search('query', user_id='alice')
+        result = client.search('query', scope=MemoryScope(actor_id='alice', actor_type='user'))
 
         assert result == []
         mock_api.search_memories.assert_called_once()
         call_args = mock_api.search_memories.call_args[0][0]
-        assert call_args.actor_id == 'alice'
-        assert call_args.actor_type == 'user'
+        assert call_args.scope.actor_id == 'alice'
+        assert call_args.scope.actor_type == 'user'
         assert call_args.query == 'query'
 
     def test_search_with_explicit_actor_id_and_type(self, client, mock_api):
-        """When actor_id and actor_type are passed without user_id, they pass through unchanged."""
+        """When actor_id and actor_type are passed, they pass through unchanged."""
         mock_response = MagicMock()
         mock_response.memories = []
         mock_api.search_memories.return_value = mock_response
 
         result = client.search(
             'query',
-            actor_id='bot-1',
-            actor_type='agent',
+            scope=MemoryScope(actor_id='bot-1', actor_type='agent'),
         )
 
         call_args = mock_api.search_memories.call_args[0][0]
-        assert call_args.actor_id == 'bot-1'
-        assert call_args.actor_type == 'agent'
-
-    def test_search_user_id_overrides_actor_id(self, client, mock_api):
-        """user_id takes precedence and overrides actor_id."""
-        mock_response = MagicMock()
-        mock_response.memories = []
-        mock_api.search_memories.return_value = mock_response
-
-        result = client.search(
-            'query',
-            user_id='alice',
-            actor_id='ignored-id',
-            actor_type='ignored-type',
-        )
-
-        call_args = mock_api.search_memories.call_args[0][0]
-        assert call_args.actor_id == 'alice'
-        assert call_args.actor_type == 'user'
+        assert call_args.scope.actor_id == 'bot-1'
+        assert call_args.scope.actor_type == 'agent'
 
     def test_search_with_all_parameters(self, client, mock_api):
         """Test search() with all optional parameters."""
@@ -174,20 +143,23 @@ class TestSearchUserIdConvenience:
 
         result = client.search(
             'query',
-            user_id='alice',
+            scope=MemoryScope(
+                actor_id='alice',
+                actor_type='user',
+                conversation_id='conv-123',
+            ),
             limit=10,
             threshold=0.5,
             graph_depth=2,
-            conversation_id='conv-123',
         )
 
         call_args = mock_api.search_memories.call_args[0][0]
-        assert call_args.actor_id == 'alice'
-        assert call_args.actor_type == 'user'
+        assert call_args.scope.actor_id == 'alice'
+        assert call_args.scope.actor_type == 'user'
         assert call_args.limit == 10
         assert call_args.threshold == 0.5
         assert call_args.graph_depth == 2
-        assert call_args.conversation_id == 'conv-123'
+        assert call_args.scope.conversation_id == 'conv-123'
 
     def test_search_with_temporal_filters(self, client, mock_api):
         """Test search() with temporal filter parameters."""
@@ -197,15 +169,15 @@ class TestSearchUserIdConvenience:
 
         result = client.search(
             'query',
-            user_id='alice',
+            scope=MemoryScope(actor_id='alice', actor_type='user'),
             from_time='2024-01-01T00:00:00Z',
             to_time='2024-12-31T23:59:59Z',
             valid_at='2024-06-15T12:00:00Z',
         )
 
         call_args = mock_api.search_memories.call_args[0][0]
-        assert call_args.actor_id == 'alice'
-        assert call_args.actor_type == 'user'
+        assert call_args.scope.actor_id == 'alice'
+        assert call_args.scope.actor_type == 'user'
         assert call_args.from_time == '2024-01-01T00:00:00Z'
         assert call_args.to_time == '2024-12-31T23:59:59Z'
         assert call_args.valid_at == '2024-06-15T12:00:00Z'
@@ -463,7 +435,7 @@ class TestGetAll:
     def test_get_all_with_parameters_not_implemented(self, client):
         """get_all() with parameters still raises NotImplementedError."""
         with pytest.raises(NotImplementedError):
-            client.get_all(user_id='alice', limit=10, offset=0)
+            client.get_all(limit=10, offset=0)
 
 
 # ==============================================================================

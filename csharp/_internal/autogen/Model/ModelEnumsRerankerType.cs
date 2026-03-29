@@ -34,46 +34,40 @@ namespace Smritea.Internal.Autogen.Model
     public enum ModelEnumsRerankerType
     {
         /// <summary>
-        /// Enum RerankerNone for value: none
-        /// </summary>
-        [EnumMember(Value = "none")]
-        RerankerNone = 1,
-
-        /// <summary>
         /// Enum RerankerRRF for value: rrf
         /// </summary>
         [EnumMember(Value = "rrf")]
-        RerankerRRF = 2,
+        RerankerRRF = 1,
 
         /// <summary>
         /// Enum RerankerMMR for value: mmr
         /// </summary>
         [EnumMember(Value = "mmr")]
-        RerankerMMR = 3,
+        RerankerMMR = 2,
 
         /// <summary>
         /// Enum RerankerTemporal for value: temporal
         /// </summary>
         [EnumMember(Value = "temporal")]
-        RerankerTemporal = 4,
+        RerankerTemporal = 3,
 
         /// <summary>
         /// Enum RerankerCrossEncoder for value: cross_encoder
         /// </summary>
         [EnumMember(Value = "cross_encoder")]
-        RerankerCrossEncoder = 5,
+        RerankerCrossEncoder = 4,
 
         /// <summary>
         /// Enum RerankerNodeDistance for value: node_distance
         /// </summary>
         [EnumMember(Value = "node_distance")]
-        RerankerNodeDistance = 6,
+        RerankerNodeDistance = 5,
 
         /// <summary>
         /// Enum RerankerRRFTemporal for value: rrf_temporal
         /// </summary>
         [EnumMember(Value = "rrf_temporal")]
-        RerankerRRFTemporal = 7
+        RerankerRRFTemporal = 6
     }
 
 }

@@ -22,17 +22,14 @@ var _ MappedNullable = &MemoryMemoryResponse{}
 type MemoryMemoryResponse struct {
 	ActiveFrom *string `json:"active_from,omitempty"`
 	ActiveTo *string `json:"active_to,omitempty"`
-	ActorId *string `json:"actor_id,omitempty"`
-	ActorName *string `json:"actor_name,omitempty"`
-	ActorType *string `json:"actor_type,omitempty"`
 	AppId *string `json:"app_id,omitempty"`
 	Content *string `json:"content,omitempty"`
-	ConversationId *string `json:"conversation_id,omitempty"`
-	ConversationMessageId *string `json:"conversation_message_id,omitempty"`
 	CreatedAt *string `json:"created_at,omitempty"`
 	Id *string `json:"id,omitempty"`
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 	RelativeStanding *CommondtoRelativeStandingConfig `json:"relative_standing,omitempty"`
+	// Scope contains the memory's actor, conversation, and source context.
+	Scope *CommondtoMemoryScope `json:"scope,omitempty"`
 	UpdatedAt *string `json:"updated_at,omitempty"`
 }
 
@@ -117,102 +114,6 @@ func (o *MemoryMemoryResponse) SetActiveTo(v string) {
 	o.ActiveTo = &v
 }
 
-// GetActorId returns the ActorId field value if set, zero value otherwise.
-func (o *MemoryMemoryResponse) GetActorId() string {
-	if o == nil || IsNil(o.ActorId) {
-		var ret string
-		return ret
-	}
-	return *o.ActorId
-}
-
-// GetActorIdOk returns a tuple with the ActorId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryMemoryResponse) GetActorIdOk() (*string, bool) {
-	if o == nil || IsNil(o.ActorId) {
-		return nil, false
-	}
-	return o.ActorId, true
-}
-
-// HasActorId returns a boolean if a field has been set.
-func (o *MemoryMemoryResponse) HasActorId() bool {
-	if o != nil && !IsNil(o.ActorId) {
-		return true
-	}
-
-	return false
-}
-
-// SetActorId gets a reference to the given string and assigns it to the ActorId field.
-func (o *MemoryMemoryResponse) SetActorId(v string) {
-	o.ActorId = &v
-}
-
-// GetActorName returns the ActorName field value if set, zero value otherwise.
-func (o *MemoryMemoryResponse) GetActorName() string {
-	if o == nil || IsNil(o.ActorName) {
-		var ret string
-		return ret
-	}
-	return *o.ActorName
-}
-
-// GetActorNameOk returns a tuple with the ActorName field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryMemoryResponse) GetActorNameOk() (*string, bool) {
-	if o == nil || IsNil(o.ActorName) {
-		return nil, false
-	}
-	return o.ActorName, true
-}
-
-// HasActorName returns a boolean if a field has been set.
-func (o *MemoryMemoryResponse) HasActorName() bool {
-	if o != nil && !IsNil(o.ActorName) {
-		return true
-	}
-
-	return false
-}
-
-// SetActorName gets a reference to the given string and assigns it to the ActorName field.
-func (o *MemoryMemoryResponse) SetActorName(v string) {
-	o.ActorName = &v
-}
-
-// GetActorType returns the ActorType field value if set, zero value otherwise.
-func (o *MemoryMemoryResponse) GetActorType() string {
-	if o == nil || IsNil(o.ActorType) {
-		var ret string
-		return ret
-	}
-	return *o.ActorType
-}
-
-// GetActorTypeOk returns a tuple with the ActorType field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryMemoryResponse) GetActorTypeOk() (*string, bool) {
-	if o == nil || IsNil(o.ActorType) {
-		return nil, false
-	}
-	return o.ActorType, true
-}
-
-// HasActorType returns a boolean if a field has been set.
-func (o *MemoryMemoryResponse) HasActorType() bool {
-	if o != nil && !IsNil(o.ActorType) {
-		return true
-	}
-
-	return false
-}
-
-// SetActorType gets a reference to the given string and assigns it to the ActorType field.
-func (o *MemoryMemoryResponse) SetActorType(v string) {
-	o.ActorType = &v
-}
-
 // GetAppId returns the AppId field value if set, zero value otherwise.
 func (o *MemoryMemoryResponse) GetAppId() string {
 	if o == nil || IsNil(o.AppId) {
@@ -275,70 +176,6 @@ func (o *MemoryMemoryResponse) HasContent() bool {
 // SetContent gets a reference to the given string and assigns it to the Content field.
 func (o *MemoryMemoryResponse) SetContent(v string) {
 	o.Content = &v
-}
-
-// GetConversationId returns the ConversationId field value if set, zero value otherwise.
-func (o *MemoryMemoryResponse) GetConversationId() string {
-	if o == nil || IsNil(o.ConversationId) {
-		var ret string
-		return ret
-	}
-	return *o.ConversationId
-}
-
-// GetConversationIdOk returns a tuple with the ConversationId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryMemoryResponse) GetConversationIdOk() (*string, bool) {
-	if o == nil || IsNil(o.ConversationId) {
-		return nil, false
-	}
-	return o.ConversationId, true
-}
-
-// HasConversationId returns a boolean if a field has been set.
-func (o *MemoryMemoryResponse) HasConversationId() bool {
-	if o != nil && !IsNil(o.ConversationId) {
-		return true
-	}
-
-	return false
-}
-
-// SetConversationId gets a reference to the given string and assigns it to the ConversationId field.
-func (o *MemoryMemoryResponse) SetConversationId(v string) {
-	o.ConversationId = &v
-}
-
-// GetConversationMessageId returns the ConversationMessageId field value if set, zero value otherwise.
-func (o *MemoryMemoryResponse) GetConversationMessageId() string {
-	if o == nil || IsNil(o.ConversationMessageId) {
-		var ret string
-		return ret
-	}
-	return *o.ConversationMessageId
-}
-
-// GetConversationMessageIdOk returns a tuple with the ConversationMessageId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryMemoryResponse) GetConversationMessageIdOk() (*string, bool) {
-	if o == nil || IsNil(o.ConversationMessageId) {
-		return nil, false
-	}
-	return o.ConversationMessageId, true
-}
-
-// HasConversationMessageId returns a boolean if a field has been set.
-func (o *MemoryMemoryResponse) HasConversationMessageId() bool {
-	if o != nil && !IsNil(o.ConversationMessageId) {
-		return true
-	}
-
-	return false
-}
-
-// SetConversationMessageId gets a reference to the given string and assigns it to the ConversationMessageId field.
-func (o *MemoryMemoryResponse) SetConversationMessageId(v string) {
-	o.ConversationMessageId = &v
 }
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
@@ -469,6 +306,38 @@ func (o *MemoryMemoryResponse) SetRelativeStanding(v CommondtoRelativeStandingCo
 	o.RelativeStanding = &v
 }
 
+// GetScope returns the Scope field value if set, zero value otherwise.
+func (o *MemoryMemoryResponse) GetScope() CommondtoMemoryScope {
+	if o == nil || IsNil(o.Scope) {
+		var ret CommondtoMemoryScope
+		return ret
+	}
+	return *o.Scope
+}
+
+// GetScopeOk returns a tuple with the Scope field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MemoryMemoryResponse) GetScopeOk() (*CommondtoMemoryScope, bool) {
+	if o == nil || IsNil(o.Scope) {
+		return nil, false
+	}
+	return o.Scope, true
+}
+
+// HasScope returns a boolean if a field has been set.
+func (o *MemoryMemoryResponse) HasScope() bool {
+	if o != nil && !IsNil(o.Scope) {
+		return true
+	}
+
+	return false
+}
+
+// SetScope gets a reference to the given CommondtoMemoryScope and assigns it to the Scope field.
+func (o *MemoryMemoryResponse) SetScope(v CommondtoMemoryScope) {
+	o.Scope = &v
+}
+
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *MemoryMemoryResponse) GetUpdatedAt() string {
 	if o == nil || IsNil(o.UpdatedAt) {
@@ -517,26 +386,11 @@ func (o MemoryMemoryResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ActiveTo) {
 		toSerialize["active_to"] = o.ActiveTo
 	}
-	if !IsNil(o.ActorId) {
-		toSerialize["actor_id"] = o.ActorId
-	}
-	if !IsNil(o.ActorName) {
-		toSerialize["actor_name"] = o.ActorName
-	}
-	if !IsNil(o.ActorType) {
-		toSerialize["actor_type"] = o.ActorType
-	}
 	if !IsNil(o.AppId) {
 		toSerialize["app_id"] = o.AppId
 	}
 	if !IsNil(o.Content) {
 		toSerialize["content"] = o.Content
-	}
-	if !IsNil(o.ConversationId) {
-		toSerialize["conversation_id"] = o.ConversationId
-	}
-	if !IsNil(o.ConversationMessageId) {
-		toSerialize["conversation_message_id"] = o.ConversationMessageId
 	}
 	if !IsNil(o.CreatedAt) {
 		toSerialize["created_at"] = o.CreatedAt
@@ -549,6 +403,9 @@ func (o MemoryMemoryResponse) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.RelativeStanding) {
 		toSerialize["relative_standing"] = o.RelativeStanding
+	}
+	if !IsNil(o.Scope) {
+		toSerialize["scope"] = o.Scope
 	}
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt

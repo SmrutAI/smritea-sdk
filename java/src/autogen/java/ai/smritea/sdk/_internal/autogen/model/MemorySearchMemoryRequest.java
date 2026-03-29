@@ -19,6 +19,7 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
+import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
 import ai.smritea.sdk._internal.autogen.model.ModelEnumsRerankerType;
 import ai.smritea.sdk._internal.autogen.model.ModelEnumsSearchMethod;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -36,74 +37,23 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
  * MemorySearchMemoryRequest
  */
 @JsonPropertyOrder({
-  MemorySearchMemoryRequest.JSON_PROPERTY_ACTOR_ID,
-  MemorySearchMemoryRequest.JSON_PROPERTY_ACTOR_TYPE,
   MemorySearchMemoryRequest.JSON_PROPERTY_APP_ID,
-  MemorySearchMemoryRequest.JSON_PROPERTY_CONVERSATION_ID,
   MemorySearchMemoryRequest.JSON_PROPERTY_FROM_TIME,
   MemorySearchMemoryRequest.JSON_PROPERTY_GRAPH_DEPTH,
   MemorySearchMemoryRequest.JSON_PROPERTY_LIMIT,
   MemorySearchMemoryRequest.JSON_PROPERTY_METHOD,
   MemorySearchMemoryRequest.JSON_PROPERTY_QUERY,
   MemorySearchMemoryRequest.JSON_PROPERTY_RERANKER_TYPE,
+  MemorySearchMemoryRequest.JSON_PROPERTY_SCOPE,
   MemorySearchMemoryRequest.JSON_PROPERTY_THRESHOLD,
   MemorySearchMemoryRequest.JSON_PROPERTY_TO_TIME,
   MemorySearchMemoryRequest.JSON_PROPERTY_VALID_AT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class MemorySearchMemoryRequest {
-  public static final String JSON_PROPERTY_ACTOR_ID = "actor_id";
-  @javax.annotation.Nullable
-  private String actorId;
-
-  /**
-   * ActorType filters search to messages from a specific actor type (optional). Values: \&quot;user\&quot;, \&quot;agent\&quot;, \&quot;system\&quot;
-   */
-  public enum ActorTypeEnum {
-    USER(String.valueOf("user")),
-    
-    AGENT(String.valueOf("agent")),
-    
-    SYSTEM(String.valueOf("system"));
-
-    private String value;
-
-    ActorTypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ActorTypeEnum fromValue(String value) {
-      for (ActorTypeEnum b : ActorTypeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  public static final String JSON_PROPERTY_ACTOR_TYPE = "actor_type";
-  @javax.annotation.Nullable
-  private ActorTypeEnum actorType;
-
   public static final String JSON_PROPERTY_APP_ID = "app_id";
   @javax.annotation.Nonnull
   private String appId;
-
-  public static final String JSON_PROPERTY_CONVERSATION_ID = "conversation_id";
-  @javax.annotation.Nullable
-  private String conversationId;
 
   public static final String JSON_PROPERTY_FROM_TIME = "from_time";
   @javax.annotation.Nullable
@@ -129,6 +79,10 @@ public class MemorySearchMemoryRequest {
   @javax.annotation.Nullable
   private ModelEnumsRerankerType rerankerType;
 
+  public static final String JSON_PROPERTY_SCOPE = "scope";
+  @javax.annotation.Nullable
+  private CommondtoMemoryScope scope;
+
   public static final String JSON_PROPERTY_THRESHOLD = "threshold";
   @javax.annotation.Nullable
   private BigDecimal threshold;
@@ -143,54 +97,6 @@ public class MemorySearchMemoryRequest {
 
   public MemorySearchMemoryRequest() { 
   }
-
-  public MemorySearchMemoryRequest actorId(@javax.annotation.Nullable String actorId) {
-    this.actorId = actorId;
-    return this;
-  }
-
-  /**
-   * Get actorId
-   * @return actorId
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getActorId() {
-    return actorId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setActorId(@javax.annotation.Nullable String actorId) {
-    this.actorId = actorId;
-  }
-
-
-  public MemorySearchMemoryRequest actorType(@javax.annotation.Nullable ActorTypeEnum actorType) {
-    this.actorType = actorType;
-    return this;
-  }
-
-  /**
-   * ActorType filters search to messages from a specific actor type (optional). Values: \&quot;user\&quot;, \&quot;agent\&quot;, \&quot;system\&quot;
-   * @return actorType
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ActorTypeEnum getActorType() {
-    return actorType;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_ACTOR_TYPE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setActorType(@javax.annotation.Nullable ActorTypeEnum actorType) {
-    this.actorType = actorType;
-  }
-
 
   public MemorySearchMemoryRequest appId(@javax.annotation.Nonnull String appId) {
     this.appId = appId;
@@ -213,30 +119,6 @@ public class MemorySearchMemoryRequest {
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setAppId(@javax.annotation.Nonnull String appId) {
     this.appId = appId;
-  }
-
-
-  public MemorySearchMemoryRequest conversationId(@javax.annotation.Nullable String conversationId) {
-    this.conversationId = conversationId;
-    return this;
-  }
-
-  /**
-   * ConversationID filters search to a specific conversation (optional). If omitted, searches across all actor&#39;s memories.
-   * @return conversationId
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getConversationId() {
-    return conversationId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setConversationId(@javax.annotation.Nullable String conversationId) {
-    this.conversationId = conversationId;
   }
 
 
@@ -384,6 +266,30 @@ public class MemorySearchMemoryRequest {
   }
 
 
+  public MemorySearchMemoryRequest scope(@javax.annotation.Nullable CommondtoMemoryScope scope) {
+    this.scope = scope;
+    return this;
+  }
+
+  /**
+   * Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \&quot;no filter\&quot; (searches across all).
+   * @return scope
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SCOPE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public CommondtoMemoryScope getScope() {
+    return scope;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SCOPE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setScope(@javax.annotation.Nullable CommondtoMemoryScope scope) {
+    this.scope = scope;
+  }
+
+
   public MemorySearchMemoryRequest threshold(@javax.annotation.Nullable BigDecimal threshold) {
     this.threshold = threshold;
     return this;
@@ -468,16 +374,14 @@ public class MemorySearchMemoryRequest {
       return false;
     }
     MemorySearchMemoryRequest memorySearchMemoryRequest = (MemorySearchMemoryRequest) o;
-    return Objects.equals(this.actorId, memorySearchMemoryRequest.actorId) &&
-        Objects.equals(this.actorType, memorySearchMemoryRequest.actorType) &&
-        Objects.equals(this.appId, memorySearchMemoryRequest.appId) &&
-        Objects.equals(this.conversationId, memorySearchMemoryRequest.conversationId) &&
+    return Objects.equals(this.appId, memorySearchMemoryRequest.appId) &&
         Objects.equals(this.fromTime, memorySearchMemoryRequest.fromTime) &&
         Objects.equals(this.graphDepth, memorySearchMemoryRequest.graphDepth) &&
         Objects.equals(this.limit, memorySearchMemoryRequest.limit) &&
         Objects.equals(this.method, memorySearchMemoryRequest.method) &&
         Objects.equals(this.query, memorySearchMemoryRequest.query) &&
         Objects.equals(this.rerankerType, memorySearchMemoryRequest.rerankerType) &&
+        Objects.equals(this.scope, memorySearchMemoryRequest.scope) &&
         Objects.equals(this.threshold, memorySearchMemoryRequest.threshold) &&
         Objects.equals(this.toTime, memorySearchMemoryRequest.toTime) &&
         Objects.equals(this.validAt, memorySearchMemoryRequest.validAt);
@@ -485,23 +389,21 @@ public class MemorySearchMemoryRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(actorId, actorType, appId, conversationId, fromTime, graphDepth, limit, method, query, rerankerType, threshold, toTime, validAt);
+    return Objects.hash(appId, fromTime, graphDepth, limit, method, query, rerankerType, scope, threshold, toTime, validAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class MemorySearchMemoryRequest {\n");
-    sb.append("    actorId: ").append(toIndentedString(actorId)).append("\n");
-    sb.append("    actorType: ").append(toIndentedString(actorType)).append("\n");
     sb.append("    appId: ").append(toIndentedString(appId)).append("\n");
-    sb.append("    conversationId: ").append(toIndentedString(conversationId)).append("\n");
     sb.append("    fromTime: ").append(toIndentedString(fromTime)).append("\n");
     sb.append("    graphDepth: ").append(toIndentedString(graphDepth)).append("\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
     sb.append("    method: ").append(toIndentedString(method)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    rerankerType: ").append(toIndentedString(rerankerType)).append("\n");
+    sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
     sb.append("    threshold: ").append(toIndentedString(threshold)).append("\n");
     sb.append("    toTime: ").append(toIndentedString(toTime)).append("\n");
     sb.append("    validAt: ").append(toIndentedString(validAt)).append("\n");
@@ -552,24 +454,9 @@ public class MemorySearchMemoryRequest {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `actor_id` to the URL query string
-    if (getActorId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorId()))));
-    }
-
-    // add `actor_type` to the URL query string
-    if (getActorType() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactor_type%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActorType()))));
-    }
-
     // add `app_id` to the URL query string
     if (getAppId() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%sapp_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getAppId()))));
-    }
-
-    // add `conversation_id` to the URL query string
-    if (getConversationId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationId()))));
     }
 
     // add `from_time` to the URL query string
@@ -600,6 +487,11 @@ public class MemorySearchMemoryRequest {
     // add `reranker_type` to the URL query string
     if (getRerankerType() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%sreranker_type%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getRerankerType()))));
+    }
+
+    // add `scope` to the URL query string
+    if (getScope() != null) {
+      joiner.add(getScope().toUrlQueryString(prefix + "scope" + suffix));
     }
 
     // add `threshold` to the URL query string

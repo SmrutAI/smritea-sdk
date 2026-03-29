@@ -34,61 +34,22 @@ namespace Smritea.Internal.Autogen.Model
     public partial class MemorySearchMemoryResult : IValidatableObject
     {
         /// <summary>
-        /// ActorType is the type of actor (user|agent|system).
-        /// </summary>
-        /// <value>ActorType is the type of actor (user|agent|system).</value>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum ActorTypeEnum
-        {
-            /// <summary>
-            /// Enum User for value: user
-            /// </summary>
-            [EnumMember(Value = "user")]
-            User = 1,
-
-            /// <summary>
-            /// Enum Agent for value: agent
-            /// </summary>
-            [EnumMember(Value = "agent")]
-            Agent = 2,
-
-            /// <summary>
-            /// Enum System for value: system
-            /// </summary>
-            [EnumMember(Value = "system")]
-            System = 3
-        }
-
-
-        /// <summary>
-        /// ActorType is the type of actor (user|agent|system).
-        /// </summary>
-        /// <value>ActorType is the type of actor (user|agent|system).</value>
-        [DataMember(Name = "actor_type", EmitDefaultValue = false)]
-        public ActorTypeEnum? ActorType { get; set; }
-        /// <summary>
         /// Initializes a new instance of the <see cref="MemorySearchMemoryResult" /> class.
         /// </summary>
         /// <param name="activeFrom">ActiveFrom is when this fact became true (event timestamp, not DB insertion time)..</param>
         /// <param name="activeTo">ActiveTo is when this fact stopped being true (nil &#x3D; still valid). Unique to smritea — enables temporal reasoning (e.g., \&quot;worked at X until Y\&quot;)..</param>
-        /// <param name="actorId">ActorID identifies whose memory this is..</param>
-        /// <param name="actorName">ActorName is the human-readable name of the actor..</param>
-        /// <param name="actorType">ActorType is the type of actor (user|agent|system)..</param>
         /// <param name="content">Content is the memory text — the core payload for search consumers..</param>
-        /// <param name="conversationId">ConversationID is the conversation this memory belongs to (optional)..</param>
         /// <param name="id">ID is the memory identifier, needed for follow-up operations (update/delete)..</param>
         /// <param name="metadata">Metadata contains caller-defined key-value pairs (omitted when empty)..</param>
-        public MemorySearchMemoryResult(string activeFrom = default, string activeTo = default, string actorId = default, string actorName = default, ActorTypeEnum? actorType = default, string content = default, string conversationId = default, string id = default, Object metadata = default)
+        /// <param name="scope">Scope contains the memory&#39;s actor, conversation, and source context..</param>
+        public MemorySearchMemoryResult(string activeFrom = default, string activeTo = default, string content = default, string id = default, Object metadata = default, CommondtoMemoryScope scope = default)
         {
             this.ActiveFrom = activeFrom;
             this.ActiveTo = activeTo;
-            this.ActorId = actorId;
-            this.ActorName = actorName;
-            this.ActorType = actorType;
             this.Content = content;
-            this.ConversationId = conversationId;
             this.Id = id;
             this.Metadata = metadata;
+            this.Scope = scope;
         }
 
         /// <summary>
@@ -106,32 +67,11 @@ namespace Smritea.Internal.Autogen.Model
         public string ActiveTo { get; set; }
 
         /// <summary>
-        /// ActorID identifies whose memory this is.
-        /// </summary>
-        /// <value>ActorID identifies whose memory this is.</value>
-        [DataMember(Name = "actor_id", EmitDefaultValue = false)]
-        public string ActorId { get; set; }
-
-        /// <summary>
-        /// ActorName is the human-readable name of the actor.
-        /// </summary>
-        /// <value>ActorName is the human-readable name of the actor.</value>
-        [DataMember(Name = "actor_name", EmitDefaultValue = false)]
-        public string ActorName { get; set; }
-
-        /// <summary>
         /// Content is the memory text — the core payload for search consumers.
         /// </summary>
         /// <value>Content is the memory text — the core payload for search consumers.</value>
         [DataMember(Name = "content", EmitDefaultValue = false)]
         public string Content { get; set; }
-
-        /// <summary>
-        /// ConversationID is the conversation this memory belongs to (optional).
-        /// </summary>
-        /// <value>ConversationID is the conversation this memory belongs to (optional).</value>
-        [DataMember(Name = "conversation_id", EmitDefaultValue = false)]
-        public string ConversationId { get; set; }
 
         /// <summary>
         /// ID is the memory identifier, needed for follow-up operations (update/delete).
@@ -148,6 +88,13 @@ namespace Smritea.Internal.Autogen.Model
         public Object Metadata { get; set; }
 
         /// <summary>
+        /// Scope contains the memory&#39;s actor, conversation, and source context.
+        /// </summary>
+        /// <value>Scope contains the memory&#39;s actor, conversation, and source context.</value>
+        [DataMember(Name = "scope", EmitDefaultValue = false)]
+        public CommondtoMemoryScope Scope { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -157,13 +104,10 @@ namespace Smritea.Internal.Autogen.Model
             sb.Append("class MemorySearchMemoryResult {\n");
             sb.Append("  ActiveFrom: ").Append(ActiveFrom).Append("\n");
             sb.Append("  ActiveTo: ").Append(ActiveTo).Append("\n");
-            sb.Append("  ActorId: ").Append(ActorId).Append("\n");
-            sb.Append("  ActorName: ").Append(ActorName).Append("\n");
-            sb.Append("  ActorType: ").Append(ActorType).Append("\n");
             sb.Append("  Content: ").Append(Content).Append("\n");
-            sb.Append("  ConversationId: ").Append(ConversationId).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Metadata: ").Append(Metadata).Append("\n");
+            sb.Append("  Scope: ").Append(Scope).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

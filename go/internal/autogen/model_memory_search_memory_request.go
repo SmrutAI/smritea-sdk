@@ -22,12 +22,7 @@ var _ MappedNullable = &MemorySearchMemoryRequest{}
 
 // MemorySearchMemoryRequest struct for MemorySearchMemoryRequest
 type MemorySearchMemoryRequest struct {
-	ActorId *string `json:"actor_id,omitempty"`
-	// ActorType filters search to messages from a specific actor type (optional). Values: \"user\", \"agent\", \"system\"
-	ActorType *string `json:"actor_type,omitempty"`
 	AppId string `json:"app_id"`
-	// ConversationID filters search to a specific conversation (optional). If omitted, searches across all actor's memories.
-	ConversationId *string `json:"conversation_id,omitempty"`
 	// FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime.
 	FromTime *string `json:"from_time,omitempty"`
 	// 0=use app config, 1-5=override traversal depth
@@ -37,6 +32,8 @@ type MemorySearchMemoryRequest struct {
 	Query string `json:"query"`
 	// RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.
 	RerankerType *ModelEnumsRerankerType `json:"reranker_type,omitempty"`
+	// Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \"no filter\" (searches across all).
+	Scope *CommondtoMemoryScope `json:"scope,omitempty"`
 	// 0=no filtering (pipeline uses RRF scores, not cosine similarity)
 	Threshold *float32 `json:"threshold,omitempty"`
 	// ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.
@@ -66,70 +63,6 @@ func NewMemorySearchMemoryRequestWithDefaults() *MemorySearchMemoryRequest {
 	return &this
 }
 
-// GetActorId returns the ActorId field value if set, zero value otherwise.
-func (o *MemorySearchMemoryRequest) GetActorId() string {
-	if o == nil || IsNil(o.ActorId) {
-		var ret string
-		return ret
-	}
-	return *o.ActorId
-}
-
-// GetActorIdOk returns a tuple with the ActorId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemorySearchMemoryRequest) GetActorIdOk() (*string, bool) {
-	if o == nil || IsNil(o.ActorId) {
-		return nil, false
-	}
-	return o.ActorId, true
-}
-
-// HasActorId returns a boolean if a field has been set.
-func (o *MemorySearchMemoryRequest) HasActorId() bool {
-	if o != nil && !IsNil(o.ActorId) {
-		return true
-	}
-
-	return false
-}
-
-// SetActorId gets a reference to the given string and assigns it to the ActorId field.
-func (o *MemorySearchMemoryRequest) SetActorId(v string) {
-	o.ActorId = &v
-}
-
-// GetActorType returns the ActorType field value if set, zero value otherwise.
-func (o *MemorySearchMemoryRequest) GetActorType() string {
-	if o == nil || IsNil(o.ActorType) {
-		var ret string
-		return ret
-	}
-	return *o.ActorType
-}
-
-// GetActorTypeOk returns a tuple with the ActorType field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemorySearchMemoryRequest) GetActorTypeOk() (*string, bool) {
-	if o == nil || IsNil(o.ActorType) {
-		return nil, false
-	}
-	return o.ActorType, true
-}
-
-// HasActorType returns a boolean if a field has been set.
-func (o *MemorySearchMemoryRequest) HasActorType() bool {
-	if o != nil && !IsNil(o.ActorType) {
-		return true
-	}
-
-	return false
-}
-
-// SetActorType gets a reference to the given string and assigns it to the ActorType field.
-func (o *MemorySearchMemoryRequest) SetActorType(v string) {
-	o.ActorType = &v
-}
-
 // GetAppId returns the AppId field value
 func (o *MemorySearchMemoryRequest) GetAppId() string {
 	if o == nil {
@@ -152,38 +85,6 @@ func (o *MemorySearchMemoryRequest) GetAppIdOk() (*string, bool) {
 // SetAppId sets field value
 func (o *MemorySearchMemoryRequest) SetAppId(v string) {
 	o.AppId = v
-}
-
-// GetConversationId returns the ConversationId field value if set, zero value otherwise.
-func (o *MemorySearchMemoryRequest) GetConversationId() string {
-	if o == nil || IsNil(o.ConversationId) {
-		var ret string
-		return ret
-	}
-	return *o.ConversationId
-}
-
-// GetConversationIdOk returns a tuple with the ConversationId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemorySearchMemoryRequest) GetConversationIdOk() (*string, bool) {
-	if o == nil || IsNil(o.ConversationId) {
-		return nil, false
-	}
-	return o.ConversationId, true
-}
-
-// HasConversationId returns a boolean if a field has been set.
-func (o *MemorySearchMemoryRequest) HasConversationId() bool {
-	if o != nil && !IsNil(o.ConversationId) {
-		return true
-	}
-
-	return false
-}
-
-// SetConversationId gets a reference to the given string and assigns it to the ConversationId field.
-func (o *MemorySearchMemoryRequest) SetConversationId(v string) {
-	o.ConversationId = &v
 }
 
 // GetFromTime returns the FromTime field value if set, zero value otherwise.
@@ -370,6 +271,38 @@ func (o *MemorySearchMemoryRequest) SetRerankerType(v ModelEnumsRerankerType) {
 	o.RerankerType = &v
 }
 
+// GetScope returns the Scope field value if set, zero value otherwise.
+func (o *MemorySearchMemoryRequest) GetScope() CommondtoMemoryScope {
+	if o == nil || IsNil(o.Scope) {
+		var ret CommondtoMemoryScope
+		return ret
+	}
+	return *o.Scope
+}
+
+// GetScopeOk returns a tuple with the Scope field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MemorySearchMemoryRequest) GetScopeOk() (*CommondtoMemoryScope, bool) {
+	if o == nil || IsNil(o.Scope) {
+		return nil, false
+	}
+	return o.Scope, true
+}
+
+// HasScope returns a boolean if a field has been set.
+func (o *MemorySearchMemoryRequest) HasScope() bool {
+	if o != nil && !IsNil(o.Scope) {
+		return true
+	}
+
+	return false
+}
+
+// SetScope gets a reference to the given CommondtoMemoryScope and assigns it to the Scope field.
+func (o *MemorySearchMemoryRequest) SetScope(v CommondtoMemoryScope) {
+	o.Scope = &v
+}
+
 // GetThreshold returns the Threshold field value if set, zero value otherwise.
 func (o *MemorySearchMemoryRequest) GetThreshold() float32 {
 	if o == nil || IsNil(o.Threshold) {
@@ -476,16 +409,7 @@ func (o MemorySearchMemoryRequest) MarshalJSON() ([]byte, error) {
 
 func (o MemorySearchMemoryRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.ActorId) {
-		toSerialize["actor_id"] = o.ActorId
-	}
-	if !IsNil(o.ActorType) {
-		toSerialize["actor_type"] = o.ActorType
-	}
 	toSerialize["app_id"] = o.AppId
-	if !IsNil(o.ConversationId) {
-		toSerialize["conversation_id"] = o.ConversationId
-	}
 	if !IsNil(o.FromTime) {
 		toSerialize["from_time"] = o.FromTime
 	}
@@ -501,6 +425,9 @@ func (o MemorySearchMemoryRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize["query"] = o.Query
 	if !IsNil(o.RerankerType) {
 		toSerialize["reranker_type"] = o.RerankerType
+	}
+	if !IsNil(o.Scope) {
+		toSerialize["scope"] = o.Scope
 	}
 	if !IsNil(o.Threshold) {
 		toSerialize["threshold"] = o.Threshold

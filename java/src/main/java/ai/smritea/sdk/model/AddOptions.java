@@ -2,59 +2,32 @@ package ai.smritea.sdk.model;
 
 import java.util.Map;
 
-/** Builder-style options for adding a memory. */
+/**
+ * Builder-style options for adding a memory.
+ *
+ * <p>Usage example:
+ *
+ * <pre>{@code
+ * new AddOptions()
+ *     .withScope(MemoryScope.builder().actorId("alice").actorType("user").build())
+ *     .withMetadata(Map.of("key", "value"));
+ * }</pre>
+ */
 public final class AddOptions {
-  private String userId;
-  private String actorId;
-  private String actorType;
-  private String actorName;
+  private MemoryScope scope;
   private Map<String, Object> metadata;
-  private String conversationId;
 
   /** Creates a new AddOptions with all fields unset. */
   public AddOptions() {}
 
   /**
-   * Sets the user ID.
+   * Sets the memory scope (actor and conversation context).
    *
-   * @param userId the user ID
+   * @param scope the memory scope
    * @return this instance for chaining
    */
-  public AddOptions withUserId(String userId) {
-    this.userId = userId;
-    return this;
-  }
-
-  /**
-   * Sets the actor ID.
-   *
-   * @param actorId the actor ID
-   * @return this instance for chaining
-   */
-  public AddOptions withActorId(String actorId) {
-    this.actorId = actorId;
-    return this;
-  }
-
-  /**
-   * Sets the actor type (e.g. "user", "agent").
-   *
-   * @param actorType the actor type
-   * @return this instance for chaining
-   */
-  public AddOptions withActorType(String actorType) {
-    this.actorType = actorType;
-    return this;
-  }
-
-  /**
-   * Sets the actor display name.
-   *
-   * @param actorName the actor name
-   * @return this instance for chaining
-   */
-  public AddOptions withActorName(String actorName) {
-    this.actorName = actorName;
+  public AddOptions withScope(MemoryScope scope) {
+    this.scope = scope;
     return this;
   }
 
@@ -69,44 +42,13 @@ public final class AddOptions {
     return this;
   }
 
-  /**
-   * Sets the conversation ID.
-   *
-   * @param conversationId the conversation ID
-   * @return this instance for chaining
-   */
-  public AddOptions withConversationId(String conversationId) {
-    this.conversationId = conversationId;
-    return this;
-  }
-
-  /** Returns the user ID. */
-  public String getUserId() {
-    return userId;
-  }
-
-  /** Returns the actor ID. */
-  public String getActorId() {
-    return actorId;
-  }
-
-  /** Returns the actor type. */
-  public String getActorType() {
-    return actorType;
-  }
-
-  /** Returns the actor name. */
-  public String getActorName() {
-    return actorName;
+  /** Returns the memory scope. */
+  public MemoryScope getScope() {
+    return scope;
   }
 
   /** Returns the metadata map. */
   public Map<String, Object> getMetadata() {
     return metadata;
-  }
-
-  /** Returns the conversation ID. */
-  public String getConversationId() {
-    return conversationId;
   }
 }

@@ -3,6 +3,7 @@
 export * from './CommondtoAPIError';
 export * from './CommondtoEntityExtractionConfig';
 export * from './CommondtoFactExtractionConfig';
+export * from './CommondtoMemoryScope';
 export * from './CommondtoPersonaDomainConfig';
 export * from './CommondtoPersonaExtractionConfig';
 export * from './CommondtoRelativeStandingConfig';

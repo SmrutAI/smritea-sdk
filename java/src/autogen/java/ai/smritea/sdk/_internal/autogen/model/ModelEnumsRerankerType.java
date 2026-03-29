@@ -30,8 +30,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ModelEnumsRerankerType {
   
-  RerankerNone("none"),
-  
   RerankerRRF("rrf"),
   
   RerankerMMR("mmr"),
