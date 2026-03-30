@@ -46,8 +46,8 @@ export class SmriteaClient {
                 actorType: options.scope.actorType,
                 actorName: options.scope.actorName,
                 conversationId: options.scope.conversationId,
-                conversationMessageId: options.scope.conversationMessageId,
                 sourceType: options.scope.sourceType,
+                participantIds: options.scope.participantIds,
               }
             : undefined,
           metadata: options?.metadata as never,

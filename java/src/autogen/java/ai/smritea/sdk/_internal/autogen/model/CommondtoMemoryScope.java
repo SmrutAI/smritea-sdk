@@ -24,7 +24,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -37,6 +39,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   CommondtoMemoryScope.JSON_PROPERTY_ACTOR_NAME,
   CommondtoMemoryScope.JSON_PROPERTY_ACTOR_TYPE,
   CommondtoMemoryScope.JSON_PROPERTY_CONVERSATION_ID,
+  CommondtoMemoryScope.JSON_PROPERTY_PARTICIPANT_IDS,
   CommondtoMemoryScope.JSON_PROPERTY_SOURCE_TYPE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
@@ -93,6 +96,10 @@ public class CommondtoMemoryScope {
   public static final String JSON_PROPERTY_CONVERSATION_ID = "conversation_id";
   @javax.annotation.Nullable
   private String conversationId;
+
+  public static final String JSON_PROPERTY_PARTICIPANT_IDS = "participant_ids";
+  @javax.annotation.Nullable
+  private List<String> participantIds = new ArrayList<>();
 
   /**
    * Gets or Sets sourceType
@@ -234,6 +241,38 @@ public class CommondtoMemoryScope {
   }
 
 
+  public CommondtoMemoryScope participantIds(@javax.annotation.Nullable List<String> participantIds) {
+    this.participantIds = participantIds;
+    return this;
+  }
+
+  public CommondtoMemoryScope addParticipantIdsItem(String participantIdsItem) {
+    if (this.participantIds == null) {
+      this.participantIds = new ArrayList<>();
+    }
+    this.participantIds.add(participantIdsItem);
+    return this;
+  }
+
+  /**
+   * ParticipantIDs lists actor IDs whose shared conversations to search. The search service expands this to all conversations where ALL listed actors participated (AND semantics — conversations missing even one actor are excluded). Mutually exclusive with ConversationID; if both are set, ConversationID takes precedence. Minimum 2 IDs required.
+   * @return participantIds
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PARTICIPANT_IDS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getParticipantIds() {
+    return participantIds;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PARTICIPANT_IDS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setParticipantIds(@javax.annotation.Nullable List<String> participantIds) {
+    this.participantIds = participantIds;
+  }
+
+
   public CommondtoMemoryScope sourceType(@javax.annotation.Nullable SourceTypeEnum sourceType) {
     this.sourceType = sourceType;
     return this;
@@ -274,12 +313,13 @@ public class CommondtoMemoryScope {
         Objects.equals(this.actorName, commondtoMemoryScope.actorName) &&
         Objects.equals(this.actorType, commondtoMemoryScope.actorType) &&
         Objects.equals(this.conversationId, commondtoMemoryScope.conversationId) &&
+        Objects.equals(this.participantIds, commondtoMemoryScope.participantIds) &&
         Objects.equals(this.sourceType, commondtoMemoryScope.sourceType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(actorId, actorName, actorType, conversationId, sourceType);
+    return Objects.hash(actorId, actorName, actorType, conversationId, participantIds, sourceType);
   }
 
   @Override
@@ -290,6 +330,7 @@ public class CommondtoMemoryScope {
     sb.append("    actorName: ").append(toIndentedString(actorName)).append("\n");
     sb.append("    actorType: ").append(toIndentedString(actorType)).append("\n");
     sb.append("    conversationId: ").append(toIndentedString(conversationId)).append("\n");
+    sb.append("    participantIds: ").append(toIndentedString(participantIds)).append("\n");
     sb.append("    sourceType: ").append(toIndentedString(sourceType)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -356,6 +397,15 @@ public class CommondtoMemoryScope {
     // add `conversation_id` to the URL query string
     if (getConversationId() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationId()))));
+    }
+
+    // add `participant_ids` to the URL query string
+    if (getParticipantIds() != null) {
+      for (int i = 0; i < getParticipantIds().size(); i++) {
+        joiner.add(String.format(java.util.Locale.ROOT, "%sparticipant_ids%s%s=%s", prefix, suffix,
+            "".equals(suffix) ? "" : String.format(java.util.Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix),
+            ApiClient.urlEncode(ApiClient.valueToString(getParticipantIds().get(i)))));
+      }
     }
 
     // add `source_type` to the URL query string

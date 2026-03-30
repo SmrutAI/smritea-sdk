@@ -122,12 +122,12 @@ public class SmriteaClient {
         if (scope.getConversationId() != null) {
           autogenScope.setConversationId(scope.getConversationId());
         }
-        if (scope.getConversationMessageId() != null) {
-          autogenScope.setConversationMessageId(scope.getConversationMessageId());
-        }
         if (scope.getSourceType() != null) {
           autogenScope.setSourceType(
               CommondtoMemoryScope.SourceTypeEnum.fromValue(scope.getSourceType()));
+        }
+        if (scope.getParticipantIds() != null && !scope.getParticipantIds().isEmpty()) {
+          autogenScope.setParticipantIds(scope.getParticipantIds());
         }
         request.setScope(autogenScope);
       }

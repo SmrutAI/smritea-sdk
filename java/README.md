@@ -224,7 +224,6 @@ try {
 | `getActorName()` | String | Display name (nullable) |
 | `getMetadata()` | Map<String, Object> | Arbitrary key-value pairs (nullable) |
 | `getConversationId()` | String | Conversation context (nullable) |
-| `getConversationMessageId()` | String | Message within the conversation (nullable) |
 | `getActiveFrom()` | String | ISO 8601 — when memory becomes valid |
 | `getActiveTo()` | String | ISO 8601 — when memory expires (nullable) |
 | `getCreatedAt()` | String | ISO 8601 creation timestamp |

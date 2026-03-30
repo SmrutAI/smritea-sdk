@@ -40,14 +40,43 @@ __all__ = ["Memory", "SearchResult", "MemorySearchMemoriesResponse", "MemoryScop
 
 
 class MemoryScope(BaseModel):
-    """Scope fields for actor and conversation context."""
+    """Scope fields for actor and conversation context.
+
+    All fields are optional. Supply only the fields relevant to your operation:
+
+    - **add**: set ``actor_id`` + ``actor_type`` to attribute the memory to a specific
+      actor, and ``conversation_id`` to link it to a conversation thread.
+    - **search**: set ``actor_id`` + ``actor_type`` to restrict results to a single actor,
+      or ``participant_ids`` to find memories from conversations where **all** listed actors
+      participated (AND semantics — minimum 2 IDs required).
+    """
 
     actor_id: str | None = None
+    """Identifier for the actor (user, agent, or system) associated with this memory.
+    Must be set together with ``actor_type``; max 64 characters."""
+
     actor_type: str | None = None
+    """Role of the actor. Accepted values: ``"user"``, ``"agent"``, ``"system"``.
+    Must be set together with ``actor_id``."""
+
     actor_name: str | None = None
+    """Display name of the actor. Optional — used for human-readable labels; max 255 characters."""
+
     conversation_id: str | None = None
-    conversation_message_id: str | None = None
+    """Conversation thread this memory belongs to or should be searched within; max 64 characters.
+    Mutually exclusive with ``participant_ids``; if both are set, ``conversation_id`` takes
+    precedence."""
+
     source_type: str | None = None
+    """Origin of the memory. Accepted values: ``"conversation"``, ``"document"``, ``"api"``.
+    Defaults to ``"api"`` when omitted."""
+
+    participant_ids: list[str] | None = None
+    """Search across conversations where **all** listed actors participated (AND semantics).
+    The service expands this list into the matching conversation IDs before querying.
+    Requires at least 2 IDs; each ID must be 1–64 characters.
+    Mutually exclusive with ``conversation_id``; if both are set, ``conversation_id`` wins.
+    Only relevant for ``search`` — ignored on ``add``."""
 
 
 class AddOptions(BaseModel):

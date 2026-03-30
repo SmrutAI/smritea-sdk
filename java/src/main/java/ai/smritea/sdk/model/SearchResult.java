@@ -10,8 +10,8 @@ import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResult;
  * types as-is.
  *
  * <p>The memory field is a {@link MemorySearchMemoryResult} — the lean search-specific type that
- * excludes internal/operational fields (appId, createdAt, updatedAt, conversationMessageId). This
- * is distinct from {@link Memory} which wraps the full CRUD response type returned by get/add.
+ * excludes internal/operational fields (appId, createdAt, updatedAt). This is distinct from {@link
+ * Memory} which wraps the full CRUD response type returned by get/add.
  */
 public final class SearchResult {
   private final MemorySearchMemoryResult memory;

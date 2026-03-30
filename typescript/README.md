@@ -202,7 +202,6 @@ All fields use `camelCase`.
 | `actorName` | `string?` | Display name |
 | `metadata` | `object?` | Arbitrary key-value pairs |
 | `conversationId` | `string?` | Conversation context |
-| `conversationMessageId` | `string?` | Message within the conversation |
 | `activeFrom` | `string` | ISO 8601 — when memory becomes valid |
 | `activeTo` | `string?` | ISO 8601 — when memory expires |
 | `createdAt` | `string` | ISO 8601 creation timestamp |

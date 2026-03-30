@@ -24,6 +24,8 @@ type CommondtoMemoryScope struct {
 	ActorName *string `json:"actor_name,omitempty"`
 	ActorType *string `json:"actor_type,omitempty"`
 	ConversationId *string `json:"conversation_id,omitempty"`
+	// ParticipantIDs lists actor IDs whose shared conversations to search. The search service expands this to all conversations where ALL listed actors participated (AND semantics — conversations missing even one actor are excluded). Mutually exclusive with ConversationID; if both are set, ConversationID takes precedence. Minimum 2 IDs required.
+	ParticipantIds []string `json:"participant_ids,omitempty"`
 	SourceType *string `json:"source_type,omitempty"`
 }
 
@@ -172,6 +174,38 @@ func (o *CommondtoMemoryScope) SetConversationId(v string) {
 	o.ConversationId = &v
 }
 
+// GetParticipantIds returns the ParticipantIds field value if set, zero value otherwise.
+func (o *CommondtoMemoryScope) GetParticipantIds() []string {
+	if o == nil || IsNil(o.ParticipantIds) {
+		var ret []string
+		return ret
+	}
+	return o.ParticipantIds
+}
+
+// GetParticipantIdsOk returns a tuple with the ParticipantIds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CommondtoMemoryScope) GetParticipantIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.ParticipantIds) {
+		return nil, false
+	}
+	return o.ParticipantIds, true
+}
+
+// HasParticipantIds returns a boolean if a field has been set.
+func (o *CommondtoMemoryScope) HasParticipantIds() bool {
+	if o != nil && !IsNil(o.ParticipantIds) {
+		return true
+	}
+
+	return false
+}
+
+// SetParticipantIds gets a reference to the given []string and assigns it to the ParticipantIds field.
+func (o *CommondtoMemoryScope) SetParticipantIds(v []string) {
+	o.ParticipantIds = v
+}
+
 // GetSourceType returns the SourceType field value if set, zero value otherwise.
 func (o *CommondtoMemoryScope) GetSourceType() string {
 	if o == nil || IsNil(o.SourceType) {
@@ -225,6 +259,9 @@ func (o CommondtoMemoryScope) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ConversationId) {
 		toSerialize["conversation_id"] = o.ConversationId
+	}
+	if !IsNil(o.ParticipantIds) {
+		toSerialize["participant_ids"] = o.ParticipantIds
 	}
 	if !IsNil(o.SourceType) {
 		toSerialize["source_type"] = o.SourceType

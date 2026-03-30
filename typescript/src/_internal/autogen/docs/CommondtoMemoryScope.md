@@ -10,6 +10,7 @@ Name | Type
 `actorName` | string
 `actorType` | string
 `conversationId` | string
+`participantIds` | Array&lt;string&gt;
 `sourceType` | string
 
 ## Example
@@ -23,6 +24,7 @@ const example = {
   "actorName": null,
   "actorType": null,
   "conversationId": null,
+  "participantIds": null,
   "sourceType": null,
 } satisfies CommondtoMemoryScope
 

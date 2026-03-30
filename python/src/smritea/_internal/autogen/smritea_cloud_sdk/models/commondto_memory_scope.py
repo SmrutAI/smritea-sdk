@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -31,8 +31,9 @@ class CommondtoMemoryScope(BaseModel):
     actor_name: Optional[StrictStr] = None
     actor_type: Optional[StrictStr] = None
     conversation_id: Optional[StrictStr] = None
+    participant_ids: Optional[List[StrictStr]] = Field(default=None, description="ParticipantIDs lists actor IDs whose shared conversations to search. The search service expands this to all conversations where ALL listed actors participated (AND semantics — conversations missing even one actor are excluded). Mutually exclusive with ConversationID; if both are set, ConversationID takes precedence. Minimum 2 IDs required.")
     source_type: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["actor_id", "actor_name", "actor_type", "conversation_id", "source_type"]
+    __properties: ClassVar[List[str]] = ["actor_id", "actor_name", "actor_type", "conversation_id", "participant_ids", "source_type"]
 
     @field_validator('actor_type')
     def actor_type_validate_enum(cls, value):
@@ -109,6 +110,7 @@ class CommondtoMemoryScope(BaseModel):
             "actor_name": obj.get("actor_name"),
             "actor_type": obj.get("actor_type"),
             "conversation_id": obj.get("conversation_id"),
+            "participant_ids": obj.get("participant_ids"),
             "source_type": obj.get("source_type")
         })
         return _obj

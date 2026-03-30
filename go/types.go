@@ -21,12 +21,26 @@ type ClientConfig struct {
 
 // Scope groups actor and conversation context fields for memory operations.
 type Scope struct {
-	ActorID               *string
-	ActorType             *string
-	ActorName             *string
-	ConversationID        *string
-	ConversationMessageID *string
-	SourceType            *string
+	// ActorID is the identifier for the actor (user, agent, or system) associated
+	// with this memory. Must be set together with ActorType; max 64 characters.
+	ActorID *string
+	// ActorType is the role of the actor. Accepted values: "user", "agent", "system".
+	// Must be set together with ActorID.
+	ActorType *string
+	// ActorName is the human-readable display name of the actor. Optional; max 255 characters.
+	ActorName *string
+	// ConversationID scopes this memory to a specific conversation thread; max 64 characters.
+	// Mutually exclusive with ParticipantIDs; if both are set, ConversationID takes precedence.
+	ConversationID *string
+	// SourceType is the origin of the memory. Accepted values: "conversation", "document",
+	// "api". Defaults to "api" when omitted.
+	SourceType *string
+	// ParticipantIDs searches across conversations where all listed actors participated
+	// (AND semantics). The service expands this list into the matching conversation IDs
+	// before querying. Requires at least 2 IDs; each ID must be 1–64 characters.
+	// Mutually exclusive with ConversationID; if both are set, ConversationID wins.
+	// Only relevant for Search — ignored on Add.
+	ParticipantIDs []string
 }
 
 // NewScope returns a new empty Scope ready for fluent configuration.
@@ -44,11 +58,12 @@ func (s *Scope) WithActorName(name string) *Scope { s.ActorName = &name; return 
 // WithConversationID sets ConversationID.
 func (s *Scope) WithConversationID(id string) *Scope { s.ConversationID = &id; return s }
 
-// WithConversationMessageID sets ConversationMessageID.
-func (s *Scope) WithConversationMessageID(id string) *Scope { s.ConversationMessageID = &id; return s }
-
 // WithSourceType sets SourceType.
 func (s *Scope) WithSourceType(t string) *Scope { s.SourceType = &t; return s }
+
+// WithParticipantIDs sets ParticipantIDs to search across conversations where all listed
+// actors participated. Requires at least 2 IDs. Mutually exclusive with ConversationID.
+func (s *Scope) WithParticipantIDs(ids []string) *Scope { s.ParticipantIDs = ids; return s }
 
 // AddOptions are the optional parameters for Client.Add.
 //

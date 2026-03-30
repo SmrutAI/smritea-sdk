@@ -106,15 +106,15 @@ public class SmriteaClient : IDisposable
                     scope.ConversationId = opts.Scope.ConversationId;
                 }
 
-                if (opts.Scope.ConversationMessageId is not null)
-                {
-                    scope.ConversationMessageId = opts.Scope.ConversationMessageId;
-                }
-
                 if (opts.Scope.SourceType is not null)
                 {
                     scope.SourceType = Enum.Parse<CommondtoMemoryScope.SourceTypeEnum>(
                         opts.Scope.SourceType, ignoreCase: true);
+                }
+
+                if (opts.Scope.ParticipantIds is not null && opts.Scope.ParticipantIds.Count > 0)
+                {
+                    scope.ParticipantIds = opts.Scope.ParticipantIds.ToList();
                 }
 
                 request.Scope = scope;

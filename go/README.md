@@ -220,7 +220,6 @@ if err != nil {
 | `ActorName` | *string | Display name |
 | `Metadata` | map[string]interface{} | Arbitrary key-value pairs |
 | `ConversationId` | *string | Conversation context |
-| `ConversationMessageId` | *string | Message within the conversation |
 | `ActiveFrom` | string | ISO 8601 — when memory becomes valid |
 | `ActiveTo` | *string | ISO 8601 — when memory expires |
 | `CreatedAt` | string | ISO 8601 creation timestamp |

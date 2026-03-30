@@ -97,8 +97,8 @@ class SmriteaClient:
                 actor_type=scope.actor_type,
                 actor_name=scope.actor_name,
                 conversation_id=scope.conversation_id,
-                conversation_message_id=scope.conversation_message_id,
                 source_type=scope.source_type,
+                participant_ids=scope.participant_ids,
             )
 
         request = MemoryCreateMemoryRequest(

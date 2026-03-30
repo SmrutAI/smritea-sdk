@@ -44,6 +44,15 @@ export interface CommondtoMemoryScope {
      */
     conversationId?: string;
     /**
+     * ParticipantIDs lists actor IDs whose shared conversations to search. The search service
+     * expands this to all conversations where ALL listed actors participated (AND semantics —
+     * conversations missing even one actor are excluded). Mutually exclusive with ConversationID;
+     * if both are set, ConversationID takes precedence. Minimum 2 IDs required.
+     * @type {Array<string>}
+     * @memberof CommondtoMemoryScope
+     */
+    participantIds?: Array<string>;
+    /**
      * 
      * @type {CommondtoMemoryScopeSourceTypeEnum}
      * @memberof CommondtoMemoryScope
@@ -94,6 +103,7 @@ export function CommondtoMemoryScopeFromJSONTyped(json: any, ignoreDiscriminator
         'actorName': json['actor_name'] == null ? undefined : json['actor_name'],
         'actorType': json['actor_type'] == null ? undefined : json['actor_type'],
         'conversationId': json['conversation_id'] == null ? undefined : json['conversation_id'],
+        'participantIds': json['participant_ids'] == null ? undefined : json['participant_ids'],
         'sourceType': json['source_type'] == null ? undefined : json['source_type'],
     };
 }
@@ -113,6 +123,7 @@ export function CommondtoMemoryScopeToJSONTyped(value?: CommondtoMemoryScope | n
         'actor_name': value['actorName'],
         'actor_type': value['actorType'],
         'conversation_id': value['conversationId'],
+        'participant_ids': value['participantIds'],
         'source_type': value['sourceType'],
     };
 }

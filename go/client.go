@@ -68,12 +68,12 @@ func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOption
 	if opts != nil {
 		if opts.Scope != nil {
 			req.Scope = &autogen.CommondtoMemoryScope{
-				ActorId:               opts.Scope.ActorID,
-				ActorType:             opts.Scope.ActorType,
-				ActorName:             opts.Scope.ActorName,
-				ConversationId:        opts.Scope.ConversationID,
-				ConversationMessageId: opts.Scope.ConversationMessageID,
-				SourceType:            opts.Scope.SourceType,
+				ActorId:        opts.Scope.ActorID,
+				ActorType:      opts.Scope.ActorType,
+				ActorName:      opts.Scope.ActorName,
+				ConversationId: opts.Scope.ConversationID,
+				SourceType:     opts.Scope.SourceType,
+				ParticipantIds: opts.Scope.ParticipantIDs,
 			}
 		}
 		if opts.Metadata != nil {

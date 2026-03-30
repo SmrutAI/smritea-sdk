@@ -58,9 +58,9 @@ Every SDK implementation MUST expose exactly this surface:
 Callers must never pass it per-call.
 
 **`scope` object**: Groups actor and conversation context fields (`actor_id`, `actor_type`,
-`actor_name`, `conversation_id`, `conversation_message_id`, `source_type`). All fields are
-optional. In `add()`, all 6 scope fields are mapped. In `search()`, only `actor_id`,
-`actor_type`, and `conversation_id` are sent as filters.
+`actor_name`, `conversation_id`, `source_type`, `participant_ids`). All fields are
+optional. In `add()`, all 5 scope fields are mapped. In `search()`, `actor_id`,
+`actor_type`, `conversation_id`, and `participant_ids` are sent as filters.
 
 ---
 

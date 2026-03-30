@@ -162,11 +162,6 @@ public final class Memory {
       return this;
     }
 
-    public Builder conversationMessageId(String conversationMessageId) {
-      ensureScope().setConversationMessageId(conversationMessageId);
-      return this;
-    }
-
     public Builder activeFrom(String activeFrom) {
       delegate.setActiveFrom(activeFrom);
       return this;

@@ -102,13 +102,15 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="actorName">actorName.</param>
         /// <param name="actorType">actorType.</param>
         /// <param name="conversationId">conversationId.</param>
+        /// <param name="participantIds">ParticipantIDs lists actor IDs whose shared conversations to search. The search service expands this to all conversations where ALL listed actors participated (AND semantics — conversations missing even one actor are excluded). Mutually exclusive with ConversationID; if both are set, ConversationID takes precedence. Minimum 2 IDs required..</param>
         /// <param name="sourceType">sourceType.</param>
-        public CommondtoMemoryScope(string actorId = default, string actorName = default, ActorTypeEnum? actorType = default, string conversationId = default, SourceTypeEnum? sourceType = default)
+        public CommondtoMemoryScope(string actorId = default, string actorName = default, ActorTypeEnum? actorType = default, string conversationId = default, List<string> participantIds = default, SourceTypeEnum? sourceType = default)
         {
             this.ActorId = actorId;
             this.ActorName = actorName;
             this.ActorType = actorType;
             this.ConversationId = conversationId;
+            this.ParticipantIds = participantIds;
             this.SourceType = sourceType;
         }
 
@@ -131,6 +133,13 @@ namespace Smritea.Internal.Autogen.Model
         public string ConversationId { get; set; }
 
         /// <summary>
+        /// ParticipantIDs lists actor IDs whose shared conversations to search. The search service expands this to all conversations where ALL listed actors participated (AND semantics — conversations missing even one actor are excluded). Mutually exclusive with ConversationID; if both are set, ConversationID takes precedence. Minimum 2 IDs required.
+        /// </summary>
+        /// <value>ParticipantIDs lists actor IDs whose shared conversations to search. The search service expands this to all conversations where ALL listed actors participated (AND semantics — conversations missing even one actor are excluded). Mutually exclusive with ConversationID; if both are set, ConversationID takes precedence. Minimum 2 IDs required.</value>
+        [DataMember(Name = "participant_ids", EmitDefaultValue = false)]
+        public List<string> ParticipantIds { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -142,6 +151,7 @@ namespace Smritea.Internal.Autogen.Model
             sb.Append("  ActorName: ").Append(ActorName).Append("\n");
             sb.Append("  ActorType: ").Append(ActorType).Append("\n");
             sb.Append("  ConversationId: ").Append(ConversationId).Append("\n");
+            sb.Append("  ParticipantIds: ").Append(ParticipantIds).Append("\n");
             sb.Append("  SourceType: ").Append(SourceType).Append("\n");
             sb.Append("}\n");
             return sb.ToString();

@@ -198,7 +198,6 @@ except SmriteaError as e:
 | `actor_name` | str \| None | Display name |
 | `metadata` | dict \| None | Arbitrary key-value pairs |
 | `conversation_id` | str \| None | Conversation context |
-| `conversation_message_id` | str \| None | Message within the conversation |
 | `active_from` | str | ISO 8601 — when memory becomes valid |
 | `active_to` | str \| None | ISO 8601 — when memory expires |
 | `created_at` | str | ISO 8601 creation timestamp |
