@@ -10,7 +10,6 @@ Name | Type
 `actorName` | string
 `actorType` | string
 `conversationId` | string
-`conversationMessageId` | string
 `sourceType` | string
 
 ## Example
@@ -24,7 +23,6 @@ const example = {
   "actorName": null,
   "actorType": null,
   "conversationId": null,
-  "conversationMessageId": null,
   "sourceType": null,
 } satisfies CommondtoMemoryScope
 

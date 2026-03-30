@@ -31,9 +31,8 @@ class CommondtoMemoryScope(BaseModel):
     actor_name: Optional[StrictStr] = None
     actor_type: Optional[StrictStr] = None
     conversation_id: Optional[StrictStr] = None
-    conversation_message_id: Optional[StrictStr] = None
     source_type: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["actor_id", "actor_name", "actor_type", "conversation_id", "conversation_message_id", "source_type"]
+    __properties: ClassVar[List[str]] = ["actor_id", "actor_name", "actor_type", "conversation_id", "source_type"]
 
     @field_validator('actor_type')
     def actor_type_validate_enum(cls, value):
@@ -110,7 +109,6 @@ class CommondtoMemoryScope(BaseModel):
             "actor_name": obj.get("actor_name"),
             "actor_type": obj.get("actor_type"),
             "conversation_id": obj.get("conversation_id"),
-            "conversation_message_id": obj.get("conversation_message_id"),
             "source_type": obj.get("source_type")
         })
         return _obj

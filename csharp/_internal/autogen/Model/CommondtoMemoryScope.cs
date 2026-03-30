@@ -102,15 +102,13 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="actorName">actorName.</param>
         /// <param name="actorType">actorType.</param>
         /// <param name="conversationId">conversationId.</param>
-        /// <param name="conversationMessageId">conversationMessageId.</param>
         /// <param name="sourceType">sourceType.</param>
-        public CommondtoMemoryScope(string actorId = default, string actorName = default, ActorTypeEnum? actorType = default, string conversationId = default, string conversationMessageId = default, SourceTypeEnum? sourceType = default)
+        public CommondtoMemoryScope(string actorId = default, string actorName = default, ActorTypeEnum? actorType = default, string conversationId = default, SourceTypeEnum? sourceType = default)
         {
             this.ActorId = actorId;
             this.ActorName = actorName;
             this.ActorType = actorType;
             this.ConversationId = conversationId;
-            this.ConversationMessageId = conversationMessageId;
             this.SourceType = sourceType;
         }
 
@@ -133,12 +131,6 @@ namespace Smritea.Internal.Autogen.Model
         public string ConversationId { get; set; }
 
         /// <summary>
-        /// Gets or Sets ConversationMessageId
-        /// </summary>
-        [DataMember(Name = "conversation_message_id", EmitDefaultValue = false)]
-        public string ConversationMessageId { get; set; }
-
-        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -150,7 +142,6 @@ namespace Smritea.Internal.Autogen.Model
             sb.Append("  ActorName: ").Append(ActorName).Append("\n");
             sb.Append("  ActorType: ").Append(ActorType).Append("\n");
             sb.Append("  ConversationId: ").Append(ConversationId).Append("\n");
-            sb.Append("  ConversationMessageId: ").Append(ConversationMessageId).Append("\n");
             sb.Append("  SourceType: ").Append(SourceType).Append("\n");
             sb.Append("}\n");
             return sb.ToString();

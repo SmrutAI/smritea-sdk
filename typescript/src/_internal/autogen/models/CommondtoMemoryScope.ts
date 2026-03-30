@@ -45,12 +45,6 @@ export interface CommondtoMemoryScope {
     conversationId?: string;
     /**
      * 
-     * @type {string}
-     * @memberof CommondtoMemoryScope
-     */
-    conversationMessageId?: string;
-    /**
-     * 
      * @type {CommondtoMemoryScopeSourceTypeEnum}
      * @memberof CommondtoMemoryScope
      */
@@ -100,7 +94,6 @@ export function CommondtoMemoryScopeFromJSONTyped(json: any, ignoreDiscriminator
         'actorName': json['actor_name'] == null ? undefined : json['actor_name'],
         'actorType': json['actor_type'] == null ? undefined : json['actor_type'],
         'conversationId': json['conversation_id'] == null ? undefined : json['conversation_id'],
-        'conversationMessageId': json['conversation_message_id'] == null ? undefined : json['conversation_message_id'],
         'sourceType': json['source_type'] == null ? undefined : json['source_type'],
     };
 }
@@ -120,7 +113,6 @@ export function CommondtoMemoryScopeToJSONTyped(value?: CommondtoMemoryScope | n
         'actor_name': value['actorName'],
         'actor_type': value['actorType'],
         'conversation_id': value['conversationId'],
-        'conversation_message_id': value['conversationMessageId'],
         'source_type': value['sourceType'],
     };
 }

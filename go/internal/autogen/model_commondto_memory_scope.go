@@ -24,7 +24,6 @@ type CommondtoMemoryScope struct {
 	ActorName *string `json:"actor_name,omitempty"`
 	ActorType *string `json:"actor_type,omitempty"`
 	ConversationId *string `json:"conversation_id,omitempty"`
-	ConversationMessageId *string `json:"conversation_message_id,omitempty"`
 	SourceType *string `json:"source_type,omitempty"`
 }
 
@@ -173,38 +172,6 @@ func (o *CommondtoMemoryScope) SetConversationId(v string) {
 	o.ConversationId = &v
 }
 
-// GetConversationMessageId returns the ConversationMessageId field value if set, zero value otherwise.
-func (o *CommondtoMemoryScope) GetConversationMessageId() string {
-	if o == nil || IsNil(o.ConversationMessageId) {
-		var ret string
-		return ret
-	}
-	return *o.ConversationMessageId
-}
-
-// GetConversationMessageIdOk returns a tuple with the ConversationMessageId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *CommondtoMemoryScope) GetConversationMessageIdOk() (*string, bool) {
-	if o == nil || IsNil(o.ConversationMessageId) {
-		return nil, false
-	}
-	return o.ConversationMessageId, true
-}
-
-// HasConversationMessageId returns a boolean if a field has been set.
-func (o *CommondtoMemoryScope) HasConversationMessageId() bool {
-	if o != nil && !IsNil(o.ConversationMessageId) {
-		return true
-	}
-
-	return false
-}
-
-// SetConversationMessageId gets a reference to the given string and assigns it to the ConversationMessageId field.
-func (o *CommondtoMemoryScope) SetConversationMessageId(v string) {
-	o.ConversationMessageId = &v
-}
-
 // GetSourceType returns the SourceType field value if set, zero value otherwise.
 func (o *CommondtoMemoryScope) GetSourceType() string {
 	if o == nil || IsNil(o.SourceType) {
@@ -258,9 +225,6 @@ func (o CommondtoMemoryScope) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ConversationId) {
 		toSerialize["conversation_id"] = o.ConversationId
-	}
-	if !IsNil(o.ConversationMessageId) {
-		toSerialize["conversation_message_id"] = o.ConversationMessageId
 	}
 	if !IsNil(o.SourceType) {
 		toSerialize["source_type"] = o.SourceType

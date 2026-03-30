@@ -37,7 +37,6 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   CommondtoMemoryScope.JSON_PROPERTY_ACTOR_NAME,
   CommondtoMemoryScope.JSON_PROPERTY_ACTOR_TYPE,
   CommondtoMemoryScope.JSON_PROPERTY_CONVERSATION_ID,
-  CommondtoMemoryScope.JSON_PROPERTY_CONVERSATION_MESSAGE_ID,
   CommondtoMemoryScope.JSON_PROPERTY_SOURCE_TYPE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
@@ -94,10 +93,6 @@ public class CommondtoMemoryScope {
   public static final String JSON_PROPERTY_CONVERSATION_ID = "conversation_id";
   @javax.annotation.Nullable
   private String conversationId;
-
-  public static final String JSON_PROPERTY_CONVERSATION_MESSAGE_ID = "conversation_message_id";
-  @javax.annotation.Nullable
-  private String conversationMessageId;
 
   /**
    * Gets or Sets sourceType
@@ -239,30 +234,6 @@ public class CommondtoMemoryScope {
   }
 
 
-  public CommondtoMemoryScope conversationMessageId(@javax.annotation.Nullable String conversationMessageId) {
-    this.conversationMessageId = conversationMessageId;
-    return this;
-  }
-
-  /**
-   * Get conversationMessageId
-   * @return conversationMessageId
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_MESSAGE_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getConversationMessageId() {
-    return conversationMessageId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_CONVERSATION_MESSAGE_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setConversationMessageId(@javax.annotation.Nullable String conversationMessageId) {
-    this.conversationMessageId = conversationMessageId;
-  }
-
-
   public CommondtoMemoryScope sourceType(@javax.annotation.Nullable SourceTypeEnum sourceType) {
     this.sourceType = sourceType;
     return this;
@@ -303,13 +274,12 @@ public class CommondtoMemoryScope {
         Objects.equals(this.actorName, commondtoMemoryScope.actorName) &&
         Objects.equals(this.actorType, commondtoMemoryScope.actorType) &&
         Objects.equals(this.conversationId, commondtoMemoryScope.conversationId) &&
-        Objects.equals(this.conversationMessageId, commondtoMemoryScope.conversationMessageId) &&
         Objects.equals(this.sourceType, commondtoMemoryScope.sourceType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(actorId, actorName, actorType, conversationId, conversationMessageId, sourceType);
+    return Objects.hash(actorId, actorName, actorType, conversationId, sourceType);
   }
 
   @Override
@@ -320,7 +290,6 @@ public class CommondtoMemoryScope {
     sb.append("    actorName: ").append(toIndentedString(actorName)).append("\n");
     sb.append("    actorType: ").append(toIndentedString(actorType)).append("\n");
     sb.append("    conversationId: ").append(toIndentedString(conversationId)).append("\n");
-    sb.append("    conversationMessageId: ").append(toIndentedString(conversationMessageId)).append("\n");
     sb.append("    sourceType: ").append(toIndentedString(sourceType)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -387,11 +356,6 @@ public class CommondtoMemoryScope {
     // add `conversation_id` to the URL query string
     if (getConversationId() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationId()))));
-    }
-
-    // add `conversation_message_id` to the URL query string
-    if (getConversationMessageId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sconversation_message_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getConversationMessageId()))));
     }
 
     // add `source_type` to the URL query string
