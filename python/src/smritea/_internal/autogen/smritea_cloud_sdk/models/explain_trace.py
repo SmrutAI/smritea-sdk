@@ -18,20 +18,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
-from smritea._internal.autogen.smritea_cloud_sdk.models.explain_trace import ExplainTrace
-from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memory_response import MemorySearchMemoryResponse
+from smritea._internal.autogen.smritea_cloud_sdk.models.explain_stage_trace import ExplainStageTrace
 from typing import Optional, Set
 from typing_extensions import Self
 
-class MemorySearchMemoriesResponse(BaseModel):
+class ExplainTrace(BaseModel):
     """
-    MemorySearchMemoriesResponse
+    ExplainTrace
     """ # noqa: E501
-    explain_trace: Optional[ExplainTrace] = None
-    memories: Optional[List[MemorySearchMemoryResponse]] = None
-    __properties: ClassVar[List[str]] = ["explain_trace", "memories"]
+    stages: Optional[List[ExplainStageTrace]] = Field(default=None, description="Stages contains the trace for each pipeline stage in execution order.")
+    total_ms: Optional[StrictInt] = Field(default=None, description="TotalMs is the wall-clock duration of the entire search request in milliseconds.")
+    __properties: ClassVar[List[str]] = ["stages", "total_ms"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +50,7 @@ class MemorySearchMemoriesResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of MemorySearchMemoriesResponse from a JSON string"""
+        """Create an instance of ExplainTrace from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,21 +71,18 @@ class MemorySearchMemoriesResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of explain_trace
-        if self.explain_trace:
-            _dict['explain_trace'] = self.explain_trace.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in memories (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in stages (list)
         _items = []
-        if self.memories:
-            for _item_memories in self.memories:
-                if _item_memories:
-                    _items.append(_item_memories.to_dict())
-            _dict['memories'] = _items
+        if self.stages:
+            for _item_stages in self.stages:
+                if _item_stages:
+                    _items.append(_item_stages.to_dict())
+            _dict['stages'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of MemorySearchMemoriesResponse from a dict"""
+        """Create an instance of ExplainTrace from a dict"""
         if obj is None:
             return None
 
@@ -94,8 +90,8 @@ class MemorySearchMemoriesResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "explain_trace": ExplainTrace.from_dict(obj["explain_trace"]) if obj.get("explain_trace") is not None else None,
-            "memories": [MemorySearchMemoryResponse.from_dict(_item) for _item in obj["memories"]] if obj.get("memories") is not None else None
+            "stages": [ExplainStageTrace.from_dict(_item) for _item in obj["stages"]] if obj.get("stages") is not None else None,
+            "total_ms": obj.get("total_ms")
         })
         return _obj
 

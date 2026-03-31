@@ -18,20 +18,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from smritea._internal.autogen.smritea_cloud_sdk.models.explain_trace import ExplainTrace
-from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memory_response import MemorySearchMemoryResponse
 from typing import Optional, Set
 from typing_extensions import Self
 
-class MemorySearchMemoriesResponse(BaseModel):
+class ExplainStepTrace(BaseModel):
     """
-    MemorySearchMemoriesResponse
+    ExplainStepTrace
     """ # noqa: E501
-    explain_trace: Optional[ExplainTrace] = None
-    memories: Optional[List[MemorySearchMemoryResponse]] = None
-    __properties: ClassVar[List[str]] = ["explain_trace", "memories"]
+    duration_ms: Optional[StrictInt] = Field(default=None, description="DurationMs is the wall-clock duration of the step.Execute() call.")
+    error: Optional[StrictStr] = Field(default=None, description="Error is the error string if the step failed, empty on success.")
+    input: Optional[StrictStr] = Field(default=None, description="InputJSON is the JSON-serialized step input.")
+    output: Optional[StrictStr] = Field(default=None, description="OutputJSON is the JSON-serialized step output.")
+    result_count: Optional[StrictInt] = Field(default=None, description="ResultCount is the number of results the step produced.")
+    step_name: Optional[StrictStr] = Field(default=None, description="StepName is the step's Name() return value.")
+    __properties: ClassVar[List[str]] = ["duration_ms", "error", "input", "output", "result_count", "step_name"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +53,7 @@ class MemorySearchMemoriesResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of MemorySearchMemoriesResponse from a JSON string"""
+        """Create an instance of ExplainStepTrace from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,21 +74,11 @@ class MemorySearchMemoriesResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of explain_trace
-        if self.explain_trace:
-            _dict['explain_trace'] = self.explain_trace.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in memories (list)
-        _items = []
-        if self.memories:
-            for _item_memories in self.memories:
-                if _item_memories:
-                    _items.append(_item_memories.to_dict())
-            _dict['memories'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of MemorySearchMemoriesResponse from a dict"""
+        """Create an instance of ExplainStepTrace from a dict"""
         if obj is None:
             return None
 
@@ -94,8 +86,12 @@ class MemorySearchMemoriesResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "explain_trace": ExplainTrace.from_dict(obj["explain_trace"]) if obj.get("explain_trace") is not None else None,
-            "memories": [MemorySearchMemoryResponse.from_dict(_item) for _item in obj["memories"]] if obj.get("memories") is not None else None
+            "duration_ms": obj.get("duration_ms"),
+            "error": obj.get("error"),
+            "input": obj.get("input"),
+            "output": obj.get("output"),
+            "result_count": obj.get("result_count"),
+            "step_name": obj.get("step_name")
         })
         return _obj
 

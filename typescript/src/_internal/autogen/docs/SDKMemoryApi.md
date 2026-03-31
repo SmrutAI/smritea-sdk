@@ -13,7 +13,7 @@ All URIs are relative to *http://api.smritea.ai/api/v1*
 
 ## createMemory
 
-> MemoryMemoryResponse createMemory(request)
+> MemoryCreateMemoryResponse createMemory(request)
 
 Create memory (SDK)
 
@@ -62,7 +62,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**MemoryMemoryResponse**](MemoryMemoryResponse.md)
+[**MemoryCreateMemoryResponse**](MemoryCreateMemoryResponse.md)
 
 ### Authorization
 

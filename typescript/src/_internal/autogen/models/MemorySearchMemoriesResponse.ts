@@ -20,6 +20,13 @@ import {
     MemorySearchMemoryResponseToJSON,
     MemorySearchMemoryResponseToJSONTyped,
 } from './MemorySearchMemoryResponse';
+import type { ExplainTrace } from './ExplainTrace';
+import {
+    ExplainTraceFromJSON,
+    ExplainTraceFromJSONTyped,
+    ExplainTraceToJSON,
+    ExplainTraceToJSONTyped,
+} from './ExplainTrace';
 
 /**
  * 
@@ -27,6 +34,12 @@ import {
  * @interface MemorySearchMemoriesResponse
  */
 export interface MemorySearchMemoriesResponse {
+    /**
+     * 
+     * @type {ExplainTrace}
+     * @memberof MemorySearchMemoriesResponse
+     */
+    explainTrace?: ExplainTrace;
     /**
      * 
      * @type {Array<MemorySearchMemoryResponse>}
@@ -52,6 +65,7 @@ export function MemorySearchMemoriesResponseFromJSONTyped(json: any, ignoreDiscr
     }
     return {
         
+        'explainTrace': json['explain_trace'] == null ? undefined : ExplainTraceFromJSON(json['explain_trace']),
         'memories': json['memories'] == null ? undefined : ((json['memories'] as Array<any>).map(MemorySearchMemoryResponseFromJSON)),
     };
 }
@@ -67,6 +81,7 @@ export function MemorySearchMemoriesResponseToJSONTyped(value?: MemorySearchMemo
 
     return {
         
+        'explain_trace': ExplainTraceToJSON(value['explainTrace']),
         'memories': value['memories'] == null ? undefined : ((value['memories'] as Array<any>).map(MemorySearchMemoryResponseToJSON)),
     };
 }

@@ -19,6 +19,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictStr
 from typing_extensions import Annotated
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_create_memory_request import MemoryCreateMemoryRequest
+from smritea._internal.autogen.smritea_cloud_sdk.models.memory_create_memory_response import MemoryCreateMemoryResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_memory_response import MemoryMemoryResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memories_response import MemorySearchMemoriesResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memory_request import MemorySearchMemoryRequest
@@ -57,7 +58,7 @@ class SDKMemoryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> MemoryMemoryResponse:
+    ) -> MemoryCreateMemoryResponse:
         """Create memory (SDK)
 
         Create a new memory with quota and rate limit enforcement
@@ -95,7 +96,7 @@ class SDKMemoryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "MemoryMemoryResponse",
+            '201': "MemoryCreateMemoryResponse",
             '400': "CommondtoAPIError",
             '401': "CommondtoAPIError",
             '402': "CommondtoAPIError",
@@ -129,7 +130,7 @@ class SDKMemoryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[MemoryMemoryResponse]:
+    ) -> ApiResponse[MemoryCreateMemoryResponse]:
         """Create memory (SDK)
 
         Create a new memory with quota and rate limit enforcement
@@ -167,7 +168,7 @@ class SDKMemoryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "MemoryMemoryResponse",
+            '201': "MemoryCreateMemoryResponse",
             '400': "CommondtoAPIError",
             '401': "CommondtoAPIError",
             '402': "CommondtoAPIError",
@@ -239,7 +240,7 @@ class SDKMemoryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "MemoryMemoryResponse",
+            '201': "MemoryCreateMemoryResponse",
             '400': "CommondtoAPIError",
             '401': "CommondtoAPIError",
             '402': "CommondtoAPIError",

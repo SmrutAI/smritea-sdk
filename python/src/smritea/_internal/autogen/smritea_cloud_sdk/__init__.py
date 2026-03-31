@@ -36,7 +36,11 @@ __all__ = [
     "CommondtoPersonaDomainConfig",
     "CommondtoPersonaExtractionConfig",
     "CommondtoRelativeStandingConfig",
+    "ExplainStageTrace",
+    "ExplainStepTrace",
+    "ExplainTrace",
     "MemoryCreateMemoryRequest",
+    "MemoryCreateMemoryResponse",
     "MemoryMemoryResponse",
     "MemorySearchMemoriesResponse",
     "MemorySearchMemoryRequest",
@@ -68,7 +72,11 @@ from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_memory_scope i
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_persona_domain_config import CommondtoPersonaDomainConfig as CommondtoPersonaDomainConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_persona_extraction_config import CommondtoPersonaExtractionConfig as CommondtoPersonaExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_relative_standing_config import CommondtoRelativeStandingConfig as CommondtoRelativeStandingConfig
+from smritea._internal.autogen.smritea_cloud_sdk.models.explain_stage_trace import ExplainStageTrace as ExplainStageTrace
+from smritea._internal.autogen.smritea_cloud_sdk.models.explain_step_trace import ExplainStepTrace as ExplainStepTrace
+from smritea._internal.autogen.smritea_cloud_sdk.models.explain_trace import ExplainTrace as ExplainTrace
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_create_memory_request import MemoryCreateMemoryRequest as MemoryCreateMemoryRequest
+from smritea._internal.autogen.smritea_cloud_sdk.models.memory_create_memory_response import MemoryCreateMemoryResponse as MemoryCreateMemoryResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_memory_response import MemoryMemoryResponse as MemoryMemoryResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memories_response import MemorySearchMemoriesResponse as MemorySearchMemoriesResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memory_request import MemorySearchMemoryRequest as MemorySearchMemoryRequest

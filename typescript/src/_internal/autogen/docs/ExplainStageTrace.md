@@ -1,24 +1,34 @@
 
-# MemorySearchMemoriesResponse
+# ExplainStageTrace
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`explainTrace` | [ExplainTrace](ExplainTrace.md)
-`memories` | [Array&lt;MemorySearchMemoryResponse&gt;](MemorySearchMemoryResponse.md)
+`durationMs` | number
+`error` | string
+`input` | string
+`output` | string
+`resultCount` | number
+`stageName` | string
+`steps` | [Array&lt;ExplainStepTrace&gt;](ExplainStepTrace.md)
 
 ## Example
 
 ```typescript
-import type { MemorySearchMemoriesResponse } from ''
+import type { ExplainStageTrace } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "explainTrace": null,
-  "memories": null,
-} satisfies MemorySearchMemoriesResponse
+  "durationMs": null,
+  "error": null,
+  "input": null,
+  "output": null,
+  "resultCount": null,
+  "stageName": null,
+  "steps": null,
+} satisfies ExplainStageTrace
 
 console.log(example)
 
@@ -27,7 +37,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as MemorySearchMemoriesResponse
+const exampleParsed = JSON.parse(exampleJSON) as ExplainStageTrace
 console.log(exampleParsed)
 ```
 

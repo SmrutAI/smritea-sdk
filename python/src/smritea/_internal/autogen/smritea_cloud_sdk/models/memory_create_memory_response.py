@@ -18,20 +18,30 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_memory_scope import CommondtoMemoryScope
+from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_relative_standing_config import CommondtoRelativeStandingConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.explain_trace import ExplainTrace
-from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memory_response import MemorySearchMemoryResponse
 from typing import Optional, Set
 from typing_extensions import Self
 
-class MemorySearchMemoriesResponse(BaseModel):
+class MemoryCreateMemoryResponse(BaseModel):
     """
-    MemorySearchMemoriesResponse
+    MemoryCreateMemoryResponse
     """ # noqa: E501
+    active_from: Optional[StrictStr] = None
+    active_to: Optional[StrictStr] = None
+    app_id: Optional[StrictStr] = None
+    content: Optional[StrictStr] = None
+    created_at: Optional[StrictStr] = None
     explain_trace: Optional[ExplainTrace] = None
-    memories: Optional[List[MemorySearchMemoryResponse]] = None
-    __properties: ClassVar[List[str]] = ["explain_trace", "memories"]
+    id: Optional[StrictStr] = None
+    metadata: Optional[Dict[str, Any]] = None
+    relative_standing: Optional[CommondtoRelativeStandingConfig] = None
+    scope: Optional[CommondtoMemoryScope] = Field(default=None, description="Scope contains the memory's actor, conversation, and source context.")
+    updated_at: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["active_from", "active_to", "app_id", "content", "created_at", "explain_trace", "id", "metadata", "relative_standing", "scope", "updated_at"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +61,7 @@ class MemorySearchMemoriesResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of MemorySearchMemoriesResponse from a JSON string"""
+        """Create an instance of MemoryCreateMemoryResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,18 +85,17 @@ class MemorySearchMemoriesResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of explain_trace
         if self.explain_trace:
             _dict['explain_trace'] = self.explain_trace.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in memories (list)
-        _items = []
-        if self.memories:
-            for _item_memories in self.memories:
-                if _item_memories:
-                    _items.append(_item_memories.to_dict())
-            _dict['memories'] = _items
+        # override the default output from pydantic by calling `to_dict()` of relative_standing
+        if self.relative_standing:
+            _dict['relative_standing'] = self.relative_standing.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of scope
+        if self.scope:
+            _dict['scope'] = self.scope.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of MemorySearchMemoriesResponse from a dict"""
+        """Create an instance of MemoryCreateMemoryResponse from a dict"""
         if obj is None:
             return None
 
@@ -94,8 +103,17 @@ class MemorySearchMemoriesResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "active_from": obj.get("active_from"),
+            "active_to": obj.get("active_to"),
+            "app_id": obj.get("app_id"),
+            "content": obj.get("content"),
+            "created_at": obj.get("created_at"),
             "explain_trace": ExplainTrace.from_dict(obj["explain_trace"]) if obj.get("explain_trace") is not None else None,
-            "memories": [MemorySearchMemoryResponse.from_dict(_item) for _item in obj["memories"]] if obj.get("memories") is not None else None
+            "id": obj.get("id"),
+            "metadata": obj.get("metadata"),
+            "relative_standing": CommondtoRelativeStandingConfig.from_dict(obj["relative_standing"]) if obj.get("relative_standing") is not None else None,
+            "scope": CommondtoMemoryScope.from_dict(obj["scope"]) if obj.get("scope") is not None else None,
+            "updated_at": obj.get("updated_at")
         })
         return _obj
 

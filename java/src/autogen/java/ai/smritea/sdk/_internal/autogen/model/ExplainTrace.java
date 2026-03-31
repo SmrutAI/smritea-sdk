@@ -19,8 +19,7 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
-import ai.smritea.sdk._internal.autogen.model.ExplainTrace;
-import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.ExplainStageTrace;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -34,83 +33,83 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import ai.smritea.sdk._internal.autogen.ApiClient;
 /**
- * MemorySearchMemoriesResponse
+ * ExplainTrace
  */
 @JsonPropertyOrder({
-  MemorySearchMemoriesResponse.JSON_PROPERTY_EXPLAIN_TRACE,
-  MemorySearchMemoriesResponse.JSON_PROPERTY_MEMORIES
+  ExplainTrace.JSON_PROPERTY_STAGES,
+  ExplainTrace.JSON_PROPERTY_TOTAL_MS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
-public class MemorySearchMemoriesResponse {
-  public static final String JSON_PROPERTY_EXPLAIN_TRACE = "explain_trace";
+public class ExplainTrace {
+  public static final String JSON_PROPERTY_STAGES = "stages";
   @javax.annotation.Nullable
-  private ExplainTrace explainTrace;
+  private List<ExplainStageTrace> stages = new ArrayList<>();
 
-  public static final String JSON_PROPERTY_MEMORIES = "memories";
+  public static final String JSON_PROPERTY_TOTAL_MS = "total_ms";
   @javax.annotation.Nullable
-  private List<MemorySearchMemoryResponse> memories = new ArrayList<>();
+  private Integer totalMs;
 
-  public MemorySearchMemoriesResponse() { 
+  public ExplainTrace() { 
   }
 
-  public MemorySearchMemoriesResponse explainTrace(@javax.annotation.Nullable ExplainTrace explainTrace) {
-    this.explainTrace = explainTrace;
+  public ExplainTrace stages(@javax.annotation.Nullable List<ExplainStageTrace> stages) {
+    this.stages = stages;
     return this;
   }
 
-  /**
-   * Get explainTrace
-   * @return explainTrace
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_EXPLAIN_TRACE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ExplainTrace getExplainTrace() {
-    return explainTrace;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_EXPLAIN_TRACE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setExplainTrace(@javax.annotation.Nullable ExplainTrace explainTrace) {
-    this.explainTrace = explainTrace;
-  }
-
-
-  public MemorySearchMemoriesResponse memories(@javax.annotation.Nullable List<MemorySearchMemoryResponse> memories) {
-    this.memories = memories;
-    return this;
-  }
-
-  public MemorySearchMemoriesResponse addMemoriesItem(MemorySearchMemoryResponse memoriesItem) {
-    if (this.memories == null) {
-      this.memories = new ArrayList<>();
+  public ExplainTrace addStagesItem(ExplainStageTrace stagesItem) {
+    if (this.stages == null) {
+      this.stages = new ArrayList<>();
     }
-    this.memories.add(memoriesItem);
+    this.stages.add(stagesItem);
     return this;
   }
 
   /**
-   * Get memories
-   * @return memories
+   * Stages contains the trace for each pipeline stage in execution order.
+   * @return stages
    */
   @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_MEMORIES, required = false)
+  @JsonProperty(value = JSON_PROPERTY_STAGES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<MemorySearchMemoryResponse> getMemories() {
-    return memories;
+  public List<ExplainStageTrace> getStages() {
+    return stages;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_MEMORIES, required = false)
+  @JsonProperty(value = JSON_PROPERTY_STAGES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMemories(@javax.annotation.Nullable List<MemorySearchMemoryResponse> memories) {
-    this.memories = memories;
+  public void setStages(@javax.annotation.Nullable List<ExplainStageTrace> stages) {
+    this.stages = stages;
+  }
+
+
+  public ExplainTrace totalMs(@javax.annotation.Nullable Integer totalMs) {
+    this.totalMs = totalMs;
+    return this;
+  }
+
+  /**
+   * TotalMs is the wall-clock duration of the entire search request in milliseconds.
+   * @return totalMs
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TOTAL_MS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getTotalMs() {
+    return totalMs;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TOTAL_MS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTotalMs(@javax.annotation.Nullable Integer totalMs) {
+    this.totalMs = totalMs;
   }
 
 
   /**
-   * Return true if this memory.SearchMemoriesResponse object is equal to o.
+   * Return true if this explain.Trace object is equal to o.
    */
   @Override
   public boolean equals(Object o) {
@@ -120,22 +119,22 @@ public class MemorySearchMemoriesResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    MemorySearchMemoriesResponse memorySearchMemoriesResponse = (MemorySearchMemoriesResponse) o;
-    return Objects.equals(this.explainTrace, memorySearchMemoriesResponse.explainTrace) &&
-        Objects.equals(this.memories, memorySearchMemoriesResponse.memories);
+    ExplainTrace explainTrace = (ExplainTrace) o;
+    return Objects.equals(this.stages, explainTrace.stages) &&
+        Objects.equals(this.totalMs, explainTrace.totalMs);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(explainTrace, memories);
+    return Objects.hash(stages, totalMs);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class MemorySearchMemoriesResponse {\n");
-    sb.append("    explainTrace: ").append(toIndentedString(explainTrace)).append("\n");
-    sb.append("    memories: ").append(toIndentedString(memories)).append("\n");
+    sb.append("class ExplainTrace {\n");
+    sb.append("    stages: ").append(toIndentedString(stages)).append("\n");
+    sb.append("    totalMs: ").append(toIndentedString(totalMs)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -183,19 +182,19 @@ public class MemorySearchMemoriesResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `explain_trace` to the URL query string
-    if (getExplainTrace() != null) {
-      joiner.add(getExplainTrace().toUrlQueryString(prefix + "explain_trace" + suffix));
-    }
-
-    // add `memories` to the URL query string
-    if (getMemories() != null) {
-      for (int i = 0; i < getMemories().size(); i++) {
-        if (getMemories().get(i) != null) {
-          joiner.add(getMemories().get(i).toUrlQueryString(String.format(java.util.Locale.ROOT, "%smemories%s%s", prefix, suffix,
+    // add `stages` to the URL query string
+    if (getStages() != null) {
+      for (int i = 0; i < getStages().size(); i++) {
+        if (getStages().get(i) != null) {
+          joiner.add(getStages().get(i).toUrlQueryString(String.format(java.util.Locale.ROOT, "%sstages%s%s", prefix, suffix,
           "".equals(suffix) ? "" : String.format(java.util.Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix))));
         }
       }
+    }
+
+    // add `total_ms` to the URL query string
+    if (getTotalMs() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%stotal_ms%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getTotalMs()))));
     }
 
     return joiner.toString();

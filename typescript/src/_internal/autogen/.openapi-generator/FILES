@@ -8,7 +8,11 @@ docs/CommondtoMemoryScope.md
 docs/CommondtoPersonaDomainConfig.md
 docs/CommondtoPersonaExtractionConfig.md
 docs/CommondtoRelativeStandingConfig.md
+docs/ExplainStageTrace.md
+docs/ExplainStepTrace.md
+docs/ExplainTrace.md
 docs/MemoryCreateMemoryRequest.md
+docs/MemoryCreateMemoryResponse.md
 docs/MemoryMemoryResponse.md
 docs/MemorySearchMemoriesResponse.md
 docs/MemorySearchMemoryRequest.md
@@ -25,7 +29,11 @@ models/CommondtoMemoryScope.ts
 models/CommondtoPersonaDomainConfig.ts
 models/CommondtoPersonaExtractionConfig.ts
 models/CommondtoRelativeStandingConfig.ts
+models/ExplainStageTrace.ts
+models/ExplainStepTrace.ts
+models/ExplainTrace.ts
 models/MemoryCreateMemoryRequest.ts
+models/MemoryCreateMemoryResponse.ts
 models/MemoryMemoryResponse.ts
 models/MemorySearchMemoriesResponse.ts
 models/MemorySearchMemoryRequest.ts

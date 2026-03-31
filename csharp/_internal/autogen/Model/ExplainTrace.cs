@@ -28,33 +28,35 @@ using OpenAPIDateConverter = Smritea.Internal.Autogen.Client.OpenAPIDateConverte
 namespace Smritea.Internal.Autogen.Model
 {
     /// <summary>
-    /// MemorySearchMemoriesResponse
+    /// ExplainTrace
     /// </summary>
-    [DataContract(Name = "memory.SearchMemoriesResponse")]
-    public partial class MemorySearchMemoriesResponse : IValidatableObject
+    [DataContract(Name = "explain.Trace")]
+    public partial class ExplainTrace : IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MemorySearchMemoriesResponse" /> class.
+        /// Initializes a new instance of the <see cref="ExplainTrace" /> class.
         /// </summary>
-        /// <param name="explainTrace">explainTrace.</param>
-        /// <param name="memories">memories.</param>
-        public MemorySearchMemoriesResponse(ExplainTrace explainTrace = default, List<MemorySearchMemoryResponse> memories = default)
+        /// <param name="stages">Stages contains the trace for each pipeline stage in execution order..</param>
+        /// <param name="totalMs">TotalMs is the wall-clock duration of the entire search request in milliseconds..</param>
+        public ExplainTrace(List<ExplainStageTrace> stages = default, int totalMs = default)
         {
-            this.ExplainTrace = explainTrace;
-            this.Memories = memories;
+            this.Stages = stages;
+            this.TotalMs = totalMs;
         }
 
         /// <summary>
-        /// Gets or Sets ExplainTrace
+        /// Stages contains the trace for each pipeline stage in execution order.
         /// </summary>
-        [DataMember(Name = "explain_trace", EmitDefaultValue = false)]
-        public ExplainTrace ExplainTrace { get; set; }
+        /// <value>Stages contains the trace for each pipeline stage in execution order.</value>
+        [DataMember(Name = "stages", EmitDefaultValue = false)]
+        public List<ExplainStageTrace> Stages { get; set; }
 
         /// <summary>
-        /// Gets or Sets Memories
+        /// TotalMs is the wall-clock duration of the entire search request in milliseconds.
         /// </summary>
-        [DataMember(Name = "memories", EmitDefaultValue = false)]
-        public List<MemorySearchMemoryResponse> Memories { get; set; }
+        /// <value>TotalMs is the wall-clock duration of the entire search request in milliseconds.</value>
+        [DataMember(Name = "total_ms", EmitDefaultValue = false)]
+        public int TotalMs { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -63,9 +65,9 @@ namespace Smritea.Internal.Autogen.Model
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("class MemorySearchMemoriesResponse {\n");
-            sb.Append("  ExplainTrace: ").Append(ExplainTrace).Append("\n");
-            sb.Append("  Memories: ").Append(Memories).Append("\n");
+            sb.Append("class ExplainTrace {\n");
+            sb.Append("  Stages: ").Append(Stages).Append("\n");
+            sb.Append("  TotalMs: ").Append(TotalMs).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

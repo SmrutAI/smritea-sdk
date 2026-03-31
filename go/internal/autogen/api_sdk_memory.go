@@ -36,7 +36,7 @@ func (r ApiCreateMemoryRequest) Request(request MemoryCreateMemoryRequest) ApiCr
 	return r
 }
 
-func (r ApiCreateMemoryRequest) Execute() (*MemoryMemoryResponse, *http.Response, error) {
+func (r ApiCreateMemoryRequest) Execute() (*MemoryCreateMemoryResponse, *http.Response, error) {
 	return r.ApiService.CreateMemoryExecute(r)
 }
 
@@ -56,13 +56,13 @@ func (a *SDKMemoryAPIService) CreateMemory(ctx context.Context) ApiCreateMemoryR
 }
 
 // Execute executes the request
-//  @return MemoryMemoryResponse
-func (a *SDKMemoryAPIService) CreateMemoryExecute(r ApiCreateMemoryRequest) (*MemoryMemoryResponse, *http.Response, error) {
+//  @return MemoryCreateMemoryResponse
+func (a *SDKMemoryAPIService) CreateMemoryExecute(r ApiCreateMemoryRequest) (*MemoryCreateMemoryResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *MemoryMemoryResponse
+		localVarReturnValue  *MemoryCreateMemoryResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SDKMemoryAPIService.CreateMemory")

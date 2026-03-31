@@ -17,6 +17,7 @@ import * as runtime from '../runtime';
 import type {
   CommondtoAPIError,
   MemoryCreateMemoryRequest,
+  MemoryCreateMemoryResponse,
   MemoryMemoryResponse,
   MemorySearchMemoriesResponse,
   MemorySearchMemoryRequest,
@@ -26,6 +27,8 @@ import {
     CommondtoAPIErrorToJSON,
     MemoryCreateMemoryRequestFromJSON,
     MemoryCreateMemoryRequestToJSON,
+    MemoryCreateMemoryResponseFromJSON,
+    MemoryCreateMemoryResponseToJSON,
     MemoryMemoryResponseFromJSON,
     MemoryMemoryResponseToJSON,
     MemorySearchMemoriesResponseFromJSON,
@@ -92,18 +95,18 @@ export class SDKMemoryApi extends runtime.BaseAPI {
      * Create a new memory with quota and rate limit enforcement
      * Create memory (SDK)
      */
-    async createMemoryRaw(requestParameters: CreateMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MemoryMemoryResponse>> {
+    async createMemoryRaw(requestParameters: CreateMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MemoryCreateMemoryResponse>> {
         const requestOptions = await this.createMemoryRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => MemoryMemoryResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => MemoryCreateMemoryResponseFromJSON(jsonValue));
     }
 
     /**
      * Create a new memory with quota and rate limit enforcement
      * Create memory (SDK)
      */
-    async createMemory(requestParameters: CreateMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MemoryMemoryResponse> {
+    async createMemory(requestParameters: CreateMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MemoryCreateMemoryResponse> {
         const response = await this.createMemoryRaw(requestParameters, initOverrides);
         return await response.value();
     }
