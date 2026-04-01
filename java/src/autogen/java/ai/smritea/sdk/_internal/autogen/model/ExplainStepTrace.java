@@ -40,7 +40,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   ExplainStepTrace.JSON_PROPERTY_RESULT_COUNT,
   ExplainStepTrace.JSON_PROPERTY_STEP_NAME
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class ExplainStepTrace {
   public static final String JSON_PROPERTY_DURATION_MS = "duration_ms";
   @javax.annotation.Nullable
@@ -257,7 +257,10 @@ public class ExplainStepTrace {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    return o == null ? "null" : o.toString().replace("\n", "\n    ");
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
   }
 
   /**

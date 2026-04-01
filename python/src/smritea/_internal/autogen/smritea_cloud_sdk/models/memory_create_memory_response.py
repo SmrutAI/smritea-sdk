@@ -25,7 +25,6 @@ from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_relative_stand
 from smritea._internal.autogen.smritea_cloud_sdk.models.explain_trace import ExplainTrace
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class MemoryCreateMemoryResponse(BaseModel):
     """
@@ -45,8 +44,7 @@ class MemoryCreateMemoryResponse(BaseModel):
     __properties: ClassVar[List[str]] = ["active_from", "active_to", "app_id", "content", "created_at", "explain_trace", "id", "metadata", "relative_standing", "scope", "updated_at"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -58,7 +56,8 @@ class MemoryCreateMemoryResponse(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

@@ -42,7 +42,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   CommondtoMemoryScope.JSON_PROPERTY_PARTICIPANT_IDS,
   CommondtoMemoryScope.JSON_PROPERTY_SOURCE_TYPE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class CommondtoMemoryScope {
   public static final String JSON_PROPERTY_ACTOR_ID = "actor_id";
   @javax.annotation.Nullable
@@ -341,7 +341,10 @@ public class CommondtoMemoryScope {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    return o == null ? "null" : o.toString().replace("\n", "\n    ");
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
   }
 
   /**

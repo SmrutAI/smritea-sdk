@@ -36,7 +36,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   CommondtoAPIError.JSON_PROPERTY_CODE,
   CommondtoAPIError.JSON_PROPERTY_MESSAGE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class CommondtoAPIError {
   public static final String JSON_PROPERTY_CODE = "code";
   @javax.annotation.Nullable
@@ -133,7 +133,10 @@ public class CommondtoAPIError {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    return o == null ? "null" : o.toString().replace("\n", "\n    ");
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
   }
 
   /**
