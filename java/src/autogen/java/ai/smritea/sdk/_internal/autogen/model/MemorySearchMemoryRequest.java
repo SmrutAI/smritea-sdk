@@ -49,7 +49,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   MemorySearchMemoryRequest.JSON_PROPERTY_TO_TIME,
   MemorySearchMemoryRequest.JSON_PROPERTY_VALID_AT
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class MemorySearchMemoryRequest {
   public static final String JSON_PROPERTY_APP_ID = "app_id";
   @javax.annotation.Nonnull
@@ -416,10 +416,7 @@ public class MemorySearchMemoryRequest {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
+    return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 
   /**

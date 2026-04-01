@@ -38,7 +38,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   MemorySearchMemoryResponse.JSON_PROPERTY_MEMORY,
   MemorySearchMemoryResponse.JSON_PROPERTY_SCORE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class MemorySearchMemoryResponse {
   public static final String JSON_PROPERTY_MEMORY = "memory";
   @javax.annotation.Nullable
@@ -135,10 +135,7 @@ public class MemorySearchMemoryResponse {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
+    return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 
   /**

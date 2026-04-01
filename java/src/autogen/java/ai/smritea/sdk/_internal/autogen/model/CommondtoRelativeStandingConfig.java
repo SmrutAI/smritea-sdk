@@ -38,7 +38,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   CommondtoRelativeStandingConfig.JSON_PROPERTY_DECAY_FUNCTION,
   CommondtoRelativeStandingConfig.JSON_PROPERTY_IMPORTANCE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class CommondtoRelativeStandingConfig {
   public static final String JSON_PROPERTY_DECAY_FACTOR = "decay_factor";
   @javax.annotation.Nullable
@@ -202,10 +202,7 @@ public class CommondtoRelativeStandingConfig {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
+    return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 
   /**

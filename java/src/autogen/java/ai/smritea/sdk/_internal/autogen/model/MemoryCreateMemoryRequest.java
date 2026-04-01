@@ -49,7 +49,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   MemoryCreateMemoryRequest.JSON_PROPERTY_RELATIVE_STANDING,
   MemoryCreateMemoryRequest.JSON_PROPERTY_SCOPE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class MemoryCreateMemoryRequest {
   public static final String JSON_PROPERTY_ACTIVE_FROM = "active_from";
   @javax.annotation.Nullable
@@ -386,10 +386,7 @@ public class MemoryCreateMemoryRequest {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
+    return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 
   /**

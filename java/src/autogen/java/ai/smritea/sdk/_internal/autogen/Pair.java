@@ -13,7 +13,7 @@
 
 package ai.smritea.sdk._internal.autogen;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class Pair {
   private final String name;
   private final String value;

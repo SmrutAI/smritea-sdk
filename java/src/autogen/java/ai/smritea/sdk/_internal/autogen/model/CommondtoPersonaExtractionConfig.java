@@ -44,7 +44,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   CommondtoPersonaExtractionConfig.JSON_PROPERTY_MODEL,
   CommondtoPersonaExtractionConfig.JSON_PROPERTY_TEMPERATURE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class CommondtoPersonaExtractionConfig {
   public static final String JSON_PROPERTY_ACTOR_TYPES = "actor_types";
   @javax.annotation.Nullable
@@ -277,10 +277,7 @@ public class CommondtoPersonaExtractionConfig {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
+    return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 
   /**
