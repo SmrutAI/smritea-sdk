@@ -6,17 +6,12 @@
 
 Name | Type
 ------------ | -------------
-`activeFrom` | string
-`activeTo` | string
-`appId` | string
-`content` | string
-`createdAt` | string
 `explainTrace` | [ExplainTrace](ExplainTrace.md)
-`id` | string
-`metadata` | object
-`relativeStanding` | [CommondtoRelativeStandingConfig](CommondtoRelativeStandingConfig.md)
-`scope` | [CommondtoMemoryScope](CommondtoMemoryScope.md)
-`updatedAt` | string
+`extractionConfidence` | number
+`factsExtracted` | number
+`memories` | [Array&lt;MemoryMemoryResponse&gt;](MemoryMemoryResponse.md)
+`skippedCount` | number
+`updatedCount` | number
 
 ## Example
 
@@ -25,17 +20,12 @@ import type { MemoryCreateMemoryResponse } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "activeFrom": null,
-  "activeTo": null,
-  "appId": null,
-  "content": null,
-  "createdAt": null,
   "explainTrace": null,
-  "id": null,
-  "metadata": null,
-  "relativeStanding": null,
-  "scope": null,
-  "updatedAt": null,
+  "extractionConfidence": null,
+  "factsExtracted": null,
+  "memories": null,
+  "skippedCount": null,
+  "updatedCount": null,
 } satisfies MemoryCreateMemoryResponse
 
 console.log(example)

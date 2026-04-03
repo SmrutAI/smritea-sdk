@@ -36,8 +36,6 @@ namespace Smritea.Internal.Autogen.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryCreateMemoryRequest" /> class.
         /// </summary>
-        /// <param name="activeFrom">ActiveFrom is when this memory becomes contextually valid (defaults to now if omitted).</param>
-        /// <param name="activeTo">ActiveTo is when this memory stops being valid (optional, nil &#x3D; still valid).</param>
         /// <param name="appId">AppID is the application identifier (required).</param>
         /// <param name="content">Content is the memory content (required, min 1 char).</param>
         /// <param name="entityExtractionOverrides">EntityExtractionOverrides overrides App-level entity extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values..</param>
@@ -46,10 +44,8 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="personaExtractionOverrides">PersonaExtractionOverrides overrides App-level persona extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values. This is a stub for v1 - the actual LLM-based persona extraction is deferred to a future task..</param>
         /// <param name="relativeStanding">RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are applied (importance&#x3D;1.0, decay_factor&#x3D;0.2, decay_function&#x3D;exponential)..</param>
         /// <param name="scope">Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before..</param>
-        public MemoryCreateMemoryRequest(string activeFrom = default, string activeTo = default, string appId = default, string content = default, CommondtoEntityExtractionConfig entityExtractionOverrides = default, CommondtoFactExtractionConfig factExtractionOverrides = default, Object metadata = default, CommondtoPersonaExtractionConfig personaExtractionOverrides = default, CommondtoRelativeStandingConfig relativeStanding = default, CommondtoMemoryScope scope = default)
+        public MemoryCreateMemoryRequest(string appId = default, string content = default, CommondtoEntityExtractionConfig entityExtractionOverrides = default, CommondtoFactExtractionConfig factExtractionOverrides = default, Object metadata = default, CommondtoPersonaExtractionConfig personaExtractionOverrides = default, CommondtoRelativeStandingConfig relativeStanding = default, CommondtoMemoryScope scope = default)
         {
-            this.ActiveFrom = activeFrom;
-            this.ActiveTo = activeTo;
             this.AppId = appId;
             this.Content = content;
             this.EntityExtractionOverrides = entityExtractionOverrides;
@@ -59,20 +55,6 @@ namespace Smritea.Internal.Autogen.Model
             this.RelativeStanding = relativeStanding;
             this.Scope = scope;
         }
-
-        /// <summary>
-        /// ActiveFrom is when this memory becomes contextually valid (defaults to now if omitted)
-        /// </summary>
-        /// <value>ActiveFrom is when this memory becomes contextually valid (defaults to now if omitted)</value>
-        [DataMember(Name = "active_from", EmitDefaultValue = false)]
-        public string ActiveFrom { get; set; }
-
-        /// <summary>
-        /// ActiveTo is when this memory stops being valid (optional, nil &#x3D; still valid)
-        /// </summary>
-        /// <value>ActiveTo is when this memory stops being valid (optional, nil &#x3D; still valid)</value>
-        [DataMember(Name = "active_to", EmitDefaultValue = false)]
-        public string ActiveTo { get; set; }
 
         /// <summary>
         /// AppID is the application identifier (required)
@@ -138,8 +120,6 @@ namespace Smritea.Internal.Autogen.Model
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("class MemoryCreateMemoryRequest {\n");
-            sb.Append("  ActiveFrom: ").Append(ActiveFrom).Append("\n");
-            sb.Append("  ActiveTo: ").Append(ActiveTo).Append("\n");
             sb.Append("  AppId: ").Append(AppId).Append("\n");
             sb.Append("  Content: ").Append(Content).Append("\n");
             sb.Append("  EntityExtractionOverrides: ").Append(EntityExtractionOverrides).Append("\n");

@@ -6,8 +6,6 @@
 
 Name | Type
 ------------ | -------------
-`activeFrom` | string
-`activeTo` | string
 `appId` | string
 `content` | string
 `entityExtractionOverrides` | [CommondtoEntityExtractionConfig](CommondtoEntityExtractionConfig.md)
@@ -24,8 +22,6 @@ import type { MemoryCreateMemoryRequest } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "activeFrom": null,
-  "activeTo": null,
   "appId": null,
   "content": null,
   "entityExtractionOverrides": null,

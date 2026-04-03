@@ -32,8 +32,6 @@ class MemoryCreateMemoryRequest(BaseModel):
     """
     MemoryCreateMemoryRequest
     """ # noqa: E501
-    active_from: Optional[StrictStr] = Field(default=None, description="ActiveFrom is when this memory becomes contextually valid (defaults to now if omitted)")
-    active_to: Optional[StrictStr] = Field(default=None, description="ActiveTo is when this memory stops being valid (optional, nil = still valid)")
     app_id: Optional[StrictStr] = Field(default=None, description="AppID is the application identifier (required)")
     content: Optional[StrictStr] = Field(default=None, description="Content is the memory content (required, min 1 char)")
     entity_extraction_overrides: Optional[CommondtoEntityExtractionConfig] = Field(default=None, description="EntityExtractionOverrides overrides App-level entity extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.")
@@ -42,7 +40,7 @@ class MemoryCreateMemoryRequest(BaseModel):
     persona_extraction_overrides: Optional[CommondtoPersonaExtractionConfig] = Field(default=None, description="PersonaExtractionOverrides overrides App-level persona extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values. This is a stub for v1 - the actual LLM-based persona extraction is deferred to a future task.")
     relative_standing: Optional[CommondtoRelativeStandingConfig] = Field(default=None, description="RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are applied (importance=1.0, decay_factor=0.2, decay_function=exponential).")
     scope: Optional[CommondtoMemoryScope] = Field(default=None, description="Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before.")
-    __properties: ClassVar[List[str]] = ["active_from", "active_to", "app_id", "content", "entity_extraction_overrides", "fact_extraction_overrides", "metadata", "persona_extraction_overrides", "relative_standing", "scope"]
+    __properties: ClassVar[List[str]] = ["app_id", "content", "entity_extraction_overrides", "fact_extraction_overrides", "metadata", "persona_extraction_overrides", "relative_standing", "scope"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -110,8 +108,6 @@ class MemoryCreateMemoryRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "active_from": obj.get("active_from"),
-            "active_to": obj.get("active_to"),
             "app_id": obj.get("app_id"),
             "content": obj.get("content"),
             "entity_extraction_overrides": CommondtoEntityExtractionConfig.from_dict(obj["entity_extraction_overrides"]) if obj.get("entity_extraction_overrides") is not None else None,

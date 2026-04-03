@@ -20,10 +20,6 @@ var _ MappedNullable = &MemoryCreateMemoryRequest{}
 
 // MemoryCreateMemoryRequest struct for MemoryCreateMemoryRequest
 type MemoryCreateMemoryRequest struct {
-	// ActiveFrom is when this memory becomes contextually valid (defaults to now if omitted)
-	ActiveFrom *string `json:"active_from,omitempty"`
-	// ActiveTo is when this memory stops being valid (optional, nil = still valid)
-	ActiveTo *string `json:"active_to,omitempty"`
 	// AppID is the application identifier (required)
 	AppId *string `json:"app_id,omitempty"`
 	// Content is the memory content (required, min 1 char)
@@ -57,70 +53,6 @@ func NewMemoryCreateMemoryRequest() *MemoryCreateMemoryRequest {
 func NewMemoryCreateMemoryRequestWithDefaults() *MemoryCreateMemoryRequest {
 	this := MemoryCreateMemoryRequest{}
 	return &this
-}
-
-// GetActiveFrom returns the ActiveFrom field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryRequest) GetActiveFrom() string {
-	if o == nil || IsNil(o.ActiveFrom) {
-		var ret string
-		return ret
-	}
-	return *o.ActiveFrom
-}
-
-// GetActiveFromOk returns a tuple with the ActiveFrom field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryRequest) GetActiveFromOk() (*string, bool) {
-	if o == nil || IsNil(o.ActiveFrom) {
-		return nil, false
-	}
-	return o.ActiveFrom, true
-}
-
-// HasActiveFrom returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryRequest) HasActiveFrom() bool {
-	if o != nil && !IsNil(o.ActiveFrom) {
-		return true
-	}
-
-	return false
-}
-
-// SetActiveFrom gets a reference to the given string and assigns it to the ActiveFrom field.
-func (o *MemoryCreateMemoryRequest) SetActiveFrom(v string) {
-	o.ActiveFrom = &v
-}
-
-// GetActiveTo returns the ActiveTo field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryRequest) GetActiveTo() string {
-	if o == nil || IsNil(o.ActiveTo) {
-		var ret string
-		return ret
-	}
-	return *o.ActiveTo
-}
-
-// GetActiveToOk returns a tuple with the ActiveTo field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryRequest) GetActiveToOk() (*string, bool) {
-	if o == nil || IsNil(o.ActiveTo) {
-		return nil, false
-	}
-	return o.ActiveTo, true
-}
-
-// HasActiveTo returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryRequest) HasActiveTo() bool {
-	if o != nil && !IsNil(o.ActiveTo) {
-		return true
-	}
-
-	return false
-}
-
-// SetActiveTo gets a reference to the given string and assigns it to the ActiveTo field.
-func (o *MemoryCreateMemoryRequest) SetActiveTo(v string) {
-	o.ActiveTo = &v
 }
 
 // GetAppId returns the AppId field value if set, zero value otherwise.
@@ -389,12 +321,6 @@ func (o MemoryCreateMemoryRequest) MarshalJSON() ([]byte, error) {
 
 func (o MemoryCreateMemoryRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.ActiveFrom) {
-		toSerialize["active_from"] = o.ActiveFrom
-	}
-	if !IsNil(o.ActiveTo) {
-		toSerialize["active_to"] = o.ActiveTo
-	}
 	if !IsNil(o.AppId) {
 		toSerialize["app_id"] = o.AppId
 	}

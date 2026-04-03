@@ -18,11 +18,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_memory_scope import CommondtoMemoryScope
-from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_relative_standing_config import CommondtoRelativeStandingConfig
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from smritea._internal.autogen.smritea_cloud_sdk.models.explain_trace import ExplainTrace
+from smritea._internal.autogen.smritea_cloud_sdk.models.memory_memory_response import MemoryMemoryResponse
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,18 +29,13 @@ class MemoryCreateMemoryResponse(BaseModel):
     """
     MemoryCreateMemoryResponse
     """ # noqa: E501
-    active_from: Optional[StrictStr] = None
-    active_to: Optional[StrictStr] = None
-    app_id: Optional[StrictStr] = None
-    content: Optional[StrictStr] = None
-    created_at: Optional[StrictStr] = None
     explain_trace: Optional[ExplainTrace] = None
-    id: Optional[StrictStr] = None
-    metadata: Optional[Dict[str, Any]] = None
-    relative_standing: Optional[CommondtoRelativeStandingConfig] = None
-    scope: Optional[CommondtoMemoryScope] = Field(default=None, description="Scope contains the memory's actor, conversation, and source context.")
-    updated_at: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["active_from", "active_to", "app_id", "content", "created_at", "explain_trace", "id", "metadata", "relative_standing", "scope", "updated_at"]
+    extraction_confidence: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="ExtractionConfidence is the LLM's confidence in the extraction quality (0.0-1.0).")
+    facts_extracted: Optional[StrictInt] = Field(default=None, description="FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, or when the LLM finds no facts. In these cases the original content is stored as-is.")
+    memories: Optional[List[MemoryMemoryResponse]] = Field(default=None, description="Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content.")
+    skipped_count: Optional[StrictInt] = Field(default=None, description="SkippedCount is the number of facts skipped due to deduplication (exact duplicates).")
+    updated_count: Optional[StrictInt] = Field(default=None, description="UpdatedCount is the number of facts that resulted in updates to existing memories.")
+    __properties: ClassVar[List[str]] = ["explain_trace", "extraction_confidence", "facts_extracted", "memories", "skipped_count", "updated_count"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,12 +79,13 @@ class MemoryCreateMemoryResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of explain_trace
         if self.explain_trace:
             _dict['explain_trace'] = self.explain_trace.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of relative_standing
-        if self.relative_standing:
-            _dict['relative_standing'] = self.relative_standing.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of scope
-        if self.scope:
-            _dict['scope'] = self.scope.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in memories (list)
+        _items = []
+        if self.memories:
+            for _item_memories in self.memories:
+                if _item_memories:
+                    _items.append(_item_memories.to_dict())
+            _dict['memories'] = _items
         return _dict
 
     @classmethod
@@ -103,17 +98,12 @@ class MemoryCreateMemoryResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "active_from": obj.get("active_from"),
-            "active_to": obj.get("active_to"),
-            "app_id": obj.get("app_id"),
-            "content": obj.get("content"),
-            "created_at": obj.get("created_at"),
             "explain_trace": ExplainTrace.from_dict(obj["explain_trace"]) if obj.get("explain_trace") is not None else None,
-            "id": obj.get("id"),
-            "metadata": obj.get("metadata"),
-            "relative_standing": CommondtoRelativeStandingConfig.from_dict(obj["relative_standing"]) if obj.get("relative_standing") is not None else None,
-            "scope": CommondtoMemoryScope.from_dict(obj["scope"]) if obj.get("scope") is not None else None,
-            "updated_at": obj.get("updated_at")
+            "extraction_confidence": obj.get("extraction_confidence"),
+            "facts_extracted": obj.get("facts_extracted"),
+            "memories": [MemoryMemoryResponse.from_dict(_item) for _item in obj["memories"]] if obj.get("memories") is not None else None,
+            "skipped_count": obj.get("skipped_count"),
+            "updated_count": obj.get("updated_count")
         })
         return _obj
 

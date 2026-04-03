@@ -38,8 +38,6 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
  * MemoryCreateMemoryRequest
  */
 @JsonPropertyOrder({
-  MemoryCreateMemoryRequest.JSON_PROPERTY_ACTIVE_FROM,
-  MemoryCreateMemoryRequest.JSON_PROPERTY_ACTIVE_TO,
   MemoryCreateMemoryRequest.JSON_PROPERTY_APP_ID,
   MemoryCreateMemoryRequest.JSON_PROPERTY_CONTENT,
   MemoryCreateMemoryRequest.JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES,
@@ -51,14 +49,6 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class MemoryCreateMemoryRequest {
-  public static final String JSON_PROPERTY_ACTIVE_FROM = "active_from";
-  @javax.annotation.Nullable
-  private String activeFrom;
-
-  public static final String JSON_PROPERTY_ACTIVE_TO = "active_to";
-  @javax.annotation.Nullable
-  private String activeTo;
-
   public static final String JSON_PROPERTY_APP_ID = "app_id";
   @javax.annotation.Nullable
   private String appId;
@@ -93,54 +83,6 @@ public class MemoryCreateMemoryRequest {
 
   public MemoryCreateMemoryRequest() { 
   }
-
-  public MemoryCreateMemoryRequest activeFrom(@javax.annotation.Nullable String activeFrom) {
-    this.activeFrom = activeFrom;
-    return this;
-  }
-
-  /**
-   * ActiveFrom is when this memory becomes contextually valid (defaults to now if omitted)
-   * @return activeFrom
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACTIVE_FROM, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getActiveFrom() {
-    return activeFrom;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_ACTIVE_FROM, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setActiveFrom(@javax.annotation.Nullable String activeFrom) {
-    this.activeFrom = activeFrom;
-  }
-
-
-  public MemoryCreateMemoryRequest activeTo(@javax.annotation.Nullable String activeTo) {
-    this.activeTo = activeTo;
-    return this;
-  }
-
-  /**
-   * ActiveTo is when this memory stops being valid (optional, nil &#x3D; still valid)
-   * @return activeTo
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACTIVE_TO, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getActiveTo() {
-    return activeTo;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_ACTIVE_TO, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setActiveTo(@javax.annotation.Nullable String activeTo) {
-    this.activeTo = activeTo;
-  }
-
 
   public MemoryCreateMemoryRequest appId(@javax.annotation.Nullable String appId) {
     this.appId = appId;
@@ -346,9 +288,7 @@ public class MemoryCreateMemoryRequest {
       return false;
     }
     MemoryCreateMemoryRequest memoryCreateMemoryRequest = (MemoryCreateMemoryRequest) o;
-    return Objects.equals(this.activeFrom, memoryCreateMemoryRequest.activeFrom) &&
-        Objects.equals(this.activeTo, memoryCreateMemoryRequest.activeTo) &&
-        Objects.equals(this.appId, memoryCreateMemoryRequest.appId) &&
+    return Objects.equals(this.appId, memoryCreateMemoryRequest.appId) &&
         Objects.equals(this.content, memoryCreateMemoryRequest.content) &&
         Objects.equals(this.entityExtractionOverrides, memoryCreateMemoryRequest.entityExtractionOverrides) &&
         Objects.equals(this.factExtractionOverrides, memoryCreateMemoryRequest.factExtractionOverrides) &&
@@ -360,15 +300,13 @@ public class MemoryCreateMemoryRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(activeFrom, activeTo, appId, content, entityExtractionOverrides, factExtractionOverrides, metadata, personaExtractionOverrides, relativeStanding, scope);
+    return Objects.hash(appId, content, entityExtractionOverrides, factExtractionOverrides, metadata, personaExtractionOverrides, relativeStanding, scope);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class MemoryCreateMemoryRequest {\n");
-    sb.append("    activeFrom: ").append(toIndentedString(activeFrom)).append("\n");
-    sb.append("    activeTo: ").append(toIndentedString(activeTo)).append("\n");
     sb.append("    appId: ").append(toIndentedString(appId)).append("\n");
     sb.append("    content: ").append(toIndentedString(content)).append("\n");
     sb.append("    entityExtractionOverrides: ").append(toIndentedString(entityExtractionOverrides)).append("\n");
@@ -423,16 +361,6 @@ public class MemoryCreateMemoryRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
-
-    // add `active_from` to the URL query string
-    if (getActiveFrom() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactive_from%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActiveFrom()))));
-    }
-
-    // add `active_to` to the URL query string
-    if (getActiveTo() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactive_to%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActiveTo()))));
-    }
 
     // add `app_id` to the URL query string
     if (getAppId() != null) {

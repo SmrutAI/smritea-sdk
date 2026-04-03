@@ -36,61 +36,21 @@ namespace Smritea.Internal.Autogen.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryCreateMemoryResponse" /> class.
         /// </summary>
-        /// <param name="activeFrom">activeFrom.</param>
-        /// <param name="activeTo">activeTo.</param>
-        /// <param name="appId">appId.</param>
-        /// <param name="content">content.</param>
-        /// <param name="createdAt">createdAt.</param>
         /// <param name="explainTrace">explainTrace.</param>
-        /// <param name="id">id.</param>
-        /// <param name="metadata">metadata.</param>
-        /// <param name="relativeStanding">relativeStanding.</param>
-        /// <param name="scope">Scope contains the memory&#39;s actor, conversation, and source context..</param>
-        /// <param name="updatedAt">updatedAt.</param>
-        public MemoryCreateMemoryResponse(string activeFrom = default, string activeTo = default, string appId = default, string content = default, string createdAt = default, ExplainTrace explainTrace = default, string id = default, Object metadata = default, CommondtoRelativeStandingConfig relativeStanding = default, CommondtoMemoryScope scope = default, string updatedAt = default)
+        /// <param name="extractionConfidence">ExtractionConfidence is the LLM&#39;s confidence in the extraction quality (0.0-1.0)..</param>
+        /// <param name="factsExtracted">FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, or when the LLM finds no facts. In these cases the original content is stored as-is..</param>
+        /// <param name="memories">Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content..</param>
+        /// <param name="skippedCount">SkippedCount is the number of facts skipped due to deduplication (exact duplicates)..</param>
+        /// <param name="updatedCount">UpdatedCount is the number of facts that resulted in updates to existing memories..</param>
+        public MemoryCreateMemoryResponse(ExplainTrace explainTrace = default, decimal extractionConfidence = default, int factsExtracted = default, List<MemoryMemoryResponse> memories = default, int skippedCount = default, int updatedCount = default)
         {
-            this.ActiveFrom = activeFrom;
-            this.ActiveTo = activeTo;
-            this.AppId = appId;
-            this.Content = content;
-            this.CreatedAt = createdAt;
             this.ExplainTrace = explainTrace;
-            this.Id = id;
-            this.Metadata = metadata;
-            this.RelativeStanding = relativeStanding;
-            this.Scope = scope;
-            this.UpdatedAt = updatedAt;
+            this.ExtractionConfidence = extractionConfidence;
+            this.FactsExtracted = factsExtracted;
+            this.Memories = memories;
+            this.SkippedCount = skippedCount;
+            this.UpdatedCount = updatedCount;
         }
-
-        /// <summary>
-        /// Gets or Sets ActiveFrom
-        /// </summary>
-        [DataMember(Name = "active_from", EmitDefaultValue = false)]
-        public string ActiveFrom { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ActiveTo
-        /// </summary>
-        [DataMember(Name = "active_to", EmitDefaultValue = false)]
-        public string ActiveTo { get; set; }
-
-        /// <summary>
-        /// Gets or Sets AppId
-        /// </summary>
-        [DataMember(Name = "app_id", EmitDefaultValue = false)]
-        public string AppId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Content
-        /// </summary>
-        [DataMember(Name = "content", EmitDefaultValue = false)]
-        public string Content { get; set; }
-
-        /// <summary>
-        /// Gets or Sets CreatedAt
-        /// </summary>
-        [DataMember(Name = "created_at", EmitDefaultValue = false)]
-        public string CreatedAt { get; set; }
 
         /// <summary>
         /// Gets or Sets ExplainTrace
@@ -99,35 +59,39 @@ namespace Smritea.Internal.Autogen.Model
         public ExplainTrace ExplainTrace { get; set; }
 
         /// <summary>
-        /// Gets or Sets Id
+        /// ExtractionConfidence is the LLM&#39;s confidence in the extraction quality (0.0-1.0).
         /// </summary>
-        [DataMember(Name = "id", EmitDefaultValue = false)]
-        public string Id { get; set; }
+        /// <value>ExtractionConfidence is the LLM&#39;s confidence in the extraction quality (0.0-1.0).</value>
+        [DataMember(Name = "extraction_confidence", EmitDefaultValue = false)]
+        public decimal ExtractionConfidence { get; set; }
 
         /// <summary>
-        /// Gets or Sets Metadata
+        /// FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, or when the LLM finds no facts. In these cases the original content is stored as-is.
         /// </summary>
-        [DataMember(Name = "metadata", EmitDefaultValue = false)]
-        public Object Metadata { get; set; }
+        /// <value>FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, or when the LLM finds no facts. In these cases the original content is stored as-is.</value>
+        [DataMember(Name = "facts_extracted", EmitDefaultValue = false)]
+        public int FactsExtracted { get; set; }
 
         /// <summary>
-        /// Gets or Sets RelativeStanding
+        /// Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content.
         /// </summary>
-        [DataMember(Name = "relative_standing", EmitDefaultValue = false)]
-        public CommondtoRelativeStandingConfig RelativeStanding { get; set; }
+        /// <value>Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content.</value>
+        [DataMember(Name = "memories", EmitDefaultValue = false)]
+        public List<MemoryMemoryResponse> Memories { get; set; }
 
         /// <summary>
-        /// Scope contains the memory&#39;s actor, conversation, and source context.
+        /// SkippedCount is the number of facts skipped due to deduplication (exact duplicates).
         /// </summary>
-        /// <value>Scope contains the memory&#39;s actor, conversation, and source context.</value>
-        [DataMember(Name = "scope", EmitDefaultValue = false)]
-        public CommondtoMemoryScope Scope { get; set; }
+        /// <value>SkippedCount is the number of facts skipped due to deduplication (exact duplicates).</value>
+        [DataMember(Name = "skipped_count", EmitDefaultValue = false)]
+        public int SkippedCount { get; set; }
 
         /// <summary>
-        /// Gets or Sets UpdatedAt
+        /// UpdatedCount is the number of facts that resulted in updates to existing memories.
         /// </summary>
-        [DataMember(Name = "updated_at", EmitDefaultValue = false)]
-        public string UpdatedAt { get; set; }
+        /// <value>UpdatedCount is the number of facts that resulted in updates to existing memories.</value>
+        [DataMember(Name = "updated_count", EmitDefaultValue = false)]
+        public int UpdatedCount { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -137,17 +101,12 @@ namespace Smritea.Internal.Autogen.Model
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("class MemoryCreateMemoryResponse {\n");
-            sb.Append("  ActiveFrom: ").Append(ActiveFrom).Append("\n");
-            sb.Append("  ActiveTo: ").Append(ActiveTo).Append("\n");
-            sb.Append("  AppId: ").Append(AppId).Append("\n");
-            sb.Append("  Content: ").Append(Content).Append("\n");
-            sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
             sb.Append("  ExplainTrace: ").Append(ExplainTrace).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Metadata: ").Append(Metadata).Append("\n");
-            sb.Append("  RelativeStanding: ").Append(RelativeStanding).Append("\n");
-            sb.Append("  Scope: ").Append(Scope).Append("\n");
-            sb.Append("  UpdatedAt: ").Append(UpdatedAt).Append("\n");
+            sb.Append("  ExtractionConfidence: ").Append(ExtractionConfidence).Append("\n");
+            sb.Append("  FactsExtracted: ").Append(FactsExtracted).Append("\n");
+            sb.Append("  Memories: ").Append(Memories).Append("\n");
+            sb.Append("  SkippedCount: ").Append(SkippedCount).Append("\n");
+            sb.Append("  UpdatedCount: ").Append(UpdatedCount).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

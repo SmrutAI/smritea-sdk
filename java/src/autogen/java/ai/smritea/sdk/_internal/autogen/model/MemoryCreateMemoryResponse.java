@@ -19,15 +19,17 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
-import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
-import ai.smritea.sdk._internal.autogen.model.CommondtoRelativeStandingConfig;
 import ai.smritea.sdk._internal.autogen.model.ExplainTrace;
+import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
@@ -36,186 +38,41 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
  * MemoryCreateMemoryResponse
  */
 @JsonPropertyOrder({
-  MemoryCreateMemoryResponse.JSON_PROPERTY_ACTIVE_FROM,
-  MemoryCreateMemoryResponse.JSON_PROPERTY_ACTIVE_TO,
-  MemoryCreateMemoryResponse.JSON_PROPERTY_APP_ID,
-  MemoryCreateMemoryResponse.JSON_PROPERTY_CONTENT,
-  MemoryCreateMemoryResponse.JSON_PROPERTY_CREATED_AT,
   MemoryCreateMemoryResponse.JSON_PROPERTY_EXPLAIN_TRACE,
-  MemoryCreateMemoryResponse.JSON_PROPERTY_ID,
-  MemoryCreateMemoryResponse.JSON_PROPERTY_METADATA,
-  MemoryCreateMemoryResponse.JSON_PROPERTY_RELATIVE_STANDING,
-  MemoryCreateMemoryResponse.JSON_PROPERTY_SCOPE,
-  MemoryCreateMemoryResponse.JSON_PROPERTY_UPDATED_AT
+  MemoryCreateMemoryResponse.JSON_PROPERTY_EXTRACTION_CONFIDENCE,
+  MemoryCreateMemoryResponse.JSON_PROPERTY_FACTS_EXTRACTED,
+  MemoryCreateMemoryResponse.JSON_PROPERTY_MEMORIES,
+  MemoryCreateMemoryResponse.JSON_PROPERTY_SKIPPED_COUNT,
+  MemoryCreateMemoryResponse.JSON_PROPERTY_UPDATED_COUNT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class MemoryCreateMemoryResponse {
-  public static final String JSON_PROPERTY_ACTIVE_FROM = "active_from";
-  @javax.annotation.Nullable
-  private String activeFrom;
-
-  public static final String JSON_PROPERTY_ACTIVE_TO = "active_to";
-  @javax.annotation.Nullable
-  private String activeTo;
-
-  public static final String JSON_PROPERTY_APP_ID = "app_id";
-  @javax.annotation.Nullable
-  private String appId;
-
-  public static final String JSON_PROPERTY_CONTENT = "content";
-  @javax.annotation.Nullable
-  private String content;
-
-  public static final String JSON_PROPERTY_CREATED_AT = "created_at";
-  @javax.annotation.Nullable
-  private String createdAt;
-
   public static final String JSON_PROPERTY_EXPLAIN_TRACE = "explain_trace";
   @javax.annotation.Nullable
   private ExplainTrace explainTrace;
 
-  public static final String JSON_PROPERTY_ID = "id";
+  public static final String JSON_PROPERTY_EXTRACTION_CONFIDENCE = "extraction_confidence";
   @javax.annotation.Nullable
-  private String id;
+  private BigDecimal extractionConfidence;
 
-  public static final String JSON_PROPERTY_METADATA = "metadata";
+  public static final String JSON_PROPERTY_FACTS_EXTRACTED = "facts_extracted";
   @javax.annotation.Nullable
-  private Object metadata;
+  private Integer factsExtracted;
 
-  public static final String JSON_PROPERTY_RELATIVE_STANDING = "relative_standing";
+  public static final String JSON_PROPERTY_MEMORIES = "memories";
   @javax.annotation.Nullable
-  private CommondtoRelativeStandingConfig relativeStanding;
+  private List<MemoryMemoryResponse> memories = new ArrayList<>();
 
-  public static final String JSON_PROPERTY_SCOPE = "scope";
+  public static final String JSON_PROPERTY_SKIPPED_COUNT = "skipped_count";
   @javax.annotation.Nullable
-  private CommondtoMemoryScope scope;
+  private Integer skippedCount;
 
-  public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
+  public static final String JSON_PROPERTY_UPDATED_COUNT = "updated_count";
   @javax.annotation.Nullable
-  private String updatedAt;
+  private Integer updatedCount;
 
   public MemoryCreateMemoryResponse() { 
   }
-
-  public MemoryCreateMemoryResponse activeFrom(@javax.annotation.Nullable String activeFrom) {
-    this.activeFrom = activeFrom;
-    return this;
-  }
-
-  /**
-   * Get activeFrom
-   * @return activeFrom
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACTIVE_FROM, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getActiveFrom() {
-    return activeFrom;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_ACTIVE_FROM, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setActiveFrom(@javax.annotation.Nullable String activeFrom) {
-    this.activeFrom = activeFrom;
-  }
-
-
-  public MemoryCreateMemoryResponse activeTo(@javax.annotation.Nullable String activeTo) {
-    this.activeTo = activeTo;
-    return this;
-  }
-
-  /**
-   * Get activeTo
-   * @return activeTo
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ACTIVE_TO, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getActiveTo() {
-    return activeTo;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_ACTIVE_TO, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setActiveTo(@javax.annotation.Nullable String activeTo) {
-    this.activeTo = activeTo;
-  }
-
-
-  public MemoryCreateMemoryResponse appId(@javax.annotation.Nullable String appId) {
-    this.appId = appId;
-    return this;
-  }
-
-  /**
-   * Get appId
-   * @return appId
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_APP_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getAppId() {
-    return appId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_APP_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setAppId(@javax.annotation.Nullable String appId) {
-    this.appId = appId;
-  }
-
-
-  public MemoryCreateMemoryResponse content(@javax.annotation.Nullable String content) {
-    this.content = content;
-    return this;
-  }
-
-  /**
-   * Get content
-   * @return content
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getContent() {
-    return content;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setContent(@javax.annotation.Nullable String content) {
-    this.content = content;
-  }
-
-
-  public MemoryCreateMemoryResponse createdAt(@javax.annotation.Nullable String createdAt) {
-    this.createdAt = createdAt;
-    return this;
-  }
-
-  /**
-   * Get createdAt
-   * @return createdAt
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getCreatedAt() {
-    return createdAt;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setCreatedAt(@javax.annotation.Nullable String createdAt) {
-    this.createdAt = createdAt;
-  }
-
 
   public MemoryCreateMemoryResponse explainTrace(@javax.annotation.Nullable ExplainTrace explainTrace) {
     this.explainTrace = explainTrace;
@@ -241,123 +98,131 @@ public class MemoryCreateMemoryResponse {
   }
 
 
-  public MemoryCreateMemoryResponse id(@javax.annotation.Nullable String id) {
-    this.id = id;
+  public MemoryCreateMemoryResponse extractionConfidence(@javax.annotation.Nullable BigDecimal extractionConfidence) {
+    this.extractionConfidence = extractionConfidence;
     return this;
   }
 
   /**
-   * Get id
-   * @return id
+   * ExtractionConfidence is the LLM&#39;s confidence in the extraction quality (0.0-1.0).
+   * @return extractionConfidence
    */
   @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_ID, required = false)
+  @JsonProperty(value = JSON_PROPERTY_EXTRACTION_CONFIDENCE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getId() {
-    return id;
+  public BigDecimal getExtractionConfidence() {
+    return extractionConfidence;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_ID, required = false)
+  @JsonProperty(value = JSON_PROPERTY_EXTRACTION_CONFIDENCE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setId(@javax.annotation.Nullable String id) {
-    this.id = id;
+  public void setExtractionConfidence(@javax.annotation.Nullable BigDecimal extractionConfidence) {
+    this.extractionConfidence = extractionConfidence;
   }
 
 
-  public MemoryCreateMemoryResponse metadata(@javax.annotation.Nullable Object metadata) {
-    this.metadata = metadata;
+  public MemoryCreateMemoryResponse factsExtracted(@javax.annotation.Nullable Integer factsExtracted) {
+    this.factsExtracted = factsExtracted;
     return this;
   }
 
   /**
-   * Get metadata
-   * @return metadata
+   * FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, or when the LLM finds no facts. In these cases the original content is stored as-is.
+   * @return factsExtracted
    */
   @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_METADATA, required = false)
+  @JsonProperty(value = JSON_PROPERTY_FACTS_EXTRACTED, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Object getMetadata() {
-    return metadata;
+  public Integer getFactsExtracted() {
+    return factsExtracted;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_METADATA, required = false)
+  @JsonProperty(value = JSON_PROPERTY_FACTS_EXTRACTED, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMetadata(@javax.annotation.Nullable Object metadata) {
-    this.metadata = metadata;
+  public void setFactsExtracted(@javax.annotation.Nullable Integer factsExtracted) {
+    this.factsExtracted = factsExtracted;
   }
 
 
-  public MemoryCreateMemoryResponse relativeStanding(@javax.annotation.Nullable CommondtoRelativeStandingConfig relativeStanding) {
-    this.relativeStanding = relativeStanding;
+  public MemoryCreateMemoryResponse memories(@javax.annotation.Nullable List<MemoryMemoryResponse> memories) {
+    this.memories = memories;
+    return this;
+  }
+
+  public MemoryCreateMemoryResponse addMemoriesItem(MemoryMemoryResponse memoriesItem) {
+    if (this.memories == null) {
+      this.memories = new ArrayList<>();
+    }
+    this.memories.add(memoriesItem);
     return this;
   }
 
   /**
-   * Get relativeStanding
-   * @return relativeStanding
+   * Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content.
+   * @return memories
    */
   @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_RELATIVE_STANDING, required = false)
+  @JsonProperty(value = JSON_PROPERTY_MEMORIES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public CommondtoRelativeStandingConfig getRelativeStanding() {
-    return relativeStanding;
+  public List<MemoryMemoryResponse> getMemories() {
+    return memories;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_RELATIVE_STANDING, required = false)
+  @JsonProperty(value = JSON_PROPERTY_MEMORIES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setRelativeStanding(@javax.annotation.Nullable CommondtoRelativeStandingConfig relativeStanding) {
-    this.relativeStanding = relativeStanding;
+  public void setMemories(@javax.annotation.Nullable List<MemoryMemoryResponse> memories) {
+    this.memories = memories;
   }
 
 
-  public MemoryCreateMemoryResponse scope(@javax.annotation.Nullable CommondtoMemoryScope scope) {
-    this.scope = scope;
+  public MemoryCreateMemoryResponse skippedCount(@javax.annotation.Nullable Integer skippedCount) {
+    this.skippedCount = skippedCount;
     return this;
   }
 
   /**
-   * Scope contains the memory&#39;s actor, conversation, and source context.
-   * @return scope
+   * SkippedCount is the number of facts skipped due to deduplication (exact duplicates).
+   * @return skippedCount
    */
   @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_SCOPE, required = false)
+  @JsonProperty(value = JSON_PROPERTY_SKIPPED_COUNT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public CommondtoMemoryScope getScope() {
-    return scope;
+  public Integer getSkippedCount() {
+    return skippedCount;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_SCOPE, required = false)
+  @JsonProperty(value = JSON_PROPERTY_SKIPPED_COUNT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setScope(@javax.annotation.Nullable CommondtoMemoryScope scope) {
-    this.scope = scope;
+  public void setSkippedCount(@javax.annotation.Nullable Integer skippedCount) {
+    this.skippedCount = skippedCount;
   }
 
 
-  public MemoryCreateMemoryResponse updatedAt(@javax.annotation.Nullable String updatedAt) {
-    this.updatedAt = updatedAt;
+  public MemoryCreateMemoryResponse updatedCount(@javax.annotation.Nullable Integer updatedCount) {
+    this.updatedCount = updatedCount;
     return this;
   }
 
   /**
-   * Get updatedAt
-   * @return updatedAt
+   * UpdatedCount is the number of facts that resulted in updates to existing memories.
+   * @return updatedCount
    */
   @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_UPDATED_AT, required = false)
+  @JsonProperty(value = JSON_PROPERTY_UPDATED_COUNT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getUpdatedAt() {
-    return updatedAt;
+  public Integer getUpdatedCount() {
+    return updatedCount;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_UPDATED_AT, required = false)
+  @JsonProperty(value = JSON_PROPERTY_UPDATED_COUNT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setUpdatedAt(@javax.annotation.Nullable String updatedAt) {
-    this.updatedAt = updatedAt;
+  public void setUpdatedCount(@javax.annotation.Nullable Integer updatedCount) {
+    this.updatedCount = updatedCount;
   }
 
 
@@ -373,39 +238,29 @@ public class MemoryCreateMemoryResponse {
       return false;
     }
     MemoryCreateMemoryResponse memoryCreateMemoryResponse = (MemoryCreateMemoryResponse) o;
-    return Objects.equals(this.activeFrom, memoryCreateMemoryResponse.activeFrom) &&
-        Objects.equals(this.activeTo, memoryCreateMemoryResponse.activeTo) &&
-        Objects.equals(this.appId, memoryCreateMemoryResponse.appId) &&
-        Objects.equals(this.content, memoryCreateMemoryResponse.content) &&
-        Objects.equals(this.createdAt, memoryCreateMemoryResponse.createdAt) &&
-        Objects.equals(this.explainTrace, memoryCreateMemoryResponse.explainTrace) &&
-        Objects.equals(this.id, memoryCreateMemoryResponse.id) &&
-        Objects.equals(this.metadata, memoryCreateMemoryResponse.metadata) &&
-        Objects.equals(this.relativeStanding, memoryCreateMemoryResponse.relativeStanding) &&
-        Objects.equals(this.scope, memoryCreateMemoryResponse.scope) &&
-        Objects.equals(this.updatedAt, memoryCreateMemoryResponse.updatedAt);
+    return Objects.equals(this.explainTrace, memoryCreateMemoryResponse.explainTrace) &&
+        Objects.equals(this.extractionConfidence, memoryCreateMemoryResponse.extractionConfidence) &&
+        Objects.equals(this.factsExtracted, memoryCreateMemoryResponse.factsExtracted) &&
+        Objects.equals(this.memories, memoryCreateMemoryResponse.memories) &&
+        Objects.equals(this.skippedCount, memoryCreateMemoryResponse.skippedCount) &&
+        Objects.equals(this.updatedCount, memoryCreateMemoryResponse.updatedCount);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(activeFrom, activeTo, appId, content, createdAt, explainTrace, id, metadata, relativeStanding, scope, updatedAt);
+    return Objects.hash(explainTrace, extractionConfidence, factsExtracted, memories, skippedCount, updatedCount);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class MemoryCreateMemoryResponse {\n");
-    sb.append("    activeFrom: ").append(toIndentedString(activeFrom)).append("\n");
-    sb.append("    activeTo: ").append(toIndentedString(activeTo)).append("\n");
-    sb.append("    appId: ").append(toIndentedString(appId)).append("\n");
-    sb.append("    content: ").append(toIndentedString(content)).append("\n");
-    sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    explainTrace: ").append(toIndentedString(explainTrace)).append("\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("    relativeStanding: ").append(toIndentedString(relativeStanding)).append("\n");
-    sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
-    sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
+    sb.append("    extractionConfidence: ").append(toIndentedString(extractionConfidence)).append("\n");
+    sb.append("    factsExtracted: ").append(toIndentedString(factsExtracted)).append("\n");
+    sb.append("    memories: ").append(toIndentedString(memories)).append("\n");
+    sb.append("    skippedCount: ").append(toIndentedString(skippedCount)).append("\n");
+    sb.append("    updatedCount: ").append(toIndentedString(updatedCount)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -453,59 +308,39 @@ public class MemoryCreateMemoryResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `active_from` to the URL query string
-    if (getActiveFrom() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactive_from%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActiveFrom()))));
-    }
-
-    // add `active_to` to the URL query string
-    if (getActiveTo() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sactive_to%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActiveTo()))));
-    }
-
-    // add `app_id` to the URL query string
-    if (getAppId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sapp_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getAppId()))));
-    }
-
-    // add `content` to the URL query string
-    if (getContent() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%scontent%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getContent()))));
-    }
-
-    // add `created_at` to the URL query string
-    if (getCreatedAt() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%screated_at%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getCreatedAt()))));
-    }
-
     // add `explain_trace` to the URL query string
     if (getExplainTrace() != null) {
       joiner.add(getExplainTrace().toUrlQueryString(prefix + "explain_trace" + suffix));
     }
 
-    // add `id` to the URL query string
-    if (getId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sid%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+    // add `extraction_confidence` to the URL query string
+    if (getExtractionConfidence() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sextraction_confidence%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getExtractionConfidence()))));
     }
 
-    // add `metadata` to the URL query string
-    if (getMetadata() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%smetadata%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMetadata()))));
+    // add `facts_extracted` to the URL query string
+    if (getFactsExtracted() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sfacts_extracted%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getFactsExtracted()))));
     }
 
-    // add `relative_standing` to the URL query string
-    if (getRelativeStanding() != null) {
-      joiner.add(getRelativeStanding().toUrlQueryString(prefix + "relative_standing" + suffix));
+    // add `memories` to the URL query string
+    if (getMemories() != null) {
+      for (int i = 0; i < getMemories().size(); i++) {
+        if (getMemories().get(i) != null) {
+          joiner.add(getMemories().get(i).toUrlQueryString(String.format(java.util.Locale.ROOT, "%smemories%s%s", prefix, suffix,
+          "".equals(suffix) ? "" : String.format(java.util.Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix))));
+        }
+      }
     }
 
-    // add `scope` to the URL query string
-    if (getScope() != null) {
-      joiner.add(getScope().toUrlQueryString(prefix + "scope" + suffix));
+    // add `skipped_count` to the URL query string
+    if (getSkippedCount() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sskipped_count%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSkippedCount()))));
     }
 
-    // add `updated_at` to the URL query string
-    if (getUpdatedAt() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%supdated_at%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getUpdatedAt()))));
+    // add `updated_count` to the URL query string
+    if (getUpdatedCount() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%supdated_count%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getUpdatedCount()))));
     }
 
     return joiner.toString();

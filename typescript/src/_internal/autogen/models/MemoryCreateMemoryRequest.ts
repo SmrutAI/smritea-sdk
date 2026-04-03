@@ -56,18 +56,6 @@ import {
  */
 export interface MemoryCreateMemoryRequest {
     /**
-     * ActiveFrom is when this memory becomes contextually valid (defaults to now if omitted)
-     * @type {string}
-     * @memberof MemoryCreateMemoryRequest
-     */
-    activeFrom?: string;
-    /**
-     * ActiveTo is when this memory stops being valid (optional, nil = still valid)
-     * @type {string}
-     * @memberof MemoryCreateMemoryRequest
-     */
-    activeTo?: string;
-    /**
      * AppID is the application identifier (required)
      * @type {string}
      * @memberof MemoryCreateMemoryRequest
@@ -140,8 +128,6 @@ export function MemoryCreateMemoryRequestFromJSONTyped(json: any, ignoreDiscrimi
     }
     return {
         
-        'activeFrom': json['active_from'] == null ? undefined : json['active_from'],
-        'activeTo': json['active_to'] == null ? undefined : json['active_to'],
         'appId': json['app_id'] == null ? undefined : json['app_id'],
         'content': json['content'] == null ? undefined : json['content'],
         'entityExtractionOverrides': json['entity_extraction_overrides'] == null ? undefined : CommondtoEntityExtractionConfigFromJSON(json['entity_extraction_overrides']),
@@ -164,8 +150,6 @@ export function MemoryCreateMemoryRequestToJSONTyped(value?: MemoryCreateMemoryR
 
     return {
         
-        'active_from': value['activeFrom'],
-        'active_to': value['activeTo'],
         'app_id': value['appId'],
         'content': value['content'],
         'entity_extraction_overrides': CommondtoEntityExtractionConfigToJSON(value['entityExtractionOverrides']),

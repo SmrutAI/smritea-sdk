@@ -13,20 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
-import type { CommondtoRelativeStandingConfig } from './CommondtoRelativeStandingConfig';
+import type { MemoryMemoryResponse } from './MemoryMemoryResponse';
 import {
-    CommondtoRelativeStandingConfigFromJSON,
-    CommondtoRelativeStandingConfigFromJSONTyped,
-    CommondtoRelativeStandingConfigToJSON,
-    CommondtoRelativeStandingConfigToJSONTyped,
-} from './CommondtoRelativeStandingConfig';
-import type { CommondtoMemoryScope } from './CommondtoMemoryScope';
-import {
-    CommondtoMemoryScopeFromJSON,
-    CommondtoMemoryScopeFromJSONTyped,
-    CommondtoMemoryScopeToJSON,
-    CommondtoMemoryScopeToJSONTyped,
-} from './CommondtoMemoryScope';
+    MemoryMemoryResponseFromJSON,
+    MemoryMemoryResponseFromJSONTyped,
+    MemoryMemoryResponseToJSON,
+    MemoryMemoryResponseToJSONTyped,
+} from './MemoryMemoryResponse';
 import type { ExplainTrace } from './ExplainTrace';
 import {
     ExplainTraceFromJSON,
@@ -43,70 +36,43 @@ import {
 export interface MemoryCreateMemoryResponse {
     /**
      * 
-     * @type {string}
-     * @memberof MemoryCreateMemoryResponse
-     */
-    activeFrom?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MemoryCreateMemoryResponse
-     */
-    activeTo?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MemoryCreateMemoryResponse
-     */
-    appId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MemoryCreateMemoryResponse
-     */
-    content?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MemoryCreateMemoryResponse
-     */
-    createdAt?: string;
-    /**
-     * 
      * @type {ExplainTrace}
      * @memberof MemoryCreateMemoryResponse
      */
     explainTrace?: ExplainTrace;
     /**
-     * 
-     * @type {string}
+     * ExtractionConfidence is the LLM's confidence in the extraction quality (0.0-1.0).
+     * @type {number}
      * @memberof MemoryCreateMemoryResponse
      */
-    id?: string;
+    extractionConfidence?: number;
     /**
-     * 
-     * @type {object}
+     * FactsExtracted is the number of discrete facts the LLM extracted from the input.
+     * 0 when extraction is disabled (NoExtract/quick_search), when extraction fails,
+     * or when the LLM finds no facts. In these cases the original content is stored as-is.
+     * @type {number}
      * @memberof MemoryCreateMemoryResponse
      */
-    metadata?: object;
+    factsExtracted?: number;
     /**
-     * 
-     * @type {CommondtoRelativeStandingConfig}
+     * Memories contains all memories created from the extracted facts.
+     * When extraction is disabled or fails, this contains a single memory with the original content.
+     * @type {Array<MemoryMemoryResponse>}
      * @memberof MemoryCreateMemoryResponse
      */
-    relativeStanding?: CommondtoRelativeStandingConfig;
+    memories?: Array<MemoryMemoryResponse>;
     /**
-     * Scope contains the memory's actor, conversation, and source context.
-     * @type {CommondtoMemoryScope}
+     * SkippedCount is the number of facts skipped due to deduplication (exact duplicates).
+     * @type {number}
      * @memberof MemoryCreateMemoryResponse
      */
-    scope?: CommondtoMemoryScope;
+    skippedCount?: number;
     /**
-     * 
-     * @type {string}
+     * UpdatedCount is the number of facts that resulted in updates to existing memories.
+     * @type {number}
      * @memberof MemoryCreateMemoryResponse
      */
-    updatedAt?: string;
+    updatedCount?: number;
 }
 
 /**
@@ -126,17 +92,12 @@ export function MemoryCreateMemoryResponseFromJSONTyped(json: any, ignoreDiscrim
     }
     return {
         
-        'activeFrom': json['active_from'] == null ? undefined : json['active_from'],
-        'activeTo': json['active_to'] == null ? undefined : json['active_to'],
-        'appId': json['app_id'] == null ? undefined : json['app_id'],
-        'content': json['content'] == null ? undefined : json['content'],
-        'createdAt': json['created_at'] == null ? undefined : json['created_at'],
         'explainTrace': json['explain_trace'] == null ? undefined : ExplainTraceFromJSON(json['explain_trace']),
-        'id': json['id'] == null ? undefined : json['id'],
-        'metadata': json['metadata'] == null ? undefined : json['metadata'],
-        'relativeStanding': json['relative_standing'] == null ? undefined : CommondtoRelativeStandingConfigFromJSON(json['relative_standing']),
-        'scope': json['scope'] == null ? undefined : CommondtoMemoryScopeFromJSON(json['scope']),
-        'updatedAt': json['updated_at'] == null ? undefined : json['updated_at'],
+        'extractionConfidence': json['extraction_confidence'] == null ? undefined : json['extraction_confidence'],
+        'factsExtracted': json['facts_extracted'] == null ? undefined : json['facts_extracted'],
+        'memories': json['memories'] == null ? undefined : ((json['memories'] as Array<any>).map(MemoryMemoryResponseFromJSON)),
+        'skippedCount': json['skipped_count'] == null ? undefined : json['skipped_count'],
+        'updatedCount': json['updated_count'] == null ? undefined : json['updated_count'],
     };
 }
 
@@ -151,17 +112,12 @@ export function MemoryCreateMemoryResponseToJSONTyped(value?: MemoryCreateMemory
 
     return {
         
-        'active_from': value['activeFrom'],
-        'active_to': value['activeTo'],
-        'app_id': value['appId'],
-        'content': value['content'],
-        'created_at': value['createdAt'],
         'explain_trace': ExplainTraceToJSON(value['explainTrace']),
-        'id': value['id'],
-        'metadata': value['metadata'],
-        'relative_standing': CommondtoRelativeStandingConfigToJSON(value['relativeStanding']),
-        'scope': CommondtoMemoryScopeToJSON(value['scope']),
-        'updated_at': value['updatedAt'],
+        'extraction_confidence': value['extractionConfidence'],
+        'facts_extracted': value['factsExtracted'],
+        'memories': value['memories'] == null ? undefined : ((value['memories'] as Array<any>).map(MemoryMemoryResponseToJSON)),
+        'skipped_count': value['skippedCount'],
+        'updated_count': value['updatedCount'],
     };
 }
 

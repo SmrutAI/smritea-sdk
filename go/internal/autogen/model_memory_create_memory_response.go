@@ -20,18 +20,17 @@ var _ MappedNullable = &MemoryCreateMemoryResponse{}
 
 // MemoryCreateMemoryResponse struct for MemoryCreateMemoryResponse
 type MemoryCreateMemoryResponse struct {
-	ActiveFrom *string `json:"active_from,omitempty"`
-	ActiveTo *string `json:"active_to,omitempty"`
-	AppId *string `json:"app_id,omitempty"`
-	Content *string `json:"content,omitempty"`
-	CreatedAt *string `json:"created_at,omitempty"`
 	ExplainTrace *ExplainTrace `json:"explain_trace,omitempty"`
-	Id *string `json:"id,omitempty"`
-	Metadata map[string]interface{} `json:"metadata,omitempty"`
-	RelativeStanding *CommondtoRelativeStandingConfig `json:"relative_standing,omitempty"`
-	// Scope contains the memory's actor, conversation, and source context.
-	Scope *CommondtoMemoryScope `json:"scope,omitempty"`
-	UpdatedAt *string `json:"updated_at,omitempty"`
+	// ExtractionConfidence is the LLM's confidence in the extraction quality (0.0-1.0).
+	ExtractionConfidence *float32 `json:"extraction_confidence,omitempty"`
+	// FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, or when the LLM finds no facts. In these cases the original content is stored as-is.
+	FactsExtracted *int32 `json:"facts_extracted,omitempty"`
+	// Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content.
+	Memories []MemoryMemoryResponse `json:"memories,omitempty"`
+	// SkippedCount is the number of facts skipped due to deduplication (exact duplicates).
+	SkippedCount *int32 `json:"skipped_count,omitempty"`
+	// UpdatedCount is the number of facts that resulted in updates to existing memories.
+	UpdatedCount *int32 `json:"updated_count,omitempty"`
 }
 
 // NewMemoryCreateMemoryResponse instantiates a new MemoryCreateMemoryResponse object
@@ -49,166 +48,6 @@ func NewMemoryCreateMemoryResponse() *MemoryCreateMemoryResponse {
 func NewMemoryCreateMemoryResponseWithDefaults() *MemoryCreateMemoryResponse {
 	this := MemoryCreateMemoryResponse{}
 	return &this
-}
-
-// GetActiveFrom returns the ActiveFrom field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryResponse) GetActiveFrom() string {
-	if o == nil || IsNil(o.ActiveFrom) {
-		var ret string
-		return ret
-	}
-	return *o.ActiveFrom
-}
-
-// GetActiveFromOk returns a tuple with the ActiveFrom field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryResponse) GetActiveFromOk() (*string, bool) {
-	if o == nil || IsNil(o.ActiveFrom) {
-		return nil, false
-	}
-	return o.ActiveFrom, true
-}
-
-// HasActiveFrom returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryResponse) HasActiveFrom() bool {
-	if o != nil && !IsNil(o.ActiveFrom) {
-		return true
-	}
-
-	return false
-}
-
-// SetActiveFrom gets a reference to the given string and assigns it to the ActiveFrom field.
-func (o *MemoryCreateMemoryResponse) SetActiveFrom(v string) {
-	o.ActiveFrom = &v
-}
-
-// GetActiveTo returns the ActiveTo field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryResponse) GetActiveTo() string {
-	if o == nil || IsNil(o.ActiveTo) {
-		var ret string
-		return ret
-	}
-	return *o.ActiveTo
-}
-
-// GetActiveToOk returns a tuple with the ActiveTo field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryResponse) GetActiveToOk() (*string, bool) {
-	if o == nil || IsNil(o.ActiveTo) {
-		return nil, false
-	}
-	return o.ActiveTo, true
-}
-
-// HasActiveTo returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryResponse) HasActiveTo() bool {
-	if o != nil && !IsNil(o.ActiveTo) {
-		return true
-	}
-
-	return false
-}
-
-// SetActiveTo gets a reference to the given string and assigns it to the ActiveTo field.
-func (o *MemoryCreateMemoryResponse) SetActiveTo(v string) {
-	o.ActiveTo = &v
-}
-
-// GetAppId returns the AppId field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryResponse) GetAppId() string {
-	if o == nil || IsNil(o.AppId) {
-		var ret string
-		return ret
-	}
-	return *o.AppId
-}
-
-// GetAppIdOk returns a tuple with the AppId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryResponse) GetAppIdOk() (*string, bool) {
-	if o == nil || IsNil(o.AppId) {
-		return nil, false
-	}
-	return o.AppId, true
-}
-
-// HasAppId returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryResponse) HasAppId() bool {
-	if o != nil && !IsNil(o.AppId) {
-		return true
-	}
-
-	return false
-}
-
-// SetAppId gets a reference to the given string and assigns it to the AppId field.
-func (o *MemoryCreateMemoryResponse) SetAppId(v string) {
-	o.AppId = &v
-}
-
-// GetContent returns the Content field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryResponse) GetContent() string {
-	if o == nil || IsNil(o.Content) {
-		var ret string
-		return ret
-	}
-	return *o.Content
-}
-
-// GetContentOk returns a tuple with the Content field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryResponse) GetContentOk() (*string, bool) {
-	if o == nil || IsNil(o.Content) {
-		return nil, false
-	}
-	return o.Content, true
-}
-
-// HasContent returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryResponse) HasContent() bool {
-	if o != nil && !IsNil(o.Content) {
-		return true
-	}
-
-	return false
-}
-
-// SetContent gets a reference to the given string and assigns it to the Content field.
-func (o *MemoryCreateMemoryResponse) SetContent(v string) {
-	o.Content = &v
-}
-
-// GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryResponse) GetCreatedAt() string {
-	if o == nil || IsNil(o.CreatedAt) {
-		var ret string
-		return ret
-	}
-	return *o.CreatedAt
-}
-
-// GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryResponse) GetCreatedAtOk() (*string, bool) {
-	if o == nil || IsNil(o.CreatedAt) {
-		return nil, false
-	}
-	return o.CreatedAt, true
-}
-
-// HasCreatedAt returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryResponse) HasCreatedAt() bool {
-	if o != nil && !IsNil(o.CreatedAt) {
-		return true
-	}
-
-	return false
-}
-
-// SetCreatedAt gets a reference to the given string and assigns it to the CreatedAt field.
-func (o *MemoryCreateMemoryResponse) SetCreatedAt(v string) {
-	o.CreatedAt = &v
 }
 
 // GetExplainTrace returns the ExplainTrace field value if set, zero value otherwise.
@@ -243,164 +82,164 @@ func (o *MemoryCreateMemoryResponse) SetExplainTrace(v ExplainTrace) {
 	o.ExplainTrace = &v
 }
 
-// GetId returns the Id field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryResponse) GetId() string {
-	if o == nil || IsNil(o.Id) {
-		var ret string
+// GetExtractionConfidence returns the ExtractionConfidence field value if set, zero value otherwise.
+func (o *MemoryCreateMemoryResponse) GetExtractionConfidence() float32 {
+	if o == nil || IsNil(o.ExtractionConfidence) {
+		var ret float32
 		return ret
 	}
-	return *o.Id
+	return *o.ExtractionConfidence
 }
 
-// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// GetExtractionConfidenceOk returns a tuple with the ExtractionConfidence field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryResponse) GetIdOk() (*string, bool) {
-	if o == nil || IsNil(o.Id) {
+func (o *MemoryCreateMemoryResponse) GetExtractionConfidenceOk() (*float32, bool) {
+	if o == nil || IsNil(o.ExtractionConfidence) {
 		return nil, false
 	}
-	return o.Id, true
+	return o.ExtractionConfidence, true
 }
 
-// HasId returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryResponse) HasId() bool {
-	if o != nil && !IsNil(o.Id) {
+// HasExtractionConfidence returns a boolean if a field has been set.
+func (o *MemoryCreateMemoryResponse) HasExtractionConfidence() bool {
+	if o != nil && !IsNil(o.ExtractionConfidence) {
 		return true
 	}
 
 	return false
 }
 
-// SetId gets a reference to the given string and assigns it to the Id field.
-func (o *MemoryCreateMemoryResponse) SetId(v string) {
-	o.Id = &v
+// SetExtractionConfidence gets a reference to the given float32 and assigns it to the ExtractionConfidence field.
+func (o *MemoryCreateMemoryResponse) SetExtractionConfidence(v float32) {
+	o.ExtractionConfidence = &v
 }
 
-// GetMetadata returns the Metadata field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryResponse) GetMetadata() map[string]interface{} {
-	if o == nil || IsNil(o.Metadata) {
-		var ret map[string]interface{}
+// GetFactsExtracted returns the FactsExtracted field value if set, zero value otherwise.
+func (o *MemoryCreateMemoryResponse) GetFactsExtracted() int32 {
+	if o == nil || IsNil(o.FactsExtracted) {
+		var ret int32
 		return ret
 	}
-	return o.Metadata
+	return *o.FactsExtracted
 }
 
-// GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
+// GetFactsExtractedOk returns a tuple with the FactsExtracted field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryResponse) GetMetadataOk() (map[string]interface{}, bool) {
-	if o == nil || IsNil(o.Metadata) {
-		return map[string]interface{}{}, false
-	}
-	return o.Metadata, true
-}
-
-// HasMetadata returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryResponse) HasMetadata() bool {
-	if o != nil && !IsNil(o.Metadata) {
-		return true
-	}
-
-	return false
-}
-
-// SetMetadata gets a reference to the given map[string]interface{} and assigns it to the Metadata field.
-func (o *MemoryCreateMemoryResponse) SetMetadata(v map[string]interface{}) {
-	o.Metadata = v
-}
-
-// GetRelativeStanding returns the RelativeStanding field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryResponse) GetRelativeStanding() CommondtoRelativeStandingConfig {
-	if o == nil || IsNil(o.RelativeStanding) {
-		var ret CommondtoRelativeStandingConfig
-		return ret
-	}
-	return *o.RelativeStanding
-}
-
-// GetRelativeStandingOk returns a tuple with the RelativeStanding field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryResponse) GetRelativeStandingOk() (*CommondtoRelativeStandingConfig, bool) {
-	if o == nil || IsNil(o.RelativeStanding) {
+func (o *MemoryCreateMemoryResponse) GetFactsExtractedOk() (*int32, bool) {
+	if o == nil || IsNil(o.FactsExtracted) {
 		return nil, false
 	}
-	return o.RelativeStanding, true
+	return o.FactsExtracted, true
 }
 
-// HasRelativeStanding returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryResponse) HasRelativeStanding() bool {
-	if o != nil && !IsNil(o.RelativeStanding) {
+// HasFactsExtracted returns a boolean if a field has been set.
+func (o *MemoryCreateMemoryResponse) HasFactsExtracted() bool {
+	if o != nil && !IsNil(o.FactsExtracted) {
 		return true
 	}
 
 	return false
 }
 
-// SetRelativeStanding gets a reference to the given CommondtoRelativeStandingConfig and assigns it to the RelativeStanding field.
-func (o *MemoryCreateMemoryResponse) SetRelativeStanding(v CommondtoRelativeStandingConfig) {
-	o.RelativeStanding = &v
+// SetFactsExtracted gets a reference to the given int32 and assigns it to the FactsExtracted field.
+func (o *MemoryCreateMemoryResponse) SetFactsExtracted(v int32) {
+	o.FactsExtracted = &v
 }
 
-// GetScope returns the Scope field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryResponse) GetScope() CommondtoMemoryScope {
-	if o == nil || IsNil(o.Scope) {
-		var ret CommondtoMemoryScope
+// GetMemories returns the Memories field value if set, zero value otherwise.
+func (o *MemoryCreateMemoryResponse) GetMemories() []MemoryMemoryResponse {
+	if o == nil || IsNil(o.Memories) {
+		var ret []MemoryMemoryResponse
 		return ret
 	}
-	return *o.Scope
+	return o.Memories
 }
 
-// GetScopeOk returns a tuple with the Scope field value if set, nil otherwise
+// GetMemoriesOk returns a tuple with the Memories field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryResponse) GetScopeOk() (*CommondtoMemoryScope, bool) {
-	if o == nil || IsNil(o.Scope) {
+func (o *MemoryCreateMemoryResponse) GetMemoriesOk() ([]MemoryMemoryResponse, bool) {
+	if o == nil || IsNil(o.Memories) {
 		return nil, false
 	}
-	return o.Scope, true
+	return o.Memories, true
 }
 
-// HasScope returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryResponse) HasScope() bool {
-	if o != nil && !IsNil(o.Scope) {
+// HasMemories returns a boolean if a field has been set.
+func (o *MemoryCreateMemoryResponse) HasMemories() bool {
+	if o != nil && !IsNil(o.Memories) {
 		return true
 	}
 
 	return false
 }
 
-// SetScope gets a reference to the given CommondtoMemoryScope and assigns it to the Scope field.
-func (o *MemoryCreateMemoryResponse) SetScope(v CommondtoMemoryScope) {
-	o.Scope = &v
+// SetMemories gets a reference to the given []MemoryMemoryResponse and assigns it to the Memories field.
+func (o *MemoryCreateMemoryResponse) SetMemories(v []MemoryMemoryResponse) {
+	o.Memories = v
 }
 
-// GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryResponse) GetUpdatedAt() string {
-	if o == nil || IsNil(o.UpdatedAt) {
-		var ret string
+// GetSkippedCount returns the SkippedCount field value if set, zero value otherwise.
+func (o *MemoryCreateMemoryResponse) GetSkippedCount() int32 {
+	if o == nil || IsNil(o.SkippedCount) {
+		var ret int32
 		return ret
 	}
-	return *o.UpdatedAt
+	return *o.SkippedCount
 }
 
-// GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
+// GetSkippedCountOk returns a tuple with the SkippedCount field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryResponse) GetUpdatedAtOk() (*string, bool) {
-	if o == nil || IsNil(o.UpdatedAt) {
+func (o *MemoryCreateMemoryResponse) GetSkippedCountOk() (*int32, bool) {
+	if o == nil || IsNil(o.SkippedCount) {
 		return nil, false
 	}
-	return o.UpdatedAt, true
+	return o.SkippedCount, true
 }
 
-// HasUpdatedAt returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryResponse) HasUpdatedAt() bool {
-	if o != nil && !IsNil(o.UpdatedAt) {
+// HasSkippedCount returns a boolean if a field has been set.
+func (o *MemoryCreateMemoryResponse) HasSkippedCount() bool {
+	if o != nil && !IsNil(o.SkippedCount) {
 		return true
 	}
 
 	return false
 }
 
-// SetUpdatedAt gets a reference to the given string and assigns it to the UpdatedAt field.
-func (o *MemoryCreateMemoryResponse) SetUpdatedAt(v string) {
-	o.UpdatedAt = &v
+// SetSkippedCount gets a reference to the given int32 and assigns it to the SkippedCount field.
+func (o *MemoryCreateMemoryResponse) SetSkippedCount(v int32) {
+	o.SkippedCount = &v
+}
+
+// GetUpdatedCount returns the UpdatedCount field value if set, zero value otherwise.
+func (o *MemoryCreateMemoryResponse) GetUpdatedCount() int32 {
+	if o == nil || IsNil(o.UpdatedCount) {
+		var ret int32
+		return ret
+	}
+	return *o.UpdatedCount
+}
+
+// GetUpdatedCountOk returns a tuple with the UpdatedCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MemoryCreateMemoryResponse) GetUpdatedCountOk() (*int32, bool) {
+	if o == nil || IsNil(o.UpdatedCount) {
+		return nil, false
+	}
+	return o.UpdatedCount, true
+}
+
+// HasUpdatedCount returns a boolean if a field has been set.
+func (o *MemoryCreateMemoryResponse) HasUpdatedCount() bool {
+	if o != nil && !IsNil(o.UpdatedCount) {
+		return true
+	}
+
+	return false
+}
+
+// SetUpdatedCount gets a reference to the given int32 and assigns it to the UpdatedCount field.
+func (o *MemoryCreateMemoryResponse) SetUpdatedCount(v int32) {
+	o.UpdatedCount = &v
 }
 
 func (o MemoryCreateMemoryResponse) MarshalJSON() ([]byte, error) {
@@ -413,38 +252,23 @@ func (o MemoryCreateMemoryResponse) MarshalJSON() ([]byte, error) {
 
 func (o MemoryCreateMemoryResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.ActiveFrom) {
-		toSerialize["active_from"] = o.ActiveFrom
-	}
-	if !IsNil(o.ActiveTo) {
-		toSerialize["active_to"] = o.ActiveTo
-	}
-	if !IsNil(o.AppId) {
-		toSerialize["app_id"] = o.AppId
-	}
-	if !IsNil(o.Content) {
-		toSerialize["content"] = o.Content
-	}
-	if !IsNil(o.CreatedAt) {
-		toSerialize["created_at"] = o.CreatedAt
-	}
 	if !IsNil(o.ExplainTrace) {
 		toSerialize["explain_trace"] = o.ExplainTrace
 	}
-	if !IsNil(o.Id) {
-		toSerialize["id"] = o.Id
+	if !IsNil(o.ExtractionConfidence) {
+		toSerialize["extraction_confidence"] = o.ExtractionConfidence
 	}
-	if !IsNil(o.Metadata) {
-		toSerialize["metadata"] = o.Metadata
+	if !IsNil(o.FactsExtracted) {
+		toSerialize["facts_extracted"] = o.FactsExtracted
 	}
-	if !IsNil(o.RelativeStanding) {
-		toSerialize["relative_standing"] = o.RelativeStanding
+	if !IsNil(o.Memories) {
+		toSerialize["memories"] = o.Memories
 	}
-	if !IsNil(o.Scope) {
-		toSerialize["scope"] = o.Scope
+	if !IsNil(o.SkippedCount) {
+		toSerialize["skipped_count"] = o.SkippedCount
 	}
-	if !IsNil(o.UpdatedAt) {
-		toSerialize["updated_at"] = o.UpdatedAt
+	if !IsNil(o.UpdatedCount) {
+		toSerialize["updated_count"] = o.UpdatedCount
 	}
 	return toSerialize, nil
 }
