@@ -1,5 +1,6 @@
 using Smritea.Internal.Autogen.Api;
 using Smritea.Internal.Autogen.Client;
+using Smritea.Internal.Autogen.Model;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
@@ -21,6 +22,17 @@ public class SmriteaClientTests : IDisposable
         _server.Stop();
         _server.Dispose();
     }
+
+    // -----------------------------------------------------------------------
+    // Test response helpers — build from autogen types so field names stay in sync
+    // -----------------------------------------------------------------------
+
+    private static string MemCreateJson(string id, string content) =>
+        new MemoryCreateMemoryResponse(
+            memories: new List<MemoryMemoryResponse>
+            {
+                new MemoryMemoryResponse(id: id, content: content, appId: "app-test"),
+            }).ToJson();
 
     private SmriteaClient CreateClient(int maxRetries = 2)
     {
@@ -44,15 +56,17 @@ public class SmriteaClientTests : IDisposable
         _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
             .RespondWith(Response.Create().WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
-                .WithBody("{\"id\":\"mem-1\",\"content\":\"hello world\",\"app_id\":\"app-test\"}"));
+                .WithBody(MemCreateJson("mem-1", "hello world")));
 
         using var client = CreateClient();
         var mem = await client.AddAsync("hello world");
 
         Assert.NotNull(mem);
-        Assert.Equal("mem-1", mem.Id);
-        Assert.Equal("hello world", mem.Content);
-        Assert.Equal("app-test", mem.AppId);
+        Assert.NotNull(mem.Memories);
+        Assert.Single(mem.Memories);
+        Assert.Equal("mem-1", mem.Memories[0].Id);
+        Assert.Equal("hello world", mem.Memories[0].Content);
+        Assert.Equal("app-test", mem.Memories[0].AppId);
     }
 
     [Fact]
@@ -62,13 +76,13 @@ public class SmriteaClientTests : IDisposable
                 .WithBody(b => b != null && b.Contains("\"scope\"") && b.Contains("\"actor_id\":\"user-42\"") && b.Contains("\"actor_type\":\"user\"")))
             .RespondWith(Response.Create().WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
-                .WithBody("{\"id\":\"mem-2\",\"content\":\"content\",\"app_id\":\"app-test\"}"));
+                .WithBody(MemCreateJson("mem-2", "content")));
 
         using var client = CreateClient();
         var mem = await client.AddAsync("content", new AddOptions().WithScope(new Scope().WithActorId("user-42").WithActorType("user")));
 
         Assert.NotNull(mem);
-        Assert.Equal("mem-2", mem.Id);
+        Assert.Equal("mem-2", mem.Memories![0].Id);
     }
 
     [Fact]
@@ -78,14 +92,14 @@ public class SmriteaClientTests : IDisposable
                 .WithBody(b => b != null && b.Contains("\"scope\"") && b.Contains("\"actor_id\":\"agent-7\"") && b.Contains("\"actor_type\":\"agent\"")))
             .RespondWith(Response.Create().WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
-                .WithBody("{\"id\":\"mem-3\",\"content\":\"content\",\"app_id\":\"app-test\"}"));
+                .WithBody(MemCreateJson("mem-3", "content")));
 
         using var client = CreateClient();
         var mem = await client.AddAsync("content",
             new AddOptions().WithScope(new Scope().WithActorId("agent-7").WithActorType("agent")));
 
         Assert.NotNull(mem);
-        Assert.Equal("mem-3", mem.Id);
+        Assert.Equal("mem-3", mem.Memories![0].Id);
     }
 
     // -----------------------------------------------------------------------
@@ -262,12 +276,12 @@ public class SmriteaClientTests : IDisposable
             .WhenStateIs("retried")
             .RespondWith(Response.Create().WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
-                .WithBody("{\"id\":\"mem-ok\",\"content\":\"ok\",\"app_id\":\"app-test\"}"));
+                .WithBody(MemCreateJson("mem-ok", "ok")));
 
         using var client = CreateClient();
         var mem = await client.AddAsync("x");
 
-        Assert.Equal("mem-ok", mem.Id);
+        Assert.Equal("mem-ok", mem.Memories![0].Id);
     }
 
     [Fact]

@@ -5,6 +5,11 @@ import "github.com/SmrutAI/smritea-sdk/go/internal/autogen"
 // Memory is the canonical return type for a stored memory.
 type Memory = autogen.MemoryMemoryResponse
 
+// MemoryCreationResult is the response from Add(). Contains all memories
+// created from the extracted facts (GetMemories()), plus extraction metadata:
+// GetFactsExtracted(), GetExtractionConfidence(), GetSkippedCount(), GetUpdatedCount().
+type MemoryCreationResult = autogen.MemoryCreateMemoryResponse
+
 // SearchResult is a single ranked search result.
 type SearchResult = autogen.MemorySearchMemoryResponse
 
@@ -65,6 +70,33 @@ func (s *Scope) WithSourceType(t string) *Scope { s.SourceType = &t; return s }
 // actors participated. Requires at least 2 IDs. Mutually exclusive with ConversationID.
 func (s *Scope) WithParticipantIDs(ids []string) *Scope { s.ParticipantIDs = ids; return s }
 
+// RelativeStanding groups per-memory importance and temporal decay parameters.
+type RelativeStanding struct {
+	// Importance is the memory importance score (0-1). Higher = ranks higher in search.
+	Importance *float32
+	// DecayFactor modulates the temporal decay rate. 0 = no decay (memory score is pinned
+	// permanently). 0.2 = light decay (default). 1.0 = standard. 3.0+ = aggressive.
+	DecayFactor *float32
+	// DecayFunction selects the temporal decay algorithm.
+	// Accepted values: "exponential", "gaussian", "linear".
+	DecayFunction *string
+}
+
+// NewRelativeStanding returns a new empty RelativeStanding ready for fluent configuration.
+func NewRelativeStanding() *RelativeStanding { return &RelativeStanding{} }
+
+// WithImportance sets the importance score.
+func (r *RelativeStanding) WithImportance(v float32) *RelativeStanding { r.Importance = &v; return r }
+
+// WithDecayFactor sets the decay factor.
+func (r *RelativeStanding) WithDecayFactor(v float32) *RelativeStanding { r.DecayFactor = &v; return r }
+
+// WithDecayFunction sets the decay function.
+func (r *RelativeStanding) WithDecayFunction(v string) *RelativeStanding {
+	r.DecayFunction = &v
+	return r
+}
+
 // AddOptions are the optional parameters for Client.Add.
 //
 // Use NewAddOptions() with fluent With* methods for ergonomic construction:
@@ -74,6 +106,12 @@ func (s *Scope) WithParticipantIDs(ids []string) *Scope { s.ParticipantIDs = ids
 type AddOptions struct {
 	Scope    *Scope
 	Metadata map[string]any
+	// EventOccurredAt is an ISO-8601 datetime string — when this content was created or occurred.
+	// Used by the extraction LLM to resolve relative temporal expressions like "last year".
+	// Defaults to current time if nil.
+	EventOccurredAt *string
+	// RelativeStanding sets importance and temporal decay configuration for this memory.
+	RelativeStanding *RelativeStanding
 }
 
 // NewAddOptions returns a new empty AddOptions ready for fluent configuration.
@@ -84,6 +122,15 @@ func (o *AddOptions) WithScope(s *Scope) *AddOptions { o.Scope = s; return o }
 
 // WithMetadata sets Metadata.
 func (o *AddOptions) WithMetadata(m map[string]any) *AddOptions { o.Metadata = m; return o }
+
+// WithEventOccurredAt sets the temporal anchor for extraction.
+func (o *AddOptions) WithEventOccurredAt(t string) *AddOptions { o.EventOccurredAt = &t; return o }
+
+// WithRelativeStanding sets importance and decay configuration.
+func (o *AddOptions) WithRelativeStanding(r *RelativeStanding) *AddOptions {
+	o.RelativeStanding = r
+	return o
+}
 
 // SearchOptions are the optional parameters for Client.Search.
 //
@@ -102,6 +149,12 @@ type SearchOptions struct {
 	ToTime *string
 	// ValidAt is an ISO-8601 datetime string — return memories valid at exactly this point in time.
 	ValidAt *string
+	// Method overrides the search method. Accepted values: "quick_search", "deep_search",
+	// "context_aware_search". Defaults to app config if nil.
+	Method *string
+	// RerankerType overrides the reranker. Accepted values: "rrf_temporal", "rrf", "temporal",
+	// "node_distance", "mmr", "cross_encoder". Only applies to deep_search. Defaults to app config if nil.
+	RerankerType *string
 }
 
 // NewSearchOptions returns a new empty SearchOptions ready for fluent configuration.
@@ -134,5 +187,17 @@ func (o *SearchOptions) WithToTime(t string) *SearchOptions {
 // WithValidAt sets the point-in-time filter for memory validity.
 func (o *SearchOptions) WithValidAt(t string) *SearchOptions {
 	o.ValidAt = &t
+	return o
+}
+
+// WithMethod sets the search method override.
+func (o *SearchOptions) WithMethod(m string) *SearchOptions {
+	o.Method = &m
+	return o
+}
+
+// WithRerankerType sets the reranker type override.
+func (o *SearchOptions) WithRerankerType(r string) *SearchOptions {
+	o.RerankerType = &r
 	return o
 }

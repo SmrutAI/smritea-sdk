@@ -16,6 +16,8 @@ import java.util.Map;
 public final class AddOptions {
   private MemoryScope scope;
   private Map<String, Object> metadata;
+  private String eventOccurredAt;
+  private RelativeStanding relativeStanding;
 
   /** Creates a new AddOptions with all fields unset. */
   public AddOptions() {}
@@ -42,6 +44,30 @@ public final class AddOptions {
     return this;
   }
 
+  /**
+   * Sets the temporal anchor for extraction (ISO-8601 datetime string). Used by the extraction LLM
+   * to resolve relative temporal expressions like "last year" or "yesterday". Defaults to current
+   * time if omitted.
+   *
+   * @param eventOccurredAt ISO-8601 datetime string
+   * @return this instance for chaining
+   */
+  public AddOptions withEventOccurredAt(String eventOccurredAt) {
+    this.eventOccurredAt = eventOccurredAt;
+    return this;
+  }
+
+  /**
+   * Sets importance and temporal decay configuration for this memory.
+   *
+   * @param relativeStanding the relative standing configuration
+   * @return this instance for chaining
+   */
+  public AddOptions withRelativeStanding(RelativeStanding relativeStanding) {
+    this.relativeStanding = relativeStanding;
+    return this;
+  }
+
   /** Returns the memory scope. */
   public MemoryScope getScope() {
     return scope;
@@ -50,5 +76,15 @@ public final class AddOptions {
   /** Returns the metadata map. */
   public Map<String, Object> getMetadata() {
     return metadata;
+  }
+
+  /** Returns the event occurred at timestamp. */
+  public String getEventOccurredAt() {
+    return eventOccurredAt;
+  }
+
+  /** Returns the relative standing configuration. */
+  public RelativeStanding getRelativeStanding() {
+    return relativeStanding;
   }
 }

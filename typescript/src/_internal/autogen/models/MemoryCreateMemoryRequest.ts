@@ -75,6 +75,14 @@ export interface MemoryCreateMemoryRequest {
      */
     entityExtractionOverrides?: CommondtoEntityExtractionConfig;
     /**
+     * EventOccurredAt is the timestamp when this content was created or occurred (optional).
+     * Used by the extraction LLM to resolve relative temporal expressions like "last year" or "yesterday".
+     * If nil, defaults to time.Now() inside the pipeline.
+     * @type {string}
+     * @memberof MemoryCreateMemoryRequest
+     */
+    eventOccurredAt?: string;
+    /**
      * FactExtractionOverrides overrides App-level fact extraction config (nil = use App defaults).
      * Only non-zero fields in overrides replace app-level values.
      * @type {CommondtoFactExtractionConfig}
@@ -131,6 +139,7 @@ export function MemoryCreateMemoryRequestFromJSONTyped(json: any, ignoreDiscrimi
         'appId': json['app_id'] == null ? undefined : json['app_id'],
         'content': json['content'] == null ? undefined : json['content'],
         'entityExtractionOverrides': json['entity_extraction_overrides'] == null ? undefined : CommondtoEntityExtractionConfigFromJSON(json['entity_extraction_overrides']),
+        'eventOccurredAt': json['event_occurred_at'] == null ? undefined : json['event_occurred_at'],
         'factExtractionOverrides': json['fact_extraction_overrides'] == null ? undefined : CommondtoFactExtractionConfigFromJSON(json['fact_extraction_overrides']),
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'personaExtractionOverrides': json['persona_extraction_overrides'] == null ? undefined : CommondtoPersonaExtractionConfigFromJSON(json['persona_extraction_overrides']),
@@ -153,6 +162,7 @@ export function MemoryCreateMemoryRequestToJSONTyped(value?: MemoryCreateMemoryR
         'app_id': value['appId'],
         'content': value['content'],
         'entity_extraction_overrides': CommondtoEntityExtractionConfigToJSON(value['entityExtractionOverrides']),
+        'event_occurred_at': value['eventOccurredAt'],
         'fact_extraction_overrides': CommondtoFactExtractionConfigToJSON(value['factExtractionOverrides']),
         'metadata': value['metadata'],
         'persona_extraction_overrides': CommondtoPersonaExtractionConfigToJSON(value['personaExtractionOverrides']),

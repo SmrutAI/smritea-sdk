@@ -4,11 +4,15 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 import ai.smritea.sdk._internal.autogen.ApiException;
 import ai.smritea.sdk._internal.autogen.api.SdkMemoryApi;
 import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
+import ai.smritea.sdk._internal.autogen.model.CommondtoRelativeStandingConfig;
 import ai.smritea.sdk._internal.autogen.model.MemoryCreateMemoryRequest;
+import ai.smritea.sdk._internal.autogen.model.MemoryCreateMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoriesResponse;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryRequest;
 import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.ModelEnumsRerankerType;
+import ai.smritea.sdk._internal.autogen.model.ModelEnumsSearchMethod;
 import ai.smritea.sdk.errors.SmriteaAuthError;
 import ai.smritea.sdk.errors.SmriteaDeserializationError;
 import ai.smritea.sdk.errors.SmriteaError;
@@ -18,7 +22,9 @@ import ai.smritea.sdk.errors.SmriteaRateLimitError;
 import ai.smritea.sdk.errors.SmriteaValidationError;
 import ai.smritea.sdk.model.AddOptions;
 import ai.smritea.sdk.model.Memory;
+import ai.smritea.sdk.model.MemoryCreationResult;
 import ai.smritea.sdk.model.MemoryScope;
+import ai.smritea.sdk.model.RelativeStanding;
 import ai.smritea.sdk.model.SearchOptions;
 import ai.smritea.sdk.model.SearchResult;
 import java.math.BigDecimal;
@@ -97,10 +103,11 @@ public class SmriteaClient {
    *
    * @param content the memory content text
    * @param opts optional parameters controlling actor attribution, metadata, and conversation
-   * @return the created Memory
+   * @return a MemoryCreationResult containing all memories created from the extracted facts, plus
+   *     metadata: factsExtracted, extractionConfidence, skippedCount, updatedCount
    * @throws SmriteaError on any API error
    */
-  public Memory add(String content, AddOptions opts) {
+  public MemoryCreationResult add(String content, AddOptions opts) {
     MemoryCreateMemoryRequest request = new MemoryCreateMemoryRequest();
     request.setAppId(appId);
     request.setContent(content);
@@ -134,17 +141,36 @@ public class SmriteaClient {
       if (opts.getMetadata() != null) {
         request.setMetadata(opts.getMetadata());
       }
+      if (opts.getEventOccurredAt() != null) {
+        request.setEventOccurredAt(opts.getEventOccurredAt());
+      }
+      RelativeStanding rs = opts.getRelativeStanding();
+      if (rs != null) {
+        CommondtoRelativeStandingConfig autogenRs = new CommondtoRelativeStandingConfig();
+        if (rs.getImportance() != null) {
+          autogenRs.setImportance(BigDecimal.valueOf(rs.getImportance()));
+        }
+        if (rs.getDecayFactor() != null) {
+          autogenRs.setDecayFactor(BigDecimal.valueOf(rs.getDecayFactor()));
+        }
+        if (rs.getDecayFunction() != null) {
+          autogenRs.setDecayFunction(
+              CommondtoRelativeStandingConfig.DecayFunctionEnum.fromValue(rs.getDecayFunction()));
+        }
+        request.setRelativeStanding(autogenRs);
+      }
     }
 
     return executeWithRetry(
         () -> {
           try {
-            MemoryMemoryResponse resp = api.createMemory(request);
+            MemoryCreateMemoryResponse resp = api.createMemory(request);
             if (resp == null) {
               throw new SmriteaDeserializationError(
-                  "server returned null body for add() — expected a MemoryMemoryResponse object");
+                  "server returned null body for add() — expected a MemoryCreateMemoryResponse"
+                      + " object");
             }
-            return new Memory(resp);
+            return new MemoryCreationResult(resp);
           } catch (ApiException e) {
             throw mapError(e);
           }
@@ -179,6 +205,9 @@ public class SmriteaClient {
         if (scope.getConversationId() != null) {
           autogenScope.setConversationId(scope.getConversationId());
         }
+        if (scope.getParticipantIds() != null && !scope.getParticipantIds().isEmpty()) {
+          autogenScope.setParticipantIds(scope.getParticipantIds());
+        }
         request.setScope(autogenScope);
       }
       if (opts.getLimit() != null) {
@@ -198,6 +227,12 @@ public class SmriteaClient {
       }
       if (opts.getValidAt() != null) {
         request.setValidAt(opts.getValidAt());
+      }
+      if (opts.getMethod() != null) {
+        request.setMethod(ModelEnumsSearchMethod.fromValue(opts.getMethod()));
+      }
+      if (opts.getRerankerType() != null) {
+        request.setRerankerType(ModelEnumsRerankerType.fromValue(opts.getRerankerType()));
       }
     }
 

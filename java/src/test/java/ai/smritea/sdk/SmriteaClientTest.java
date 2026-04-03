@@ -3,6 +3,8 @@ package ai.smritea.sdk;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import ai.smritea.sdk._internal.autogen.model.MemoryCreateMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
 import ai.smritea.sdk.errors.SmriteaAuthError;
 import ai.smritea.sdk.errors.SmriteaDeserializationError;
 import ai.smritea.sdk.errors.SmriteaNotFoundError;
@@ -11,9 +13,11 @@ import ai.smritea.sdk.errors.SmriteaRateLimitError;
 import ai.smritea.sdk.errors.SmriteaValidationError;
 import ai.smritea.sdk.model.AddOptions;
 import ai.smritea.sdk.model.Memory;
+import ai.smritea.sdk.model.MemoryCreationResult;
 import ai.smritea.sdk.model.MemoryScope;
 import ai.smritea.sdk.model.SearchOptions;
 import ai.smritea.sdk.model.SearchResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import java.util.List;
@@ -21,6 +25,23 @@ import org.junit.jupiter.api.Test;
 
 @WireMockTest
 class SmriteaClientTest {
+
+  // ---------------------------------------------------------------------------
+  // Test response helpers — build from autogen types so field names stay in sync
+  // ---------------------------------------------------------------------------
+
+  private static final ObjectMapper MAPPER = new ObjectMapper();
+
+  private static String memCreateJson(String id, String content) {
+    MemoryCreateMemoryResponse resp =
+        new MemoryCreateMemoryResponse()
+            .addMemoriesItem(new MemoryMemoryResponse().id(id).content(content).appId("app-test"));
+    try {
+      return MAPPER.writeValueAsString(resp);
+    } catch (Exception e) {
+      throw new RuntimeException("memCreateJson failed", e);
+    }
+  }
 
   private SmriteaClient clientFor(WireMockRuntimeInfo wm) {
     return new SmriteaClient("test-key", "app-test", wm.getHttpBaseUrl(), 2);
@@ -32,18 +53,16 @@ class SmriteaClientTest {
 
   @Test
   void testAdd_Success(WireMockRuntimeInfo wm) {
-    stubFor(
-        post("/api/v1/sdk/memories")
-            .willReturn(
-                okJson("{\"id\":\"mem-1\",\"content\":\"hello world\",\"app_id\":\"app-test\"}")));
+    stubFor(post("/api/v1/sdk/memories").willReturn(okJson(memCreateJson("mem-1", "hello world"))));
 
     SmriteaClient client = clientFor(wm);
-    Memory mem = client.add("hello world", null);
+    MemoryCreationResult result = client.add("hello world", null);
 
-    assertNotNull(mem);
-    assertEquals("mem-1", mem.getId());
-    assertEquals("hello world", mem.getContent());
-    assertEquals("app-test", mem.getAppId());
+    assertNotNull(result);
+    assertEquals(1, result.getMemories().size());
+    assertEquals("mem-1", result.getMemories().get(0).getId());
+    assertEquals("hello world", result.getMemories().get(0).getContent());
+    assertEquals("app-test", result.getMemories().get(0).getAppId());
   }
 
   @Test
@@ -52,18 +71,17 @@ class SmriteaClientTest {
         post("/api/v1/sdk/memories")
             .withRequestBody(matchingJsonPath("$.scope.actor_id", equalTo("user-42")))
             .withRequestBody(matchingJsonPath("$.scope.actor_type", equalTo("user")))
-            .willReturn(
-                okJson("{\"id\":\"mem-2\",\"content\":\"content\",\"app_id\":\"app-test\"}")));
+            .willReturn(okJson(memCreateJson("mem-2", "content"))));
 
     SmriteaClient client = clientFor(wm);
-    Memory mem =
+    MemoryCreationResult result =
         client.add(
             "content",
             new AddOptions()
                 .withScope(MemoryScope.builder().actorId("user-42").actorType("user").build()));
 
-    assertNotNull(mem);
-    assertEquals("mem-2", mem.getId());
+    assertNotNull(result);
+    assertEquals("mem-2", result.getMemories().get(0).getId());
   }
 
   @Test
@@ -72,18 +90,17 @@ class SmriteaClientTest {
         post("/api/v1/sdk/memories")
             .withRequestBody(matchingJsonPath("$.scope.actor_id", equalTo("agent-7")))
             .withRequestBody(matchingJsonPath("$.scope.actor_type", equalTo("agent")))
-            .willReturn(
-                okJson("{\"id\":\"mem-3\",\"content\":\"content\",\"app_id\":\"app-test\"}")));
+            .willReturn(okJson(memCreateJson("mem-3", "content"))));
 
     SmriteaClient client = clientFor(wm);
-    Memory mem =
+    MemoryCreationResult result =
         client.add(
             "content",
             new AddOptions()
                 .withScope(MemoryScope.builder().actorId("agent-7").actorType("agent").build()));
 
-    assertNotNull(mem);
-    assertEquals("mem-3", mem.getId());
+    assertNotNull(result);
+    assertEquals("mem-3", result.getMemories().get(0).getId());
   }
 
   // -----------------------------------------------------------------------
@@ -274,13 +291,13 @@ class SmriteaClientTest {
         post("/api/v1/sdk/memories")
             .inScenario("retry")
             .whenScenarioStateIs("retried")
-            .willReturn(okJson("{\"id\":\"mem-ok\",\"content\":\"ok\",\"app_id\":\"app-test\"}")));
+            .willReturn(okJson(memCreateJson("mem-ok", "ok"))));
 
     SmriteaClient client = clientFor(wm);
-    Memory mem = client.add("x", null);
+    MemoryCreationResult result = client.add("x", null);
 
-    assertNotNull(mem);
-    assertEquals("mem-ok", mem.getId());
+    assertNotNull(result);
+    assertEquals("mem-ok", result.getMemories().get(0).getId());
   }
 
   @Test

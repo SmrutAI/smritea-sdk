@@ -47,12 +47,12 @@ file, with `_internal/autogen` (or `internal/autogen` for Go) excluded from lint
 
 Every SDK implementation MUST expose exactly this surface:
 
-| Method   | Signature                                                                                                    |
-|----------|--------------------------------------------------------------------------------------------------------------|
-| `add`    | `(content, *, scope?, metadata?) → Memory`                                                                   |
-| `search` | `(query, *, scope?, limit?, threshold?, graph_depth?, from_time?, to_time?, valid_at?) → list[SearchResult]` |
-| `get`    | `(memory_id) → Memory`                                                                                       |
-| `delete` | `(memory_id) → void`                                                                                         |
+| Method   | Signature                                                                                                                                                |
+|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `add`    | `(content, *, scope?, metadata?, event_occurred_at?, relative_standing?) → MemoryCreationResult`                                                         |
+| `search` | `(query, *, scope?, limit?, threshold?, graph_depth?, from_time?, to_time?, valid_at?, method?, reranker_type?) → list[SearchResult]`                    |
+| `get`    | `(memory_id) → Memory`                                                                                                                                   |
+| `delete` | `(memory_id) → void`                                                                                                                                     |
 
 **`app_id` on constructor**: Set once, injected automatically into every request.
 Callers must never pass it per-call.

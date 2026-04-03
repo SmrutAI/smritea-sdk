@@ -39,16 +39,18 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="appId">AppID is the application identifier (required).</param>
         /// <param name="content">Content is the memory content (required, min 1 char).</param>
         /// <param name="entityExtractionOverrides">EntityExtractionOverrides overrides App-level entity extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values..</param>
+        /// <param name="eventOccurredAt">EventOccurredAt is the timestamp when this content was created or occurred (optional). Used by the extraction LLM to resolve relative temporal expressions like \&quot;last year\&quot; or \&quot;yesterday\&quot;. If nil, defaults to time.Now() inside the pipeline..</param>
         /// <param name="factExtractionOverrides">FactExtractionOverrides overrides App-level fact extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values..</param>
         /// <param name="metadata">Metadata contains flexible memory metadata (optional).</param>
         /// <param name="personaExtractionOverrides">PersonaExtractionOverrides overrides App-level persona extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values. This is a stub for v1 - the actual LLM-based persona extraction is deferred to a future task..</param>
         /// <param name="relativeStanding">RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are applied (importance&#x3D;1.0, decay_factor&#x3D;0.2, decay_function&#x3D;exponential)..</param>
         /// <param name="scope">Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before..</param>
-        public MemoryCreateMemoryRequest(string appId = default, string content = default, CommondtoEntityExtractionConfig entityExtractionOverrides = default, CommondtoFactExtractionConfig factExtractionOverrides = default, Object metadata = default, CommondtoPersonaExtractionConfig personaExtractionOverrides = default, CommondtoRelativeStandingConfig relativeStanding = default, CommondtoMemoryScope scope = default)
+        public MemoryCreateMemoryRequest(string appId = default, string content = default, CommondtoEntityExtractionConfig entityExtractionOverrides = default, string eventOccurredAt = default, CommondtoFactExtractionConfig factExtractionOverrides = default, Object metadata = default, CommondtoPersonaExtractionConfig personaExtractionOverrides = default, CommondtoRelativeStandingConfig relativeStanding = default, CommondtoMemoryScope scope = default)
         {
             this.AppId = appId;
             this.Content = content;
             this.EntityExtractionOverrides = entityExtractionOverrides;
+            this.EventOccurredAt = eventOccurredAt;
             this.FactExtractionOverrides = factExtractionOverrides;
             this.Metadata = metadata;
             this.PersonaExtractionOverrides = personaExtractionOverrides;
@@ -76,6 +78,13 @@ namespace Smritea.Internal.Autogen.Model
         /// <value>EntityExtractionOverrides overrides App-level entity extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values.</value>
         [DataMember(Name = "entity_extraction_overrides", EmitDefaultValue = false)]
         public CommondtoEntityExtractionConfig EntityExtractionOverrides { get; set; }
+
+        /// <summary>
+        /// EventOccurredAt is the timestamp when this content was created or occurred (optional). Used by the extraction LLM to resolve relative temporal expressions like \&quot;last year\&quot; or \&quot;yesterday\&quot;. If nil, defaults to time.Now() inside the pipeline.
+        /// </summary>
+        /// <value>EventOccurredAt is the timestamp when this content was created or occurred (optional). Used by the extraction LLM to resolve relative temporal expressions like \&quot;last year\&quot; or \&quot;yesterday\&quot;. If nil, defaults to time.Now() inside the pipeline.</value>
+        [DataMember(Name = "event_occurred_at", EmitDefaultValue = false)]
+        public string EventOccurredAt { get; set; }
 
         /// <summary>
         /// FactExtractionOverrides overrides App-level fact extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values.
@@ -123,6 +132,7 @@ namespace Smritea.Internal.Autogen.Model
             sb.Append("  AppId: ").Append(AppId).Append("\n");
             sb.Append("  Content: ").Append(Content).Append("\n");
             sb.Append("  EntityExtractionOverrides: ").Append(EntityExtractionOverrides).Append("\n");
+            sb.Append("  EventOccurredAt: ").Append(EventOccurredAt).Append("\n");
             sb.Append("  FactExtractionOverrides: ").Append(FactExtractionOverrides).Append("\n");
             sb.Append("  Metadata: ").Append(Metadata).Append("\n");
             sb.Append("  PersonaExtractionOverrides: ").Append(PersonaExtractionOverrides).Append("\n");

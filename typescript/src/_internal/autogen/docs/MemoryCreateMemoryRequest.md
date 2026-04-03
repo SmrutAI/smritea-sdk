@@ -9,6 +9,7 @@ Name | Type
 `appId` | string
 `content` | string
 `entityExtractionOverrides` | [CommondtoEntityExtractionConfig](CommondtoEntityExtractionConfig.md)
+`eventOccurredAt` | string
 `factExtractionOverrides` | [CommondtoFactExtractionConfig](CommondtoFactExtractionConfig.md)
 `metadata` | object
 `personaExtractionOverrides` | [CommondtoPersonaExtractionConfig](CommondtoPersonaExtractionConfig.md)
@@ -25,6 +26,7 @@ const example = {
   "appId": null,
   "content": null,
   "entityExtractionOverrides": null,
+  "eventOccurredAt": null,
   "factExtractionOverrides": null,
   "metadata": null,
   "personaExtractionOverrides": null,

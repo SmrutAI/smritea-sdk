@@ -1,6 +1,20 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { SmriteaClient } from '../src/client.js';
 import { ResponseError } from '../src/_internal/autogen/runtime.js';
+import type { MemoryCreateMemoryResponse } from '../src/_internal/autogen/models/index.js';
+import { MemoryCreateMemoryResponseFromJSON } from '../src/_internal/autogen/models/index.js';
+
+// ---------------------------------------------------------------------------
+// Test response helpers — build from autogen types so field names stay in sync
+// ---------------------------------------------------------------------------
+
+function memCreateResponse(id: string, content: string): MemoryCreateMemoryResponse {
+  // Use the autogen-generated factory so field name mapping (snake_case ↔ camelCase)
+  // goes through the same code path as production deserialization.
+  return MemoryCreateMemoryResponseFromJSON({
+    memories: [{ id, content, app_id: 'app-123' }],
+  });
+}
 import {
   SmriteaError,
   SmriteaAuthError,
@@ -69,7 +83,7 @@ function makeResponseError(
 describe('actor scope mapping', () => {
   it('add() passes actorId and actorType as user scope', async () => {
     const { client, mockApi } = createClientWithMock();
-    mockApi.createMemory.mockResolvedValue({ id: 'mem-1' });
+    mockApi.createMemory.mockResolvedValue(memCreateResponse('mem-1', 'hello world'));
 
     await client.add('hello world', { scope: { actorId: 'alice', actorType: 'user' } });
 
@@ -81,7 +95,7 @@ describe('actor scope mapping', () => {
 
   it('add() passes actorId and actorType through for non-user actors', async () => {
     const { client, mockApi } = createClientWithMock();
-    mockApi.createMemory.mockResolvedValue({ id: 'mem-1' });
+    mockApi.createMemory.mockResolvedValue(memCreateResponse('mem-1', 'hello world'));
 
     await client.add('hello world', { scope: { actorId: 'bot-1', actorType: 'agent' } });
 
@@ -214,7 +228,7 @@ describe('retry logic', () => {
     mockApi.createMemory
       .mockRejectedValueOnce(makeResponseError(429, '1'))
       .mockRejectedValueOnce(makeResponseError(429, '1'))
-      .mockResolvedValueOnce({ id: 'mem-1' });
+      .mockResolvedValueOnce(memCreateResponse('mem-1', 'content'));
 
     const promise = client.add('content');
 
@@ -224,7 +238,7 @@ describe('retry logic', () => {
     await vi.runAllTimersAsync();
 
     const result = await resultPromise;
-    expect(result).toEqual({ id: 'mem-1' });
+    expect(result.memories?.[0]?.id).toBe('mem-1');
     expect(mockApi.createMemory).toHaveBeenCalledTimes(3);
   });
 

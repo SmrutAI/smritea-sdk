@@ -7,9 +7,13 @@
  */
 
 export type {
+  MemoryCreateMemoryResponse as MemoryCreationResult,
   MemoryMemoryResponse as Memory,
   MemorySearchMemoryResponse as SearchResult,
 } from './_internal/autogen/models/index.js';
+// MemoryCreationResult is the response from add(). Contains all memories
+// created from the extracted facts (memories[]), plus extraction metadata:
+// factsExtracted, extractionConfidence, skippedCount, updatedCount.
 
 export interface Scope {
   /**
@@ -48,9 +52,25 @@ export interface Scope {
   participantIds?: string[];
 }
 
+export interface RelativeStanding {
+  /** How important is this memory (0.0–1.0). Higher = ranks higher in search. */
+  importance?: number;
+  /** Rate of relevance decay over time (>=0). 0 = no decay (memory score is pinned
+   * permanently). 0.2 = light decay (default). 1.0 = standard. 3.0+ = aggressive. */
+  decayFactor?: number;
+  /** Decay curve shape. Accepted values: `"exponential"`, `"gaussian"`, `"linear"`. */
+  decayFunction?: 'exponential' | 'gaussian' | 'linear';
+}
+
 export interface AddOptions {
   scope?: Scope;
   metadata?: Record<string, unknown>;
+  /** ISO-8601 datetime string — when this content was created or occurred.
+   * Used by the extraction LLM to resolve relative temporal expressions
+   * like "last year" or "yesterday". Defaults to current time if omitted. */
+  eventOccurredAt?: string;
+  /** Importance and temporal decay configuration for this memory. */
+  relativeStanding?: RelativeStanding;
 }
 
 export interface SearchOptions {
@@ -64,6 +84,13 @@ export interface SearchOptions {
   toTime?: string;
   /** ISO-8601 datetime string — return memories valid at exactly this point in time. */
   validAt?: string;
+  /** Search method override. Accepted values: `"quick_search"`, `"deep_search"`,
+   * `"context_aware_search"`. Defaults to app config if omitted. */
+  method?: 'quick_search' | 'deep_search' | 'context_aware_search';
+  /** Reranker override. Accepted values: `"rrf_temporal"`, `"rrf"`, `"temporal"`,
+   * `"node_distance"`, `"mmr"`, `"cross_encoder"`. Only applies to deep_search.
+   * Defaults to app config if omitted. */
+  rerankerType?: 'rrf_temporal' | 'rrf' | 'temporal' | 'node_distance' | 'mmr' | 'cross_encoder';
 }
 
 export interface SmriteaClientConfig {

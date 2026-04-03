@@ -41,6 +41,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   MemoryCreateMemoryRequest.JSON_PROPERTY_APP_ID,
   MemoryCreateMemoryRequest.JSON_PROPERTY_CONTENT,
   MemoryCreateMemoryRequest.JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES,
+  MemoryCreateMemoryRequest.JSON_PROPERTY_EVENT_OCCURRED_AT,
   MemoryCreateMemoryRequest.JSON_PROPERTY_FACT_EXTRACTION_OVERRIDES,
   MemoryCreateMemoryRequest.JSON_PROPERTY_METADATA,
   MemoryCreateMemoryRequest.JSON_PROPERTY_PERSONA_EXTRACTION_OVERRIDES,
@@ -60,6 +61,10 @@ public class MemoryCreateMemoryRequest {
   public static final String JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES = "entity_extraction_overrides";
   @javax.annotation.Nullable
   private CommondtoEntityExtractionConfig entityExtractionOverrides;
+
+  public static final String JSON_PROPERTY_EVENT_OCCURRED_AT = "event_occurred_at";
+  @javax.annotation.Nullable
+  private String eventOccurredAt;
 
   public static final String JSON_PROPERTY_FACT_EXTRACTION_OVERRIDES = "fact_extraction_overrides";
   @javax.annotation.Nullable
@@ -153,6 +158,30 @@ public class MemoryCreateMemoryRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setEntityExtractionOverrides(@javax.annotation.Nullable CommondtoEntityExtractionConfig entityExtractionOverrides) {
     this.entityExtractionOverrides = entityExtractionOverrides;
+  }
+
+
+  public MemoryCreateMemoryRequest eventOccurredAt(@javax.annotation.Nullable String eventOccurredAt) {
+    this.eventOccurredAt = eventOccurredAt;
+    return this;
+  }
+
+  /**
+   * EventOccurredAt is the timestamp when this content was created or occurred (optional). Used by the extraction LLM to resolve relative temporal expressions like \&quot;last year\&quot; or \&quot;yesterday\&quot;. If nil, defaults to time.Now() inside the pipeline.
+   * @return eventOccurredAt
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_EVENT_OCCURRED_AT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getEventOccurredAt() {
+    return eventOccurredAt;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_EVENT_OCCURRED_AT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setEventOccurredAt(@javax.annotation.Nullable String eventOccurredAt) {
+    this.eventOccurredAt = eventOccurredAt;
   }
 
 
@@ -291,6 +320,7 @@ public class MemoryCreateMemoryRequest {
     return Objects.equals(this.appId, memoryCreateMemoryRequest.appId) &&
         Objects.equals(this.content, memoryCreateMemoryRequest.content) &&
         Objects.equals(this.entityExtractionOverrides, memoryCreateMemoryRequest.entityExtractionOverrides) &&
+        Objects.equals(this.eventOccurredAt, memoryCreateMemoryRequest.eventOccurredAt) &&
         Objects.equals(this.factExtractionOverrides, memoryCreateMemoryRequest.factExtractionOverrides) &&
         Objects.equals(this.metadata, memoryCreateMemoryRequest.metadata) &&
         Objects.equals(this.personaExtractionOverrides, memoryCreateMemoryRequest.personaExtractionOverrides) &&
@@ -300,7 +330,7 @@ public class MemoryCreateMemoryRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(appId, content, entityExtractionOverrides, factExtractionOverrides, metadata, personaExtractionOverrides, relativeStanding, scope);
+    return Objects.hash(appId, content, entityExtractionOverrides, eventOccurredAt, factExtractionOverrides, metadata, personaExtractionOverrides, relativeStanding, scope);
   }
 
   @Override
@@ -310,6 +340,7 @@ public class MemoryCreateMemoryRequest {
     sb.append("    appId: ").append(toIndentedString(appId)).append("\n");
     sb.append("    content: ").append(toIndentedString(content)).append("\n");
     sb.append("    entityExtractionOverrides: ").append(toIndentedString(entityExtractionOverrides)).append("\n");
+    sb.append("    eventOccurredAt: ").append(toIndentedString(eventOccurredAt)).append("\n");
     sb.append("    factExtractionOverrides: ").append(toIndentedString(factExtractionOverrides)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("    personaExtractionOverrides: ").append(toIndentedString(personaExtractionOverrides)).append("\n");
@@ -375,6 +406,11 @@ public class MemoryCreateMemoryRequest {
     // add `entity_extraction_overrides` to the URL query string
     if (getEntityExtractionOverrides() != null) {
       joiner.add(getEntityExtractionOverrides().toUrlQueryString(prefix + "entity_extraction_overrides" + suffix));
+    }
+
+    // add `event_occurred_at` to the URL query string
+    if (getEventOccurredAt() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sevent_occurred_at%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getEventOccurredAt()))));
     }
 
     // add `fact_extraction_overrides` to the URL query string

@@ -58,8 +58,9 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 
 // Add stores a new memory with the given content. The optional AddOptions
 // control which actor the memory is attributed to, metadata, and conversation
-// scoping.
-func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOptions) (*Memory, error) {
+// scoping. Returns a MemoryCreationResult containing all memories created from
+// the extracted facts, plus metadata (FactsExtracted, ExtractionConfidence, etc.).
+func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOptions) (*MemoryCreationResult, error) {
 	req := autogen.MemoryCreateMemoryRequest{
 		AppId:   &c.appID,
 		Content: &content,
@@ -79,9 +80,17 @@ func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOption
 		if opts.Metadata != nil {
 			req.Metadata = opts.Metadata
 		}
+		req.EventOccurredAt = opts.EventOccurredAt
+		if opts.RelativeStanding != nil {
+			req.RelativeStanding = &autogen.CommondtoRelativeStandingConfig{
+				Importance:    opts.RelativeStanding.Importance,
+				DecayFactor:   opts.RelativeStanding.DecayFactor,
+				DecayFunction: opts.RelativeStanding.DecayFunction,
+			}
+		}
 	}
 
-	return withRetry[*Memory](ctx, c.maxRetries, func() (*Memory, error) {
+	return withRetry[*MemoryCreationResult](ctx, c.maxRetries, func() (*MemoryCreationResult, error) {
 		result, httpResp, err := c.api.CreateMemory(ctx).Request(req).Execute()
 		if wErr := wrapHTTPError(httpResp, err); wErr != nil {
 			return nil, wErr
@@ -108,6 +117,7 @@ func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOp
 				ActorId:        opts.Scope.ActorID,
 				ActorType:      opts.Scope.ActorType,
 				ConversationId: opts.Scope.ConversationID,
+				ParticipantIds: opts.Scope.ParticipantIDs,
 			}
 		}
 		// SearchOptions uses *int32 to match the autogen types directly.
@@ -117,6 +127,14 @@ func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOp
 		req.FromTime = opts.FromTime
 		req.ToTime = opts.ToTime
 		req.ValidAt = opts.ValidAt
+		if opts.Method != nil {
+			method := autogen.ModelEnumsSearchMethod(*opts.Method)
+			req.Method = &method
+		}
+		if opts.RerankerType != nil {
+			rt := autogen.ModelEnumsRerankerType(*opts.RerankerType)
+			req.RerankerType = &rt
+		}
 	}
 
 	return withRetry[[]*SearchResult](ctx, c.maxRetries, func() ([]*SearchResult, error) {

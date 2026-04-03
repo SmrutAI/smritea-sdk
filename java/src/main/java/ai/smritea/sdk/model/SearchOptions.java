@@ -19,6 +19,8 @@ public final class SearchOptions {
   private String fromTime;
   private String toTime;
   private String validAt;
+  private String method;
+  private String rerankerType;
 
   /** Creates a new SearchOptions with all fields unset. */
   public SearchOptions() {}
@@ -133,5 +135,40 @@ public final class SearchOptions {
   /** Returns the point-in-time filter. */
   public String getValidAt() {
     return validAt;
+  }
+
+  /**
+   * Sets the search method override. Accepted values: "quick_search", "deep_search",
+   * "context_aware_search". Defaults to app config if omitted.
+   *
+   * @param method the search method
+   * @return this instance for chaining
+   */
+  public SearchOptions withMethod(String method) {
+    this.method = method;
+    return this;
+  }
+
+  /**
+   * Sets the reranker type override. Accepted values: "rrf_temporal", "rrf", "temporal",
+   * "node_distance", "mmr", "cross_encoder". Only applies to deep_search. Defaults to app config if
+   * omitted.
+   *
+   * @param rerankerType the reranker type
+   * @return this instance for chaining
+   */
+  public SearchOptions withRerankerType(String rerankerType) {
+    this.rerankerType = rerankerType;
+    return this;
+  }
+
+  /** Returns the search method override. */
+  public String getMethod() {
+    return method;
+  }
+
+  /** Returns the reranker type override. */
+  public String getRerankerType() {
+    return rerankerType;
   }
 }

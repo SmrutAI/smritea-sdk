@@ -71,8 +71,10 @@ public class SmriteaClient : IDisposable
     /// <param name="content">The memory content text to store.</param>
     /// <param name="opts">Optional add options for actor attribution, metadata, and conversation scoping.</param>
     /// <param name="ct">Cancellation token.</param>
-    /// <returns>A <see cref="Task{TResult}"/> resolving to the stored <see cref="Memory"/>.</returns>
-    public async Task<Memory> AddAsync(string content, AddOptions? opts = null, CancellationToken ct = default)
+    /// <returns>A <see cref="Task{TResult}"/> resolving to a <see cref="MemoryCreationResult"/> containing all
+    /// memories created from the extracted facts, plus metadata (factsExtracted, extractionConfidence, skippedCount,
+    /// updatedCount).</returns>
+    public async Task<MemoryCreationResult> AddAsync(string content, AddOptions? opts = null, CancellationToken ct = default)
     {
         var request = new MemoryCreateMemoryRequest
         {
@@ -123,6 +125,33 @@ public class SmriteaClient : IDisposable
             if (opts.Metadata is not null)
             {
                 request.Metadata = opts.Metadata;
+            }
+
+            if (opts.EventOccurredAt is not null)
+            {
+                request.EventOccurredAt = opts.EventOccurredAt;
+            }
+
+            if (opts.RelativeStanding is not null)
+            {
+                var rs = new CommondtoRelativeStandingConfig();
+                if (opts.RelativeStanding.Importance.HasValue)
+                {
+                    rs.Importance = (decimal)opts.RelativeStanding.Importance.Value;
+                }
+
+                if (opts.RelativeStanding.DecayFactor.HasValue)
+                {
+                    rs.DecayFactor = (decimal)opts.RelativeStanding.DecayFactor.Value;
+                }
+
+                if (opts.RelativeStanding.DecayFunction is not null)
+                {
+                    rs.DecayFunction = Enum.Parse<CommondtoRelativeStandingConfig.DecayFunctionEnum>(
+                        opts.RelativeStanding.DecayFunction, ignoreCase: true);
+                }
+
+                request.RelativeStanding = rs;
             }
         }
 
@@ -185,6 +214,11 @@ public class SmriteaClient : IDisposable
                     scope.ConversationId = opts.Scope.ConversationId;
                 }
 
+                if (opts.Scope.ParticipantIds is not null && opts.Scope.ParticipantIds.Count > 0)
+                {
+                    scope.ParticipantIds = opts.Scope.ParticipantIds.ToList();
+                }
+
                 request.Scope = scope;
             }
 
@@ -216,6 +250,16 @@ public class SmriteaClient : IDisposable
             if (opts.ValidAt is not null)
             {
                 request.ValidAt = opts.ValidAt;
+            }
+
+            if (opts.Method is not null)
+            {
+                request.Method = Enum.Parse<ModelEnumsSearchMethod>(opts.Method, ignoreCase: true);
+            }
+
+            if (opts.RerankerType is not null)
+            {
+                request.RerankerType = Enum.Parse<ModelEnumsRerankerType>(opts.RerankerType, ignoreCase: true);
             }
         }
 

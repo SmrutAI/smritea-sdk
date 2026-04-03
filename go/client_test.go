@@ -11,6 +11,8 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/SmrutAI/smritea-sdk/go/internal/autogen"
 )
 
 // ---------------------------------------------------------------------------
@@ -35,9 +37,37 @@ func newTestClient(t *testing.T, handler http.Handler, maxRetries int) *SmriteaC
 	})
 }
 
-// memJSON returns a minimal MemoryMemoryResponse JSON body.
+// memJSON serialises a minimal MemoryCreateMemoryResponse using the autogen struct.
+// Use this for Add endpoint responses (POST /memories).
 func memJSON(id, content string) []byte {
-	return []byte(fmt.Sprintf(`{"id":%q,"content":%q,"app_id":"app-test"}`, id, content))
+	appID := "app-test"
+	resp := autogen.MemoryCreateMemoryResponse{
+		Memories: []autogen.MemoryMemoryResponse{
+			{Id: &id, Content: &content, AppId: &appID},
+		},
+	}
+	b, err := json.Marshal(resp)
+	if err != nil {
+		panic(fmt.Sprintf("memJSON: %v", err))
+	}
+	return b
+}
+
+// memSingleJSON serialises a minimal MemoryMemoryResponse using the autogen struct.
+// Use this for Get endpoint responses (GET /memories/{id}) which return a bare memory,
+// not the creation envelope.
+func memSingleJSON(id, content string) []byte {
+	appID := "app-test"
+	resp := autogen.MemoryMemoryResponse{
+		Id:      &id,
+		Content: &content,
+		AppId:   &appID,
+	}
+	b, err := json.Marshal(resp)
+	if err != nil {
+		panic(fmt.Sprintf("memSingleJSON: %v", err))
+	}
+	return b
 }
 
 // writeJSON writes status + JSON body.
@@ -49,9 +79,14 @@ func writeJSON(w http.ResponseWriter, status int, body []byte) {
 	}
 }
 
-// errJSON returns a minimal error body the autogen can decode as ErrorsAppError.
+// errJSON serialises a CommondtoAPIError using the autogen struct so the JSON
+// structure stays in sync with the generated code.
 func errJSON(msg string) []byte {
-	return []byte(fmt.Sprintf(`{"detail":%q}`, msg))
+	b, err := json.Marshal(autogen.CommondtoAPIError{Message: &msg})
+	if err != nil {
+		panic(fmt.Sprintf("errJSON: %v", err))
+	}
+	return b
 }
 
 // ---------------------------------------------------------------------------
@@ -225,7 +260,8 @@ func TestAddOptions_Builder_UsedInAdd(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Add with builder opts: unexpected error: %v", err)
 	}
-	if mem == nil || mem.Id == nil || *mem.Id != "mem-builder" {
+	mems := mem.GetMemories()
+	if mem == nil || len(mems) == 0 || mems[0].GetId() != "mem-builder" {
 		t.Errorf("Add with builder opts: got unexpected memory %+v", mem)
 	}
 }
@@ -268,7 +304,8 @@ func TestAdd_Success(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Add: unexpected error: %v", err)
 	}
-	if mem == nil || mem.Id == nil || *mem.Id != "mem-1" {
+	mems := mem.GetMemories()
+	if mem == nil || len(mems) == 0 || mems[0].GetId() != "mem-1" {
 		t.Errorf("Add: got id=%v, want mem-1", mem)
 	}
 }
@@ -405,7 +442,7 @@ func TestGet_Success(t *testing.T) {
 			return
 		}
 		id := memIDFromPath(r.URL.Path)
-		writeJSON(w, http.StatusOK, memJSON(id, "stored content"))
+		writeJSON(w, http.StatusOK, memSingleJSON(id, "stored content"))
 	})
 	client := newTestClient(t, handler, 1)
 
@@ -519,7 +556,8 @@ func TestAdd_429_RetryThenSuccess(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Add retry-then-success: unexpected error: %v", err)
 	}
-	if mem == nil || mem.Id == nil || *mem.Id != "mem-ok" {
+	mems := mem.GetMemories()
+	if mem == nil || len(mems) == 0 || mems[0].GetId() != "mem-ok" {
 		t.Errorf("Add retry-then-success: got unexpected memory %+v", mem)
 	}
 	if n := callCount.Load(); n != 2 {

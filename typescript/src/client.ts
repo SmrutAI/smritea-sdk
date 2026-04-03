@@ -1,6 +1,6 @@
 import { Configuration, ResponseError } from './_internal/autogen/runtime.js';
 import { SDKMemoryApi } from './_internal/autogen/apis/SDKMemoryApi.js';
-import type { AddOptions, Memory, SearchOptions, SearchResult, SmriteaClientConfig } from './types.js';
+import type { AddOptions, Memory, MemoryCreationResult, SearchOptions, SearchResult, SmriteaClientConfig } from './types.js';
 import {
   SmriteaAuthError,
   SmriteaError,
@@ -27,7 +27,7 @@ export class SmriteaClient {
     this.api = new SDKMemoryApi(configuration);
   }
 
-  async add(content: string, options?: AddOptions): Promise<Memory> {
+  async add(content: string, options?: AddOptions): Promise<MemoryCreationResult> {
     if (options?.metadata !== undefined) {
       const m = options.metadata;
       if (typeof m !== 'object' || m === null || Array.isArray(m)) {
@@ -51,6 +51,14 @@ export class SmriteaClient {
               }
             : undefined,
           metadata: options?.metadata as never,
+          eventOccurredAt: options?.eventOccurredAt,
+          relativeStanding: options?.relativeStanding
+            ? {
+                importance: options.relativeStanding.importance,
+                decayFactor: options.relativeStanding.decayFactor,
+                decayFunction: options.relativeStanding.decayFunction,
+              }
+            : undefined,
         },
       }),
     );
@@ -67,6 +75,7 @@ export class SmriteaClient {
                 actorId: options.scope.actorId,
                 actorType: options.scope.actorType,
                 conversationId: options.scope.conversationId,
+                participantIds: options.scope.participantIds,
               }
             : undefined,
           limit: options?.limit,
@@ -75,6 +84,8 @@ export class SmriteaClient {
           fromTime: options?.fromTime,
           toTime: options?.toTime,
           validAt: options?.validAt,
+          method: options?.method,
+          rerankerType: options?.rerankerType,
         },
       }),
     );

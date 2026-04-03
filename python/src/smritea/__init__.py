@@ -10,11 +10,12 @@ from smritea.exceptions import (
     SmriteaRateLimitError,
     SmriteaValidationError,
 )
-from smritea.types import Memory, SearchResult
+from smritea.types import Memory, MemoryCreationResult, SearchResult
 
 __all__ = [
     "SmriteaClient",
     "Memory",
+    "MemoryCreationResult",
     "SearchResult",
     "SmriteaError",
     "SmriteaAuthError",

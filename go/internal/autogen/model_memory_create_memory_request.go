@@ -26,6 +26,8 @@ type MemoryCreateMemoryRequest struct {
 	Content *string `json:"content,omitempty"`
 	// EntityExtractionOverrides overrides App-level entity extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.
 	EntityExtractionOverrides *CommondtoEntityExtractionConfig `json:"entity_extraction_overrides,omitempty"`
+	// EventOccurredAt is the timestamp when this content was created or occurred (optional). Used by the extraction LLM to resolve relative temporal expressions like \"last year\" or \"yesterday\". If nil, defaults to time.Now() inside the pipeline.
+	EventOccurredAt *string `json:"event_occurred_at,omitempty"`
 	// FactExtractionOverrides overrides App-level fact extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.
 	FactExtractionOverrides *CommondtoFactExtractionConfig `json:"fact_extraction_overrides,omitempty"`
 	// Metadata contains flexible memory metadata (optional)
@@ -149,6 +151,38 @@ func (o *MemoryCreateMemoryRequest) HasEntityExtractionOverrides() bool {
 // SetEntityExtractionOverrides gets a reference to the given CommondtoEntityExtractionConfig and assigns it to the EntityExtractionOverrides field.
 func (o *MemoryCreateMemoryRequest) SetEntityExtractionOverrides(v CommondtoEntityExtractionConfig) {
 	o.EntityExtractionOverrides = &v
+}
+
+// GetEventOccurredAt returns the EventOccurredAt field value if set, zero value otherwise.
+func (o *MemoryCreateMemoryRequest) GetEventOccurredAt() string {
+	if o == nil || IsNil(o.EventOccurredAt) {
+		var ret string
+		return ret
+	}
+	return *o.EventOccurredAt
+}
+
+// GetEventOccurredAtOk returns a tuple with the EventOccurredAt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MemoryCreateMemoryRequest) GetEventOccurredAtOk() (*string, bool) {
+	if o == nil || IsNil(o.EventOccurredAt) {
+		return nil, false
+	}
+	return o.EventOccurredAt, true
+}
+
+// HasEventOccurredAt returns a boolean if a field has been set.
+func (o *MemoryCreateMemoryRequest) HasEventOccurredAt() bool {
+	if o != nil && !IsNil(o.EventOccurredAt) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventOccurredAt gets a reference to the given string and assigns it to the EventOccurredAt field.
+func (o *MemoryCreateMemoryRequest) SetEventOccurredAt(v string) {
+	o.EventOccurredAt = &v
 }
 
 // GetFactExtractionOverrides returns the FactExtractionOverrides field value if set, zero value otherwise.
@@ -329,6 +363,9 @@ func (o MemoryCreateMemoryRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.EntityExtractionOverrides) {
 		toSerialize["entity_extraction_overrides"] = o.EntityExtractionOverrides
+	}
+	if !IsNil(o.EventOccurredAt) {
+		toSerialize["event_occurred_at"] = o.EventOccurredAt
 	}
 	if !IsNil(o.FactExtractionOverrides) {
 		toSerialize["fact_extraction_overrides"] = o.FactExtractionOverrides

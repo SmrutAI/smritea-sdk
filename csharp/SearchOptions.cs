@@ -32,6 +32,12 @@ public sealed class SearchOptions
     /// <summary>Gets iSO-8601 datetime string — return memories valid at exactly this point in time.</summary>
     public string? ValidAt { get; private set; }
 
+    /// <summary>Gets the search method override. Accepted values: "quick_search", "deep_search", "context_aware_search".</summary>
+    public string? Method { get; private set; }
+
+    /// <summary>Gets the reranker type override. Accepted values: "rrf_temporal", "rrf", "temporal", "node_distance", "mmr", "cross_encoder".</summary>
+    public string? RerankerType { get; private set; }
+
     /// <summary>Sets the scope containing actor and conversation context.</summary>
     /// <param name="scope">The scope object grouping actor and conversation fields.</param>
     /// <returns>The current instance for method chaining.</returns>
@@ -92,6 +98,24 @@ public sealed class SearchOptions
     public SearchOptions WithValidAt(string validAt)
     {
         this.ValidAt = validAt;
+        return this;
+    }
+
+    /// <summary>Sets the search method override. Defaults to app config if omitted.</summary>
+    /// <param name="method">Accepted values: "quick_search", "deep_search", "context_aware_search".</param>
+    /// <returns>The current instance for method chaining.</returns>
+    public SearchOptions WithMethod(string method)
+    {
+        this.Method = method;
+        return this;
+    }
+
+    /// <summary>Sets the reranker type override. Only applies to deep_search. Defaults to app config if omitted.</summary>
+    /// <param name="rerankerType">Accepted values: "rrf_temporal", "rrf", "temporal", "node_distance", "mmr", "cross_encoder".</param>
+    /// <returns>The current instance for method chaining.</returns>
+    public SearchOptions WithRerankerType(string rerankerType)
+    {
+        this.RerankerType = rerankerType;
         return this;
     }
 }

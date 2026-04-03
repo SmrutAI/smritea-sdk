@@ -15,6 +15,9 @@ from typing import Any
 from pydantic import BaseModel
 
 from smritea._internal.autogen.smritea_cloud_sdk.models import (
+    MemoryCreateMemoryResponse as MemoryCreationResult,
+)
+from smritea._internal.autogen.smritea_cloud_sdk.models import (
     MemoryMemoryResponse as Memory,
 )
 from smritea._internal.autogen.smritea_cloud_sdk.models import (
@@ -29,8 +32,18 @@ from smritea._internal.autogen.smritea_cloud_sdk.models import (
 # These are the real pydantic model classes produced by the openapi-generator.
 # Regenerated from smritea-cloud via: cd ../smritea-cloud && make generate-public-sdk
 # ---------------------------------------------------------------------------
+# MemoryCreationResult is the response from add(). Contains all memories
+# created from the extracted facts (memories[]), plus extraction metadata:
+# facts_extracted, extraction_confidence, skipped_count, updated_count.
+# ---------------------------------------------------------------------------
 
-__all__ = ["Memory", "SearchResult", "MemorySearchMemoriesResponse", "MemoryScope"]
+__all__ = [
+    "MemoryCreationResult",
+    "Memory",
+    "SearchResult",
+    "MemorySearchMemoriesResponse",
+    "MemoryScope",
+]
 
 
 # ---------------------------------------------------------------------------
@@ -79,11 +92,34 @@ class MemoryScope(BaseModel):
     Only relevant for ``search`` — ignored on ``add``."""
 
 
+class RelativeStanding(BaseModel):
+    """Importance and temporal decay configuration for a memory.
+
+    Controls how the memory's relevance score decays over time in search results.
+    All fields are optional — omitted fields use server defaults
+    (importance=1.0, decay_factor=0.2, decay_function="exponential").
+    """
+
+    importance: float | None = None
+    """How important is this memory (0.0–1.0). Higher = ranks higher in search."""
+    decay_factor: float | None = None
+    """Rate of relevance decay over time (>=0). 0 = no decay (memory score is pinned
+    permanently). 0.2 = light decay (default). 1.0 = standard. 3.0+ = aggressive."""
+    decay_function: str | None = None
+    """Decay curve shape. Accepted values: ``"exponential"``, ``"gaussian"``, ``"linear"``."""
+
+
 class AddOptions(BaseModel):
     """Options for SmriteaClient.add()."""
 
     scope: MemoryScope | None = None
     metadata: dict[str, Any] | None = None
+    event_occurred_at: str | None = None
+    """ISO-8601 datetime string — when this content was created or occurred.
+    Used by the extraction LLM to resolve relative temporal expressions
+    like "last year" or "yesterday". Defaults to current time if omitted."""
+    relative_standing: RelativeStanding | None = None
+    """Importance and temporal decay configuration for this memory."""
 
 
 class SearchOptions(BaseModel):
@@ -99,3 +135,10 @@ class SearchOptions(BaseModel):
     """ISO-8601 datetime string — only return memories created at or before this time."""
     valid_at: str | None = None
     """ISO-8601 datetime string — return memories valid at exactly this point in time."""
+    method: str | None = None
+    """Search method override. Accepted values: ``"quick_search"``, ``"deep_search"``,
+    ``"context_aware_search"``. Defaults to app config if omitted."""
+    reranker_type: str | None = None
+    """Reranker override. Accepted values: ``"rrf_temporal"``, ``"rrf"``, ``"temporal"``,
+    ``"node_distance"``, ``"mmr"``, ``"cross_encoder"``. Only applies to deep_search.
+    Defaults to app config if omitted."""

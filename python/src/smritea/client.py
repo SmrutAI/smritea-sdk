@@ -11,6 +11,7 @@ from smritea._internal.autogen.smritea_cloud_sdk.api.sdk_memory_api import SDKMe
 from smritea._internal.autogen.smritea_cloud_sdk.exceptions import ApiException
 from smritea._internal.autogen.smritea_cloud_sdk.models import (
     CommondtoMemoryScope,
+    CommondtoRelativeStandingConfig,
     MemoryCreateMemoryRequest,
     MemorySearchMemoryRequest,
 )
@@ -22,7 +23,7 @@ from smritea.exceptions import (
     SmriteaRateLimitError,
     SmriteaValidationError,
 )
-from smritea.types import Memory, MemoryScope, SearchResult
+from smritea.types import Memory, MemoryCreationResult, MemoryScope, RelativeStanding, SearchResult
 
 _T = TypeVar("_T")
 _RETRY_CAP_SECONDS = 30.0
@@ -73,16 +74,25 @@ class SmriteaClient:
         *,
         scope: MemoryScope | None = None,
         metadata: dict[str, Any] | None = None,
-    ) -> Memory:
+        event_occurred_at: str | None = None,
+        relative_standing: RelativeStanding | None = None,
+    ) -> MemoryCreationResult:
         """Add a new memory.
 
         Args:
             content: The memory content to store.
             scope: Optional MemoryScope object for actor and conversation context.
             metadata: Optional key-value metadata.
+            event_occurred_at: ISO-8601 datetime string — when this content was created
+                or occurred. Used by the extraction LLM to resolve relative temporal
+                expressions like "last year" or "yesterday". Defaults to current time
+                if omitted.
+            relative_standing: Optional importance and temporal decay configuration.
 
         Returns:
-            The created Memory object.
+            MemoryCreationResult containing all memories created from the extracted
+            facts (result.memories), plus metadata: facts_extracted,
+            extraction_confidence, skipped_count, updated_count.
         """
         if metadata is not None and not isinstance(metadata, dict):
             raise SmriteaValidationError(
@@ -101,11 +111,22 @@ class SmriteaClient:
                 participant_ids=scope.participant_ids,
             )
 
+        # Build autogen relative_standing from SDK type
+        autogen_relative_standing = None
+        if relative_standing is not None:
+            autogen_relative_standing = CommondtoRelativeStandingConfig(
+                importance=relative_standing.importance,
+                decay_factor=relative_standing.decay_factor,
+                decay_function=relative_standing.decay_function,
+            )
+
         request = MemoryCreateMemoryRequest(
             app_id=self._app_id,
             content=content,
             scope=autogen_scope,
             metadata=metadata,
+            event_occurred_at=event_occurred_at,
+            relative_standing=autogen_relative_standing,
         )
         return self._execute_with_retry(lambda: self._memory_api.create_memory(request))
 
@@ -120,6 +141,8 @@ class SmriteaClient:
         from_time: str | None = None,
         to_time: str | None = None,
         valid_at: str | None = None,
+        method: str | None = None,
+        reranker_type: str | None = None,
     ) -> list[SearchResult]:
         """Search for memories semantically.
 
@@ -132,6 +155,11 @@ class SmriteaClient:
             from_time: ISO-8601 datetime — only return memories created at or after this time.
             to_time: ISO-8601 datetime — only return memories created at or before this time.
             valid_at: ISO-8601 datetime — return memories valid at exactly this point in time.
+            method: Search method override. Accepted values: ``"quick_search"``,
+                ``"deep_search"``, ``"context_aware_search"``. Defaults to app config.
+            reranker_type: Reranker override. Accepted values: ``"rrf_temporal"``,
+                ``"rrf"``, ``"temporal"``, ``"node_distance"``, ``"mmr"``,
+                ``"cross_encoder"``. Only applies to deep_search. Defaults to app config.
 
         Returns:
             List of SearchResult objects ordered by relevance score.
@@ -143,6 +171,7 @@ class SmriteaClient:
                 actor_id=scope.actor_id,
                 actor_type=scope.actor_type,
                 conversation_id=scope.conversation_id,
+                participant_ids=scope.participant_ids,
             )
 
         request = MemorySearchMemoryRequest(
@@ -155,6 +184,8 @@ class SmriteaClient:
             from_time=from_time,
             to_time=to_time,
             valid_at=valid_at,
+            method=method,
+            reranker_type=reranker_type,
         )
         response = self._execute_with_retry(lambda: self._memory_api.search_memories(request))
         return list(response.memories or [])
