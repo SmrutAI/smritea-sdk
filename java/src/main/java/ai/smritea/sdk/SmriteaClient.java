@@ -234,6 +234,9 @@ public class SmriteaClient {
       if (opts.getRerankerType() != null) {
         request.setRerankerType(ModelEnumsRerankerType.fromValue(opts.getRerankerType()));
       }
+      if (opts.getMetadataFilter() != null) {
+        request.setMetadataFilter(opts.getMetadataFilter());
+      }
     }
 
     return executeWithRetry(

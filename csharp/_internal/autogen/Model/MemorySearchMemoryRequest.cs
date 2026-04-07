@@ -58,6 +58,7 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="fromTime">FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime..</param>
         /// <param name="graphDepth">0&#x3D;use app config, 1-5&#x3D;override traversal depth.</param>
         /// <param name="limit">limit.</param>
+        /// <param name="metadataFilter">MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned..</param>
         /// <param name="method">method.</param>
         /// <param name="query">query (required).</param>
         /// <param name="rerankerType">RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method..</param>
@@ -65,7 +66,7 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="threshold">0&#x3D;no filtering (pipeline uses RRF scores, not cosine similarity).</param>
         /// <param name="toTime">ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime..</param>
         /// <param name="validAt">ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from &lt;&#x3D; ValidAt AND (active_to is null OR active_to &gt;&#x3D; ValidAt) Mutually exclusive with FromTime/ToTime..</param>
-        public MemorySearchMemoryRequest(string appId = default, string fromTime = default, int graphDepth = default, int limit = default, ModelEnumsSearchMethod? method = default, string query = default, ModelEnumsRerankerType? rerankerType = default, CommondtoMemoryScope scope = default, decimal threshold = default, string toTime = default, string validAt = default)
+        public MemorySearchMemoryRequest(string appId = default, string fromTime = default, int graphDepth = default, int limit = default, Object metadataFilter = default, ModelEnumsSearchMethod? method = default, string query = default, ModelEnumsRerankerType? rerankerType = default, CommondtoMemoryScope scope = default, decimal threshold = default, string toTime = default, string validAt = default)
         {
             // to ensure "appId" is required (not null)
             if (appId == null)
@@ -82,6 +83,7 @@ namespace Smritea.Internal.Autogen.Model
             this.FromTime = fromTime;
             this.GraphDepth = graphDepth;
             this.Limit = limit;
+            this.MetadataFilter = metadataFilter;
             this.Method = method;
             this.RerankerType = rerankerType;
             this.Scope = scope;
@@ -115,6 +117,13 @@ namespace Smritea.Internal.Autogen.Model
         /// </summary>
         [DataMember(Name = "limit", EmitDefaultValue = false)]
         public int Limit { get; set; }
+
+        /// <summary>
+        /// MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned.
+        /// </summary>
+        /// <value>MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned.</value>
+        [DataMember(Name = "metadata_filter", EmitDefaultValue = false)]
+        public Object MetadataFilter { get; set; }
 
         /// <summary>
         /// Gets or Sets Query
@@ -162,6 +171,7 @@ namespace Smritea.Internal.Autogen.Model
             sb.Append("  FromTime: ").Append(FromTime).Append("\n");
             sb.Append("  GraphDepth: ").Append(GraphDepth).Append("\n");
             sb.Append("  Limit: ").Append(Limit).Append("\n");
+            sb.Append("  MetadataFilter: ").Append(MetadataFilter).Append("\n");
             sb.Append("  Method: ").Append(Method).Append("\n");
             sb.Append("  Query: ").Append(Query).Append("\n");
             sb.Append("  RerankerType: ").Append(RerankerType).Append("\n");

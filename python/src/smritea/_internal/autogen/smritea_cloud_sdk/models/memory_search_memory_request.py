@@ -34,6 +34,7 @@ class MemorySearchMemoryRequest(BaseModel):
     from_time: Optional[StrictStr] = Field(default=None, description="FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime.")
     graph_depth: Optional[StrictInt] = Field(default=None, description="0=use app config, 1-5=override traversal depth")
     limit: Optional[StrictInt] = None
+    metadata_filter: Optional[Dict[str, Any]] = Field(default=None, description="MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned.")
     method: Optional[ModelEnumsSearchMethod] = None
     query: StrictStr
     reranker_type: Optional[ModelEnumsRerankerType] = Field(default=None, description="RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.")
@@ -41,7 +42,7 @@ class MemorySearchMemoryRequest(BaseModel):
     threshold: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="0=no filtering (pipeline uses RRF scores, not cosine similarity)")
     to_time: Optional[StrictStr] = Field(default=None, description="ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.")
     valid_at: Optional[StrictStr] = Field(default=None, description="ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from <= ValidAt AND (active_to is null OR active_to >= ValidAt) Mutually exclusive with FromTime/ToTime.")
-    __properties: ClassVar[List[str]] = ["app_id", "from_time", "graph_depth", "limit", "method", "query", "reranker_type", "scope", "threshold", "to_time", "valid_at"]
+    __properties: ClassVar[List[str]] = ["app_id", "from_time", "graph_depth", "limit", "metadata_filter", "method", "query", "reranker_type", "scope", "threshold", "to_time", "valid_at"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -101,6 +102,7 @@ class MemorySearchMemoryRequest(BaseModel):
             "from_time": obj.get("from_time"),
             "graph_depth": obj.get("graph_depth"),
             "limit": obj.get("limit"),
+            "metadata_filter": obj.get("metadata_filter"),
             "method": obj.get("method"),
             "query": obj.get("query"),
             "reranker_type": obj.get("reranker_type"),

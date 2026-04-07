@@ -155,6 +155,14 @@ type SearchOptions struct {
 	// RerankerType overrides the reranker. Accepted values: "rrf_temporal", "rrf", "temporal",
 	// "node_distance", "mmr", "cross_encoder". Only applies to deep_search. Defaults to app config if nil.
 	RerankerType *string
+	// MetadataFilter is a MongoDB-style operator DSL for filtering search results by their metadata.
+	// Supports $eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $contains, $and, $or, $not, and wildcard "*".
+	// Values must be string, int64, or float64. Booleans and nested objects are rejected by the server.
+	// Example: map[string]any{"department": "engineering"} or
+	// map[string]any{"level": map[string]any{"$gte": 4}}.
+	// Note: $contains is applied as a post-filter and may return fewer results than Limit.
+	// $contains inside $or is rejected with HTTP 400.
+	MetadataFilter map[string]any
 }
 
 // NewSearchOptions returns a new empty SearchOptions ready for fluent configuration.
@@ -199,5 +207,15 @@ func (o *SearchOptions) WithMethod(m string) *SearchOptions {
 // WithRerankerType sets the reranker type override.
 func (o *SearchOptions) WithRerankerType(r string) *SearchOptions {
 	o.RerankerType = &r
+	return o
+}
+
+// WithMetadataFilter sets a MongoDB-style operator DSL filter on memory metadata.
+// Supports $eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $contains, $and, $or, $not,
+// and wildcard "*". Values must be string, int64, or float64.
+// Note: $contains is applied as a post-filter and may return fewer results than Limit.
+// $contains inside $or is rejected by the server (HTTP 400).
+func (o *SearchOptions) WithMetadataFilter(m map[string]any) *SearchOptions {
+	o.MetadataFilter = m
 	return o
 }

@@ -261,6 +261,11 @@ public class SmriteaClient : IDisposable
             {
                 request.RerankerType = Enum.Parse<ModelEnumsRerankerType>(opts.RerankerType, ignoreCase: true);
             }
+
+            if (opts.MetadataFilter is not null)
+            {
+                request.MetadataFilter = opts.MetadataFilter;
+            }
         }
 
         return await this.ExecuteWithRetryAsync<IReadOnlyList<SearchResult>>(

@@ -142,3 +142,14 @@ class SearchOptions(BaseModel):
     """Reranker override. Accepted values: ``"rrf_temporal"``, ``"rrf"``, ``"temporal"``,
     ``"node_distance"``, ``"mmr"``, ``"cross_encoder"``. Only applies to deep_search.
     Defaults to app config if omitted."""
+    metadata_filter: dict[str, Any] | None = None
+    """MongoDB-style operator DSL for filtering search results by their metadata.
+    Supports ``$eq``, ``$ne``, ``$gt``, ``$gte``, ``$lt``, ``$lte``, ``$in``, ``$nin``,
+    ``$contains``, ``$and``, ``$or``, ``$not``, and wildcard ``"*"``.
+    Values must be str, int, or float — booleans and nested objects are rejected.
+    Simple equality: ``{"department": "engineering"}``
+    Range: ``{"level": {"$gte": 4}}``
+    Logical: ``{"$and": [{"department": "eng"}, {"level": {"$gt": 3}}]}``
+    Note: ``$contains`` is applied as a post-filter and may return fewer results than
+    ``limit``. ``$contains`` inside ``$or`` is rejected with HTTP 400.
+    ``None`` = no metadata filtering."""

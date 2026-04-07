@@ -91,6 +91,21 @@ export interface SearchOptions {
    * `"node_distance"`, `"mmr"`, `"cross_encoder"`. Only applies to deep_search.
    * Defaults to app config if omitted. */
   rerankerType?: 'rrf_temporal' | 'rrf' | 'temporal' | 'node_distance' | 'mmr' | 'cross_encoder';
+  /**
+   * MongoDB-style operator DSL for filtering search results by their metadata.
+   * Supports `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`,
+   * `$contains`, `$and`, `$or`, `$not`, and wildcard `"*"`.
+   * Values must be string, number (int or float). Booleans and nested objects
+   * are rejected by the server.
+   *
+   * Simple equality: `{ department: "engineering" }`
+   * Range: `{ level: { $gte: 4 } }`
+   * Logical: `{ $and: [{ department: "eng" }, { level: { $gt: 3 } }] }`
+   *
+   * Note: `$contains` is applied as a post-filter and may return fewer results
+   * than `limit`. `$contains` inside `$or` is rejected with HTTP 400.
+   */
+  metadataFilter?: Record<string, unknown>;
 }
 
 export interface SmriteaClientConfig {

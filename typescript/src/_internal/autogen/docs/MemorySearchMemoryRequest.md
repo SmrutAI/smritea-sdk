@@ -10,6 +10,7 @@ Name | Type
 `fromTime` | string
 `graphDepth` | number
 `limit` | number
+`metadataFilter` | object
 `method` | [ModelEnumsSearchMethod](ModelEnumsSearchMethod.md)
 `query` | string
 `rerankerType` | [ModelEnumsRerankerType](ModelEnumsRerankerType.md)
@@ -29,6 +30,7 @@ const example = {
   "fromTime": null,
   "graphDepth": null,
   "limit": null,
+  "metadataFilter": null,
   "method": null,
   "query": null,
   "rerankerType": null,

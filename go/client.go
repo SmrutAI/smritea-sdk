@@ -135,6 +135,9 @@ func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOp
 			rt := autogen.ModelEnumsRerankerType(*opts.RerankerType)
 			req.RerankerType = &rt
 		}
+		if opts.MetadataFilter != nil {
+			req.MetadataFilter = opts.MetadataFilter
+		}
 	}
 
 	return withRetry[[]*SearchResult](ctx, c.maxRetries, func() ([]*SearchResult, error) {

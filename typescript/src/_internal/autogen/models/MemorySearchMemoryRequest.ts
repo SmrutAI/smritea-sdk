@@ -67,6 +67,13 @@ export interface MemorySearchMemoryRequest {
      */
     limit?: number;
     /**
+     * MetadataFilter filters memories by user-provided key-value metadata.
+     * Only memories whose metadata contains ALL specified key-value pairs are returned.
+     * @type {object}
+     * @memberof MemorySearchMemoryRequest
+     */
+    metadataFilter?: object;
+    /**
      * 
      * @type {ModelEnumsSearchMethod}
      * @memberof MemorySearchMemoryRequest
@@ -140,6 +147,7 @@ export function MemorySearchMemoryRequestFromJSONTyped(json: any, ignoreDiscrimi
         'fromTime': json['from_time'] == null ? undefined : json['from_time'],
         'graphDepth': json['graph_depth'] == null ? undefined : json['graph_depth'],
         'limit': json['limit'] == null ? undefined : json['limit'],
+        'metadataFilter': json['metadata_filter'] == null ? undefined : json['metadata_filter'],
         'method': json['method'] == null ? undefined : ModelEnumsSearchMethodFromJSON(json['method']),
         'query': json['query'],
         'rerankerType': json['reranker_type'] == null ? undefined : ModelEnumsRerankerTypeFromJSON(json['reranker_type']),
@@ -165,6 +173,7 @@ export function MemorySearchMemoryRequestToJSONTyped(value?: MemorySearchMemoryR
         'from_time': value['fromTime'],
         'graph_depth': value['graphDepth'],
         'limit': value['limit'],
+        'metadata_filter': value['metadataFilter'],
         'method': ModelEnumsSearchMethodToJSON(value['method']),
         'query': value['query'],
         'reranker_type': ModelEnumsRerankerTypeToJSON(value['rerankerType']),

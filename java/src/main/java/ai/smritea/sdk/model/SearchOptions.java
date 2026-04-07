@@ -21,6 +21,7 @@ public final class SearchOptions {
   private String validAt;
   private String method;
   private String rerankerType;
+  private java.util.Map<String, Object> metadataFilter;
 
   /** Creates a new SearchOptions with all fields unset. */
   public SearchOptions() {}
@@ -170,5 +171,26 @@ public final class SearchOptions {
   /** Returns the reranker type override. */
   public String getRerankerType() {
     return rerankerType;
+  }
+
+  /**
+   * Sets the metadata filter using a MongoDB-style operator DSL. Supported operators: $eq, $ne,
+   * $gt, $gte, $lt, $lte, $in, $nin, $contains, $and, $or, $not, and wildcard "*". Values must be
+   * String, Integer, Long, or Double — booleans and nested objects are rejected by the server.
+   * Simple equality: {@code Map.of("department", "engineering")}. Range: {@code Map.of("level",
+   * Map.of("$gte", 4))}. Note: $contains is applied as a post-filter and may return fewer results
+   * than limit. $contains inside $or is rejected (HTTP 400).
+   *
+   * @param metadataFilter the metadata filter DSL map
+   * @return this instance for chaining
+   */
+  public SearchOptions withMetadataFilter(java.util.Map<String, Object> metadataFilter) {
+    this.metadataFilter = metadataFilter;
+    return this;
+  }
+
+  /** Returns the metadata filter. */
+  public java.util.Map<String, Object> getMetadataFilter() {
+    return metadataFilter;
   }
 }

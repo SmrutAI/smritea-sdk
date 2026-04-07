@@ -28,6 +28,8 @@ type MemorySearchMemoryRequest struct {
 	// 0=use app config, 1-5=override traversal depth
 	GraphDepth *int32 `json:"graph_depth,omitempty"`
 	Limit *int32 `json:"limit,omitempty"`
+	// MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned.
+	MetadataFilter map[string]interface{} `json:"metadata_filter,omitempty"`
 	Method *ModelEnumsSearchMethod `json:"method,omitempty"`
 	Query string `json:"query"`
 	// RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.
@@ -181,6 +183,38 @@ func (o *MemorySearchMemoryRequest) HasLimit() bool {
 // SetLimit gets a reference to the given int32 and assigns it to the Limit field.
 func (o *MemorySearchMemoryRequest) SetLimit(v int32) {
 	o.Limit = &v
+}
+
+// GetMetadataFilter returns the MetadataFilter field value if set, zero value otherwise.
+func (o *MemorySearchMemoryRequest) GetMetadataFilter() map[string]interface{} {
+	if o == nil || IsNil(o.MetadataFilter) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.MetadataFilter
+}
+
+// GetMetadataFilterOk returns a tuple with the MetadataFilter field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MemorySearchMemoryRequest) GetMetadataFilterOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.MetadataFilter) {
+		return map[string]interface{}{}, false
+	}
+	return o.MetadataFilter, true
+}
+
+// HasMetadataFilter returns a boolean if a field has been set.
+func (o *MemorySearchMemoryRequest) HasMetadataFilter() bool {
+	if o != nil && !IsNil(o.MetadataFilter) {
+		return true
+	}
+
+	return false
+}
+
+// SetMetadataFilter gets a reference to the given map[string]interface{} and assigns it to the MetadataFilter field.
+func (o *MemorySearchMemoryRequest) SetMetadataFilter(v map[string]interface{}) {
+	o.MetadataFilter = v
 }
 
 // GetMethod returns the Method field value if set, zero value otherwise.
@@ -418,6 +452,9 @@ func (o MemorySearchMemoryRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Limit) {
 		toSerialize["limit"] = o.Limit
+	}
+	if !IsNil(o.MetadataFilter) {
+		toSerialize["metadata_filter"] = o.MetadataFilter
 	}
 	if !IsNil(o.Method) {
 		toSerialize["method"] = o.Method

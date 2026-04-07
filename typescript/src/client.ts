@@ -86,6 +86,7 @@ export class SmriteaClient {
           validAt: options?.validAt,
           method: options?.method,
           rerankerType: options?.rerankerType,
+          metadataFilter: options?.metadataFilter as never,
         },
       }),
     );

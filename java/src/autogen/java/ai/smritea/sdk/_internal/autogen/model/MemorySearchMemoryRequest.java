@@ -41,6 +41,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   MemorySearchMemoryRequest.JSON_PROPERTY_FROM_TIME,
   MemorySearchMemoryRequest.JSON_PROPERTY_GRAPH_DEPTH,
   MemorySearchMemoryRequest.JSON_PROPERTY_LIMIT,
+  MemorySearchMemoryRequest.JSON_PROPERTY_METADATA_FILTER,
   MemorySearchMemoryRequest.JSON_PROPERTY_METHOD,
   MemorySearchMemoryRequest.JSON_PROPERTY_QUERY,
   MemorySearchMemoryRequest.JSON_PROPERTY_RERANKER_TYPE,
@@ -66,6 +67,10 @@ public class MemorySearchMemoryRequest {
   public static final String JSON_PROPERTY_LIMIT = "limit";
   @javax.annotation.Nullable
   private Integer limit;
+
+  public static final String JSON_PROPERTY_METADATA_FILTER = "metadata_filter";
+  @javax.annotation.Nullable
+  private Object metadataFilter;
 
   public static final String JSON_PROPERTY_METHOD = "method";
   @javax.annotation.Nullable
@@ -191,6 +196,30 @@ public class MemorySearchMemoryRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setLimit(@javax.annotation.Nullable Integer limit) {
     this.limit = limit;
+  }
+
+
+  public MemorySearchMemoryRequest metadataFilter(@javax.annotation.Nullable Object metadataFilter) {
+    this.metadataFilter = metadataFilter;
+    return this;
+  }
+
+  /**
+   * MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned.
+   * @return metadataFilter
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_METADATA_FILTER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Object getMetadataFilter() {
+    return metadataFilter;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_METADATA_FILTER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setMetadataFilter(@javax.annotation.Nullable Object metadataFilter) {
+    this.metadataFilter = metadataFilter;
   }
 
 
@@ -378,6 +407,7 @@ public class MemorySearchMemoryRequest {
         Objects.equals(this.fromTime, memorySearchMemoryRequest.fromTime) &&
         Objects.equals(this.graphDepth, memorySearchMemoryRequest.graphDepth) &&
         Objects.equals(this.limit, memorySearchMemoryRequest.limit) &&
+        Objects.equals(this.metadataFilter, memorySearchMemoryRequest.metadataFilter) &&
         Objects.equals(this.method, memorySearchMemoryRequest.method) &&
         Objects.equals(this.query, memorySearchMemoryRequest.query) &&
         Objects.equals(this.rerankerType, memorySearchMemoryRequest.rerankerType) &&
@@ -389,7 +419,7 @@ public class MemorySearchMemoryRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(appId, fromTime, graphDepth, limit, method, query, rerankerType, scope, threshold, toTime, validAt);
+    return Objects.hash(appId, fromTime, graphDepth, limit, metadataFilter, method, query, rerankerType, scope, threshold, toTime, validAt);
   }
 
   @Override
@@ -400,6 +430,7 @@ public class MemorySearchMemoryRequest {
     sb.append("    fromTime: ").append(toIndentedString(fromTime)).append("\n");
     sb.append("    graphDepth: ").append(toIndentedString(graphDepth)).append("\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
+    sb.append("    metadataFilter: ").append(toIndentedString(metadataFilter)).append("\n");
     sb.append("    method: ").append(toIndentedString(method)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    rerankerType: ").append(toIndentedString(rerankerType)).append("\n");
@@ -472,6 +503,11 @@ public class MemorySearchMemoryRequest {
     // add `limit` to the URL query string
     if (getLimit() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%slimit%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getLimit()))));
+    }
+
+    // add `metadata_filter` to the URL query string
+    if (getMetadataFilter() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%smetadata_filter%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMetadataFilter()))));
     }
 
     // add `method` to the URL query string

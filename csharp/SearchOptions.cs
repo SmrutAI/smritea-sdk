@@ -38,6 +38,17 @@ public sealed class SearchOptions
     /// <summary>Gets the reranker type override. Accepted values: "rrf_temporal", "rrf", "temporal", "node_distance", "mmr", "cross_encoder".</summary>
     public string? RerankerType { get; private set; }
 
+    /// <summary>
+    /// Gets the MongoDB-style operator DSL filter on memory metadata.
+    /// Supports $eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $contains, $and, $or, $not, and wildcard "*".
+    /// Values must be string, int, long, or double — booleans and nested objects are rejected by the server.
+    /// Simple equality: <c>new Dictionary&lt;string, object&gt; { ["department"] = "engineering" }</c>
+    /// Range: <c>new Dictionary&lt;string, object&gt; { ["level"] = new Dictionary&lt;string, object&gt; { ["$gte"] = 4 } }</c>
+    /// Note: $contains is applied as a post-filter and may return fewer results than Limit.
+    /// $contains inside $or is rejected with HTTP 400.
+    /// </summary>
+    public Dictionary<string, object>? MetadataFilter { get; private set; }
+
     /// <summary>Sets the scope containing actor and conversation context.</summary>
     /// <param name="scope">The scope object grouping actor and conversation fields.</param>
     /// <returns>The current instance for method chaining.</returns>
@@ -116,6 +127,15 @@ public sealed class SearchOptions
     public SearchOptions WithRerankerType(string rerankerType)
     {
         this.RerankerType = rerankerType;
+        return this;
+    }
+
+    /// <summary>Sets the MongoDB-style operator DSL filter on memory metadata.</summary>
+    /// <param name="metadataFilter">A dictionary using MongoDB-style operators ($eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $contains, $and, $or, $not, "*").</param>
+    /// <returns>The current instance for method chaining.</returns>
+    public SearchOptions WithMetadataFilter(Dictionary<string, object> metadataFilter)
+    {
+        this.MetadataFilter = metadataFilter;
         return this;
     }
 }
