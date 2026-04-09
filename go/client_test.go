@@ -180,7 +180,7 @@ func TestRetryDelay_ZeroRetryAfter(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestAddOptions_Builder(t *testing.T) {
-	scope := NewScope().WithActorID("u1").WithActorType("user").WithActorName("Alice").WithConversationID("conv-1")
+	scope := NewMemoryScope().WithActorID("u1").WithActorType("user").WithActorName("Alice").WithConversationID("conv-1")
 	opts := NewAddOptions().WithScope(scope)
 
 	if opts.Scope == nil || opts.Scope.ActorID == nil || *opts.Scope.ActorID != "u1" {
@@ -256,7 +256,7 @@ func TestAddOptions_Builder_UsedInAdd(t *testing.T) {
 	})
 	client := newTestClient(t, handler, 1)
 
-	mem, err := client.Add(context.Background(), "content", NewAddOptions().WithScope(NewScope().WithActorID("user-42").WithActorType("user")))
+	mem, err := client.Add(context.Background(), "content", NewAddOptions().WithScope(NewMemoryScope().WithActorID("user-42").WithActorType("user")))
 	if err != nil {
 		t.Fatalf("Add with builder opts: unexpected error: %v", err)
 	}
@@ -333,7 +333,7 @@ func TestAdd_ExplicitActorIDAndType(t *testing.T) {
 	client := newTestClient(t, handler, 1)
 
 	_, err := client.Add(context.Background(), "content", &AddOptions{
-		Scope: &Scope{
+		Scope: &MemoryScope{
 			ActorID:   strPtr("agent-7"),
 			ActorType: strPtr("agent"),
 		},

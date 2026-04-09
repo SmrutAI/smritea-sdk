@@ -41,6 +41,12 @@ export interface MemoryCreateMemoryResponse {
      */
     explainTrace?: ExplainTrace;
     /**
+     * ExplicitSkip is true when the LLM intentionally extracted no facts; nothing was stored.
+     * @type {boolean}
+     * @memberof MemoryCreateMemoryResponse
+     */
+    explicitSkip?: boolean;
+    /**
      * ExtractionConfidence is the LLM's confidence in the extraction quality (0.0-1.0).
      * @type {number}
      * @memberof MemoryCreateMemoryResponse
@@ -49,7 +55,7 @@ export interface MemoryCreateMemoryResponse {
     /**
      * FactsExtracted is the number of discrete facts the LLM extracted from the input.
      * 0 when extraction is disabled (NoExtract/quick_search), when extraction fails,
-     * or when the LLM finds no facts. In these cases the original content is stored as-is.
+     * when the LLM finds no facts (ExplicitSkip), or when passthrough applies.
      * @type {number}
      * @memberof MemoryCreateMemoryResponse
      */
@@ -57,6 +63,7 @@ export interface MemoryCreateMemoryResponse {
     /**
      * Memories contains all memories created from the extracted facts.
      * When extraction is disabled or fails, this contains a single memory with the original content.
+     * When ExplicitSkip is true (phatic / non-extractable content), this is empty.
      * @type {Array<MemoryMemoryResponse>}
      * @memberof MemoryCreateMemoryResponse
      */
@@ -93,6 +100,7 @@ export function MemoryCreateMemoryResponseFromJSONTyped(json: any, ignoreDiscrim
     return {
         
         'explainTrace': json['explain_trace'] == null ? undefined : ExplainTraceFromJSON(json['explain_trace']),
+        'explicitSkip': json['explicit_skip'] == null ? undefined : json['explicit_skip'],
         'extractionConfidence': json['extraction_confidence'] == null ? undefined : json['extraction_confidence'],
         'factsExtracted': json['facts_extracted'] == null ? undefined : json['facts_extracted'],
         'memories': json['memories'] == null ? undefined : ((json['memories'] as Array<any>).map(MemoryMemoryResponseFromJSON)),
@@ -113,6 +121,7 @@ export function MemoryCreateMemoryResponseToJSONTyped(value?: MemoryCreateMemory
     return {
         
         'explain_trace': ExplainTraceToJSON(value['explainTrace']),
+        'explicit_skip': value['explicitSkip'],
         'extraction_confidence': value['extractionConfidence'],
         'facts_extracted': value['factsExtracted'],
         'memories': value['memories'] == null ? undefined : ((value['memories'] as Array<any>).map(MemoryMemoryResponseToJSON)),

@@ -21,11 +21,13 @@ var _ MappedNullable = &MemoryCreateMemoryResponse{}
 // MemoryCreateMemoryResponse struct for MemoryCreateMemoryResponse
 type MemoryCreateMemoryResponse struct {
 	ExplainTrace *ExplainTrace `json:"explain_trace,omitempty"`
+	// ExplicitSkip is true when the LLM intentionally extracted no facts; nothing was stored.
+	ExplicitSkip *bool `json:"explicit_skip,omitempty"`
 	// ExtractionConfidence is the LLM's confidence in the extraction quality (0.0-1.0).
 	ExtractionConfidence *float32 `json:"extraction_confidence,omitempty"`
-	// FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, or when the LLM finds no facts. In these cases the original content is stored as-is.
+	// FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, when the LLM finds no facts (ExplicitSkip), or when passthrough applies.
 	FactsExtracted *int32 `json:"facts_extracted,omitempty"`
-	// Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content.
+	// Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content. When ExplicitSkip is true (phatic / non-extractable content), this is empty.
 	Memories []MemoryMemoryResponse `json:"memories,omitempty"`
 	// SkippedCount is the number of facts skipped due to deduplication (exact duplicates).
 	SkippedCount *int32 `json:"skipped_count,omitempty"`
@@ -80,6 +82,38 @@ func (o *MemoryCreateMemoryResponse) HasExplainTrace() bool {
 // SetExplainTrace gets a reference to the given ExplainTrace and assigns it to the ExplainTrace field.
 func (o *MemoryCreateMemoryResponse) SetExplainTrace(v ExplainTrace) {
 	o.ExplainTrace = &v
+}
+
+// GetExplicitSkip returns the ExplicitSkip field value if set, zero value otherwise.
+func (o *MemoryCreateMemoryResponse) GetExplicitSkip() bool {
+	if o == nil || IsNil(o.ExplicitSkip) {
+		var ret bool
+		return ret
+	}
+	return *o.ExplicitSkip
+}
+
+// GetExplicitSkipOk returns a tuple with the ExplicitSkip field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MemoryCreateMemoryResponse) GetExplicitSkipOk() (*bool, bool) {
+	if o == nil || IsNil(o.ExplicitSkip) {
+		return nil, false
+	}
+	return o.ExplicitSkip, true
+}
+
+// HasExplicitSkip returns a boolean if a field has been set.
+func (o *MemoryCreateMemoryResponse) HasExplicitSkip() bool {
+	if o != nil && !IsNil(o.ExplicitSkip) {
+		return true
+	}
+
+	return false
+}
+
+// SetExplicitSkip gets a reference to the given bool and assigns it to the ExplicitSkip field.
+func (o *MemoryCreateMemoryResponse) SetExplicitSkip(v bool) {
+	o.ExplicitSkip = &v
 }
 
 // GetExtractionConfidence returns the ExtractionConfidence field value if set, zero value otherwise.
@@ -254,6 +288,9 @@ func (o MemoryCreateMemoryResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.ExplainTrace) {
 		toSerialize["explain_trace"] = o.ExplainTrace
+	}
+	if !IsNil(o.ExplicitSkip) {
+		toSerialize["explicit_skip"] = o.ExplicitSkip
 	}
 	if !IsNil(o.ExtractionConfidence) {
 		toSerialize["extraction_confidence"] = o.ExtractionConfidence

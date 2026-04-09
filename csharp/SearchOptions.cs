@@ -7,12 +7,12 @@ namespace Smritea.Sdk;
 /// <summary>
 /// Builder-style options for the SearchAsync method.
 /// Use fluent <c>With*</c> methods for ergonomic construction:
-/// <code>new SearchOptions().WithScope(new Scope().WithActorId("alice")).WithLimit(10)</code>
+/// <code>new SearchOptions().WithScope(new MemoryScope().WithActorId("alice")).WithLimit(10)</code>
 /// </summary>
 public sealed class SearchOptions
 {
     /// <summary>Gets the scope containing actor and conversation context.</summary>
-    public Scope? Scope { get; private set; }
+    public MemoryScope? Scope { get; private set; }
 
     /// <summary>Gets the maximum number of results to return.</summary>
     public int? Limit { get; private set; }
@@ -52,7 +52,7 @@ public sealed class SearchOptions
     /// <summary>Sets the scope containing actor and conversation context.</summary>
     /// <param name="scope">The scope object grouping actor and conversation fields.</param>
     /// <returns>The current instance for method chaining.</returns>
-    public SearchOptions WithScope(Scope scope)
+    public SearchOptions WithScope(MemoryScope scope)
     {
         this.Scope = scope;
         return this;

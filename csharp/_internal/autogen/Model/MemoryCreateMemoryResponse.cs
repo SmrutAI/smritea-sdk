@@ -37,14 +37,16 @@ namespace Smritea.Internal.Autogen.Model
         /// Initializes a new instance of the <see cref="MemoryCreateMemoryResponse" /> class.
         /// </summary>
         /// <param name="explainTrace">explainTrace.</param>
+        /// <param name="explicitSkip">ExplicitSkip is true when the LLM intentionally extracted no facts; nothing was stored..</param>
         /// <param name="extractionConfidence">ExtractionConfidence is the LLM&#39;s confidence in the extraction quality (0.0-1.0)..</param>
-        /// <param name="factsExtracted">FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, or when the LLM finds no facts. In these cases the original content is stored as-is..</param>
-        /// <param name="memories">Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content..</param>
+        /// <param name="factsExtracted">FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, when the LLM finds no facts (ExplicitSkip), or when passthrough applies..</param>
+        /// <param name="memories">Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content. When ExplicitSkip is true (phatic / non-extractable content), this is empty..</param>
         /// <param name="skippedCount">SkippedCount is the number of facts skipped due to deduplication (exact duplicates)..</param>
         /// <param name="updatedCount">UpdatedCount is the number of facts that resulted in updates to existing memories..</param>
-        public MemoryCreateMemoryResponse(ExplainTrace explainTrace = default, decimal extractionConfidence = default, int factsExtracted = default, List<MemoryMemoryResponse> memories = default, int skippedCount = default, int updatedCount = default)
+        public MemoryCreateMemoryResponse(ExplainTrace explainTrace = default, bool explicitSkip = default, decimal extractionConfidence = default, int factsExtracted = default, List<MemoryMemoryResponse> memories = default, int skippedCount = default, int updatedCount = default)
         {
             this.ExplainTrace = explainTrace;
+            this.ExplicitSkip = explicitSkip;
             this.ExtractionConfidence = extractionConfidence;
             this.FactsExtracted = factsExtracted;
             this.Memories = memories;
@@ -59,6 +61,13 @@ namespace Smritea.Internal.Autogen.Model
         public ExplainTrace ExplainTrace { get; set; }
 
         /// <summary>
+        /// ExplicitSkip is true when the LLM intentionally extracted no facts; nothing was stored.
+        /// </summary>
+        /// <value>ExplicitSkip is true when the LLM intentionally extracted no facts; nothing was stored.</value>
+        [DataMember(Name = "explicit_skip", EmitDefaultValue = true)]
+        public bool ExplicitSkip { get; set; }
+
+        /// <summary>
         /// ExtractionConfidence is the LLM&#39;s confidence in the extraction quality (0.0-1.0).
         /// </summary>
         /// <value>ExtractionConfidence is the LLM&#39;s confidence in the extraction quality (0.0-1.0).</value>
@@ -66,16 +75,16 @@ namespace Smritea.Internal.Autogen.Model
         public decimal ExtractionConfidence { get; set; }
 
         /// <summary>
-        /// FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, or when the LLM finds no facts. In these cases the original content is stored as-is.
+        /// FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, when the LLM finds no facts (ExplicitSkip), or when passthrough applies.
         /// </summary>
-        /// <value>FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, or when the LLM finds no facts. In these cases the original content is stored as-is.</value>
+        /// <value>FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, when the LLM finds no facts (ExplicitSkip), or when passthrough applies.</value>
         [DataMember(Name = "facts_extracted", EmitDefaultValue = false)]
         public int FactsExtracted { get; set; }
 
         /// <summary>
-        /// Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content.
+        /// Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content. When ExplicitSkip is true (phatic / non-extractable content), this is empty.
         /// </summary>
-        /// <value>Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content.</value>
+        /// <value>Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content. When ExplicitSkip is true (phatic / non-extractable content), this is empty.</value>
         [DataMember(Name = "memories", EmitDefaultValue = false)]
         public List<MemoryMemoryResponse> Memories { get; set; }
 
@@ -102,6 +111,7 @@ namespace Smritea.Internal.Autogen.Model
             StringBuilder sb = new StringBuilder();
             sb.Append("class MemoryCreateMemoryResponse {\n");
             sb.Append("  ExplainTrace: ").Append(ExplainTrace).Append("\n");
+            sb.Append("  ExplicitSkip: ").Append(ExplicitSkip).Append("\n");
             sb.Append("  ExtractionConfidence: ").Append(ExtractionConfidence).Append("\n");
             sb.Append("  FactsExtracted: ").Append(FactsExtracted).Append("\n");
             sb.Append("  Memories: ").Append(Memories).Append("\n");

@@ -39,6 +39,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
  */
 @JsonPropertyOrder({
   MemoryCreateMemoryResponse.JSON_PROPERTY_EXPLAIN_TRACE,
+  MemoryCreateMemoryResponse.JSON_PROPERTY_EXPLICIT_SKIP,
   MemoryCreateMemoryResponse.JSON_PROPERTY_EXTRACTION_CONFIDENCE,
   MemoryCreateMemoryResponse.JSON_PROPERTY_FACTS_EXTRACTED,
   MemoryCreateMemoryResponse.JSON_PROPERTY_MEMORIES,
@@ -50,6 +51,10 @@ public class MemoryCreateMemoryResponse {
   public static final String JSON_PROPERTY_EXPLAIN_TRACE = "explain_trace";
   @javax.annotation.Nullable
   private ExplainTrace explainTrace;
+
+  public static final String JSON_PROPERTY_EXPLICIT_SKIP = "explicit_skip";
+  @javax.annotation.Nullable
+  private Boolean explicitSkip;
 
   public static final String JSON_PROPERTY_EXTRACTION_CONFIDENCE = "extraction_confidence";
   @javax.annotation.Nullable
@@ -98,6 +103,30 @@ public class MemoryCreateMemoryResponse {
   }
 
 
+  public MemoryCreateMemoryResponse explicitSkip(@javax.annotation.Nullable Boolean explicitSkip) {
+    this.explicitSkip = explicitSkip;
+    return this;
+  }
+
+  /**
+   * ExplicitSkip is true when the LLM intentionally extracted no facts; nothing was stored.
+   * @return explicitSkip
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_EXPLICIT_SKIP, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getExplicitSkip() {
+    return explicitSkip;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_EXPLICIT_SKIP, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setExplicitSkip(@javax.annotation.Nullable Boolean explicitSkip) {
+    this.explicitSkip = explicitSkip;
+  }
+
+
   public MemoryCreateMemoryResponse extractionConfidence(@javax.annotation.Nullable BigDecimal extractionConfidence) {
     this.extractionConfidence = extractionConfidence;
     return this;
@@ -128,7 +157,7 @@ public class MemoryCreateMemoryResponse {
   }
 
   /**
-   * FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, or when the LLM finds no facts. In these cases the original content is stored as-is.
+   * FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, when the LLM finds no facts (ExplicitSkip), or when passthrough applies.
    * @return factsExtracted
    */
   @javax.annotation.Nullable
@@ -160,7 +189,7 @@ public class MemoryCreateMemoryResponse {
   }
 
   /**
-   * Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content.
+   * Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content. When ExplicitSkip is true (phatic / non-extractable content), this is empty.
    * @return memories
    */
   @javax.annotation.Nullable
@@ -239,6 +268,7 @@ public class MemoryCreateMemoryResponse {
     }
     MemoryCreateMemoryResponse memoryCreateMemoryResponse = (MemoryCreateMemoryResponse) o;
     return Objects.equals(this.explainTrace, memoryCreateMemoryResponse.explainTrace) &&
+        Objects.equals(this.explicitSkip, memoryCreateMemoryResponse.explicitSkip) &&
         Objects.equals(this.extractionConfidence, memoryCreateMemoryResponse.extractionConfidence) &&
         Objects.equals(this.factsExtracted, memoryCreateMemoryResponse.factsExtracted) &&
         Objects.equals(this.memories, memoryCreateMemoryResponse.memories) &&
@@ -248,7 +278,7 @@ public class MemoryCreateMemoryResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(explainTrace, extractionConfidence, factsExtracted, memories, skippedCount, updatedCount);
+    return Objects.hash(explainTrace, explicitSkip, extractionConfidence, factsExtracted, memories, skippedCount, updatedCount);
   }
 
   @Override
@@ -256,6 +286,7 @@ public class MemoryCreateMemoryResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class MemoryCreateMemoryResponse {\n");
     sb.append("    explainTrace: ").append(toIndentedString(explainTrace)).append("\n");
+    sb.append("    explicitSkip: ").append(toIndentedString(explicitSkip)).append("\n");
     sb.append("    extractionConfidence: ").append(toIndentedString(extractionConfidence)).append("\n");
     sb.append("    factsExtracted: ").append(toIndentedString(factsExtracted)).append("\n");
     sb.append("    memories: ").append(toIndentedString(memories)).append("\n");
@@ -311,6 +342,11 @@ public class MemoryCreateMemoryResponse {
     // add `explain_trace` to the URL query string
     if (getExplainTrace() != null) {
       joiner.add(getExplainTrace().toUrlQueryString(prefix + "explain_trace" + suffix));
+    }
+
+    // add `explicit_skip` to the URL query string
+    if (getExplicitSkip() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sexplicit_skip%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getExplicitSkip()))));
     }
 
     // add `extraction_confidence` to the URL query string

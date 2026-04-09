@@ -7,6 +7,7 @@
 Name | Type
 ------------ | -------------
 `explainTrace` | [ExplainTrace](ExplainTrace.md)
+`explicitSkip` | boolean
 `extractionConfidence` | number
 `factsExtracted` | number
 `memories` | [Array&lt;MemoryMemoryResponse&gt;](MemoryMemoryResponse.md)
@@ -21,6 +22,7 @@ import type { MemoryCreateMemoryResponse } from ''
 // TODO: Update the object below with actual values
 const example = {
   "explainTrace": null,
+  "explicitSkip": null,
   "extractionConfidence": null,
   "factsExtracted": null,
   "memories": null,

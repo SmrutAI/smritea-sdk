@@ -79,7 +79,7 @@ public class SmriteaClientTests : IDisposable
                 .WithBody(MemCreateJson("mem-2", "content")));
 
         using var client = CreateClient();
-        var mem = await client.AddAsync("content", new AddOptions().WithScope(new Scope().WithActorId("user-42").WithActorType("user")));
+        var mem = await client.AddAsync("content", new AddOptions().WithScope(new MemoryScope().WithActorId("user-42").WithActorType("user")));
 
         Assert.NotNull(mem);
         Assert.Equal("mem-2", mem.Memories![0].Id);
@@ -96,7 +96,7 @@ public class SmriteaClientTests : IDisposable
 
         using var client = CreateClient();
         var mem = await client.AddAsync("content",
-            new AddOptions().WithScope(new Scope().WithActorId("agent-7").WithActorType("agent")));
+            new AddOptions().WithScope(new MemoryScope().WithActorId("agent-7").WithActorType("agent")));
 
         Assert.NotNull(mem);
         Assert.Equal("mem-3", mem.Memories![0].Id);

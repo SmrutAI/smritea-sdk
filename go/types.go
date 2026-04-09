@@ -24,8 +24,9 @@ type ClientConfig struct {
 	MaxRetries int    // default: 2; 0 disables retry
 }
 
-// Scope groups actor and conversation context fields for memory operations.
-type Scope struct {
+// MemoryScope groups actor and conversation context fields for memory operations.
+// This is the public OSS-aligned name; wire values map to commondto.MemoryScope in API requests.
+type MemoryScope struct {
 	// ActorID is the identifier for the actor (user, agent, or system) associated
 	// with this memory. Must be set together with ActorType; max 64 characters.
 	ActorID *string
@@ -48,27 +49,27 @@ type Scope struct {
 	ParticipantIDs []string
 }
 
-// NewScope returns a new empty Scope ready for fluent configuration.
-func NewScope() *Scope { return &Scope{} }
+// NewMemoryScope returns a new empty MemoryScope ready for fluent configuration.
+func NewMemoryScope() *MemoryScope { return &MemoryScope{} }
 
 // WithActorID sets ActorID.
-func (s *Scope) WithActorID(id string) *Scope { s.ActorID = &id; return s }
+func (s *MemoryScope) WithActorID(id string) *MemoryScope { s.ActorID = &id; return s }
 
 // WithActorType sets ActorType.
-func (s *Scope) WithActorType(t string) *Scope { s.ActorType = &t; return s }
+func (s *MemoryScope) WithActorType(t string) *MemoryScope { s.ActorType = &t; return s }
 
 // WithActorName sets ActorName.
-func (s *Scope) WithActorName(name string) *Scope { s.ActorName = &name; return s }
+func (s *MemoryScope) WithActorName(name string) *MemoryScope { s.ActorName = &name; return s }
 
 // WithConversationID sets ConversationID.
-func (s *Scope) WithConversationID(id string) *Scope { s.ConversationID = &id; return s }
+func (s *MemoryScope) WithConversationID(id string) *MemoryScope { s.ConversationID = &id; return s }
 
 // WithSourceType sets SourceType.
-func (s *Scope) WithSourceType(t string) *Scope { s.SourceType = &t; return s }
+func (s *MemoryScope) WithSourceType(t string) *MemoryScope { s.SourceType = &t; return s }
 
 // WithParticipantIDs sets ParticipantIDs to search across conversations where all listed
 // actors participated. Requires at least 2 IDs. Mutually exclusive with ConversationID.
-func (s *Scope) WithParticipantIDs(ids []string) *Scope { s.ParticipantIDs = ids; return s }
+func (s *MemoryScope) WithParticipantIDs(ids []string) *MemoryScope { s.ParticipantIDs = ids; return s }
 
 // RelativeStanding groups per-memory importance and temporal decay parameters.
 type RelativeStanding struct {
@@ -101,10 +102,10 @@ func (r *RelativeStanding) WithDecayFunction(v string) *RelativeStanding {
 //
 // Use NewAddOptions() with fluent With* methods for ergonomic construction:
 //
-//	opts := smritea.NewAddOptions().WithScope(smritea.NewScope().WithActorID("actor-42").WithActorType("user"))
+//	opts := smritea.NewAddOptions().WithScope(smritea.NewMemoryScope().WithActorID("actor-42").WithActorType("user"))
 //	mem, err := client.Add(ctx, "content", opts)
 type AddOptions struct {
-	Scope    *Scope
+	Scope    *MemoryScope
 	Metadata map[string]any
 	// EventOccurredAt is an ISO-8601 datetime string — when this content was created or occurred.
 	// Used by the extraction LLM to resolve relative temporal expressions like "last year".
@@ -118,7 +119,7 @@ type AddOptions struct {
 func NewAddOptions() *AddOptions { return &AddOptions{} }
 
 // WithScope sets the actor and conversation context for this add operation.
-func (o *AddOptions) WithScope(s *Scope) *AddOptions { o.Scope = s; return o }
+func (o *AddOptions) WithScope(s *MemoryScope) *AddOptions { o.Scope = s; return o }
 
 // WithMetadata sets Metadata.
 func (o *AddOptions) WithMetadata(m map[string]any) *AddOptions { o.Metadata = m; return o }
@@ -136,10 +137,10 @@ func (o *AddOptions) WithRelativeStanding(r *RelativeStanding) *AddOptions {
 //
 // Use NewSearchOptions() with fluent With* methods for ergonomic construction:
 //
-//	opts := smritea.NewSearchOptions().WithScope(smritea.NewScope().WithActorID("actor-42")).WithLimit(10)
+//	opts := smritea.NewSearchOptions().WithScope(smritea.NewMemoryScope().WithActorID("actor-42")).WithLimit(10)
 //	results, err := client.Search(ctx, "query", opts)
 type SearchOptions struct {
-	Scope      *Scope
+	Scope      *MemoryScope
 	Limit      *int32
 	Threshold  *float32
 	GraphDepth *int32
@@ -169,7 +170,7 @@ type SearchOptions struct {
 func NewSearchOptions() *SearchOptions { return &SearchOptions{} }
 
 // WithScope sets the actor and conversation context for this search operation.
-func (o *SearchOptions) WithScope(s *Scope) *SearchOptions { o.Scope = s; return o }
+func (o *SearchOptions) WithScope(s *MemoryScope) *SearchOptions { o.Scope = s; return o }
 
 // WithLimit sets the maximum number of results.
 func (o *SearchOptions) WithLimit(n int32) *SearchOptions { o.Limit = &n; return o }

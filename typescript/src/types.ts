@@ -15,7 +15,11 @@ export type {
 // created from the extracted facts (memories[]), plus extraction metadata:
 // factsExtracted, extractionConfidence, skippedCount, updatedCount.
 
-export interface Scope {
+/**
+ * Actor and conversation context for add/search, aligned with the OSS `MemoryScope` type
+ * (maps to `commondto.MemoryScope` on the wire — not the internal OpenAPI struct name).
+ */
+export interface MemoryScope {
   /**
    * Identifier for the actor (user, agent, or system) associated with this memory.
    * Must be set together with `actorType`; max 64 characters.
@@ -63,7 +67,7 @@ export interface RelativeStanding {
 }
 
 export interface AddOptions {
-  scope?: Scope;
+  scope?: MemoryScope;
   metadata?: Record<string, unknown>;
   /** ISO-8601 datetime string — when this content was created or occurred.
    * Used by the extraction LLM to resolve relative temporal expressions
@@ -74,7 +78,7 @@ export interface AddOptions {
 }
 
 export interface SearchOptions {
-  scope?: Scope;
+  scope?: MemoryScope;
   limit?: number;
   threshold?: number;
   graphDepth?: number;
