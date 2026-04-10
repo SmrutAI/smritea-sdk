@@ -59,7 +59,7 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 // Add stores a new memory with the given content. The optional AddOptions
 // control which actor the memory is attributed to, metadata, and conversation
 // scoping. Returns a MemoryCreationResult containing all memories created from
-// the extracted facts, plus metadata (FactsExtracted, ExtractionConfidence, etc.).
+// the extracted facts, plus metadata (FactsExtracted, SkippedCount, UpdatedCount).
 func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOptions) (*MemoryCreationResult, error) {
 	req := autogen.MemoryCreateMemoryRequest{
 		AppId:   &c.appID,

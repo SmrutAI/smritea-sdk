@@ -8,7 +8,6 @@ Name | Type
 ------------ | -------------
 `explainTrace` | [ExplainTrace](ExplainTrace.md)
 `explicitSkip` | boolean
-`extractionConfidence` | number
 `factsExtracted` | number
 `memories` | [Array&lt;MemoryMemoryResponse&gt;](MemoryMemoryResponse.md)
 `skippedCount` | number
@@ -23,7 +22,6 @@ import type { MemoryCreateMemoryResponse } from ''
 const example = {
   "explainTrace": null,
   "explicitSkip": null,
-  "extractionConfidence": null,
   "factsExtracted": null,
   "memories": null,
   "skippedCount": null,

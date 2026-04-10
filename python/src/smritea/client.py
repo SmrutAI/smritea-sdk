@@ -92,7 +92,7 @@ class SmriteaClient:
         Returns:
             MemoryCreationResult containing all memories created from the extracted
             facts (result.memories), plus metadata: facts_extracted,
-            extraction_confidence, skipped_count, updated_count.
+            skipped_count, updated_count.
         """
         if metadata is not None and not isinstance(metadata, dict):
             raise SmriteaValidationError(
@@ -163,14 +163,13 @@ class SmriteaClient:
                 ``"cross_encoder"``. Only applies to deep_search. Defaults to app config.
             metadata_filter: MongoDB-style operator DSL for filtering search results by
                 their metadata. Supports ``$eq``, ``$ne``, ``$gt``, ``$gte``, ``$lt``,
-                ``$lte``, ``$in``, ``$nin``, ``$contains``, ``$and``, ``$or``, ``$not``,
+                ``$lte``, ``$in``, ``$nin``, ``$and``, ``$or``, ``$not``,
                 and wildcard ``"*"``. Values must be str, int, or float — booleans and
                 nested objects are rejected by the server.
                 Simple equality: ``{"department": "engineering"}``
                 Range: ``{"level": {"$gte": 4}}``
                 Logical: ``{"$and": [{"department": "eng"}, {"level": {"$gt": 3}}]}``
-                Note: ``$contains`` is applied as a post-filter and may return fewer
-                results than ``limit``. ``$contains`` inside ``$or`` is rejected (HTTP 400).
+                Note: ``$contains`` is not supported and is rejected with HTTP 400.
                 None = no metadata filtering.
 
         Returns:

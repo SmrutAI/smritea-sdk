@@ -2,7 +2,6 @@ package ai.smritea.sdk.model;
 
 import ai.smritea.sdk._internal.autogen.model.MemoryCreateMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,14 +58,6 @@ public final class MemoryCreationResult {
    */
   public Integer getFactsExtracted() {
     return inner.getFactsExtracted();
-  }
-
-  /**
-   * Returns the LLM's confidence score for the extraction (0.0–1.0), or null if the server did not
-   * return this field.
-   */
-  public BigDecimal getExtractionConfidence() {
-    return inner.getExtractionConfidence();
   }
 
   /**

@@ -72,7 +72,7 @@ public class SmriteaClient : IDisposable
     /// <param name="opts">Optional add options for actor attribution, metadata, and conversation scoping.</param>
     /// <param name="ct">Cancellation token.</param>
     /// <returns>A <see cref="Task{TResult}"/> resolving to a <see cref="MemoryCreationResult"/> containing all
-    /// memories created from the extracted facts, plus metadata (factsExtracted, extractionConfidence, skippedCount,
+    /// memories created from the extracted facts, plus metadata (factsExtracted, skippedCount,
     /// updatedCount).</returns>
     public async Task<MemoryCreationResult> AddAsync(string content, AddOptions? opts = null, CancellationToken ct = default)
     {

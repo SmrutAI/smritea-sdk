@@ -34,7 +34,7 @@ from smritea._internal.autogen.smritea_cloud_sdk.models import (
 # ---------------------------------------------------------------------------
 # MemoryCreationResult is the response from add(). Contains all memories
 # created from the extracted facts (memories[]), plus extraction metadata:
-# facts_extracted, extraction_confidence, skipped_count, updated_count.
+# facts_extracted, skipped_count, updated_count.
 # ---------------------------------------------------------------------------
 
 __all__ = [

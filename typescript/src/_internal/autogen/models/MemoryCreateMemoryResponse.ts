@@ -47,12 +47,6 @@ export interface MemoryCreateMemoryResponse {
      */
     explicitSkip?: boolean;
     /**
-     * ExtractionConfidence is the LLM's confidence in the extraction quality (0.0-1.0).
-     * @type {number}
-     * @memberof MemoryCreateMemoryResponse
-     */
-    extractionConfidence?: number;
-    /**
      * FactsExtracted is the number of discrete facts the LLM extracted from the input.
      * 0 when extraction is disabled (NoExtract/quick_search), when extraction fails,
      * when the LLM finds no facts (ExplicitSkip), or when passthrough applies.
@@ -101,7 +95,6 @@ export function MemoryCreateMemoryResponseFromJSONTyped(json: any, ignoreDiscrim
         
         'explainTrace': json['explain_trace'] == null ? undefined : ExplainTraceFromJSON(json['explain_trace']),
         'explicitSkip': json['explicit_skip'] == null ? undefined : json['explicit_skip'],
-        'extractionConfidence': json['extraction_confidence'] == null ? undefined : json['extraction_confidence'],
         'factsExtracted': json['facts_extracted'] == null ? undefined : json['facts_extracted'],
         'memories': json['memories'] == null ? undefined : ((json['memories'] as Array<any>).map(MemoryMemoryResponseFromJSON)),
         'skippedCount': json['skipped_count'] == null ? undefined : json['skipped_count'],
@@ -122,7 +115,6 @@ export function MemoryCreateMemoryResponseToJSONTyped(value?: MemoryCreateMemory
         
         'explain_trace': ExplainTraceToJSON(value['explainTrace']),
         'explicit_skip': value['explicitSkip'],
-        'extraction_confidence': value['extractionConfidence'],
         'facts_extracted': value['factsExtracted'],
         'memories': value['memories'] == null ? undefined : ((value['memories'] as Array<any>).map(MemoryMemoryResponseToJSON)),
         'skipped_count': value['skippedCount'],

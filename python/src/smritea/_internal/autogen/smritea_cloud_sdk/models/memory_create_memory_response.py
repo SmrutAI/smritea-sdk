@@ -18,8 +18,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt
+from typing import Any, ClassVar, Dict, List, Optional
 from smritea._internal.autogen.smritea_cloud_sdk.models.explain_trace import ExplainTrace
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_memory_response import MemoryMemoryResponse
 from typing import Optional, Set
@@ -31,12 +31,11 @@ class MemoryCreateMemoryResponse(BaseModel):
     """ # noqa: E501
     explain_trace: Optional[ExplainTrace] = None
     explicit_skip: Optional[StrictBool] = Field(default=None, description="ExplicitSkip is true when the LLM intentionally extracted no facts; nothing was stored.")
-    extraction_confidence: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="ExtractionConfidence is the LLM's confidence in the extraction quality (0.0-1.0).")
     facts_extracted: Optional[StrictInt] = Field(default=None, description="FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, when the LLM finds no facts (ExplicitSkip), or when passthrough applies.")
     memories: Optional[List[MemoryMemoryResponse]] = Field(default=None, description="Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content. When ExplicitSkip is true (phatic / non-extractable content), this is empty.")
     skipped_count: Optional[StrictInt] = Field(default=None, description="SkippedCount is the number of facts skipped due to deduplication (exact duplicates).")
     updated_count: Optional[StrictInt] = Field(default=None, description="UpdatedCount is the number of facts that resulted in updates to existing memories.")
-    __properties: ClassVar[List[str]] = ["explain_trace", "explicit_skip", "extraction_confidence", "facts_extracted", "memories", "skipped_count", "updated_count"]
+    __properties: ClassVar[List[str]] = ["explain_trace", "explicit_skip", "facts_extracted", "memories", "skipped_count", "updated_count"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -101,7 +100,6 @@ class MemoryCreateMemoryResponse(BaseModel):
         _obj = cls.model_validate({
             "explain_trace": ExplainTrace.from_dict(obj["explain_trace"]) if obj.get("explain_trace") is not None else None,
             "explicit_skip": obj.get("explicit_skip"),
-            "extraction_confidence": obj.get("extraction_confidence"),
             "facts_extracted": obj.get("facts_extracted"),
             "memories": [MemoryMemoryResponse.from_dict(_item) for _item in obj["memories"]] if obj.get("memories") is not None else None,
             "skipped_count": obj.get("skipped_count"),

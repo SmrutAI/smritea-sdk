@@ -104,7 +104,7 @@ public class SmriteaClient {
    * @param content the memory content text
    * @param opts optional parameters controlling actor attribution, metadata, and conversation
    * @return a MemoryCreationResult containing all memories created from the extracted facts, plus
-   *     metadata: factsExtracted, extractionConfidence, skippedCount, updatedCount
+   *     metadata: factsExtracted, skippedCount, updatedCount
    * @throws SmriteaError on any API error
    */
   public MemoryCreationResult add(String content, AddOptions opts) {

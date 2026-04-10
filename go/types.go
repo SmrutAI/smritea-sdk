@@ -7,7 +7,7 @@ type Memory = autogen.MemoryMemoryResponse
 
 // MemoryCreationResult is the response from Add(). Contains all memories
 // created from the extracted facts (GetMemories()), plus extraction metadata:
-// GetFactsExtracted(), GetExtractionConfidence(), GetSkippedCount(), GetUpdatedCount().
+// GetFactsExtracted(), GetSkippedCount(), GetUpdatedCount().
 type MemoryCreationResult = autogen.MemoryCreateMemoryResponse
 
 // SearchResult is a single ranked search result.

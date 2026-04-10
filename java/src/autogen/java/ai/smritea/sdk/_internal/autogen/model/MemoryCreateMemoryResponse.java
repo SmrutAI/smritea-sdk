@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +39,6 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 @JsonPropertyOrder({
   MemoryCreateMemoryResponse.JSON_PROPERTY_EXPLAIN_TRACE,
   MemoryCreateMemoryResponse.JSON_PROPERTY_EXPLICIT_SKIP,
-  MemoryCreateMemoryResponse.JSON_PROPERTY_EXTRACTION_CONFIDENCE,
   MemoryCreateMemoryResponse.JSON_PROPERTY_FACTS_EXTRACTED,
   MemoryCreateMemoryResponse.JSON_PROPERTY_MEMORIES,
   MemoryCreateMemoryResponse.JSON_PROPERTY_SKIPPED_COUNT,
@@ -55,10 +53,6 @@ public class MemoryCreateMemoryResponse {
   public static final String JSON_PROPERTY_EXPLICIT_SKIP = "explicit_skip";
   @javax.annotation.Nullable
   private Boolean explicitSkip;
-
-  public static final String JSON_PROPERTY_EXTRACTION_CONFIDENCE = "extraction_confidence";
-  @javax.annotation.Nullable
-  private BigDecimal extractionConfidence;
 
   public static final String JSON_PROPERTY_FACTS_EXTRACTED = "facts_extracted";
   @javax.annotation.Nullable
@@ -124,30 +118,6 @@ public class MemoryCreateMemoryResponse {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setExplicitSkip(@javax.annotation.Nullable Boolean explicitSkip) {
     this.explicitSkip = explicitSkip;
-  }
-
-
-  public MemoryCreateMemoryResponse extractionConfidence(@javax.annotation.Nullable BigDecimal extractionConfidence) {
-    this.extractionConfidence = extractionConfidence;
-    return this;
-  }
-
-  /**
-   * ExtractionConfidence is the LLM&#39;s confidence in the extraction quality (0.0-1.0).
-   * @return extractionConfidence
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_EXTRACTION_CONFIDENCE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public BigDecimal getExtractionConfidence() {
-    return extractionConfidence;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_EXTRACTION_CONFIDENCE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setExtractionConfidence(@javax.annotation.Nullable BigDecimal extractionConfidence) {
-    this.extractionConfidence = extractionConfidence;
   }
 
 
@@ -269,7 +239,6 @@ public class MemoryCreateMemoryResponse {
     MemoryCreateMemoryResponse memoryCreateMemoryResponse = (MemoryCreateMemoryResponse) o;
     return Objects.equals(this.explainTrace, memoryCreateMemoryResponse.explainTrace) &&
         Objects.equals(this.explicitSkip, memoryCreateMemoryResponse.explicitSkip) &&
-        Objects.equals(this.extractionConfidence, memoryCreateMemoryResponse.extractionConfidence) &&
         Objects.equals(this.factsExtracted, memoryCreateMemoryResponse.factsExtracted) &&
         Objects.equals(this.memories, memoryCreateMemoryResponse.memories) &&
         Objects.equals(this.skippedCount, memoryCreateMemoryResponse.skippedCount) &&
@@ -278,7 +247,7 @@ public class MemoryCreateMemoryResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(explainTrace, explicitSkip, extractionConfidence, factsExtracted, memories, skippedCount, updatedCount);
+    return Objects.hash(explainTrace, explicitSkip, factsExtracted, memories, skippedCount, updatedCount);
   }
 
   @Override
@@ -287,7 +256,6 @@ public class MemoryCreateMemoryResponse {
     sb.append("class MemoryCreateMemoryResponse {\n");
     sb.append("    explainTrace: ").append(toIndentedString(explainTrace)).append("\n");
     sb.append("    explicitSkip: ").append(toIndentedString(explicitSkip)).append("\n");
-    sb.append("    extractionConfidence: ").append(toIndentedString(extractionConfidence)).append("\n");
     sb.append("    factsExtracted: ").append(toIndentedString(factsExtracted)).append("\n");
     sb.append("    memories: ").append(toIndentedString(memories)).append("\n");
     sb.append("    skippedCount: ").append(toIndentedString(skippedCount)).append("\n");
@@ -347,11 +315,6 @@ public class MemoryCreateMemoryResponse {
     // add `explicit_skip` to the URL query string
     if (getExplicitSkip() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%sexplicit_skip%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getExplicitSkip()))));
-    }
-
-    // add `extraction_confidence` to the URL query string
-    if (getExtractionConfidence() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sextraction_confidence%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getExtractionConfidence()))));
     }
 
     // add `facts_extracted` to the URL query string

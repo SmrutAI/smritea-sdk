@@ -23,8 +23,6 @@ type MemoryCreateMemoryResponse struct {
 	ExplainTrace *ExplainTrace `json:"explain_trace,omitempty"`
 	// ExplicitSkip is true when the LLM intentionally extracted no facts; nothing was stored.
 	ExplicitSkip *bool `json:"explicit_skip,omitempty"`
-	// ExtractionConfidence is the LLM's confidence in the extraction quality (0.0-1.0).
-	ExtractionConfidence *float32 `json:"extraction_confidence,omitempty"`
 	// FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, when the LLM finds no facts (ExplicitSkip), or when passthrough applies.
 	FactsExtracted *int32 `json:"facts_extracted,omitempty"`
 	// Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content. When ExplicitSkip is true (phatic / non-extractable content), this is empty.
@@ -114,38 +112,6 @@ func (o *MemoryCreateMemoryResponse) HasExplicitSkip() bool {
 // SetExplicitSkip gets a reference to the given bool and assigns it to the ExplicitSkip field.
 func (o *MemoryCreateMemoryResponse) SetExplicitSkip(v bool) {
 	o.ExplicitSkip = &v
-}
-
-// GetExtractionConfidence returns the ExtractionConfidence field value if set, zero value otherwise.
-func (o *MemoryCreateMemoryResponse) GetExtractionConfidence() float32 {
-	if o == nil || IsNil(o.ExtractionConfidence) {
-		var ret float32
-		return ret
-	}
-	return *o.ExtractionConfidence
-}
-
-// GetExtractionConfidenceOk returns a tuple with the ExtractionConfidence field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *MemoryCreateMemoryResponse) GetExtractionConfidenceOk() (*float32, bool) {
-	if o == nil || IsNil(o.ExtractionConfidence) {
-		return nil, false
-	}
-	return o.ExtractionConfidence, true
-}
-
-// HasExtractionConfidence returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryResponse) HasExtractionConfidence() bool {
-	if o != nil && !IsNil(o.ExtractionConfidence) {
-		return true
-	}
-
-	return false
-}
-
-// SetExtractionConfidence gets a reference to the given float32 and assigns it to the ExtractionConfidence field.
-func (o *MemoryCreateMemoryResponse) SetExtractionConfidence(v float32) {
-	o.ExtractionConfidence = &v
 }
 
 // GetFactsExtracted returns the FactsExtracted field value if set, zero value otherwise.
@@ -291,9 +257,6 @@ func (o MemoryCreateMemoryResponse) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ExplicitSkip) {
 		toSerialize["explicit_skip"] = o.ExplicitSkip
-	}
-	if !IsNil(o.ExtractionConfidence) {
-		toSerialize["extraction_confidence"] = o.ExtractionConfidence
 	}
 	if !IsNil(o.FactsExtracted) {
 		toSerialize["facts_extracted"] = o.FactsExtracted

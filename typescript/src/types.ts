@@ -13,7 +13,7 @@ export type {
 } from './_internal/autogen/models/index.js';
 // MemoryCreationResult is the response from add(). Contains all memories
 // created from the extracted facts (memories[]), plus extraction metadata:
-// factsExtracted, extractionConfidence, skippedCount, updatedCount.
+// factsExtracted, skippedCount, updatedCount.
 
 /**
  * Actor and conversation context for add/search, aligned with the OSS `MemoryScope` type
