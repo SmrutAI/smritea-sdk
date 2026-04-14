@@ -35,7 +35,7 @@ import {
  */
 export interface MemoryMemoryResponse {
     /**
-     * 
+     * nil = unknown start (awaiting extraction pipeline)
      * @type {string}
      * @memberof MemoryMemoryResponse
      */

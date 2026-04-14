@@ -29,7 +29,7 @@ class MemoryMemoryResponse(BaseModel):
     """
     MemoryMemoryResponse
     """ # noqa: E501
-    active_from: Optional[StrictStr] = None
+    active_from: Optional[StrictStr] = Field(default=None, description="nil = unknown start (awaiting extraction pipeline)")
     active_to: Optional[StrictStr] = None
     app_id: Optional[StrictStr] = None
     content: Optional[StrictStr] = None

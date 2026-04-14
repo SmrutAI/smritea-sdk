@@ -76,7 +76,7 @@ public class MemorySearchMemoryResult {
   }
 
   /**
-   * ActiveFrom is when this fact became true (event timestamp, not DB insertion time).
+   * ActiveFrom is when this fact became true (event timestamp, not DB insertion time). nil &#x3D; unknown start (awaiting extraction pipeline resolution of temporal expressions).
    * @return activeFrom
    */
   @javax.annotation.Nullable

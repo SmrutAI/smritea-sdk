@@ -28,7 +28,7 @@ class MemorySearchMemoryResult(BaseModel):
     """
     MemorySearchMemoryResult
     """ # noqa: E501
-    active_from: Optional[StrictStr] = Field(default=None, description="ActiveFrom is when this fact became true (event timestamp, not DB insertion time).")
+    active_from: Optional[StrictStr] = Field(default=None, description="ActiveFrom is when this fact became true (event timestamp, not DB insertion time). nil = unknown start (awaiting extraction pipeline resolution of temporal expressions).")
     active_to: Optional[StrictStr] = Field(default=None, description="ActiveTo is when this fact stopped being true (nil = still valid). Unique to smritea — enables temporal reasoning (e.g., \"worked at X until Y\").")
     content: Optional[StrictStr] = Field(default=None, description="Content is the memory text — the core payload for search consumers.")
     id: Optional[StrictStr] = Field(default=None, description="ID is the memory identifier, needed for follow-up operations (update/delete).")

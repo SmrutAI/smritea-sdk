@@ -97,7 +97,7 @@ public class MemoryMemoryResponse {
   }
 
   /**
-   * Get activeFrom
+   * nil &#x3D; unknown start (awaiting extraction pipeline)
    * @return activeFrom
    */
   @javax.annotation.Nullable

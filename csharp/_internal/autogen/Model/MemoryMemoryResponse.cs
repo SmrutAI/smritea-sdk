@@ -36,7 +36,7 @@ namespace Smritea.Internal.Autogen.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryMemoryResponse" /> class.
         /// </summary>
-        /// <param name="activeFrom">activeFrom.</param>
+        /// <param name="activeFrom">nil &#x3D; unknown start (awaiting extraction pipeline).</param>
         /// <param name="activeTo">activeTo.</param>
         /// <param name="appId">appId.</param>
         /// <param name="content">content.</param>
@@ -61,8 +61,9 @@ namespace Smritea.Internal.Autogen.Model
         }
 
         /// <summary>
-        /// Gets or Sets ActiveFrom
+        /// nil &#x3D; unknown start (awaiting extraction pipeline)
         /// </summary>
+        /// <value>nil &#x3D; unknown start (awaiting extraction pipeline)</value>
         [DataMember(Name = "active_from", EmitDefaultValue = false)]
         public string ActiveFrom { get; set; }
 

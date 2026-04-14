@@ -20,6 +20,7 @@ var _ MappedNullable = &MemoryMemoryResponse{}
 
 // MemoryMemoryResponse struct for MemoryMemoryResponse
 type MemoryMemoryResponse struct {
+	// nil = unknown start (awaiting extraction pipeline)
 	ActiveFrom *string `json:"active_from,omitempty"`
 	ActiveTo *string `json:"active_to,omitempty"`
 	AppId *string `json:"app_id,omitempty"`

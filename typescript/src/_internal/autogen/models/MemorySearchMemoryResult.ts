@@ -29,6 +29,7 @@ import {
 export interface MemorySearchMemoryResult {
     /**
      * ActiveFrom is when this fact became true (event timestamp, not DB insertion time).
+     * nil = unknown start (awaiting extraction pipeline resolution of temporal expressions).
      * @type {string}
      * @memberof MemorySearchMemoryResult
      */

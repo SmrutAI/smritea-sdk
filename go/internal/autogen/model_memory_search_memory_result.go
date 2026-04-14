@@ -20,7 +20,7 @@ var _ MappedNullable = &MemorySearchMemoryResult{}
 
 // MemorySearchMemoryResult struct for MemorySearchMemoryResult
 type MemorySearchMemoryResult struct {
-	// ActiveFrom is when this fact became true (event timestamp, not DB insertion time).
+	// ActiveFrom is when this fact became true (event timestamp, not DB insertion time). nil = unknown start (awaiting extraction pipeline resolution of temporal expressions).
 	ActiveFrom *string `json:"active_from,omitempty"`
 	// ActiveTo is when this fact stopped being true (nil = still valid). Unique to smritea — enables temporal reasoning (e.g., \"worked at X until Y\").
 	ActiveTo *string `json:"active_to,omitempty"`

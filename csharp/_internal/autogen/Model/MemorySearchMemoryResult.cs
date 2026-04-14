@@ -36,7 +36,7 @@ namespace Smritea.Internal.Autogen.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="MemorySearchMemoryResult" /> class.
         /// </summary>
-        /// <param name="activeFrom">ActiveFrom is when this fact became true (event timestamp, not DB insertion time)..</param>
+        /// <param name="activeFrom">ActiveFrom is when this fact became true (event timestamp, not DB insertion time). nil &#x3D; unknown start (awaiting extraction pipeline resolution of temporal expressions)..</param>
         /// <param name="activeTo">ActiveTo is when this fact stopped being true (nil &#x3D; still valid). Unique to smritea — enables temporal reasoning (e.g., \&quot;worked at X until Y\&quot;)..</param>
         /// <param name="content">Content is the memory text — the core payload for search consumers..</param>
         /// <param name="id">ID is the memory identifier, needed for follow-up operations (update/delete)..</param>
@@ -53,9 +53,9 @@ namespace Smritea.Internal.Autogen.Model
         }
 
         /// <summary>
-        /// ActiveFrom is when this fact became true (event timestamp, not DB insertion time).
+        /// ActiveFrom is when this fact became true (event timestamp, not DB insertion time). nil &#x3D; unknown start (awaiting extraction pipeline resolution of temporal expressions).
         /// </summary>
-        /// <value>ActiveFrom is when this fact became true (event timestamp, not DB insertion time).</value>
+        /// <value>ActiveFrom is when this fact became true (event timestamp, not DB insertion time). nil &#x3D; unknown start (awaiting extraction pipeline resolution of temporal expressions).</value>
         [DataMember(Name = "active_from", EmitDefaultValue = false)]
         public string ActiveFrom { get; set; }
 
