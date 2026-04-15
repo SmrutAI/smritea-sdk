@@ -55,4 +55,15 @@ public class SmriteaDeserializationException : SmriteaException
         : base()
     {
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SmriteaDeserializationException"/> class.
+    /// </summary>
+    /// <param name="message">The error message describing the deserialization failure.</param>
+    /// <param name="statusCode">The HTTP status code, if available.</param>
+    /// <param name="errorCode">The machine-readable error code from the server response.</param>
+    public SmriteaDeserializationException(string message, int? statusCode = null, string? errorCode = null)
+        : base(message, statusCode, errorCode)
+    {
+    }
 }

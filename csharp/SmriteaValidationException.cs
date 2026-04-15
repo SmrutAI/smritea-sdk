@@ -12,8 +12,9 @@ public class SmriteaValidationException : SmriteaException
     /// </summary>
     /// <param name="message">The error message.</param>
     /// <param name="statusCode">The HTTP status code.</param>
-    public SmriteaValidationException(string message, int statusCode)
-        : base(message, statusCode)
+    /// <param name="errorCode">The machine-readable error code from the server response.</param>
+    public SmriteaValidationException(string message, int statusCode, string? errorCode = null)
+        : base(message, statusCode, errorCode)
     {
     }
 
@@ -22,8 +23,9 @@ public class SmriteaValidationException : SmriteaException
     /// </summary>
     /// <param name="message">The error message.</param>
     /// <param name="statusCode">The HTTP status code, if available.</param>
-    public SmriteaValidationException(string message, int? statusCode = null)
-        : base(message, statusCode)
+    /// <param name="errorCode">The machine-readable error code from the server response.</param>
+    public SmriteaValidationException(string message, int? statusCode = null, string? errorCode = null)
+        : base(message, statusCode, errorCode)
     {
     }
 

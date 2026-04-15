@@ -7,8 +7,19 @@ public class SmriteaNotFoundError extends SmriteaError {
    *
    * @param message the error message
    * @param statusCode the HTTP status code (typically 404)
+   * @param errorCode the error code from the API response, or null if not provided
+   */
+  public SmriteaNotFoundError(String message, int statusCode, String errorCode) {
+    super(message, statusCode, errorCode);
+  }
+
+  /**
+   * Creates a new SmriteaNotFoundError.
+   *
+   * @param message the error message
+   * @param statusCode the HTTP status code (typically 404)
    */
   public SmriteaNotFoundError(String message, int statusCode) {
-    super(message, statusCode);
+    this(message, statusCode, null);
   }
 }

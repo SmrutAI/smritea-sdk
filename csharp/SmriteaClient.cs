@@ -432,14 +432,15 @@ public class SmriteaClient : IDisposable
     {
         var statusCode = e.ErrorCode;
         var message = ExtractErrorMessage(e.Message);
+        var errorCode = ExtractErrorCode(e.Message);
         return statusCode switch
         {
-            400 => new SmriteaValidationException(message, statusCode),
-            401 => new SmriteaAuthException(message, statusCode),
-            402 => new SmriteaQuotaException(message, statusCode),
-            404 => new SmriteaNotFoundException(message, statusCode),
-            429 => new SmriteaRateLimitException(message, statusCode, ParseRetryAfter(GetRetryAfterHeader(e))),
-            _ => new SmriteaException(message, statusCode),
+            400 => new SmriteaValidationException(message, statusCode, errorCode),
+            401 => new SmriteaAuthException(message, statusCode, errorCode),
+            402 => new SmriteaQuotaException(message, statusCode, errorCode),
+            404 => new SmriteaNotFoundException(message, statusCode, errorCode),
+            429 => new SmriteaRateLimitException(message, statusCode, ParseRetryAfter(GetRetryAfterHeader(e)), errorCode),
+            _ => new SmriteaException(message, statusCode, errorCode),
         };
     }
 
@@ -475,6 +476,40 @@ public class SmriteaClient : IDisposable
         }
 
         return body;
+    }
+
+    /// <summary>
+    /// Attempts to extract the "code" field from a JSON response body.
+    /// Falls back to "INTERNAL_ERROR" if JSON parsing fails or the field is missing.
+    /// </summary>
+    /// <param name="body">The response body string, possibly null.</param>
+    /// <returns>The extracted error code or "INTERNAL_ERROR" as fallback.</returns>
+    private static string ExtractErrorCode(string? body)
+    {
+        if (string.IsNullOrEmpty(body))
+        {
+            return "INTERNAL_ERROR";
+        }
+
+        try
+        {
+            var json = System.Text.Json.JsonDocument.Parse(body);
+            var root = json.RootElement;
+            if (root.TryGetProperty("code", out var codeProp) && codeProp.ValueKind == System.Text.Json.JsonValueKind.String)
+            {
+                var code = codeProp.GetString();
+                if (!string.IsNullOrEmpty(code))
+                {
+                    return code;
+                }
+            }
+        }
+        catch
+        {
+            // JSON parsing failed; fall through to return default
+        }
+
+        return "INTERNAL_ERROR";
     }
 
     // ---------------------------------------------------------------------------

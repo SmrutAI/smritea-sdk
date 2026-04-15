@@ -166,32 +166,38 @@ export class SmriteaClient {
   private async handleError(err: unknown): Promise<never> {
     if (err instanceof ResponseError) {
       const status = err.response.status;
-      const message = (await this.extractErrorMessage(err.response)) || err.message;
+      const errorData = await this.extractErrorData(err.response);
+      const message = errorData.message || err.message;
+      const errorCode = errorData.code;
       switch (status) {
-        case 400: throw new SmriteaValidationError(message, status);
-        case 401: throw new SmriteaAuthError(message, status);
-        case 402: throw new SmriteaQuotaError(message, status);
-        case 404: throw new SmriteaNotFoundError(message, status);
-        case 429: throw new SmriteaRateLimitError(message, status, this.parseRetryAfter(err.response));
-        default: throw new SmriteaError(message, status);
+        case 400: throw new SmriteaValidationError(message, status, errorCode);
+        case 401: throw new SmriteaAuthError(message, status, errorCode);
+        case 402: throw new SmriteaQuotaError(message, status, errorCode);
+        case 404: throw new SmriteaNotFoundError(message, status, errorCode);
+        case 429: throw new SmriteaRateLimitError(message, status, this.parseRetryAfter(err.response), errorCode);
+        default: throw new SmriteaError(message, status, errorCode);
       }
     }
     throw new SmriteaError(String(err));
   }
 
-  /** Attempt to extract the "message" field from the response body JSON. */
-  private async extractErrorMessage(response: Response): Promise<string> {
+  /** Attempt to extract error data ("message" and "code" fields) from the response body JSON. */
+  private async extractErrorData(response: Response): Promise<{ message: string; code?: string }> {
     try {
       const body = await response.clone().json();
       if (body && typeof body === 'object') {
         const message = (body as Record<string, unknown>).message;
+        const code = (body as Record<string, unknown>).code;
         if (typeof message === 'string' && message) {
-          return message;
+          return {
+            message,
+            code: typeof code === 'string' ? code : undefined,
+          };
         }
       }
     } catch {
       // JSON parsing failed; fall through to caller-provided fallback.
     }
-    return '';
+    return { message: '' };
   }
 }

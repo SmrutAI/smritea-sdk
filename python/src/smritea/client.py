@@ -302,21 +302,26 @@ class SmriteaClient:
         """Map auto-gen ApiException to typed SDK exceptions. Always raises."""
         if isinstance(exc, ApiException):
             status = exc.status
+            message = "Unknown error"
+            error_code = "INTERNAL_ERROR"
             try:
                 body_dict = json.loads(exc.body) if isinstance(exc.body, (str, bytes)) else exc.body
-                body = body_dict.get("message", "Unknown error")
+                message = body_dict.get("message", "Unknown error")
+                error_code = body_dict.get("code", "INTERNAL_ERROR")
             except (json.JSONDecodeError, TypeError, KeyError):
-                body = str(exc.body) if exc.body else str(exc)
+                message = str(exc.body) if exc.body else str(exc)
             if status == 400:
-                raise SmriteaValidationError(body, status) from exc
+                raise SmriteaValidationError(message, status, error_code) from exc
             if status == 401:
-                raise SmriteaAuthError(body, status) from exc
+                raise SmriteaAuthError(message, status, error_code) from exc
             if status == 402:
-                raise SmriteaQuotaError(body, status) from exc
+                raise SmriteaQuotaError(message, status, error_code) from exc
             if status == 404:
-                raise SmriteaNotFoundError(body, status) from exc
+                raise SmriteaNotFoundError(message, status, error_code) from exc
             if status == 429:
                 retry_after = self._parse_retry_after(exc)
-                raise SmriteaRateLimitError(body, status, retry_after=retry_after) from exc
-            raise SmriteaError(body, status) from exc
+                raise SmriteaRateLimitError(
+                    message, status, retry_after=retry_after, error_code=error_code
+                ) from exc
+            raise SmriteaError(message, status, error_code) from exc
         raise SmriteaError(str(exc)) from exc

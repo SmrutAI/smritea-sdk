@@ -12,10 +12,12 @@ public class SmriteaException : Exception
     /// </summary>
     /// <param name="message">The error message.</param>
     /// <param name="statusCode">The HTTP status code, if available.</param>
-    public SmriteaException(string message, int? statusCode = null)
+    /// <param name="errorCode">The machine-readable error code from the server response.</param>
+    public SmriteaException(string message, int? statusCode = null, string? errorCode = null)
         : base(message)
     {
         this.StatusCode = statusCode;
+        this.ErrorCode = errorCode ?? "INTERNAL_ERROR";
     }
 
     /// <summary>
@@ -28,12 +30,14 @@ public class SmriteaException : Exception
         : base(message, innerException)
     {
         this.StatusCode = statusCode;
+        this.ErrorCode = "INTERNAL_ERROR";
     }
 
     /// <summary>Initializes a new instance of the <see cref="SmriteaException"/> class.</summary>
     public SmriteaException()
         : base()
     {
+        this.ErrorCode = "INTERNAL_ERROR";
     }
 
     /// <summary>
@@ -43,6 +47,7 @@ public class SmriteaException : Exception
     public SmriteaException(string? message)
         : base(message)
     {
+        this.ErrorCode = "INTERNAL_ERROR";
     }
 
     /// <summary>
@@ -53,8 +58,12 @@ public class SmriteaException : Exception
     public SmriteaException(string? message, Exception? innerException)
         : base(message, innerException)
     {
+        this.ErrorCode = "INTERNAL_ERROR";
     }
 
     /// <summary>Gets the HTTP status code associated with this error, or null if not applicable.</summary>
     public int? StatusCode { get; }
+
+    /// <summary>Gets the machine-readable error code from the server response, or "INTERNAL_ERROR" as default.</summary>
+    public string? ErrorCode { get; }
 }

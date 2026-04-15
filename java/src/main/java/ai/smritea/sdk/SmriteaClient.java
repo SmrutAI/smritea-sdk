@@ -346,13 +346,13 @@ public class SmriteaClient {
       } catch (SmriteaError e) {
         throw e;
       } catch (Exception e) {
-        throw new SmriteaError(e.getMessage(), null);
+        throw new SmriteaError(e.getMessage(), null, null);
       }
     }
     // Unreachable: the loop always returns on success or throws on non-retriable errors.
     // On the final attempt, SmriteaRateLimitError is rethrown directly.
     // This satisfies the Java compiler's requirement for a return/throw after the loop.
-    throw new SmriteaError("max retries exceeded", null);
+    throw new SmriteaError("max retries exceeded", null, null);
   }
 
   /**
@@ -408,20 +408,21 @@ public class SmriteaClient {
   private SmriteaError mapError(ApiException e) {
     int statusCode = e.getCode();
     String message = extractErrorMessage(e.getResponseBody());
+    String errorCode = extractErrorCode(e.getResponseBody());
     switch (statusCode) {
       case 400:
-        return new SmriteaValidationError(message, statusCode);
+        return new SmriteaValidationError(message, statusCode, errorCode);
       case 401:
-        return new SmriteaAuthError(message, statusCode);
+        return new SmriteaAuthError(message, statusCode, errorCode);
       case 402:
-        return new SmriteaQuotaError(message, statusCode);
+        return new SmriteaQuotaError(message, statusCode, errorCode);
       case 404:
-        return new SmriteaNotFoundError(message, statusCode);
+        return new SmriteaNotFoundError(message, statusCode, errorCode);
       case 429:
         Integer retryAfter = parseRetryAfter(getRetryAfterHeader(e));
-        return new SmriteaRateLimitError(message, statusCode, retryAfter);
+        return new SmriteaRateLimitError(message, statusCode, retryAfter, errorCode);
       default:
-        return new SmriteaError(message, statusCode);
+        return new SmriteaError(message, statusCode, errorCode);
     }
   }
 
@@ -457,5 +458,38 @@ public class SmriteaClient {
     }
 
     return body;
+  }
+
+  /**
+   * Attempts to extract the "code" field from a JSON response body. Returns null if JSON parsing
+   * fails or the field is missing.
+   *
+   * @param body the response body, possibly null
+   * @return the extracted error code, or null if not found
+   */
+  private String extractErrorCode(String body) {
+    if (body == null || body.isEmpty()) {
+      return null;
+    }
+
+    try {
+      // Use Jackson (already a dependency) for JSON parsing
+      com.fasterxml.jackson.databind.ObjectMapper mapper =
+          new com.fasterxml.jackson.databind.ObjectMapper();
+      com.fasterxml.jackson.databind.JsonNode json = mapper.readTree(body);
+      if (json != null && json.has("code")) {
+        com.fasterxml.jackson.databind.JsonNode codeNode = json.get("code");
+        if (codeNode != null && !codeNode.isNull()) {
+          String code = codeNode.asText();
+          if (code != null && !code.isEmpty()) {
+            return code;
+          }
+        }
+      }
+    } catch (Exception e) {
+      // JSON parsing failed; fall through to return null
+    }
+
+    return null;
   }
 }

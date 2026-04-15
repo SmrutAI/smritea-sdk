@@ -13,8 +13,9 @@ public class SmriteaRateLimitException : SmriteaException
     /// <param name="message">The error message.</param>
     /// <param name="statusCode">The HTTP status code.</param>
     /// <param name="retryAfter">Seconds to wait before retrying, from the Retry-After header.</param>
-    public SmriteaRateLimitException(string message, int statusCode, int? retryAfter = null)
-        : base(message, statusCode)
+    /// <param name="errorCode">The machine-readable error code from the server response.</param>
+    public SmriteaRateLimitException(string message, int statusCode, int? retryAfter = null, string? errorCode = null)
+        : base(message, statusCode, errorCode)
     {
         this.RetryAfter = retryAfter;
     }
@@ -24,8 +25,9 @@ public class SmriteaRateLimitException : SmriteaException
     /// </summary>
     /// <param name="message">The error message.</param>
     /// <param name="statusCode">The HTTP status code, if available.</param>
-    public SmriteaRateLimitException(string message, int? statusCode = null)
-        : base(message, statusCode)
+    /// <param name="errorCode">The machine-readable error code from the server response.</param>
+    public SmriteaRateLimitException(string message, int? statusCode = null, string? errorCode = null)
+        : base(message, statusCode, errorCode)
     {
     }
 

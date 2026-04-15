@@ -5,11 +5,13 @@
 
 export class SmriteaError extends Error {
   statusCode?: number;
+  errorCode: string;
 
-  constructor(message: string, statusCode?: number) {
+  constructor(message: string, statusCode?: number, errorCode?: string) {
     super(message);
     this.name = 'SmriteaError';
     this.statusCode = statusCode;
+    this.errorCode = errorCode ?? 'INTERNAL_ERROR';
     // Maintain proper prototype chain in TypeScript/transpiled environments
     Object.setPrototypeOf(this, new.target.prototype);
   }
@@ -17,8 +19,8 @@ export class SmriteaError extends Error {
 
 /** HTTP 401 -- invalid or missing API key. */
 export class SmriteaAuthError extends SmriteaError {
-  constructor(message: string, statusCode?: number) {
-    super(message, statusCode ?? 401);
+  constructor(message: string, statusCode?: number, errorCode?: string) {
+    super(message, statusCode ?? 401, errorCode);
     this.name = 'SmriteaAuthError';
     Object.setPrototypeOf(this, new.target.prototype);
   }
@@ -26,8 +28,8 @@ export class SmriteaAuthError extends SmriteaError {
 
 /** HTTP 404 -- memory not found. */
 export class SmriteaNotFoundError extends SmriteaError {
-  constructor(message: string, statusCode?: number) {
-    super(message, statusCode ?? 404);
+  constructor(message: string, statusCode?: number, errorCode?: string) {
+    super(message, statusCode ?? 404, errorCode);
     this.name = 'SmriteaNotFoundError';
     Object.setPrototypeOf(this, new.target.prototype);
   }
@@ -35,8 +37,8 @@ export class SmriteaNotFoundError extends SmriteaError {
 
 /** HTTP 400 -- request validation failed. */
 export class SmriteaValidationError extends SmriteaError {
-  constructor(message: string, statusCode?: number) {
-    super(message, statusCode ?? 400);
+  constructor(message: string, statusCode?: number, errorCode?: string) {
+    super(message, statusCode ?? 400, errorCode);
     this.name = 'SmriteaValidationError';
     Object.setPrototypeOf(this, new.target.prototype);
   }
@@ -44,8 +46,8 @@ export class SmriteaValidationError extends SmriteaError {
 
 /** HTTP 402 -- quota exceeded for this organization. */
 export class SmriteaQuotaError extends SmriteaError {
-  constructor(message: string, statusCode?: number) {
-    super(message, statusCode ?? 402);
+  constructor(message: string, statusCode?: number, errorCode?: string) {
+    super(message, statusCode ?? 402, errorCode);
     this.name = 'SmriteaQuotaError';
     Object.setPrototypeOf(this, new.target.prototype);
   }
@@ -57,8 +59,8 @@ export class SmriteaQuotaError extends SmriteaError {
  * error that produced a malformed body.
  */
 export class SmriteaDeserializationError extends SmriteaError {
-  constructor(message: string, statusCode?: number) {
-    super(message, statusCode);
+  constructor(message: string, statusCode?: number, errorCode?: string) {
+    super(message, statusCode, errorCode);
     this.name = 'SmriteaDeserializationError';
     Object.setPrototypeOf(this, new.target.prototype);
   }
@@ -74,8 +76,8 @@ export class SmriteaDeserializationError extends SmriteaError {
 export class SmriteaRateLimitError extends SmriteaError {
   retryAfter?: number;
 
-  constructor(message: string, statusCode?: number, retryAfter?: number) {
-    super(message, statusCode ?? 429);
+  constructor(message: string, statusCode?: number, retryAfter?: number, errorCode?: string) {
+    super(message, statusCode ?? 429, errorCode);
     this.name = 'SmriteaRateLimitError';
     this.retryAfter = retryAfter;
     Object.setPrototypeOf(this, new.target.prototype);
@@ -87,20 +89,21 @@ export class SmriteaRateLimitError extends SmriteaError {
  * @param status - HTTP response status code
  * @param message - Error message from the response body
  * @param retryAfter - Value of the Retry-After header (for 429 responses)
+ * @param errorCode - Error code from the response body
  */
-export function throwForStatus(status: number, message: string, retryAfter?: number): never {
+export function throwForStatus(status: number, message: string, retryAfter?: number, errorCode?: string): never {
   switch (status) {
     case 400:
-      throw new SmriteaValidationError(message, status);
+      throw new SmriteaValidationError(message, status, errorCode);
     case 401:
-      throw new SmriteaAuthError(message, status);
+      throw new SmriteaAuthError(message, status, errorCode);
     case 402:
-      throw new SmriteaQuotaError(message, status);
+      throw new SmriteaQuotaError(message, status, errorCode);
     case 404:
-      throw new SmriteaNotFoundError(message, status);
+      throw new SmriteaNotFoundError(message, status, errorCode);
     case 429:
-      throw new SmriteaRateLimitError(message, status, retryAfter);
+      throw new SmriteaRateLimitError(message, status, retryAfter, errorCode);
     default:
-      throw new SmriteaError(message, status);
+      throw new SmriteaError(message, status, errorCode);
   }
 }

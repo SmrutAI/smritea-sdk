@@ -10,12 +10,17 @@ import (
 // SmriteaError is the base error type returned by all SDK operations.
 // All other SDK error types embed SmriteaError.
 type SmriteaError struct {
-	Message    string
+	Message string
+	// ErrorCode holds the machine-readable error code from the server response (e.g. "MEMORY_NOT_FOUND").
+	ErrorCode  string
 	StatusCode int
 }
 
 // Error implements the error interface.
 func (e *SmriteaError) Error() string {
+	if e.ErrorCode != "" {
+		return fmt.Sprintf("smritea: [%s] %s (HTTP %d)", e.ErrorCode, e.Message, e.StatusCode)
+	}
 	return fmt.Sprintf("smritea: %s (HTTP %d)", e.Message, e.StatusCode)
 }
 
@@ -61,10 +66,11 @@ type SmriteaRateLimitError struct {
 // body is the already-read response body used as the error message.
 // Attempts to extract the "message" field from JSON; falls back to raw body if parsing fails.
 func mapError(resp *http.Response, body []byte) error {
-	message := extractErrorMessage(body)
+	message, errorCode := extractErrorFields(body)
 
 	base := SmriteaError{
 		Message:    message,
+		ErrorCode:  errorCode,
 		StatusCode: resp.StatusCode,
 	}
 
@@ -85,27 +91,35 @@ func mapError(resp *http.Response, body []byte) error {
 	default:
 		return &SmriteaError{
 			Message:    message,
+			ErrorCode:  errorCode,
 			StatusCode: resp.StatusCode,
 		}
 	}
 }
 
-// extractErrorMessage attempts to parse the response body as JSON and extract
-// the "message" field. If parsing fails or the field is missing, returns the
-// raw body as a string fallback.
-func extractErrorMessage(body []byte) string {
+// extractErrorFields attempts to parse the response body as JSON and extract
+// the "message" and "code" fields. If parsing fails or "message" is missing,
+// the raw body string is returned as the message. If "code" is missing or empty,
+// it defaults to "INTERNAL_ERROR".
+func extractErrorFields(body []byte) (message, errorCode string) {
 	var data map[string]interface{}
 	if err := json.Unmarshal(body, &data); err != nil {
-		return string(body)
+		return string(body), "INTERNAL_ERROR"
 	}
 
-	if message, ok := data["message"].(string); ok {
-		if message != "" {
-			return message
-		}
+	if msg, ok := data["message"].(string); ok && msg != "" {
+		message = msg
+	} else {
+		message = string(body)
 	}
 
-	return string(body)
+	if code, ok := data["code"].(string); ok && code != "" {
+		errorCode = code
+	} else {
+		errorCode = "INTERNAL_ERROR"
+	}
+
+	return message, errorCode
 }
 
 // parseRetryAfter reads the Retry-After header from the response and parses it as
