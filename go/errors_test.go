@@ -39,6 +39,62 @@ func TestMapError_400_ReturnsValidationError(t *testing.T) {
 	}
 }
 
+func TestMapError_400_ExtractsJSONMessage(t *testing.T) {
+	body := []byte(`{"message":"field required","code":"validation_failed"}`)
+	resp := mockResponse(http.StatusBadRequest, string(body), nil)
+	err := mapError(resp, body)
+
+	var target *SmriteaValidationError
+	if !errors.As(err, &target) {
+		t.Fatalf("expected *SmriteaValidationError, got %T", err)
+	}
+	if target.Message != "field required" {
+		t.Errorf("expected message %q, got %q", "field required", target.Message)
+	}
+}
+
+func TestMapError_400_FallsBackOnInvalidJSON(t *testing.T) {
+	body := []byte(`{"message":`)
+	resp := mockResponse(http.StatusBadRequest, string(body), nil)
+	err := mapError(resp, body)
+
+	var target *SmriteaValidationError
+	if !errors.As(err, &target) {
+		t.Fatalf("expected *SmriteaValidationError, got %T", err)
+	}
+	if target.Message != string(body) {
+		t.Errorf("expected fallback message %q, got %q", string(body), target.Message)
+	}
+}
+
+func TestMapError_400_FallsBackOnMissingMessageField(t *testing.T) {
+	body := []byte(`{"error":"field required"}`)
+	resp := mockResponse(http.StatusBadRequest, string(body), nil)
+	err := mapError(resp, body)
+
+	var target *SmriteaValidationError
+	if !errors.As(err, &target) {
+		t.Fatalf("expected *SmriteaValidationError, got %T", err)
+	}
+	if target.Message != string(body) {
+		t.Errorf("expected fallback message %q, got %q", string(body), target.Message)
+	}
+}
+
+func TestMapError_400_FallsBackOnEmptyMessageField(t *testing.T) {
+	body := []byte(`{"message":""}`)
+	resp := mockResponse(http.StatusBadRequest, string(body), nil)
+	err := mapError(resp, body)
+
+	var target *SmriteaValidationError
+	if !errors.As(err, &target) {
+		t.Fatalf("expected *SmriteaValidationError, got %T", err)
+	}
+	if target.Message != string(body) {
+		t.Errorf("expected fallback message %q, got %q", string(body), target.Message)
+	}
+}
+
 func TestMapError_401_ReturnsAuthError(t *testing.T) {
 	resp := mockResponse(http.StatusUnauthorized, "invalid api key", nil)
 	err := mapError(resp, []byte("invalid api key"))

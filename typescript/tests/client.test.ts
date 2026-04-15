@@ -62,6 +62,7 @@ function makeResponseError(
   status: number,
   retryAfter?: string,
   message = `HTTP ${status}`,
+  body?: unknown,
 ): ResponseError {
   const headers = new Map<string, string>();
   if (retryAfter !== undefined) {
@@ -70,7 +71,10 @@ function makeResponseError(
 
   const mockResponse = {
     status,
+    statusText: 'Bad Request',
     headers: { get: (h: string) => headers.get(h) ?? null },
+    clone: () => mockResponse,
+    json: async () => body ?? {},
   } as unknown as Response;
 
   return new ResponseError(mockResponse, message);
@@ -198,6 +202,19 @@ describe('error mapping', () => {
       expect(err).toBeInstanceOf(SmriteaRateLimitError);
       expect((err as SmriteaRateLimitError).retryAfter).toBe(10);
     }
+  });
+
+  it('uses message from response body JSON when present', async () => {
+    const { client, mockApi } = createClientWithMock({ maxRetries: 0 });
+    mockApi.createMemory.mockRejectedValue(
+      makeResponseError(404, undefined, 'transport message', { message: 'Memory not found' }),
+    );
+
+    await expect(client.add('content')).rejects.toMatchObject({
+      name: 'SmriteaNotFoundError',
+      message: 'Memory not found',
+      statusCode: 404,
+    });
   });
 
   it('non-ResponseError becomes base SmriteaError', async () => {

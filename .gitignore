@@ -25,3 +25,24 @@ csharp/tests/bin/
 csharp/tests/obj/
 csharp/TestResults/
 csharp/tests/TestResults/
+
+# Go cache
+.cache/
+*/.cache/
+*/*/.cache/
+*/*/*/.cache/
+
+cache/
+*/cache/
+*/*/cache/
+*/*/*/cache/
+
+.gocache/
+*/.gocache/
+*/*/.gocache/
+*/*/*/.gocache/
+
+.gocache-go/
+*/.gocache-go/
+*/*/.gocache-go/
+*/*/*/.gocache-go/

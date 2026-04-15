@@ -431,16 +431,50 @@ public class SmriteaClient : IDisposable
     private static SmriteaException MapError(ApiException e)
     {
         var statusCode = e.ErrorCode;
-        var body = e.Message;
+        var message = ExtractErrorMessage(e.Message);
         return statusCode switch
         {
-            400 => new SmriteaValidationException(body, statusCode),
-            401 => new SmriteaAuthException(body, statusCode),
-            402 => new SmriteaQuotaException(body, statusCode),
-            404 => new SmriteaNotFoundException(body, statusCode),
-            429 => new SmriteaRateLimitException(body, statusCode, ParseRetryAfter(GetRetryAfterHeader(e))),
-            _ => new SmriteaException(body, statusCode),
+            400 => new SmriteaValidationException(message, statusCode),
+            401 => new SmriteaAuthException(message, statusCode),
+            402 => new SmriteaQuotaException(message, statusCode),
+            404 => new SmriteaNotFoundException(message, statusCode),
+            429 => new SmriteaRateLimitException(message, statusCode, ParseRetryAfter(GetRetryAfterHeader(e))),
+            _ => new SmriteaException(message, statusCode),
         };
+    }
+
+    /// <summary>
+    /// Attempts to extract the "message" field from a JSON response body.
+    /// Falls back to the raw body string if JSON parsing fails or the field is missing.
+    /// </summary>
+    /// <param name="body">The response body string, possibly null.</param>
+    /// <returns>The extracted message or raw body as fallback.</returns>
+    private static string ExtractErrorMessage(string? body)
+    {
+        if (string.IsNullOrEmpty(body))
+        {
+            return body ?? "Unknown error";
+        }
+
+        try
+        {
+            var json = System.Text.Json.JsonDocument.Parse(body);
+            var root = json.RootElement;
+            if (root.TryGetProperty("message", out var messageProp) && messageProp.ValueKind == System.Text.Json.JsonValueKind.String)
+            {
+                var message = messageProp.GetString();
+                if (!string.IsNullOrEmpty(message))
+                {
+                    return message;
+                }
+            }
+        }
+        catch
+        {
+            // JSON parsing failed; fall through to return raw body
+        }
+
+        return body;
     }
 
     // ---------------------------------------------------------------------------

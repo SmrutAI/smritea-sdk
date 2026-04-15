@@ -134,7 +134,7 @@ export class SmriteaClient {
           );
           continue;
         }
-        this.handleError(err);
+        await this.handleError(err);
       }
     }
     throw new Error('unreachable');
@@ -163,10 +163,10 @@ export class SmriteaClient {
     return isNaN(parsed) ? undefined : parsed;
   }
 
-  private handleError(err: unknown): never {
+  private async handleError(err: unknown): Promise<never> {
     if (err instanceof ResponseError) {
       const status = err.response.status;
-      const message = err.message;
+      const message = (await this.extractErrorMessage(err.response)) || err.message;
       switch (status) {
         case 400: throw new SmriteaValidationError(message, status);
         case 401: throw new SmriteaAuthError(message, status);
@@ -177,5 +177,21 @@ export class SmriteaClient {
       }
     }
     throw new SmriteaError(String(err));
+  }
+
+  /** Attempt to extract the "message" field from the response body JSON. */
+  private async extractErrorMessage(response: Response): Promise<string> {
+    try {
+      const body = await response.clone().json();
+      if (body && typeof body === 'object') {
+        const message = (body as Record<string, unknown>).message;
+        if (typeof message === 'string' && message) {
+          return message;
+        }
+      }
+    } catch {
+      // JSON parsing failed; fall through to caller-provided fallback.
+    }
+    return '';
   }
 }

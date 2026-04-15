@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import random
 import time
 from typing import Any, Callable, NoReturn, TypeVar
@@ -301,7 +302,11 @@ class SmriteaClient:
         """Map auto-gen ApiException to typed SDK exceptions. Always raises."""
         if isinstance(exc, ApiException):
             status = exc.status
-            body = str(exc.body) if exc.body else str(exc)
+            try:
+                body_dict = json.loads(exc.body) if isinstance(exc.body, (str, bytes)) else exc.body
+                body = body_dict.get("message", "Unknown error")
+            except (json.JSONDecodeError, TypeError, KeyError):
+                body = str(exc.body) if exc.body else str(exc)
             if status == 400:
                 raise SmriteaValidationError(body, status) from exc
             if status == 401:

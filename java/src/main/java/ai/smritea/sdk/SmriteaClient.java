@@ -407,21 +407,55 @@ public class SmriteaClient {
    */
   private SmriteaError mapError(ApiException e) {
     int statusCode = e.getCode();
-    String body = e.getResponseBody();
+    String message = extractErrorMessage(e.getResponseBody());
     switch (statusCode) {
       case 400:
-        return new SmriteaValidationError(body, statusCode);
+        return new SmriteaValidationError(message, statusCode);
       case 401:
-        return new SmriteaAuthError(body, statusCode);
+        return new SmriteaAuthError(message, statusCode);
       case 402:
-        return new SmriteaQuotaError(body, statusCode);
+        return new SmriteaQuotaError(message, statusCode);
       case 404:
-        return new SmriteaNotFoundError(body, statusCode);
+        return new SmriteaNotFoundError(message, statusCode);
       case 429:
         Integer retryAfter = parseRetryAfter(getRetryAfterHeader(e));
-        return new SmriteaRateLimitError(body, statusCode, retryAfter);
+        return new SmriteaRateLimitError(message, statusCode, retryAfter);
       default:
-        return new SmriteaError(body, statusCode);
+        return new SmriteaError(message, statusCode);
     }
+  }
+
+  /**
+   * Attempts to extract the "message" field from a JSON response body. Falls back to the raw body
+   * string if JSON parsing fails or the field is missing. Uses Jackson (already a dependency) for
+   * JSON parsing.
+   *
+   * @param body the response body, possibly null
+   * @return the extracted message or raw body as fallback
+   */
+  private String extractErrorMessage(String body) {
+    if (body == null || body.isEmpty()) {
+      return body;
+    }
+
+    try {
+      // Use Jackson (already a dependency) for JSON parsing
+      com.fasterxml.jackson.databind.ObjectMapper mapper =
+          new com.fasterxml.jackson.databind.ObjectMapper();
+      com.fasterxml.jackson.databind.JsonNode json = mapper.readTree(body);
+      if (json != null && json.has("message")) {
+        com.fasterxml.jackson.databind.JsonNode messageNode = json.get("message");
+        if (messageNode != null && !messageNode.isNull()) {
+          String message = messageNode.asText();
+          if (message != null && !message.isEmpty()) {
+            return message;
+          }
+        }
+      }
+    } catch (Exception e) {
+      // JSON parsing failed; fall through to return raw body
+    }
+
+    return body;
   }
 }

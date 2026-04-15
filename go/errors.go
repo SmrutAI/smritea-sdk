@@ -1,6 +1,7 @@
 package smritea
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -58,9 +59,12 @@ type SmriteaRateLimitError struct {
 
 // mapError converts an HTTP response into the appropriate typed SDK error.
 // body is the already-read response body used as the error message.
+// Attempts to extract the "message" field from JSON; falls back to raw body if parsing fails.
 func mapError(resp *http.Response, body []byte) error {
+	message := extractErrorMessage(body)
+
 	base := SmriteaError{
-		Message:    string(body),
+		Message:    message,
 		StatusCode: resp.StatusCode,
 	}
 
@@ -80,10 +84,28 @@ func mapError(resp *http.Response, body []byte) error {
 		}
 	default:
 		return &SmriteaError{
-			Message:    string(body),
+			Message:    message,
 			StatusCode: resp.StatusCode,
 		}
 	}
+}
+
+// extractErrorMessage attempts to parse the response body as JSON and extract
+// the "message" field. If parsing fails or the field is missing, returns the
+// raw body as a string fallback.
+func extractErrorMessage(body []byte) string {
+	var data map[string]interface{}
+	if err := json.Unmarshal(body, &data); err != nil {
+		return string(body)
+	}
+
+	if message, ok := data["message"].(string); ok {
+		if message != "" {
+			return message
+		}
+	}
+
+	return string(body)
 }
 
 // parseRetryAfter reads the Retry-After header from the response and parses it as
