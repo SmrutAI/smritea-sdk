@@ -304,6 +304,7 @@ class SmriteaClient:
             status = exc.status
             message = "Unknown error"
             error_code = "INTERNAL_ERROR"
+            body_dict: dict | None = None
             try:
                 body_dict = json.loads(exc.body) if isinstance(exc.body, (str, bytes)) else exc.body
                 message = body_dict.get("message", "Unknown error")
@@ -311,17 +312,17 @@ class SmriteaClient:
             except (json.JSONDecodeError, TypeError, KeyError):
                 pass  # defaults ("Unknown error" / "INTERNAL_ERROR") are preserved
             if status == 400:
-                raise SmriteaValidationError(message, status, error_code) from exc
+                raise SmriteaValidationError(message, status, error_code, body_dict) from exc
             if status == 401:
-                raise SmriteaAuthError(message, status, error_code) from exc
+                raise SmriteaAuthError(message, status, error_code, body_dict) from exc
             if status == 402:
-                raise SmriteaQuotaError(message, status, error_code) from exc
+                raise SmriteaQuotaError(message, status, error_code, body_dict) from exc
             if status == 404:
-                raise SmriteaNotFoundError(message, status, error_code) from exc
+                raise SmriteaNotFoundError(message, status, error_code, body_dict) from exc
             if status == 429:
                 retry_after = self._parse_retry_after(exc)
                 raise SmriteaRateLimitError(
-                    message, status, retry_after=retry_after, error_code=error_code
+                    message, status, retry_after=retry_after, error_code=error_code, body=body_dict
                 ) from exc
-            raise SmriteaError(message, status, error_code) from exc
+            raise SmriteaError(message, status, error_code, body_dict) from exc
         raise SmriteaError(str(exc)) from exc

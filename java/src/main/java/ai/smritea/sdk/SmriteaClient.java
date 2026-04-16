@@ -409,41 +409,58 @@ public class SmriteaClient {
    */
   private SmriteaError mapError(ApiException e) {
     int httpStatus = e.getCode();
-    String[] fields = extractErrorFields(e.getResponseBody());
-    String message = fields[0];
-    String errorCode = fields[1];
+    ExtractedErrorFields fields = extractErrorFieldsWithBody(e.getResponseBody());
+    String message = fields.message;
+    String errorCode = fields.errorCode;
+    Object body = fields.body;
     switch (httpStatus) {
       case 400:
-        return new SmriteaValidationError(message, httpStatus, errorCode);
+        return new SmriteaValidationError(message, httpStatus, errorCode, body);
       case 401:
-        return new SmriteaAuthError(message, httpStatus, errorCode);
+        return new SmriteaAuthError(message, httpStatus, errorCode, body);
       case 402:
-        return new SmriteaQuotaError(message, httpStatus, errorCode);
+        return new SmriteaQuotaError(message, httpStatus, errorCode, body);
       case 404:
-        return new SmriteaNotFoundError(message, httpStatus, errorCode);
+        return new SmriteaNotFoundError(message, httpStatus, errorCode, body);
       case 429:
         Integer retryAfter = parseRetryAfter(getRetryAfterHeader(e));
-        return new SmriteaRateLimitError(message, httpStatus, retryAfter, errorCode);
+        return new SmriteaRateLimitError(message, httpStatus, retryAfter, errorCode, body);
       default:
-        return new SmriteaError(message, httpStatus, errorCode);
+        return new SmriteaError(message, httpStatus, errorCode, body);
+    }
+  }
+
+  /** Helper class to hold extracted error fields plus the parsed body. */
+  private static class ExtractedErrorFields {
+    final String message;
+    final String errorCode;
+    final Object body;
+
+    ExtractedErrorFields(String message, String errorCode, Object body) {
+      this.message = message;
+      this.errorCode = errorCode;
+      this.body = body;
     }
   }
 
   /**
    * Parses the JSON response body once and extracts both the human-readable {@code "message"} and
-   * machine-readable {@code "code"} fields from the server's error payload. Falls back to {@code
-   * {"Unknown error", "INTERNAL_ERROR"}} if the body is absent, unparseable, or missing the
-   * expected fields. Never returns the raw response body as the message.
+   * machine-readable {@code "code"} fields from the server's error payload, along with the full
+   * parsed body. Falls back to "Unknown error" / "INTERNAL_ERROR" if the body is absent,
+   * unparseable, or missing the expected fields. Never returns the raw response body as the
+   * message.
    *
    * @param body the raw JSON response body, possibly null
-   * @return a two-element array: {@code [message, errorCode]}
+   * @return ExtractedErrorFields with message, errorCode, and parsed body (or null if parsing
+   *     fails)
    */
-  private String[] extractErrorFields(String body) {
+  private ExtractedErrorFields extractErrorFieldsWithBody(String body) {
     if (body == null || body.isEmpty()) {
-      return new String[] {"Unknown error", "INTERNAL_ERROR"};
+      return new ExtractedErrorFields("Unknown error", "INTERNAL_ERROR", null);
     }
 
     try {
+      Object parsedBody = OBJECT_MAPPER.readValue(body, Object.class);
       com.fasterxml.jackson.databind.JsonNode json = OBJECT_MAPPER.readTree(body);
 
       String message = "Unknown error";
@@ -468,10 +485,24 @@ public class SmriteaClient {
         }
       }
 
-      return new String[] {message, errorCode};
+      return new ExtractedErrorFields(message, errorCode, parsedBody);
     } catch (Exception e) {
       // JSON parsing failed — body is not valid JSON
-      return new String[] {"Unknown error", "INTERNAL_ERROR"};
+      return new ExtractedErrorFields("Unknown error", "INTERNAL_ERROR", null);
     }
+  }
+
+  /**
+   * Parses the JSON response body once and extracts both the human-readable {@code "message"} and
+   * machine-readable {@code "code"} fields from the server's error payload. Falls back to {@code
+   * {"Unknown error", "INTERNAL_ERROR"}} if the body is absent, unparseable, or missing the
+   * expected fields. Never returns the raw response body as the message.
+   *
+   * @param body the raw JSON response body, possibly null
+   * @return a two-element array: {@code [message, errorCode]}
+   */
+  private String[] extractErrorFields(String body) {
+    ExtractedErrorFields fields = extractErrorFieldsWithBody(body);
+    return new String[] {fields.message, fields.errorCode};
   }
 }

@@ -169,20 +169,21 @@ export class SmriteaClient {
       const errorData = await this.extractErrorData(err.response);
       const message = errorData.message || err.message;
       const errorCode = errorData.code;
+      const body = errorData.body;
       switch (status) {
-        case 400: throw new SmriteaValidationError(message, status, errorCode);
-        case 401: throw new SmriteaAuthError(message, status, errorCode);
-        case 402: throw new SmriteaQuotaError(message, status, errorCode);
-        case 404: throw new SmriteaNotFoundError(message, status, errorCode);
-        case 429: throw new SmriteaRateLimitError(message, status, this.parseRetryAfter(err.response), errorCode);
-        default: throw new SmriteaError(message, status, errorCode);
+        case 400: throw new SmriteaValidationError(message, status, errorCode, body);
+        case 401: throw new SmriteaAuthError(message, status, errorCode, body);
+        case 402: throw new SmriteaQuotaError(message, status, errorCode, body);
+        case 404: throw new SmriteaNotFoundError(message, status, errorCode, body);
+        case 429: throw new SmriteaRateLimitError(message, status, this.parseRetryAfter(err.response), errorCode, body);
+        default: throw new SmriteaError(message, status, errorCode, body);
       }
     }
     throw new SmriteaError(String(err));
   }
 
   /** Attempt to extract error data ("message" and "code" fields) from the response body JSON. */
-  private async extractErrorData(response: Response): Promise<{ message: string; code?: string }> {
+  private async extractErrorData(response: Response): Promise<{ message: string; code?: string; body?: unknown }> {
     try {
       const body = await response.clone().json();
       if (body && typeof body === 'object') {
@@ -192,9 +193,11 @@ export class SmriteaClient {
           return {
             message,
             code: typeof code === 'string' ? code : undefined,
+            body,
           };
         }
       }
+      return { message: '', body };
     } catch {
       // JSON parsing failed; fall through to caller-provided fallback.
     }

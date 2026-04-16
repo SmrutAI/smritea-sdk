@@ -4,6 +4,23 @@ package ai.smritea.sdk.errors;
 public class SmriteaError extends RuntimeException {
   private final Integer statusCode;
   private final String errorCode;
+  private final Object body;
+
+  /**
+   * Creates a new SmriteaError with a message, HTTP status code, error code, and body.
+   *
+   * @param message the error message
+   * @param statusCode the HTTP status code, or null if not applicable
+   * @param errorCode the error code from the API response, or null if not provided (defaults to
+   *     "INTERNAL_ERROR")
+   * @param body the full parsed JSON response body, or null if not available
+   */
+  public SmriteaError(String message, Integer statusCode, String errorCode, Object body) {
+    super(message);
+    this.statusCode = statusCode;
+    this.errorCode = errorCode != null ? errorCode : "INTERNAL_ERROR";
+    this.body = body;
+  }
 
   /**
    * Creates a new SmriteaError with a message, HTTP status code, and error code.
@@ -14,9 +31,7 @@ public class SmriteaError extends RuntimeException {
    *     "INTERNAL_ERROR")
    */
   public SmriteaError(String message, Integer statusCode, String errorCode) {
-    super(message);
-    this.statusCode = statusCode;
-    this.errorCode = errorCode != null ? errorCode : "INTERNAL_ERROR";
+    this(message, statusCode, errorCode, null);
   }
 
   /**
@@ -26,7 +41,7 @@ public class SmriteaError extends RuntimeException {
    * @param statusCode the HTTP status code, or null if not applicable
    */
   public SmriteaError(String message, Integer statusCode) {
-    this(message, statusCode, null);
+    this(message, statusCode, null, null);
   }
 
   /**
@@ -35,7 +50,7 @@ public class SmriteaError extends RuntimeException {
    * @param message the error message
    */
   public SmriteaError(String message) {
-    this(message, null, null);
+    this(message, null, null, null);
   }
 
   /**
@@ -54,5 +69,15 @@ public class SmriteaError extends RuntimeException {
    */
   public String getErrorCode() {
     return errorCode;
+  }
+
+  /**
+   * Returns the full parsed JSON response body associated with this error, or null if not
+   * available.
+   *
+   * @return the response body, or null
+   */
+  public Object getBody() {
+    return body;
   }
 }

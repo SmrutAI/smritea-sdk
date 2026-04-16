@@ -13,8 +13,9 @@ public class SmriteaAuthException : SmriteaException
     /// <param name="message">The error message.</param>
     /// <param name="statusCode">The HTTP status code.</param>
     /// <param name="errorCode">The machine-readable error code from the server response.</param>
-    public SmriteaAuthException(string message, int statusCode, string? errorCode = null)
-        : base(message, statusCode, errorCode)
+    /// <param name="body">The full parsed JSON response body, if available.</param>
+    public SmriteaAuthException(string message, int statusCode, string? errorCode = null, object? body = null)
+        : base(message, statusCode, errorCode, body)
     {
     }
 
@@ -24,8 +25,9 @@ public class SmriteaAuthException : SmriteaException
     /// <param name="message">The error message.</param>
     /// <param name="statusCode">The HTTP status code, if available.</param>
     /// <param name="errorCode">The machine-readable error code from the server response.</param>
-    public SmriteaAuthException(string message, int? statusCode = null, string? errorCode = null)
-        : base(message, statusCode, errorCode)
+    /// <param name="body">The full parsed JSON response body, if available.</param>
+    public SmriteaAuthException(string message, int? statusCode = null, string? errorCode = null, object? body = null)
+        : base(message, statusCode, errorCode, body)
     {
     }
 
@@ -62,6 +64,18 @@ public class SmriteaAuthException : SmriteaException
     /// <param name="innerException">The inner exception.</param>
     public SmriteaAuthException(string? message, Exception? innerException)
         : base(message, innerException)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SmriteaAuthException"/> class.
+    /// </summary>
+    /// <param name="message">The error message.</param>
+    /// <param name="statusCode">The HTTP status code, if available.</param>
+    /// <param name="innerException">The inner exception.</param>
+    /// <param name="body">The full parsed JSON response body, if available.</param>
+    public SmriteaAuthException(string message, int? statusCode, Exception innerException, object? body = null)
+        : base(message, statusCode, innerException, body)
     {
     }
 }

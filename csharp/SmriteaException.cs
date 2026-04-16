@@ -13,11 +13,13 @@ public class SmriteaException : Exception
     /// <param name="message">The error message.</param>
     /// <param name="statusCode">The HTTP status code, if available.</param>
     /// <param name="errorCode">The machine-readable error code from the server response.</param>
-    public SmriteaException(string message, int? statusCode = null, string? errorCode = null)
+    /// <param name="body">The full parsed JSON response body, if available.</param>
+    public SmriteaException(string message, int? statusCode = null, string? errorCode = null, object? body = null)
         : base(message)
     {
         this.StatusCode = statusCode;
         this.ErrorCode = errorCode ?? "INTERNAL_ERROR";
+        this.Body = body;
     }
 
     /// <summary>
@@ -26,11 +28,13 @@ public class SmriteaException : Exception
     /// <param name="message">The error message.</param>
     /// <param name="statusCode">The HTTP status code.</param>
     /// <param name="innerException">The inner exception.</param>
-    public SmriteaException(string message, int? statusCode, Exception innerException)
+    /// <param name="body">The full parsed JSON response body, if available.</param>
+    public SmriteaException(string message, int? statusCode, Exception innerException, object? body = null)
         : base(message, innerException)
     {
         this.StatusCode = statusCode;
         this.ErrorCode = "INTERNAL_ERROR";
+        this.Body = body;
     }
 
     /// <summary>Initializes a new instance of the <see cref="SmriteaException"/> class.</summary>
@@ -66,4 +70,7 @@ public class SmriteaException : Exception
 
     /// <summary>Gets the machine-readable error code from the server response, or "INTERNAL_ERROR" as default.</summary>
     public string? ErrorCode { get; }
+
+    /// <summary>Gets the full parsed JSON response body associated with this error, or null if not available.</summary>
+    public object? Body { get; }
 }

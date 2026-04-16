@@ -9,17 +9,23 @@ class SmriteaError(Exception):
     """Base exception for all smritea SDK errors."""
 
     def __init__(
-        self, message: str, status_code: int | None = None, error_code: str | None = None
+        self,
+        message: str,
+        status_code: int | None = None,
+        error_code: str | None = None,
+        body: dict | None = None,
     ) -> None:
         self.message = message
         self.status_code = status_code
         self.error_code = error_code or "INTERNAL_ERROR"
+        self.body = body
         super().__init__(message)
 
     def __repr__(self) -> str:
         return (
             f"{self.__class__.__name__}(message={self.message!r}, "
-            f"status_code={self.status_code!r}, error_code={self.error_code!r})"
+            f"status_code={self.status_code!r}, error_code={self.error_code!r}, "
+            f"body={self.body!r})"
         )
 
 
@@ -61,13 +67,18 @@ class SmriteaRateLimitError(SmriteaError):
         status_code: int | None = 429,
         retry_after: int | None = None,
         error_code: str | None = None,
+        body: dict | None = None,
     ) -> None:
-        super().__init__(message, status_code, error_code)
+        super().__init__(message, status_code, error_code, body)
         self.retry_after = retry_after
 
 
 def raise_for_status(
-    status_code: int, message: str, headers: dict | None = None, error_code: str | None = None
+    status_code: int,
+    message: str,
+    headers: dict | None = None,
+    error_code: str | None = None,
+    body: dict | None = None,
 ) -> None:
     """Raise the appropriate SmriteaError subclass for an HTTP error status code.
 
@@ -76,6 +87,7 @@ def raise_for_status(
         message: Error message from the response body.
         headers: Optional response headers (used to extract Retry-After for 429).
         error_code: Error code from the response body.
+        body: Optional full response body as a dictionary.
 
     Raises:
         SmriteaValidationError: On HTTP 400.
@@ -86,19 +98,19 @@ def raise_for_status(
         SmriteaError: On HTTP 5xx or any other error status.
     """
     if status_code == 400:
-        raise SmriteaValidationError(message, status_code, error_code)
+        raise SmriteaValidationError(message, status_code, error_code, body)
     if status_code == 401:
-        raise SmriteaAuthError(message, status_code, error_code)
+        raise SmriteaAuthError(message, status_code, error_code, body)
     if status_code == 402:
-        raise SmriteaQuotaError(message, status_code, error_code)
+        raise SmriteaQuotaError(message, status_code, error_code, body)
     if status_code == 404:
-        raise SmriteaNotFoundError(message, status_code, error_code)
+        raise SmriteaNotFoundError(message, status_code, error_code, body)
     if status_code == 429:
         retry_after: int | None = None
         if headers:
             with contextlib.suppress(KeyError, ValueError, TypeError):
                 retry_after = int(headers["Retry-After"])
         raise SmriteaRateLimitError(
-            message, status_code, retry_after=retry_after, error_code=error_code
+            message, status_code, retry_after=retry_after, error_code=error_code, body=body
         )
-    raise SmriteaError(message, status_code, error_code)
+    raise SmriteaError(message, status_code, error_code, body)

@@ -8,9 +8,21 @@ public class SmriteaValidationError extends SmriteaError {
    * @param message the error message
    * @param statusCode the HTTP status code (typically 400)
    * @param errorCode the error code from the API response, or null if not provided
+   * @param body the full parsed JSON response body, or null if not available
+   */
+  public SmriteaValidationError(String message, int statusCode, String errorCode, Object body) {
+    super(message, statusCode, errorCode, body);
+  }
+
+  /**
+   * Creates a new SmriteaValidationError.
+   *
+   * @param message the error message
+   * @param statusCode the HTTP status code (typically 400)
+   * @param errorCode the error code from the API response, or null if not provided
    */
   public SmriteaValidationError(String message, int statusCode, String errorCode) {
-    super(message, statusCode, errorCode);
+    this(message, statusCode, errorCode, null);
   }
 
   /**
@@ -20,6 +32,6 @@ public class SmriteaValidationError extends SmriteaError {
    * @param statusCode the HTTP status code (typically 400)
    */
   public SmriteaValidationError(String message, int statusCode) {
-    this(message, statusCode, null);
+    this(message, statusCode, null, null);
   }
 }

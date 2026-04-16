@@ -14,8 +14,9 @@ public class SmriteaRateLimitException : SmriteaException
     /// <param name="statusCode">The HTTP status code.</param>
     /// <param name="retryAfter">Seconds to wait before retrying, from the Retry-After header.</param>
     /// <param name="errorCode">The machine-readable error code from the server response.</param>
-    public SmriteaRateLimitException(string message, int statusCode, int? retryAfter = null, string? errorCode = null)
-        : base(message, statusCode, errorCode)
+    /// <param name="body">The full parsed JSON response body, if available.</param>
+    public SmriteaRateLimitException(string message, int statusCode, int? retryAfter = null, string? errorCode = null, object? body = null)
+        : base(message, statusCode, errorCode, body)
     {
         this.RetryAfter = retryAfter;
     }
@@ -26,8 +27,9 @@ public class SmriteaRateLimitException : SmriteaException
     /// <param name="message">The error message.</param>
     /// <param name="statusCode">The HTTP status code, if available.</param>
     /// <param name="errorCode">The machine-readable error code from the server response.</param>
-    public SmriteaRateLimitException(string message, int? statusCode = null, string? errorCode = null)
-        : base(message, statusCode, errorCode)
+    /// <param name="body">The full parsed JSON response body, if available.</param>
+    public SmriteaRateLimitException(string message, int? statusCode = null, string? errorCode = null, object? body = null)
+        : base(message, statusCode, errorCode, body)
     {
     }
 
@@ -64,6 +66,18 @@ public class SmriteaRateLimitException : SmriteaException
     /// <param name="innerException">The inner exception.</param>
     public SmriteaRateLimitException(string? message, Exception? innerException)
         : base(message, innerException)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SmriteaRateLimitException"/> class.
+    /// </summary>
+    /// <param name="message">The error message.</param>
+    /// <param name="statusCode">The HTTP status code, if available.</param>
+    /// <param name="innerException">The inner exception.</param>
+    /// <param name="body">The full parsed JSON response body, if available.</param>
+    public SmriteaRateLimitException(string message, int? statusCode, Exception innerException, object? body = null)
+        : base(message, statusCode, innerException, body)
     {
     }
 

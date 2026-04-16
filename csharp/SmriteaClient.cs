@@ -431,35 +431,36 @@ public class SmriteaClient : IDisposable
     private static SmriteaException MapError(ApiException e)
     {
         var httpStatus = e.ErrorCode;
-        var (message, errorCode) = ExtractErrorFields(e.ErrorContent as string);
+        var (message, errorCode, body) = ExtractErrorFieldsWithBody(e.ErrorContent as string);
         return httpStatus switch
         {
-            400 => new SmriteaValidationException(message, httpStatus, errorCode),
-            401 => new SmriteaAuthException(message, httpStatus, errorCode),
-            402 => new SmriteaQuotaException(message, httpStatus, errorCode),
-            404 => new SmriteaNotFoundException(message, httpStatus, errorCode),
-            429 => new SmriteaRateLimitException(message, httpStatus, ParseRetryAfter(GetRetryAfterHeader(e)), errorCode),
-            _ => new SmriteaException(message, httpStatus, errorCode),
+            400 => new SmriteaValidationException(message, httpStatus, errorCode, body),
+            401 => new SmriteaAuthException(message, httpStatus, errorCode, body),
+            402 => new SmriteaQuotaException(message, httpStatus, errorCode, body),
+            404 => new SmriteaNotFoundException(message, httpStatus, errorCode, body),
+            429 => new SmriteaRateLimitException(message, httpStatus, ParseRetryAfter(GetRetryAfterHeader(e)), errorCode, body),
+            _ => new SmriteaException(message, httpStatus, errorCode, body),
         };
     }
 
     /// <summary>
     /// Parses the JSON response body once and extracts both the human-readable "message"
-    /// and machine-readable "code" fields from the server's error payload.
-    /// Falls back to ("Unknown error", "INTERNAL_ERROR") if the body is absent or unparseable.
-    /// Never returns the raw response body as the message.
+    /// and machine-readable "code" fields from the server's error payload, along with the full
+    /// parsed body. Falls back to ("Unknown error", "INTERNAL_ERROR") if the body is absent or
+    /// unparseable. Never returns the raw response body as the message.
     /// </summary>
     /// <param name="body">The raw JSON response body string, possibly null.</param>
-    /// <returns>A tuple of (message, errorCode).</returns>
-    private static (string Message, string ErrorCode) ExtractErrorFields(string? body)
+    /// <returns>A tuple of (message, errorCode, parsedBody) where parsedBody is null if parsing fails.</returns>
+    private static (string Message, string ErrorCode, object? Body) ExtractErrorFieldsWithBody(string? body)
     {
         if (string.IsNullOrEmpty(body))
         {
-            return ("Unknown error", "INTERNAL_ERROR");
+            return ("Unknown error", "INTERNAL_ERROR", null);
         }
 
         try
         {
+            object? parsedBody = System.Text.Json.JsonSerializer.Deserialize<object>(body);
             var json = System.Text.Json.JsonDocument.Parse(body);
             var root = json.RootElement;
 
@@ -483,13 +484,27 @@ public class SmriteaClient : IDisposable
                 }
             }
 
-            return (message, errorCode);
+            return (message, errorCode, parsedBody);
         }
         catch
         {
             // JSON parsing failed — body is not valid JSON
-            return ("Unknown error", "INTERNAL_ERROR");
+            return ("Unknown error", "INTERNAL_ERROR", null);
         }
+    }
+
+    /// <summary>
+    /// Parses the JSON response body once and extracts both the human-readable "message"
+    /// and machine-readable "code" fields from the server's error payload.
+    /// Falls back to ("Unknown error", "INTERNAL_ERROR") if the body is absent or unparseable.
+    /// Never returns the raw response body as the message.
+    /// </summary>
+    /// <param name="body">The raw JSON response body string, possibly null.</param>
+    /// <returns>A tuple of (message, errorCode).</returns>
+    private static (string Message, string ErrorCode) ExtractErrorFields(string? body)
+    {
+        var (message, errorCode, _) = ExtractErrorFieldsWithBody(body);
+        return (message, errorCode);
     }
 
     // ---------------------------------------------------------------------------

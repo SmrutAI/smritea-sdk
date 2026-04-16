@@ -14,6 +14,8 @@ type SmriteaError struct {
 	// ErrorCode holds the machine-readable error code from the server response (e.g. "MEMORY_NOT_FOUND").
 	ErrorCode  string
 	StatusCode int
+	// Body holds the full parsed JSON response body from the API.
+	Body map[string]any
 }
 
 // Error implements the error interface.
@@ -66,12 +68,13 @@ type SmriteaRateLimitError struct {
 // body is the already-read response body used as the error message.
 // Attempts to extract the "message" field from JSON; falls back to raw body if parsing fails.
 func mapError(resp *http.Response, body []byte) error {
-	message, errorCode := extractErrorFields(body)
+	message, errorCode, parsedBody := extractErrorFields(body)
 
 	base := SmriteaError{
 		Message:    message,
 		ErrorCode:  errorCode,
 		StatusCode: resp.StatusCode,
+		Body:       parsedBody,
 	}
 
 	switch resp.StatusCode {
@@ -93,6 +96,7 @@ func mapError(resp *http.Response, body []byte) error {
 			Message:    message,
 			ErrorCode:  errorCode,
 			StatusCode: resp.StatusCode,
+			Body:       parsedBody,
 		}
 	}
 }
@@ -101,10 +105,11 @@ func mapError(resp *http.Response, body []byte) error {
 // the "message" and "code" fields. Falls back to ("Unknown error", "INTERNAL_ERROR")
 // if the body is absent, unparseable, or missing the expected fields.
 // Never returns the raw response body as the message.
-func extractErrorFields(body []byte) (message, errorCode string) {
-	var data map[string]interface{}
+// Returns (message, errorCode, parsedBody) where parsedBody is nil if parsing fails.
+func extractErrorFields(body []byte) (message, errorCode string, parsedBody map[string]any) {
+	var data map[string]any
 	if err := json.Unmarshal(body, &data); err != nil {
-		return "Unknown error", "INTERNAL_ERROR"
+		return "Unknown error", "INTERNAL_ERROR", nil
 	}
 
 	if msg, ok := data["message"].(string); ok && msg != "" {
@@ -119,7 +124,7 @@ func extractErrorFields(body []byte) (message, errorCode string) {
 		errorCode = "INTERNAL_ERROR"
 	}
 
-	return message, errorCode
+	return message, errorCode, data
 }
 
 // parseRetryAfter reads the Retry-After header from the response and parses it as

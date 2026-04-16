@@ -66,4 +66,28 @@ public class SmriteaDeserializationException : SmriteaException
         : base(message, statusCode, errorCode)
     {
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SmriteaDeserializationException"/> class.
+    /// </summary>
+    /// <param name="message">The error message describing the deserialization failure.</param>
+    /// <param name="statusCode">The HTTP status code, if available.</param>
+    /// <param name="errorCode">The machine-readable error code from the server response.</param>
+    /// <param name="body">The full parsed JSON response body, if available.</param>
+    public SmriteaDeserializationException(string message, int? statusCode = null, string? errorCode = null, object? body = null)
+        : base(message, statusCode, errorCode, body)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SmriteaDeserializationException"/> class.
+    /// </summary>
+    /// <param name="message">The error message describing the deserialization failure.</param>
+    /// <param name="statusCode">The HTTP status code, if available.</param>
+    /// <param name="innerException">The inner exception that caused the failure.</param>
+    /// <param name="body">The full parsed JSON response body, if available.</param>
+    public SmriteaDeserializationException(string message, int? statusCode, Exception innerException, object? body = null)
+        : base(message, statusCode, innerException, body)
+    {
+    }
 }

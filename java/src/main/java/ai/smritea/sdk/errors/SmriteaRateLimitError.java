@@ -11,11 +11,25 @@ public class SmriteaRateLimitError extends SmriteaError {
    * @param statusCode the HTTP status code (typically 429)
    * @param retryAfter seconds to wait before retrying, or null if not provided
    * @param errorCode the error code from the API response, or null if not provided
+   * @param body the full parsed JSON response body, or null if not available
+   */
+  public SmriteaRateLimitError(
+      String message, int statusCode, Integer retryAfter, String errorCode, Object body) {
+    super(message, statusCode, errorCode, body);
+    this.retryAfter = retryAfter;
+  }
+
+  /**
+   * Creates a new SmriteaRateLimitError.
+   *
+   * @param message the error message
+   * @param statusCode the HTTP status code (typically 429)
+   * @param retryAfter seconds to wait before retrying, or null if not provided
+   * @param errorCode the error code from the API response, or null if not provided
    */
   public SmriteaRateLimitError(
       String message, int statusCode, Integer retryAfter, String errorCode) {
-    super(message, statusCode, errorCode);
-    this.retryAfter = retryAfter;
+    this(message, statusCode, retryAfter, errorCode, null);
   }
 
   /**
@@ -26,7 +40,7 @@ public class SmriteaRateLimitError extends SmriteaError {
    * @param retryAfter seconds to wait before retrying, or null if not provided
    */
   public SmriteaRateLimitError(String message, int statusCode, Integer retryAfter) {
-    this(message, statusCode, retryAfter, null);
+    this(message, statusCode, retryAfter, null, null);
   }
 
   /**
