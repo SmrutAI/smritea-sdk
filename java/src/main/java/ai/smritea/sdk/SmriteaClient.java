@@ -43,6 +43,8 @@ public class SmriteaClient {
   private static final String DEFAULT_BASE_URL = "https://api.smritea.ai";
   private static final int DEFAULT_MAX_RETRIES = 2;
   private static final double RETRY_CAP_SECONDS = 30.0;
+  private static final com.fasterxml.jackson.databind.ObjectMapper OBJECT_MAPPER =
+      new com.fasterxml.jackson.databind.ObjectMapper();
 
   private final String appId;
   private final int maxRetries;
@@ -406,90 +408,70 @@ public class SmriteaClient {
    * function exactly.
    */
   private SmriteaError mapError(ApiException e) {
-    int statusCode = e.getCode();
-    String message = extractErrorMessage(e.getResponseBody());
-    String errorCode = extractErrorCode(e.getResponseBody());
-    switch (statusCode) {
+    int httpStatus = e.getCode();
+    String[] fields = extractErrorFields(e.getResponseBody());
+    String message = fields[0];
+    String errorCode = fields[1];
+    switch (httpStatus) {
       case 400:
-        return new SmriteaValidationError(message, statusCode, errorCode);
+        return new SmriteaValidationError(message, httpStatus, errorCode);
       case 401:
-        return new SmriteaAuthError(message, statusCode, errorCode);
+        return new SmriteaAuthError(message, httpStatus, errorCode);
       case 402:
-        return new SmriteaQuotaError(message, statusCode, errorCode);
+        return new SmriteaQuotaError(message, httpStatus, errorCode);
       case 404:
-        return new SmriteaNotFoundError(message, statusCode, errorCode);
+        return new SmriteaNotFoundError(message, httpStatus, errorCode);
       case 429:
         Integer retryAfter = parseRetryAfter(getRetryAfterHeader(e));
-        return new SmriteaRateLimitError(message, statusCode, retryAfter, errorCode);
+        return new SmriteaRateLimitError(message, httpStatus, retryAfter, errorCode);
       default:
-        return new SmriteaError(message, statusCode, errorCode);
+        return new SmriteaError(message, httpStatus, errorCode);
     }
   }
 
   /**
-   * Attempts to extract the "message" field from a JSON response body. Falls back to the raw body
-   * string if JSON parsing fails or the field is missing. Uses Jackson (already a dependency) for
-   * JSON parsing.
+   * Parses the JSON response body once and extracts both the human-readable {@code "message"} and
+   * machine-readable {@code "code"} fields from the server's error payload. Falls back to {@code
+   * {"Unknown error", "INTERNAL_ERROR"}} if the body is absent, unparseable, or missing the
+   * expected fields. Never returns the raw response body as the message.
    *
-   * @param body the response body, possibly null
-   * @return the extracted message or raw body as fallback
+   * @param body the raw JSON response body, possibly null
+   * @return a two-element array: {@code [message, errorCode]}
    */
-  private String extractErrorMessage(String body) {
+  private String[] extractErrorFields(String body) {
     if (body == null || body.isEmpty()) {
-      return body;
+      return new String[] {"Unknown error", "INTERNAL_ERROR"};
     }
 
     try {
-      // Use Jackson (already a dependency) for JSON parsing
-      com.fasterxml.jackson.databind.ObjectMapper mapper =
-          new com.fasterxml.jackson.databind.ObjectMapper();
-      com.fasterxml.jackson.databind.JsonNode json = mapper.readTree(body);
+      com.fasterxml.jackson.databind.JsonNode json = OBJECT_MAPPER.readTree(body);
+
+      String message = "Unknown error";
       if (json != null && json.has("message")) {
         com.fasterxml.jackson.databind.JsonNode messageNode = json.get("message");
         if (messageNode != null && !messageNode.isNull()) {
-          String message = messageNode.asText();
-          if (message != null && !message.isEmpty()) {
-            return message;
+          String extracted = messageNode.asText();
+          if (extracted != null && !extracted.isEmpty()) {
+            message = extracted;
           }
         }
       }
-    } catch (Exception e) {
-      // JSON parsing failed; fall through to return raw body
-    }
 
-    return body;
-  }
-
-  /**
-   * Attempts to extract the "code" field from a JSON response body. Returns null if JSON parsing
-   * fails or the field is missing.
-   *
-   * @param body the response body, possibly null
-   * @return the extracted error code, or null if not found
-   */
-  private String extractErrorCode(String body) {
-    if (body == null || body.isEmpty()) {
-      return null;
-    }
-
-    try {
-      // Use Jackson (already a dependency) for JSON parsing
-      com.fasterxml.jackson.databind.ObjectMapper mapper =
-          new com.fasterxml.jackson.databind.ObjectMapper();
-      com.fasterxml.jackson.databind.JsonNode json = mapper.readTree(body);
+      String errorCode = "INTERNAL_ERROR";
       if (json != null && json.has("code")) {
         com.fasterxml.jackson.databind.JsonNode codeNode = json.get("code");
         if (codeNode != null && !codeNode.isNull()) {
-          String code = codeNode.asText();
-          if (code != null && !code.isEmpty()) {
-            return code;
+          String extracted = codeNode.asText();
+          if (extracted != null && !extracted.isEmpty()) {
+            errorCode = extracted;
           }
         }
       }
-    } catch (Exception e) {
-      // JSON parsing failed; fall through to return null
-    }
 
-    return null;
+      return new String[] {message, errorCode};
+    } catch (Exception e) {
+      // JSON parsing failed — body is not valid JSON
+      return new String[] {"Unknown error", "INTERNAL_ERROR"};
+    }
   }
 }

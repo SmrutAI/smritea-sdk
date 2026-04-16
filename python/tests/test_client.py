@@ -194,7 +194,7 @@ class TestErrorMapping:
     def test_400_validation_error(self, client, mock_api):
         """HTTP 400 raises SmriteaValidationError."""
         exc = ApiException(status=400)
-        exc.body = 'validation failed'
+        exc.body = '{"code": "VALIDATION_ERROR", "message": "validation failed"}'
         exc.headers = {}
         mock_api.create_memory.side_effect = exc
 
@@ -202,7 +202,8 @@ class TestErrorMapping:
             client.add('content')
 
         assert exc_info.value.status_code == 400
-        assert 'validation failed' in exc_info.value.message
+        assert exc_info.value.message == 'validation failed'
+        assert exc_info.value.error_code == 'VALIDATION_ERROR'
 
     def test_401_auth_error(self, client, mock_api):
         """HTTP 401 raises SmriteaAuthError."""

@@ -98,19 +98,19 @@ func mapError(resp *http.Response, body []byte) error {
 }
 
 // extractErrorFields attempts to parse the response body as JSON and extract
-// the "message" and "code" fields. If parsing fails or "message" is missing,
-// the raw body string is returned as the message. If "code" is missing or empty,
-// it defaults to "INTERNAL_ERROR".
+// the "message" and "code" fields. Falls back to ("Unknown error", "INTERNAL_ERROR")
+// if the body is absent, unparseable, or missing the expected fields.
+// Never returns the raw response body as the message.
 func extractErrorFields(body []byte) (message, errorCode string) {
 	var data map[string]interface{}
 	if err := json.Unmarshal(body, &data); err != nil {
-		return string(body), "INTERNAL_ERROR"
+		return "Unknown error", "INTERNAL_ERROR"
 	}
 
 	if msg, ok := data["message"].(string); ok && msg != "" {
 		message = msg
 	} else {
-		message = string(body)
+		message = "Unknown error"
 	}
 
 	if code, ok := data["code"].(string); ok && code != "" {

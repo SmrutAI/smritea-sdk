@@ -309,7 +309,7 @@ class SmriteaClient:
                 message = body_dict.get("message", "Unknown error")
                 error_code = body_dict.get("code", "INTERNAL_ERROR")
             except (json.JSONDecodeError, TypeError, KeyError):
-                message = str(exc.body) if exc.body else str(exc)
+                pass  # defaults ("Unknown error" / "INTERNAL_ERROR") are preserved
             if status == 400:
                 raise SmriteaValidationError(message, status, error_code) from exc
             if status == 401:

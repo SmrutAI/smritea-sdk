@@ -430,86 +430,66 @@ public class SmriteaClient : IDisposable
     /// <returns>A typed <see cref="SmriteaException"/> matching the HTTP status code.</returns>
     private static SmriteaException MapError(ApiException e)
     {
-        var statusCode = e.ErrorCode;
-        var message = ExtractErrorMessage(e.Message);
-        var errorCode = ExtractErrorCode(e.Message);
-        return statusCode switch
+        var httpStatus = e.ErrorCode;
+        var (message, errorCode) = ExtractErrorFields(e.ErrorContent as string);
+        return httpStatus switch
         {
-            400 => new SmriteaValidationException(message, statusCode, errorCode),
-            401 => new SmriteaAuthException(message, statusCode, errorCode),
-            402 => new SmriteaQuotaException(message, statusCode, errorCode),
-            404 => new SmriteaNotFoundException(message, statusCode, errorCode),
-            429 => new SmriteaRateLimitException(message, statusCode, ParseRetryAfter(GetRetryAfterHeader(e)), errorCode),
-            _ => new SmriteaException(message, statusCode, errorCode),
+            400 => new SmriteaValidationException(message, httpStatus, errorCode),
+            401 => new SmriteaAuthException(message, httpStatus, errorCode),
+            402 => new SmriteaQuotaException(message, httpStatus, errorCode),
+            404 => new SmriteaNotFoundException(message, httpStatus, errorCode),
+            429 => new SmriteaRateLimitException(message, httpStatus, ParseRetryAfter(GetRetryAfterHeader(e)), errorCode),
+            _ => new SmriteaException(message, httpStatus, errorCode),
         };
     }
 
     /// <summary>
-    /// Attempts to extract the "message" field from a JSON response body.
-    /// Falls back to the raw body string if JSON parsing fails or the field is missing.
+    /// Parses the JSON response body once and extracts both the human-readable "message"
+    /// and machine-readable "code" fields from the server's error payload.
+    /// Falls back to ("Unknown error", "INTERNAL_ERROR") if the body is absent or unparseable.
+    /// Never returns the raw response body as the message.
     /// </summary>
-    /// <param name="body">The response body string, possibly null.</param>
-    /// <returns>The extracted message or raw body as fallback.</returns>
-    private static string ExtractErrorMessage(string? body)
+    /// <param name="body">The raw JSON response body string, possibly null.</param>
+    /// <returns>A tuple of (message, errorCode).</returns>
+    private static (string Message, string ErrorCode) ExtractErrorFields(string? body)
     {
         if (string.IsNullOrEmpty(body))
         {
-            return body ?? "Unknown error";
+            return ("Unknown error", "INTERNAL_ERROR");
         }
 
         try
         {
             var json = System.Text.Json.JsonDocument.Parse(body);
             var root = json.RootElement;
+
+            var message = "Unknown error";
             if (root.TryGetProperty("message", out var messageProp) && messageProp.ValueKind == System.Text.Json.JsonValueKind.String)
             {
-                var message = messageProp.GetString();
-                if (!string.IsNullOrEmpty(message))
+                var extracted = messageProp.GetString();
+                if (!string.IsNullOrEmpty(extracted))
                 {
-                    return message;
+                    message = extracted;
                 }
             }
-        }
-        catch
-        {
-            // JSON parsing failed; fall through to return raw body
-        }
 
-        return body;
-    }
-
-    /// <summary>
-    /// Attempts to extract the "code" field from a JSON response body.
-    /// Falls back to "INTERNAL_ERROR" if JSON parsing fails or the field is missing.
-    /// </summary>
-    /// <param name="body">The response body string, possibly null.</param>
-    /// <returns>The extracted error code or "INTERNAL_ERROR" as fallback.</returns>
-    private static string ExtractErrorCode(string? body)
-    {
-        if (string.IsNullOrEmpty(body))
-        {
-            return "INTERNAL_ERROR";
-        }
-
-        try
-        {
-            var json = System.Text.Json.JsonDocument.Parse(body);
-            var root = json.RootElement;
+            var errorCode = "INTERNAL_ERROR";
             if (root.TryGetProperty("code", out var codeProp) && codeProp.ValueKind == System.Text.Json.JsonValueKind.String)
             {
-                var code = codeProp.GetString();
-                if (!string.IsNullOrEmpty(code))
+                var extracted = codeProp.GetString();
+                if (!string.IsNullOrEmpty(extracted))
                 {
-                    return code;
+                    errorCode = extracted;
                 }
             }
+
+            return (message, errorCode);
         }
         catch
         {
-            // JSON parsing failed; fall through to return default
+            // JSON parsing failed — body is not valid JSON
+            return ("Unknown error", "INTERNAL_ERROR");
         }
-
-        return "INTERNAL_ERROR";
     }
 
     // ---------------------------------------------------------------------------

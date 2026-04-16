@@ -34,8 +34,10 @@ func TestMapError_400_ReturnsValidationError(t *testing.T) {
 	if target.StatusCode != 400 {
 		t.Errorf("expected StatusCode 400, got %d", target.StatusCode)
 	}
-	if target.Message != "field required" {
-		t.Errorf("expected message %q, got %q", "field required", target.Message)
+	// Plain-text (non-JSON) body: server did not send the expected JSON envelope,
+	// so extractErrorFields falls back to "Unknown error" rather than surfacing raw body.
+	if target.Message != "Unknown error" {
+		t.Errorf("expected message %q, got %q", "Unknown error", target.Message)
 	}
 }
 
@@ -62,8 +64,9 @@ func TestMapError_400_FallsBackOnInvalidJSON(t *testing.T) {
 	if !errors.As(err, &target) {
 		t.Fatalf("expected *SmriteaValidationError, got %T", err)
 	}
-	if target.Message != string(body) {
-		t.Errorf("expected fallback message %q, got %q", string(body), target.Message)
+	// Truncated/invalid JSON: raw body is never surfaced; fallback is "Unknown error".
+	if target.Message != "Unknown error" {
+		t.Errorf("expected fallback message %q, got %q", "Unknown error", target.Message)
 	}
 }
 
@@ -76,8 +79,9 @@ func TestMapError_400_FallsBackOnMissingMessageField(t *testing.T) {
 	if !errors.As(err, &target) {
 		t.Fatalf("expected *SmriteaValidationError, got %T", err)
 	}
-	if target.Message != string(body) {
-		t.Errorf("expected fallback message %q, got %q", string(body), target.Message)
+	// JSON without "message" field: raw body is never surfaced; fallback is "Unknown error".
+	if target.Message != "Unknown error" {
+		t.Errorf("expected fallback message %q, got %q", "Unknown error", target.Message)
 	}
 }
 
@@ -90,8 +94,9 @@ func TestMapError_400_FallsBackOnEmptyMessageField(t *testing.T) {
 	if !errors.As(err, &target) {
 		t.Fatalf("expected *SmriteaValidationError, got %T", err)
 	}
-	if target.Message != string(body) {
-		t.Errorf("expected fallback message %q, got %q", string(body), target.Message)
+	// Empty "message" field: raw body is never surfaced; fallback is "Unknown error".
+	if target.Message != "Unknown error" {
+		t.Errorf("expected fallback message %q, got %q", "Unknown error", target.Message)
 	}
 }
 
@@ -203,8 +208,9 @@ func TestMapError_500_ReturnsBaseError(t *testing.T) {
 	if base.StatusCode != 500 {
 		t.Errorf("expected StatusCode 500, got %d", base.StatusCode)
 	}
-	if base.Message != "internal error" {
-		t.Errorf("expected message %q, got %q", "internal error", base.Message)
+	// Plain-text body: raw body is never surfaced; fallback is "Unknown error".
+	if base.Message != "Unknown error" {
+		t.Errorf("expected message %q, got %q", "Unknown error", base.Message)
 	}
 }
 
