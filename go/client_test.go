@@ -236,12 +236,12 @@ func TestSearchOptions_TemporalFilter_Builder(t *testing.T) {
 func TestAddOptions_Builder_UsedInAdd(t *testing.T) {
 	// Verify fluent builder works end-to-end with Add()
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var body map[string]interface{}
+		var body map[string]any
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		scopeMap, scopeOK := body["scope"].(map[string]interface{})
+		scopeMap, scopeOK := body["scope"].(map[string]any)
 		if !scopeOK {
 			http.Error(w, "missing scope", http.StatusBadRequest)
 			return
@@ -312,12 +312,12 @@ func TestAdd_Success(t *testing.T) {
 
 func TestAdd_ExplicitActorIDAndType(t *testing.T) {
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var body map[string]interface{}
+		var body map[string]any
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		scopeMap, scopeOK := body["scope"].(map[string]interface{})
+		scopeMap, scopeOK := body["scope"].(map[string]any)
 		if !scopeOK {
 			http.Error(w, "missing scope", http.StatusBadRequest)
 			return
@@ -392,7 +392,7 @@ func TestSearch_TemporalFilter_PassedThrough(t *testing.T) {
 	// Assert that FromTime, ToTime, and ValidAt set via the fluent builder are
 	// serialised into the outbound request body by the autogen client.
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var body map[string]interface{}
+		var body map[string]any
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return

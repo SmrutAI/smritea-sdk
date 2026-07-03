@@ -89,7 +89,7 @@ memory, err := client.Add(ctx, "User prefers concise replies",
     smritea.NewAddOptions().
         WithActorID("alice").                                          // explicit actor ID
         WithActorType("user").                                         // "user" | "agent" | "system"
-        WithMetadata(map[string]interface{}{"source": "chat"}).       // optional
+        WithMetadata(map[string]any{"source": "chat"}).       // optional
         WithConversationID("conv_123"))                                // optional
 fmt.Println(memory.Id) // mem_...
 ```
@@ -100,7 +100,7 @@ fmt.Println(memory.Id) // mem_...
 | `ActorID` | `*string` | `nil` | Actor ID |
 | `ActorType` | `*string` | `nil` | `"user"` \| `"agent"` \| `"system"` |
 | `ActorName` | `*string` | `nil` | Display name |
-| `Metadata` | `map[string]interface{}` | `nil` | Arbitrary key-value map |
+| `Metadata` | `map[string]any` | `nil` | Arbitrary key-value map |
 | `ConversationID` | `*string` | `nil` | Conversation context |
 
 ---
@@ -218,7 +218,7 @@ if err != nil {
 | `ActorId` | string | Actor who owns this memory |
 | `ActorType` | string | `"user"` \| `"agent"` \| `"system"` |
 | `ActorName` | *string | Display name |
-| `Metadata` | map[string]interface{} | Arbitrary key-value pairs |
+| `Metadata` | map[string]any | Arbitrary key-value pairs |
 | `ConversationId` | *string | Conversation context |
 | `ActiveFrom` | string | ISO 8601 — when memory becomes valid |
 | `ActiveTo` | *string | ISO 8601 — when memory expires |
