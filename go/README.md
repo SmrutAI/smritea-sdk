@@ -52,11 +52,13 @@ func main() {
 
     // Store something about a user
     client.Add(ctx, "Alice is a vegetarian and loves hiking",
-        smritea.NewAddOptions().WithActorID("alice").WithActorType("user"))
+        smritea.NewAddOptions().WithScope(
+            smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")))
 
     // Retrieve it later
     results, _ := client.Search(ctx, "What are Alice's food preferences?",
-        smritea.NewSearchOptions().WithActorID("alice").WithActorType("user"))
+        smritea.NewSearchOptions().WithScope(
+            smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")))
     for _, r := range results {
         fmt.Printf("%v  %v\n", r.Score, r.Memory.Content)
     }
@@ -87,10 +89,11 @@ client := smritea.NewClient(smritea.ClientConfig{
 ```go
 memory, err := client.Add(ctx, "User prefers concise replies",
     smritea.NewAddOptions().
-        WithActorID("alice").                                          // explicit actor ID
-        WithActorType("user").                                         // "user" | "agent" | "system"
-        WithMetadata(map[string]any{"source": "chat"}).       // optional
-        WithConversationID("conv_123"))                                // optional
+        WithScope(smritea.NewMemoryScope().
+            WithActorID("alice").              // explicit actor ID
+            WithActorType("user").             // "user" | "agent" | "system"
+            WithConversationID("conv_123")).   // optional
+        WithMetadata(map[string]any{"source": "chat"}))   // optional
 fmt.Println(memory.Id) // mem_...
 ```
 
@@ -110,8 +113,7 @@ fmt.Println(memory.Id) // mem_...
 ```go
 results, err := client.Search(ctx, "dietary restrictions",
     smritea.NewSearchOptions().
-        WithActorID("alice").
-        WithActorType("user").
+        WithScope(smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")).
         WithLimit(5).
         WithThreshold(0.7))          // min relevance score 0.0–1.0
 for _, r := range results {
@@ -159,7 +161,8 @@ err := client.Delete(ctx, "mem_abc123")
 
 ```go
 results, _ := client.Search(ctx, "",
-    smritea.NewSearchOptions().WithActorID("alice").WithActorType("user").WithLimit(100))
+    smritea.NewSearchOptions().WithScope(
+        smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")).WithLimit(100))
 ```
 
 ---
@@ -175,7 +178,8 @@ import (
 )
 
 results, err := client.Search(ctx, "preferences",
-    smritea.NewSearchOptions().WithActorID("alice").WithActorType("user"))
+    smritea.NewSearchOptions().WithScope(
+        smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")))
 if err != nil {
     var authErr *smritea.SmriteaAuthError
     var rateLimitErr *smritea.SmriteaRateLimitError
