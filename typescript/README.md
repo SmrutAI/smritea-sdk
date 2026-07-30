@@ -1,3 +1,11 @@
+---
+type: Overview
+title: smritea SDK — TypeScript / Node.js
+status: stable
+tags:
+- readme
+---
+
 # smritea SDK — TypeScript / Node.js
 
 TypeScript SDK for the [smritea](https://smritea.ai) AI memory system.

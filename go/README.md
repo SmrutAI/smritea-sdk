@@ -1,3 +1,11 @@
+---
+type: Overview
+title: smritea SDK — Go
+status: stable
+tags:
+- readme
+---
+
 # smritea SDK — Go
 
 Go SDK for the [smritea](https://smritea.ai) AI memory system.

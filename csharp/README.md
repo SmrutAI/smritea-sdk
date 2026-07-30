@@ -1,3 +1,11 @@
+---
+type: Overview
+title: smritea SDK — C#
+status: stable
+tags:
+- readme
+---
+
 # smritea SDK — C#
 
 C# SDK for the [smritea](https://smritea.ai) AI memory system.

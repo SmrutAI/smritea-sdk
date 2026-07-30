@@ -1,3 +1,11 @@
+---
+type: Overview
+title: smritea SDK — Python
+status: stable
+tags:
+- readme
+---
+
 # smritea SDK — Python
 
 Python SDK for the [smritea](https://smritea.ai) AI memory system.

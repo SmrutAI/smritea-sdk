@@ -1,3 +1,11 @@
+---
+type: Overview
+title: smritea SDK
+status: stable
+tags:
+- readme
+---
+
 # smritea SDK
 
 Give your AI apps a long-term memory. Store what users tell you, search it back when relevant, and build personalized
