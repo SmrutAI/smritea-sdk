@@ -23,7 +23,8 @@ export const ModelEnumsRerankerType = {
     RerankerTemporal: 'temporal',
     RerankerCrossEncoder: 'cross_encoder',
     RerankerNodeDistance: 'node_distance',
-    RerankerRRFTemporal: 'rrf_temporal'
+    RerankerRRFTemporal: 'rrf_temporal',
+    RerankerCrossEncoderTemporal: 'cross_encoder_temporal'
 } as const;
 export type ModelEnumsRerankerType = typeof ModelEnumsRerankerType[keyof typeof ModelEnumsRerankerType];
 

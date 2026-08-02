@@ -67,7 +67,13 @@ namespace Smritea.Internal.Autogen.Model
         /// Enum RerankerRRFTemporal for value: rrf_temporal
         /// </summary>
         [EnumMember(Value = "rrf_temporal")]
-        RerankerRRFTemporal = 6
+        RerankerRRFTemporal = 6,
+
+        /// <summary>
+        /// Enum RerankerCrossEncoderTemporal for value: cross_encoder_temporal
+        /// </summary>
+        [EnumMember(Value = "cross_encoder_temporal")]
+        RerankerCrossEncoderTemporal = 7
     }
 
 }

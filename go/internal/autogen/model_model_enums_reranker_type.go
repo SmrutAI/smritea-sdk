@@ -27,6 +27,7 @@ const (
 	RerankerCrossEncoder ModelEnumsRerankerType = "cross_encoder"
 	RerankerNodeDistance ModelEnumsRerankerType = "node_distance"
 	RerankerRRFTemporal ModelEnumsRerankerType = "rrf_temporal"
+	RerankerCrossEncoderTemporal ModelEnumsRerankerType = "cross_encoder_temporal"
 )
 
 // All allowed values of ModelEnumsRerankerType enum
@@ -37,6 +38,7 @@ var AllowedModelEnumsRerankerTypeEnumValues = []ModelEnumsRerankerType{
 	"cross_encoder",
 	"node_distance",
 	"rrf_temporal",
+	"cross_encoder_temporal",
 }
 
 func (v *ModelEnumsRerankerType) UnmarshalJSON(src []byte) error {

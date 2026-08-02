@@ -40,7 +40,9 @@ public enum ModelEnumsRerankerType {
   
   RerankerNodeDistance("node_distance"),
   
-  RerankerRRFTemporal("rrf_temporal");
+  RerankerRRFTemporal("rrf_temporal"),
+  
+  RerankerCrossEncoderTemporal("cross_encoder_temporal");
 
   private String value;
 

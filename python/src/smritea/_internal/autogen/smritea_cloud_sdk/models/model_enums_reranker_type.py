@@ -33,6 +33,7 @@ class ModelEnumsRerankerType(str, Enum):
     RerankerCrossEncoder = 'cross_encoder'
     RerankerNodeDistance = 'node_distance'
     RerankerRRFTemporal = 'rrf_temporal'
+    RerankerCrossEncoderTemporal = 'cross_encoder_temporal'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
