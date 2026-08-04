@@ -26,12 +26,12 @@ type SmriteaClient struct {
 }
 
 // NewClient constructs a SmriteaClient from the provided ClientConfig.
-// If cfg.BaseURL is empty, it defaults to "https://api.smritea.ai".
+// If cfg.BaseURL is empty, it defaults to "https://api-us.smritea.ai".
 // If cfg.MaxRetries is 0, it defaults to 2.
 func NewClient(cfg ClientConfig) *SmriteaClient {
 	baseURL := cfg.BaseURL
 	if baseURL == "" {
-		baseURL = "https://api.smritea.ai"
+		baseURL = "https://api-us.smritea.ai"
 	}
 
 	maxRetries := cfg.MaxRetries

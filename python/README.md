@@ -67,7 +67,7 @@ from smritea import SmriteaClient
 client = SmriteaClient(
     api_key="sk-...",                    # required
     app_id="app_...",                    # required
-    base_url="https://api.smritea.ai",  # optional, default shown
+    base_url="https://api-us.smritea.ai",  # optional, default shown
     max_retries=2,                       # optional, default 2; 0 disables retry
 )
 ```

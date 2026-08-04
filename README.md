@@ -402,7 +402,7 @@ from smritea import SmriteaClient
 client = SmriteaClient(
     api_key="sk-...",  # required
     app_id="app_...",  # required
-    base_url="https://api.smritea.ai",  # optional, default shown
+    base_url="https://api-us.smritea.ai",  # optional, default shown
 )
 ```
 
@@ -414,7 +414,7 @@ import { SmriteaClient } from 'smritea-sdk';
 const client = new SmriteaClient({
   apiKey: 'sk-...',                       // required
   appId: 'app_...',                       // required
-  baseUrl: 'https://api.smritea.ai',      // optional, default shown
+  baseUrl: 'https://api-us.smritea.ai',      // optional, default shown
 });
 ```
 

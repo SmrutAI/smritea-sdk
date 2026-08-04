@@ -40,7 +40,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class SmriteaClient {
 
-  private static final String DEFAULT_BASE_URL = "https://api.smritea.ai";
+  private static final String DEFAULT_BASE_URL = "https://api-us.smritea.ai";
   private static final int DEFAULT_MAX_RETRIES = 2;
   private static final double RETRY_CAP_SECONDS = 30.0;
   private static final com.fasterxml.jackson.databind.ObjectMapper OBJECT_MAPPER =
@@ -65,7 +65,7 @@ public class SmriteaClient {
    *
    * @param apiKey the API key for authentication
    * @param appId the application ID injected into every request
-   * @param baseUrl the API base URL (defaults to https://api.smritea.ai if null)
+   * @param baseUrl the API base URL (defaults to https://api-us.smritea.ai if null)
    * @param maxRetries maximum number of retries on 429 responses (minimum 0)
    */
   public SmriteaClient(String apiKey, String appId, String baseUrl, int maxRetries) {

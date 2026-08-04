@@ -83,7 +83,7 @@ import smritea "github.com/SmrutAI/smritea-sdk/go"
 client := smritea.NewClient(smritea.ClientConfig{
     APIKey:     "sk-...",                   // required
     AppID:      "app_...",                  // required
-    BaseURL:    "https://api.smritea.ai",   // optional, default shown
+    BaseURL:    "https://api-us.smritea.ai",   // optional, default shown
     MaxRetries: 2,                          // optional, default 2
 })
 ```

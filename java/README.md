@@ -90,7 +90,7 @@ SmriteaClient client = new SmriteaClient("sk-...", "app_...");
 SmriteaClient client = new SmriteaClient(
     "sk-...",                           // apiKey — required
     "app_...",                          // appId — required
-    "https://api.smritea.ai",           // baseUrl — optional, default shown
+    "https://api-us.smritea.ai",           // baseUrl — optional, default shown
     2                                   // maxRetries — optional, default 2; 0 disables retry
 );
 ```

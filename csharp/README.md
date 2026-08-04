@@ -68,7 +68,7 @@ using Smritea.Sdk;
 var client = new SmriteaClient(
     apiKey: "sk-...",                           // required
     appId: "app_...",                           // required
-    baseUrl: "https://api.smritea.ai",         // optional, default shown
+    baseUrl: "https://api-us.smritea.ai",         // optional, default shown
     maxRetries: 2                               // optional, default 2; 0 disables retry
 );
 ```

@@ -21,7 +21,7 @@ export class SmriteaClient {
     this.appId = config.appId;
     this.maxRetries = config.maxRetries ?? 2;
     const configuration = new Configuration({
-      basePath: config.baseUrl?.replace(/\/$/, '') ?? 'https://api.smritea.ai',
+      basePath: config.baseUrl?.replace(/\/$/, '') ?? 'https://api-us.smritea.ai',
       apiKey: config.apiKey,
     });
     this.api = new SDKMemoryApi(configuration);

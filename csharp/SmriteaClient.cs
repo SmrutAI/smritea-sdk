@@ -16,7 +16,7 @@ using Smritea.Internal.Autogen.Model;
 /// </summary>
 public class SmriteaClient : IDisposable
 {
-    private const string DefaultBaseUrl = "https://api.smritea.ai";
+    private const string DefaultBaseUrl = "https://api-us.smritea.ai";
     private const int DefaultMaxRetries = 2;
     private const double RetryCap = 30.0;
 
@@ -30,7 +30,7 @@ public class SmriteaClient : IDisposable
     /// </summary>
     /// <param name="apiKey">API key for authentication.</param>
     /// <param name="appId">Application ID injected into every request.</param>
-    /// <param name="baseUrl">Base URL of the smritea API. Defaults to <c>https://api.smritea.ai</c>.</param>
+    /// <param name="baseUrl">Base URL of the smritea API. Defaults to <c>https://api-us.smritea.ai</c>.</param>
     /// <param name="maxRetries">Maximum number of retries on HTTP 429. Defaults to 2.</param>
     public SmriteaClient(string apiKey, string appId, string? baseUrl = null, int maxRetries = DefaultMaxRetries)
     {

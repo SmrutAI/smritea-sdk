@@ -115,7 +115,7 @@ export interface SearchOptions {
 export interface SmriteaClientConfig {
   apiKey: string;
   appId: string;
-  /** Override API base URL. Defaults to https://api.smritea.ai */
+  /** Override API base URL. Defaults to https://api-us.smritea.ai */
   baseUrl?: string;
   /**
    * Automatic retries on HTTP 429. Uses Retry-After header when the server

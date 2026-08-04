@@ -45,7 +45,7 @@ class SmriteaClient:
         self,
         api_key: str,
         app_id: str,
-        base_url: str = "https://api.smritea.ai",
+        base_url: str = "https://api-us.smritea.ai",
         max_retries: int = 2,
     ) -> None:
         """Initialise the smritea client.

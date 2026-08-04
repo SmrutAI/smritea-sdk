@@ -20,7 +20,7 @@ type SearchMemoriesResponse = autogen.MemorySearchMemoriesResponse
 type ClientConfig struct {
 	APIKey     string
 	AppID      string
-	BaseURL    string // default: https://api.smritea.ai
+	BaseURL    string // default: https://api-us.smritea.ai
 	MaxRetries int    // default: 2; 0 disables retry
 }
 
