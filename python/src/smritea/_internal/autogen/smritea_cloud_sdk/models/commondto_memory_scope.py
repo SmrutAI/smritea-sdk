@@ -20,6 +20,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,11 +28,11 @@ class CommondtoMemoryScope(BaseModel):
     """
     CommondtoMemoryScope
     """ # noqa: E501
-    actor_id: Optional[StrictStr] = None
-    actor_name: Optional[StrictStr] = None
+    actor_id: Optional[Annotated[str, Field(strict=True, max_length=64)]] = None
+    actor_name: Optional[Annotated[str, Field(strict=True, max_length=255)]] = None
     actor_type: Optional[StrictStr] = None
-    conversation_id: Optional[StrictStr] = None
-    participant_ids: Optional[List[StrictStr]] = Field(default=None, description="ParticipantIDs lists actor IDs whose shared conversations to search. The search service expands this to all conversations where ALL listed actors participated (AND semantics — conversations missing even one actor are excluded). Mutually exclusive with ConversationID; if both are set, ConversationID takes precedence. Minimum 2 IDs required.")
+    conversation_id: Optional[Annotated[str, Field(strict=True, max_length=64)]] = None
+    participant_ids: Optional[Annotated[List[StrictStr], Field(min_length=2)]] = Field(default=None, description="ParticipantIDs lists actor IDs whose shared conversations to search. The search service expands this to all conversations where ALL listed actors participated (AND semantics — conversations missing even one actor are excluded). Mutually exclusive with ConversationID; if both are set, ConversationID takes precedence. Minimum 2 IDs required.")
     source_type: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["actor_id", "actor_name", "actor_type", "conversation_id", "participant_ids", "source_type"]
 

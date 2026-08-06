@@ -128,6 +128,30 @@ namespace Smritea.Internal.Autogen.Model
         /// <returns>Validation Result</returns>
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
+            // MaxTokens (int) maximum
+            if (this.MaxTokens > (int)16384)
+            {
+                yield return new ValidationResult("Invalid value for MaxTokens, must be a value less than or equal to 16384.", new [] { "MaxTokens" });
+            }
+
+            // MaxTokens (int) minimum
+            if (this.MaxTokens < (int)0)
+            {
+                yield return new ValidationResult("Invalid value for MaxTokens, must be a value greater than or equal to 0.", new [] { "MaxTokens" });
+            }
+
+            // Temperature (decimal) maximum
+            if (this.Temperature > (decimal)2)
+            {
+                yield return new ValidationResult("Invalid value for Temperature, must be a value less than or equal to 2.", new [] { "Temperature" });
+            }
+
+            // Temperature (decimal) minimum
+            if (this.Temperature < (decimal)0)
+            {
+                yield return new ValidationResult("Invalid value for Temperature, must be a value greater than or equal to 0.", new [] { "Temperature" });
+            }
+
             yield break;
         }
     }

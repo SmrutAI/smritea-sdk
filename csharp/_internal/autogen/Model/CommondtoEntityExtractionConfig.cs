@@ -158,6 +158,78 @@ namespace Smritea.Internal.Autogen.Model
         /// <returns>Validation Result</returns>
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
+            // ContextWindow (int) maximum
+            if (this.ContextWindow > (int)50)
+            {
+                yield return new ValidationResult("Invalid value for ContextWindow, must be a value less than or equal to 50.", new [] { "ContextWindow" });
+            }
+
+            // ContextWindow (int) minimum
+            if (this.ContextWindow < (int)0)
+            {
+                yield return new ValidationResult("Invalid value for ContextWindow, must be a value greater than or equal to 0.", new [] { "ContextWindow" });
+            }
+
+            // FallbackMessages (int) maximum
+            if (this.FallbackMessages > (int)10)
+            {
+                yield return new ValidationResult("Invalid value for FallbackMessages, must be a value less than or equal to 10.", new [] { "FallbackMessages" });
+            }
+
+            // FallbackMessages (int) minimum
+            if (this.FallbackMessages < (int)0)
+            {
+                yield return new ValidationResult("Invalid value for FallbackMessages, must be a value greater than or equal to 0.", new [] { "FallbackMessages" });
+            }
+
+            // MaxPasses (int) maximum
+            if (this.MaxPasses > (int)5)
+            {
+                yield return new ValidationResult("Invalid value for MaxPasses, must be a value less than or equal to 5.", new [] { "MaxPasses" });
+            }
+
+            // MaxPasses (int) minimum
+            if (this.MaxPasses < (int)-1)
+            {
+                yield return new ValidationResult("Invalid value for MaxPasses, must be a value greater than or equal to -1.", new [] { "MaxPasses" });
+            }
+
+            // MaxTokens (int) maximum
+            if (this.MaxTokens > (int)16384)
+            {
+                yield return new ValidationResult("Invalid value for MaxTokens, must be a value less than or equal to 16384.", new [] { "MaxTokens" });
+            }
+
+            // MaxTokens (int) minimum
+            if (this.MaxTokens < (int)0)
+            {
+                yield return new ValidationResult("Invalid value for MaxTokens, must be a value greater than or equal to 0.", new [] { "MaxTokens" });
+            }
+
+            // MinConfidence (decimal) maximum
+            if (this.MinConfidence > (decimal)1)
+            {
+                yield return new ValidationResult("Invalid value for MinConfidence, must be a value less than or equal to 1.", new [] { "MinConfidence" });
+            }
+
+            // MinConfidence (decimal) minimum
+            if (this.MinConfidence < (decimal)0)
+            {
+                yield return new ValidationResult("Invalid value for MinConfidence, must be a value greater than or equal to 0.", new [] { "MinConfidence" });
+            }
+
+            // Temperature (decimal) maximum
+            if (this.Temperature > (decimal)2)
+            {
+                yield return new ValidationResult("Invalid value for Temperature, must be a value less than or equal to 2.", new [] { "Temperature" });
+            }
+
+            // Temperature (decimal) minimum
+            if (this.Temperature < (decimal)0)
+            {
+                yield return new ValidationResult("Invalid value for Temperature, must be a value greater than or equal to 0.", new [] { "Temperature" });
+            }
+
             yield break;
         }
     }

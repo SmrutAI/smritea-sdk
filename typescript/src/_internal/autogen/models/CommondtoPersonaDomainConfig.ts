@@ -36,7 +36,7 @@ export interface CommondtoPersonaDomainConfig {
      * @type {string}
      * @memberof CommondtoPersonaDomainConfig
      */
-    name?: string;
+    name: string;
     /**
      * Traits lists expected trait names for this domain (optional, for LLM guidance).
      * @type {Array<string>}
@@ -49,6 +49,7 @@ export interface CommondtoPersonaDomainConfig {
  * Check if a given object implements the CommondtoPersonaDomainConfig interface.
  */
 export function instanceOfCommondtoPersonaDomainConfig(value: object): value is CommondtoPersonaDomainConfig {
+    if (!('name' in value) || value['name'] === undefined) return false;
     return true;
 }
 
@@ -64,7 +65,7 @@ export function CommondtoPersonaDomainConfigFromJSONTyped(json: any, ignoreDiscr
         
         'description': json['description'] == null ? undefined : json['description'],
         'isDefault': json['is_default'] == null ? undefined : json['is_default'],
-        'name': json['name'] == null ? undefined : json['name'],
+        'name': json['name'],
         'traits': json['traits'] == null ? undefined : json['traits'],
     };
 }

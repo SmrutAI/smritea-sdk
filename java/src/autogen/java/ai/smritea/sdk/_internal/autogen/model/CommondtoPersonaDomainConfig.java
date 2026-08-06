@@ -51,7 +51,7 @@ public class CommondtoPersonaDomainConfig {
   private Boolean isDefault;
 
   public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   private String name;
 
   public static final String JSON_PROPERTY_TRAITS = "traits";
@@ -109,7 +109,7 @@ public class CommondtoPersonaDomainConfig {
   }
 
 
-  public CommondtoPersonaDomainConfig name(@javax.annotation.Nullable String name) {
+  public CommondtoPersonaDomainConfig name(@javax.annotation.Nonnull String name) {
     this.name = name;
     return this;
   }
@@ -118,17 +118,17 @@ public class CommondtoPersonaDomainConfig {
    * Name is the domain identifier (e.g., \&quot;preferences\&quot;, \&quot;interests\&quot;, \&quot;demographics\&quot;).
    * @return name
    */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public String getName() {
     return name;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setName(@javax.annotation.Nullable String name) {
+  @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setName(@javax.annotation.Nonnull String name) {
     this.name = name;
   }
 

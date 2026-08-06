@@ -62,8 +62,8 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 // the extracted facts, plus metadata (FactsExtracted, SkippedCount, UpdatedCount).
 func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOptions) (*MemoryCreationResult, error) {
 	req := autogen.MemoryCreateMemoryRequest{
-		AppId:   &c.appID,
-		Content: &content,
+		AppId:   c.appID,
+		Content: content,
 	}
 
 	if opts != nil {

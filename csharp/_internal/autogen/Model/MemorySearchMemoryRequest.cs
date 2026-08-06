@@ -199,6 +199,30 @@ namespace Smritea.Internal.Autogen.Model
         /// <returns>Validation Result</returns>
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
+            // GraphDepth (int) maximum
+            if (this.GraphDepth > (int)5)
+            {
+                yield return new ValidationResult("Invalid value for GraphDepth, must be a value less than or equal to 5.", new [] { "GraphDepth" });
+            }
+
+            // Limit (int) maximum
+            if (this.Limit > (int)100)
+            {
+                yield return new ValidationResult("Invalid value for Limit, must be a value less than or equal to 100.", new [] { "Limit" });
+            }
+
+            // Threshold (decimal) maximum
+            if (this.Threshold > (decimal)1)
+            {
+                yield return new ValidationResult("Invalid value for Threshold, must be a value less than or equal to 1.", new [] { "Threshold" });
+            }
+
+            // Threshold (decimal) minimum
+            if (this.Threshold < (decimal)0)
+            {
+                yield return new ValidationResult("Invalid value for Threshold, must be a value greater than or equal to 0.", new [] { "Threshold" });
+            }
+
             yield break;
         }
     }

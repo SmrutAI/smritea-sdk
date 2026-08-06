@@ -99,6 +99,7 @@ public class CommondtoRelativeStandingConfig {
 
   /**
    * DecayFactor modulates the temporal decay rate: effectiveRate &#x3D; baseRate × decay_factor. 0 &#x3D; no decay (pinned), 0.2 &#x3D; light, 1.0 &#x3D; standard, 3.0+ &#x3D; aggressive.
+   * minimum: 0
    * @return decayFactor
    */
   @javax.annotation.Nullable
@@ -147,6 +148,8 @@ public class CommondtoRelativeStandingConfig {
 
   /**
    * Importance is the memory importance score (0-1, default 1.0). Used as a ranking signal in RRF reranking — higher importance &#x3D; better rank.
+   * minimum: 0
+   * maximum: 1
    * @return importance
    */
   @javax.annotation.Nullable

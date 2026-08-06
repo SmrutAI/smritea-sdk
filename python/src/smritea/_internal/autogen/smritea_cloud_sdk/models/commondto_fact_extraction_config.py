@@ -18,8 +18,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,12 +28,12 @@ class CommondtoFactExtractionConfig(BaseModel):
     """
     CommondtoFactExtractionConfig
     """ # noqa: E501
-    max_passes: Optional[StrictInt] = Field(default=None, description="MaxPasses controls how many extraction passes to perform. -1 = explicitly skip fact extraction (sentinel value). 0 = not specified (Go zero value), use default. 1-5 = run N extraction passes. Default is 1 (single pass) so that fact extraction is enabled by default.")
-    max_tokens: Optional[StrictInt] = Field(default=None, description="MaxTokens is the maximum completion tokens for LLM responses. 0 = not set (use default). TODO(https://linear.app/bityantriki/issue/BIT-83): revert gte=0 to gte=100 once pedantigo applies defaults to nested structs during Validate()")
-    min_importance: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="MinImportance is the minimum importance threshold for extracted facts (0.0 to 1.0). Facts below this threshold are filtered out.")
+    max_passes: Optional[Annotated[int, Field(le=5, strict=True, ge=-1)]] = Field(default=None, description="MaxPasses controls how many extraction passes to perform. -1 = explicitly skip fact extraction (sentinel value). 0 = not specified (Go zero value), use default. 1-5 = run N extraction passes. Default is 1 (single pass) so that fact extraction is enabled by default.")
+    max_tokens: Optional[Annotated[int, Field(le=16384, strict=True, ge=0)]] = Field(default=None, description="MaxTokens is the maximum completion tokens for LLM responses. 0 = not set (use default). TODO(https://linear.app/bityantriki/issue/BIT-83): revert gte=0 to gte=100 once pedantigo applies defaults to nested structs during Validate()")
+    min_importance: Optional[Union[Annotated[float, Field(le=1, strict=True, ge=0)], Annotated[int, Field(le=1, strict=True, ge=0)]]] = Field(default=None, description="MinImportance is the minimum importance threshold for extracted facts (0.0 to 1.0). Facts below this threshold are filtered out.")
     model: Optional[StrictStr] = Field(default=None, description="Model is the LLM model to use (empty = use provider default).")
     strategy: Optional[StrictStr] = Field(default=None, description="Strategy is the fact extraction strategy to use. Default: \"llm_fact_extraction\"")
-    temperature: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Temperature controls LLM randomness (0.0 = deterministic, higher = creative).")
+    temperature: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0)], Annotated[int, Field(le=2, strict=True, ge=0)]]] = Field(default=None, description="Temperature controls LLM randomness (0.0 = deterministic, higher = creative).")
     __properties: ClassVar[List[str]] = ["max_passes", "max_tokens", "min_importance", "model", "strategy", "temperature"]
 
     @field_validator('strategy')

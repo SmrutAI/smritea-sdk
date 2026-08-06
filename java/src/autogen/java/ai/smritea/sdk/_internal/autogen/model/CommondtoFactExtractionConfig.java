@@ -110,6 +110,8 @@ public class CommondtoFactExtractionConfig {
 
   /**
    * MaxPasses controls how many extraction passes to perform. -1 &#x3D; explicitly skip fact extraction (sentinel value). 0 &#x3D; not specified (Go zero value), use default. 1-5 &#x3D; run N extraction passes. Default is 1 (single pass) so that fact extraction is enabled by default.
+   * minimum: -1
+   * maximum: 5
    * @return maxPasses
    */
   @javax.annotation.Nullable
@@ -134,6 +136,8 @@ public class CommondtoFactExtractionConfig {
 
   /**
    * MaxTokens is the maximum completion tokens for LLM responses. 0 &#x3D; not set (use default). TODO(https://linear.app/bityantriki/issue/BIT-83): revert gte&#x3D;0 to gte&#x3D;100 once pedantigo applies defaults to nested structs during Validate()
+   * minimum: 0
+   * maximum: 16384
    * @return maxTokens
    */
   @javax.annotation.Nullable
@@ -158,6 +162,8 @@ public class CommondtoFactExtractionConfig {
 
   /**
    * MinImportance is the minimum importance threshold for extracted facts (0.0 to 1.0). Facts below this threshold are filtered out.
+   * minimum: 0
+   * maximum: 1
    * @return minImportance
    */
   @javax.annotation.Nullable
@@ -230,6 +236,8 @@ public class CommondtoFactExtractionConfig {
 
   /**
    * Temperature controls LLM randomness (0.0 &#x3D; deterministic, higher &#x3D; creative).
+   * minimum: 0
+   * maximum: 2
    * @return temperature
    */
   @javax.annotation.Nullable

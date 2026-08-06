@@ -133,6 +133,24 @@ namespace Smritea.Internal.Autogen.Model
         /// <returns>Validation Result</returns>
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
+            // DecayFactor (decimal) minimum
+            if (this.DecayFactor < (decimal)0)
+            {
+                yield return new ValidationResult("Invalid value for DecayFactor, must be a value greater than or equal to 0.", new [] { "DecayFactor" });
+            }
+
+            // Importance (decimal) maximum
+            if (this.Importance > (decimal)1)
+            {
+                yield return new ValidationResult("Invalid value for Importance, must be a value less than or equal to 1.", new [] { "Importance" });
+            }
+
+            // Importance (decimal) minimum
+            if (this.Importance < (decimal)0)
+            {
+                yield return new ValidationResult("Invalid value for Importance, must be a value greater than or equal to 0.", new [] { "Importance" });
+            }
+
             yield break;
         }
     }

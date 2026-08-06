@@ -18,8 +18,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,15 +28,15 @@ class CommondtoEntityExtractionConfig(BaseModel):
     """
     CommondtoEntityExtractionConfig
     """ # noqa: E501
-    context_window: Optional[StrictInt] = Field(default=None, description="ContextWindow is the number of previous messages to include in context. Only used when EnableContext is true. 0 means use default (10 messages).")
+    context_window: Optional[Annotated[int, Field(le=50, strict=True, ge=0)]] = Field(default=None, description="ContextWindow is the number of previous messages to include in context. Only used when EnableContext is true. 0 means use default (10 messages).")
     enable_context: Optional[StrictBool] = Field(default=None, description="EnableContext enables context-aware extraction using conversation history. When true, extraction considers previous messages in the conversation for better entity resolution and relationship detection.")
     entity_types: Optional[List[StrictStr]] = Field(default=None, description="EntityTypes filters which entity types to extract (empty = all types). Valid types: person, organization, concept, location, event, product, other")
-    fallback_messages: Optional[StrictInt] = Field(default=None, description="FallbackMessages is the minimum number of messages to include even if the conversation is shorter than ContextWindow. Prevents empty context.")
-    max_passes: Optional[StrictInt] = Field(default=None, description="MaxPasses controls how many extraction passes to perform. -1 = explicitly skip entity extraction (sentinel value). 0 = not specified (Go zero value), use default. 1-5 = run N extraction passes. Multiple passes can improve extraction quality but increase cost and latency.")
-    max_tokens: Optional[StrictInt] = Field(default=None, description="MaxTokens is the maximum completion tokens for LLM responses. 0 = not set (use default). Higher values allow more entities but increase cost. TODO(https://linear.app/bityantriki/issue/BIT-83): revert gte=0 to gte=100 once pedantigo applies defaults to nested structs during Validate()")
-    min_confidence: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="MinConfidence is the minimum confidence threshold for extracted entities (0.0 to 1.0). Entities below this threshold are filtered out.")
+    fallback_messages: Optional[Annotated[int, Field(le=10, strict=True, ge=0)]] = Field(default=None, description="FallbackMessages is the minimum number of messages to include even if the conversation is shorter than ContextWindow. Prevents empty context.")
+    max_passes: Optional[Annotated[int, Field(le=5, strict=True, ge=-1)]] = Field(default=None, description="MaxPasses controls how many extraction passes to perform. -1 = explicitly skip entity extraction (sentinel value). 0 = not specified (Go zero value), use default. 1-5 = run N extraction passes. Multiple passes can improve extraction quality but increase cost and latency.")
+    max_tokens: Optional[Annotated[int, Field(le=16384, strict=True, ge=0)]] = Field(default=None, description="MaxTokens is the maximum completion tokens for LLM responses. 0 = not set (use default). Higher values allow more entities but increase cost. TODO(https://linear.app/bityantriki/issue/BIT-83): revert gte=0 to gte=100 once pedantigo applies defaults to nested structs during Validate()")
+    min_confidence: Optional[Union[Annotated[float, Field(le=1, strict=True, ge=0)], Annotated[int, Field(le=1, strict=True, ge=0)]]] = Field(default=None, description="MinConfidence is the minimum confidence threshold for extracted entities (0.0 to 1.0). Entities below this threshold are filtered out.")
     model: Optional[StrictStr] = Field(default=None, description="Model is the LLM model to use (empty = use provider default). Examples: \"gpt-4\", \"gpt-3.5-turbo\", \"llama-3.3-70b-versatile\"")
-    temperature: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Temperature controls LLM randomness (0.0 = deterministic, higher = creative). For extraction, lower values (0.0-0.3) are recommended for consistency.")
+    temperature: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0)], Annotated[int, Field(le=2, strict=True, ge=0)]]] = Field(default=None, description="Temperature controls LLM randomness (0.0 = deterministic, higher = creative). For extraction, lower values (0.0-0.3) are recommended for consistency.")
     __properties: ClassVar[List[str]] = ["context_window", "enable_context", "entity_types", "fallback_messages", "max_passes", "max_tokens", "min_confidence", "model", "temperature"]
 
     model_config = ConfigDict(

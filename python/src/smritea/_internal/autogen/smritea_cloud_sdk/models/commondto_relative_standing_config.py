@@ -18,8 +18,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,9 +28,9 @@ class CommondtoRelativeStandingConfig(BaseModel):
     """
     CommondtoRelativeStandingConfig
     """ # noqa: E501
-    decay_factor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="DecayFactor modulates the temporal decay rate: effectiveRate = baseRate × decay_factor. 0 = no decay (pinned), 0.2 = light, 1.0 = standard, 3.0+ = aggressive.")
+    decay_factor: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="DecayFactor modulates the temporal decay rate: effectiveRate = baseRate × decay_factor. 0 = no decay (pinned), 0.2 = light, 1.0 = standard, 3.0+ = aggressive.")
     decay_function: Optional[StrictStr] = Field(default=None, description="DecayFunction selects the temporal decay algorithm. Defaults to \"exponential\". Options: exponential, gaussian, linear.")
-    importance: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Importance is the memory importance score (0-1, default 1.0). Used as a ranking signal in RRF reranking — higher importance = better rank.")
+    importance: Optional[Union[Annotated[float, Field(le=1, strict=True, ge=0)], Annotated[int, Field(le=1, strict=True, ge=0)]]] = Field(default=None, description="Importance is the memory importance score (0-1, default 1.0). Used as a ranking signal in RRF reranking — higher importance = better rank.")
     __properties: ClassVar[List[str]] = ["decay_factor", "decay_function", "importance"]
 
     @field_validator('decay_function')

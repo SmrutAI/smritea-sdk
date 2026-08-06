@@ -29,7 +29,7 @@ class CommondtoPersonaDomainConfig(BaseModel):
     """ # noqa: E501
     description: Optional[StrictStr] = Field(default=None, description="Description describes what kind of traits this domain captures.")
     is_default: Optional[StrictBool] = Field(default=None, description="IsDefault indicates if this domain is included by default.")
-    name: Optional[StrictStr] = Field(default=None, description="Name is the domain identifier (e.g., \"preferences\", \"interests\", \"demographics\").")
+    name: StrictStr = Field(description="Name is the domain identifier (e.g., \"preferences\", \"interests\", \"demographics\").")
     traits: Optional[List[StrictStr]] = Field(default=None, description="Traits lists expected trait names for this domain (optional, for LLM guidance).")
     __properties: ClassVar[List[str]] = ["description", "is_default", "name", "traits"]
 

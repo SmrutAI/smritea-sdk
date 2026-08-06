@@ -18,8 +18,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_persona_domain_config import CommondtoPersonaDomainConfig
 from typing import Optional, Set
 from typing_extensions import Self
@@ -31,9 +32,9 @@ class CommondtoPersonaExtractionConfig(BaseModel):
     actor_types: Optional[List[StrictStr]] = Field(default=None, description="ActorTypes filters which actor types to extract personas for (empty = all types). Valid types: user, agent, system")
     domains: Optional[List[CommondtoPersonaDomainConfig]] = Field(default=None, description="Domains specifies which persona domains to extract. Each domain defines a category of traits (preferences, interests, etc.).")
     enabled: Optional[StrictBool] = Field(default=None, description="Enabled controls whether persona extraction is active. When false, no persona traits are extracted from memory content. Unlike Entity/Fact extraction, persona has no multi-pass reflection — it runs a single LLM call.")
-    max_tokens: Optional[StrictInt] = Field(default=None, description="MaxTokens is the maximum completion tokens for LLM responses.")
+    max_tokens: Optional[Annotated[int, Field(le=16384, strict=True, ge=0)]] = Field(default=None, description="MaxTokens is the maximum completion tokens for LLM responses.")
     model: Optional[StrictStr] = Field(default=None, description="Model is the LLM model to use (empty = use provider default).")
-    temperature: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Temperature controls LLM randomness for extraction.")
+    temperature: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0)], Annotated[int, Field(le=2, strict=True, ge=0)]]] = Field(default=None, description="Temperature controls LLM randomness for extraction.")
     __properties: ClassVar[List[str]] = ["actor_types", "domains", "enabled", "max_tokens", "model", "temperature"]
 
     model_config = ConfigDict(

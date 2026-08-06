@@ -168,6 +168,8 @@ public class CommondtoPersonaExtractionConfig {
 
   /**
    * MaxTokens is the maximum completion tokens for LLM responses.
+   * minimum: 0
+   * maximum: 16384
    * @return maxTokens
    */
   @javax.annotation.Nullable
@@ -216,6 +218,8 @@ public class CommondtoPersonaExtractionConfig {
 
   /**
    * Temperature controls LLM randomness for extraction.
+   * minimum: 0
+   * maximum: 2
    * @return temperature
    */
   @javax.annotation.Nullable

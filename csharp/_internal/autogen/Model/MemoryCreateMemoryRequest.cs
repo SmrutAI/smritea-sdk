@@ -36,8 +36,13 @@ namespace Smritea.Internal.Autogen.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryCreateMemoryRequest" /> class.
         /// </summary>
-        /// <param name="appId">AppID is the application identifier (required).</param>
-        /// <param name="content">Content is the memory content (required, min 1 char).</param>
+        [JsonConstructorAttribute]
+        protected MemoryCreateMemoryRequest() { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MemoryCreateMemoryRequest" /> class.
+        /// </summary>
+        /// <param name="appId">AppID is the application identifier (required) (required).</param>
+        /// <param name="content">Content is the memory content (required, min 1 char) (required).</param>
         /// <param name="entityExtractionOverrides">EntityExtractionOverrides overrides App-level entity extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values..</param>
         /// <param name="eventOccurredAt">EventOccurredAt is the timestamp when this content was created or occurred (optional). Used by the extraction LLM to resolve relative temporal expressions like \&quot;last year\&quot; or \&quot;yesterday\&quot;. If nil, defaults to time.Now() inside the pipeline..</param>
         /// <param name="factExtractionOverrides">FactExtractionOverrides overrides App-level fact extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values..</param>
@@ -47,7 +52,17 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="scope">Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before..</param>
         public MemoryCreateMemoryRequest(string appId = default, string content = default, CommondtoEntityExtractionConfig entityExtractionOverrides = default, string eventOccurredAt = default, CommondtoFactExtractionConfig factExtractionOverrides = default, Object metadata = default, CommondtoPersonaExtractionConfig personaExtractionOverrides = default, CommondtoRelativeStandingConfig relativeStanding = default, CommondtoMemoryScope scope = default)
         {
+            // to ensure "appId" is required (not null)
+            if (appId == null)
+            {
+                throw new ArgumentNullException("appId is a required property for MemoryCreateMemoryRequest and cannot be null");
+            }
             this.AppId = appId;
+            // to ensure "content" is required (not null)
+            if (content == null)
+            {
+                throw new ArgumentNullException("content is a required property for MemoryCreateMemoryRequest and cannot be null");
+            }
             this.Content = content;
             this.EntityExtractionOverrides = entityExtractionOverrides;
             this.EventOccurredAt = eventOccurredAt;
@@ -62,14 +77,14 @@ namespace Smritea.Internal.Autogen.Model
         /// AppID is the application identifier (required)
         /// </summary>
         /// <value>AppID is the application identifier (required)</value>
-        [DataMember(Name = "app_id", EmitDefaultValue = false)]
+        [DataMember(Name = "app_id", IsRequired = true, EmitDefaultValue = true)]
         public string AppId { get; set; }
 
         /// <summary>
         /// Content is the memory content (required, min 1 char)
         /// </summary>
         /// <value>Content is the memory content (required, min 1 char)</value>
-        [DataMember(Name = "content", EmitDefaultValue = false)]
+        [DataMember(Name = "content", IsRequired = true, EmitDefaultValue = true)]
         public string Content { get; set; }
 
         /// <summary>
@@ -158,6 +173,24 @@ namespace Smritea.Internal.Autogen.Model
         /// <returns>Validation Result</returns>
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
+            // AppId (string) maxLength
+            if (this.AppId != null && this.AppId.Length > 24)
+            {
+                yield return new ValidationResult("Invalid value for AppId, length must be less than 24.", new [] { "AppId" });
+            }
+
+            // AppId (string) minLength
+            if (this.AppId != null && this.AppId.Length < 1)
+            {
+                yield return new ValidationResult("Invalid value for AppId, length must be greater than 1.", new [] { "AppId" });
+            }
+
+            // Content (string) minLength
+            if (this.Content != null && this.Content.Length < 1)
+            {
+                yield return new ValidationResult("Invalid value for Content, length must be greater than 1.", new [] { "Content" });
+            }
+
             yield break;
         }
     }

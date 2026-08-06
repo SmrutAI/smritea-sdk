@@ -173,6 +173,24 @@ namespace Smritea.Internal.Autogen.Model
         /// <returns>Validation Result</returns>
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
+            // ActorId (string) maxLength
+            if (this.ActorId != null && this.ActorId.Length > 64)
+            {
+                yield return new ValidationResult("Invalid value for ActorId, length must be less than 64.", new [] { "ActorId" });
+            }
+
+            // ActorName (string) maxLength
+            if (this.ActorName != null && this.ActorName.Length > 255)
+            {
+                yield return new ValidationResult("Invalid value for ActorName, length must be less than 255.", new [] { "ActorName" });
+            }
+
+            // ConversationId (string) maxLength
+            if (this.ConversationId != null && this.ConversationId.Length > 64)
+            {
+                yield return new ValidationResult("Invalid value for ConversationId, length must be less than 64.", new [] { "ConversationId" });
+            }
+
             yield break;
         }
     }

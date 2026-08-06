@@ -51,11 +51,11 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class MemoryCreateMemoryRequest {
   public static final String JSON_PROPERTY_APP_ID = "app_id";
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   private String appId;
 
   public static final String JSON_PROPERTY_CONTENT = "content";
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   private String content;
 
   public static final String JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES = "entity_extraction_overrides";
@@ -89,7 +89,7 @@ public class MemoryCreateMemoryRequest {
   public MemoryCreateMemoryRequest() { 
   }
 
-  public MemoryCreateMemoryRequest appId(@javax.annotation.Nullable String appId) {
+  public MemoryCreateMemoryRequest appId(@javax.annotation.Nonnull String appId) {
     this.appId = appId;
     return this;
   }
@@ -98,22 +98,22 @@ public class MemoryCreateMemoryRequest {
    * AppID is the application identifier (required)
    * @return appId
    */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_APP_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_APP_ID, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public String getAppId() {
     return appId;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_APP_ID, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setAppId(@javax.annotation.Nullable String appId) {
+  @JsonProperty(value = JSON_PROPERTY_APP_ID, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setAppId(@javax.annotation.Nonnull String appId) {
     this.appId = appId;
   }
 
 
-  public MemoryCreateMemoryRequest content(@javax.annotation.Nullable String content) {
+  public MemoryCreateMemoryRequest content(@javax.annotation.Nonnull String content) {
     this.content = content;
     return this;
   }
@@ -122,17 +122,17 @@ public class MemoryCreateMemoryRequest {
    * Content is the memory content (required, min 1 char)
    * @return content
    */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public String getContent() {
     return content;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setContent(@javax.annotation.Nullable String content) {
+  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setContent(@javax.annotation.Nonnull String content) {
     this.content = content;
   }
 

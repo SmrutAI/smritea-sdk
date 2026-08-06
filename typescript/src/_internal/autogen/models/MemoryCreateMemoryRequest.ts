@@ -60,13 +60,13 @@ export interface MemoryCreateMemoryRequest {
      * @type {string}
      * @memberof MemoryCreateMemoryRequest
      */
-    appId?: string;
+    appId: string;
     /**
      * Content is the memory content (required, min 1 char)
      * @type {string}
      * @memberof MemoryCreateMemoryRequest
      */
-    content?: string;
+    content: string;
     /**
      * EntityExtractionOverrides overrides App-level entity extraction config (nil = use App defaults).
      * Only non-zero fields in overrides replace app-level values.
@@ -123,6 +123,8 @@ export interface MemoryCreateMemoryRequest {
  * Check if a given object implements the MemoryCreateMemoryRequest interface.
  */
 export function instanceOfMemoryCreateMemoryRequest(value: object): value is MemoryCreateMemoryRequest {
+    if (!('appId' in value) || value['appId'] === undefined) return false;
+    if (!('content' in value) || value['content'] === undefined) return false;
     return true;
 }
 
@@ -136,8 +138,8 @@ export function MemoryCreateMemoryRequestFromJSONTyped(json: any, ignoreDiscrimi
     }
     return {
         
-        'appId': json['app_id'] == null ? undefined : json['app_id'],
-        'content': json['content'] == null ? undefined : json['content'],
+        'appId': json['app_id'],
+        'content': json['content'],
         'entityExtractionOverrides': json['entity_extraction_overrides'] == null ? undefined : CommondtoEntityExtractionConfigFromJSON(json['entity_extraction_overrides']),
         'eventOccurredAt': json['event_occurred_at'] == null ? undefined : json['event_occurred_at'],
         'factExtractionOverrides': json['fact_extraction_overrides'] == null ? undefined : CommondtoFactExtractionConfigFromJSON(json['fact_extraction_overrides']),

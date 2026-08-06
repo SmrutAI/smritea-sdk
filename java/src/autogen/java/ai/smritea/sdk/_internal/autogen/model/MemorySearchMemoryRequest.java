@@ -158,6 +158,7 @@ public class MemorySearchMemoryRequest {
 
   /**
    * 0&#x3D;use app config, 1-5&#x3D;override traversal depth
+   * maximum: 5
    * @return graphDepth
    */
   @javax.annotation.Nullable
@@ -182,6 +183,7 @@ public class MemorySearchMemoryRequest {
 
   /**
    * Get limit
+   * maximum: 100
    * @return limit
    */
   @javax.annotation.Nullable
@@ -326,6 +328,8 @@ public class MemorySearchMemoryRequest {
 
   /**
    * 0&#x3D;no filtering (pipeline uses RRF scores, not cosine similarity)
+   * minimum: 0
+   * maximum: 1
    * @return threshold
    */
   @javax.annotation.Nullable

@@ -20,6 +20,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_entity_extraction_config import CommondtoEntityExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_fact_extraction_config import CommondtoFactExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_memory_scope import CommondtoMemoryScope
@@ -32,8 +33,8 @@ class MemoryCreateMemoryRequest(BaseModel):
     """
     MemoryCreateMemoryRequest
     """ # noqa: E501
-    app_id: Optional[StrictStr] = Field(default=None, description="AppID is the application identifier (required)")
-    content: Optional[StrictStr] = Field(default=None, description="Content is the memory content (required, min 1 char)")
+    app_id: Annotated[str, Field(min_length=1, strict=True, max_length=24)] = Field(description="AppID is the application identifier (required)")
+    content: Annotated[str, Field(min_length=1, strict=True)] = Field(description="Content is the memory content (required, min 1 char)")
     entity_extraction_overrides: Optional[CommondtoEntityExtractionConfig] = Field(default=None, description="EntityExtractionOverrides overrides App-level entity extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.")
     event_occurred_at: Optional[StrictStr] = Field(default=None, description="EventOccurredAt is the timestamp when this content was created or occurred (optional). Used by the extraction LLM to resolve relative temporal expressions like \"last year\" or \"yesterday\". If nil, defaults to time.Now() inside the pipeline.")
     fact_extraction_overrides: Optional[CommondtoFactExtractionConfig] = Field(default=None, description="FactExtractionOverrides overrides App-level fact extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.")

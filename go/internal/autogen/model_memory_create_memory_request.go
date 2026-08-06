@@ -13,6 +13,8 @@ package autogen
 
 import (
 	"encoding/json"
+	"bytes"
+	"fmt"
 )
 
 // checks if the MemoryCreateMemoryRequest type satisfies the MappedNullable interface at compile time
@@ -21,9 +23,9 @@ var _ MappedNullable = &MemoryCreateMemoryRequest{}
 // MemoryCreateMemoryRequest struct for MemoryCreateMemoryRequest
 type MemoryCreateMemoryRequest struct {
 	// AppID is the application identifier (required)
-	AppId *string `json:"app_id,omitempty"`
+	AppId string `json:"app_id"`
 	// Content is the memory content (required, min 1 char)
-	Content *string `json:"content,omitempty"`
+	Content string `json:"content"`
 	// EntityExtractionOverrides overrides App-level entity extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.
 	EntityExtractionOverrides *CommondtoEntityExtractionConfig `json:"entity_extraction_overrides,omitempty"`
 	// EventOccurredAt is the timestamp when this content was created or occurred (optional). Used by the extraction LLM to resolve relative temporal expressions like \"last year\" or \"yesterday\". If nil, defaults to time.Now() inside the pipeline.
@@ -40,12 +42,16 @@ type MemoryCreateMemoryRequest struct {
 	Scope *CommondtoMemoryScope `json:"scope,omitempty"`
 }
 
+type _MemoryCreateMemoryRequest MemoryCreateMemoryRequest
+
 // NewMemoryCreateMemoryRequest instantiates a new MemoryCreateMemoryRequest object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewMemoryCreateMemoryRequest() *MemoryCreateMemoryRequest {
+func NewMemoryCreateMemoryRequest(appId string, content string) *MemoryCreateMemoryRequest {
 	this := MemoryCreateMemoryRequest{}
+	this.AppId = appId
+	this.Content = content
 	return &this
 }
 
@@ -57,68 +63,52 @@ func NewMemoryCreateMemoryRequestWithDefaults() *MemoryCreateMemoryRequest {
 	return &this
 }
 
-// GetAppId returns the AppId field value if set, zero value otherwise.
+// GetAppId returns the AppId field value
 func (o *MemoryCreateMemoryRequest) GetAppId() string {
-	if o == nil || IsNil(o.AppId) {
+	if o == nil {
 		var ret string
 		return ret
 	}
-	return *o.AppId
+
+	return o.AppId
 }
 
-// GetAppIdOk returns a tuple with the AppId field value if set, nil otherwise
+// GetAppIdOk returns a tuple with the AppId field value
 // and a boolean to check if the value has been set.
 func (o *MemoryCreateMemoryRequest) GetAppIdOk() (*string, bool) {
-	if o == nil || IsNil(o.AppId) {
+	if o == nil {
 		return nil, false
 	}
-	return o.AppId, true
+	return &o.AppId, true
 }
 
-// HasAppId returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryRequest) HasAppId() bool {
-	if o != nil && !IsNil(o.AppId) {
-		return true
-	}
-
-	return false
-}
-
-// SetAppId gets a reference to the given string and assigns it to the AppId field.
+// SetAppId sets field value
 func (o *MemoryCreateMemoryRequest) SetAppId(v string) {
-	o.AppId = &v
+	o.AppId = v
 }
 
-// GetContent returns the Content field value if set, zero value otherwise.
+// GetContent returns the Content field value
 func (o *MemoryCreateMemoryRequest) GetContent() string {
-	if o == nil || IsNil(o.Content) {
+	if o == nil {
 		var ret string
 		return ret
 	}
-	return *o.Content
+
+	return o.Content
 }
 
-// GetContentOk returns a tuple with the Content field value if set, nil otherwise
+// GetContentOk returns a tuple with the Content field value
 // and a boolean to check if the value has been set.
 func (o *MemoryCreateMemoryRequest) GetContentOk() (*string, bool) {
-	if o == nil || IsNil(o.Content) {
+	if o == nil {
 		return nil, false
 	}
-	return o.Content, true
+	return &o.Content, true
 }
 
-// HasContent returns a boolean if a field has been set.
-func (o *MemoryCreateMemoryRequest) HasContent() bool {
-	if o != nil && !IsNil(o.Content) {
-		return true
-	}
-
-	return false
-}
-
-// SetContent gets a reference to the given string and assigns it to the Content field.
+// SetContent sets field value
 func (o *MemoryCreateMemoryRequest) SetContent(v string) {
-	o.Content = &v
+	o.Content = v
 }
 
 // GetEntityExtractionOverrides returns the EntityExtractionOverrides field value if set, zero value otherwise.
@@ -355,12 +345,8 @@ func (o MemoryCreateMemoryRequest) MarshalJSON() ([]byte, error) {
 
 func (o MemoryCreateMemoryRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.AppId) {
-		toSerialize["app_id"] = o.AppId
-	}
-	if !IsNil(o.Content) {
-		toSerialize["content"] = o.Content
-	}
+	toSerialize["app_id"] = o.AppId
+	toSerialize["content"] = o.Content
 	if !IsNil(o.EntityExtractionOverrides) {
 		toSerialize["entity_extraction_overrides"] = o.EntityExtractionOverrides
 	}
@@ -383,6 +369,44 @@ func (o MemoryCreateMemoryRequest) ToMap() (map[string]interface{}, error) {
 		toSerialize["scope"] = o.Scope
 	}
 	return toSerialize, nil
+}
+
+func (o *MemoryCreateMemoryRequest) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"app_id",
+		"content",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varMemoryCreateMemoryRequest := _MemoryCreateMemoryRequest{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varMemoryCreateMemoryRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = MemoryCreateMemoryRequest(varMemoryCreateMemoryRequest)
+
+	return err
 }
 
 type NullableMemoryCreateMemoryRequest struct {

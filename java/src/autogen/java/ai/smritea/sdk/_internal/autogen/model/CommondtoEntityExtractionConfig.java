@@ -94,6 +94,8 @@ public class CommondtoEntityExtractionConfig {
 
   /**
    * ContextWindow is the number of previous messages to include in context. Only used when EnableContext is true. 0 means use default (10 messages).
+   * minimum: 0
+   * maximum: 50
    * @return contextWindow
    */
   @javax.annotation.Nullable
@@ -174,6 +176,8 @@ public class CommondtoEntityExtractionConfig {
 
   /**
    * FallbackMessages is the minimum number of messages to include even if the conversation is shorter than ContextWindow. Prevents empty context.
+   * minimum: 0
+   * maximum: 10
    * @return fallbackMessages
    */
   @javax.annotation.Nullable
@@ -198,6 +202,8 @@ public class CommondtoEntityExtractionConfig {
 
   /**
    * MaxPasses controls how many extraction passes to perform. -1 &#x3D; explicitly skip entity extraction (sentinel value). 0 &#x3D; not specified (Go zero value), use default. 1-5 &#x3D; run N extraction passes. Multiple passes can improve extraction quality but increase cost and latency.
+   * minimum: -1
+   * maximum: 5
    * @return maxPasses
    */
   @javax.annotation.Nullable
@@ -222,6 +228,8 @@ public class CommondtoEntityExtractionConfig {
 
   /**
    * MaxTokens is the maximum completion tokens for LLM responses. 0 &#x3D; not set (use default). Higher values allow more entities but increase cost. TODO(https://linear.app/bityantriki/issue/BIT-83): revert gte&#x3D;0 to gte&#x3D;100 once pedantigo applies defaults to nested structs during Validate()
+   * minimum: 0
+   * maximum: 16384
    * @return maxTokens
    */
   @javax.annotation.Nullable
@@ -246,6 +254,8 @@ public class CommondtoEntityExtractionConfig {
 
   /**
    * MinConfidence is the minimum confidence threshold for extracted entities (0.0 to 1.0). Entities below this threshold are filtered out.
+   * minimum: 0
+   * maximum: 1
    * @return minConfidence
    */
   @javax.annotation.Nullable
@@ -294,6 +304,8 @@ public class CommondtoEntityExtractionConfig {
 
   /**
    * Temperature controls LLM randomness (0.0 &#x3D; deterministic, higher &#x3D; creative). For extraction, lower values (0.0-0.3) are recommended for consistency.
+   * minimum: 0
+   * maximum: 2
    * @return temperature
    */
   @javax.annotation.Nullable

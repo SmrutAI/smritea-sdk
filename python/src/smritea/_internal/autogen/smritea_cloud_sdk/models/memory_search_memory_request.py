@@ -18,8 +18,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from smritea._internal.autogen.smritea_cloud_sdk.models.commondto_memory_scope import CommondtoMemoryScope
 from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_reranker_type import ModelEnumsRerankerType
 from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_search_method import ModelEnumsSearchMethod
@@ -32,14 +33,14 @@ class MemorySearchMemoryRequest(BaseModel):
     """ # noqa: E501
     app_id: StrictStr
     from_time: Optional[StrictStr] = Field(default=None, description="FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime.")
-    graph_depth: Optional[StrictInt] = Field(default=None, description="0=use app config, 1-5=override traversal depth")
-    limit: Optional[StrictInt] = None
+    graph_depth: Optional[Annotated[int, Field(le=5, strict=True)]] = Field(default=None, description="0=use app config, 1-5=override traversal depth")
+    limit: Optional[Annotated[int, Field(le=100, strict=True)]] = None
     metadata_filter: Optional[Dict[str, Any]] = Field(default=None, description="MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned.")
     method: Optional[ModelEnumsSearchMethod] = None
     query: StrictStr
     reranker_type: Optional[ModelEnumsRerankerType] = Field(default=None, description="RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.")
     scope: Optional[CommondtoMemoryScope] = Field(default=None, description="Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \"no filter\" (searches across all).")
-    threshold: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="0=no filtering (pipeline uses RRF scores, not cosine similarity)")
+    threshold: Optional[Union[Annotated[float, Field(le=1, strict=True, ge=0)], Annotated[int, Field(le=1, strict=True, ge=0)]]] = Field(default=None, description="0=no filtering (pipeline uses RRF scores, not cosine similarity)")
     to_time: Optional[StrictStr] = Field(default=None, description="ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.")
     valid_at: Optional[StrictStr] = Field(default=None, description="ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from <= ValidAt AND (active_to is null OR active_to >= ValidAt) Mutually exclusive with FromTime/ToTime.")
     __properties: ClassVar[List[str]] = ["app_id", "from_time", "graph_depth", "limit", "metadata_filter", "method", "query", "reranker_type", "scope", "threshold", "to_time", "valid_at"]

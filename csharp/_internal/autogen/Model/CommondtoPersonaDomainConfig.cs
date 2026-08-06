@@ -36,15 +36,25 @@ namespace Smritea.Internal.Autogen.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="CommondtoPersonaDomainConfig" /> class.
         /// </summary>
+        [JsonConstructorAttribute]
+        protected CommondtoPersonaDomainConfig() { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommondtoPersonaDomainConfig" /> class.
+        /// </summary>
         /// <param name="description">Description describes what kind of traits this domain captures..</param>
         /// <param name="isDefault">IsDefault indicates if this domain is included by default..</param>
-        /// <param name="name">Name is the domain identifier (e.g., \&quot;preferences\&quot;, \&quot;interests\&quot;, \&quot;demographics\&quot;)..</param>
+        /// <param name="name">Name is the domain identifier (e.g., \&quot;preferences\&quot;, \&quot;interests\&quot;, \&quot;demographics\&quot;). (required).</param>
         /// <param name="traits">Traits lists expected trait names for this domain (optional, for LLM guidance)..</param>
         public CommondtoPersonaDomainConfig(string description = default, bool isDefault = default, string name = default, List<string> traits = default)
         {
+            // to ensure "name" is required (not null)
+            if (name == null)
+            {
+                throw new ArgumentNullException("name is a required property for CommondtoPersonaDomainConfig and cannot be null");
+            }
+            this.Name = name;
             this.Description = description;
             this.IsDefault = isDefault;
-            this.Name = name;
             this.Traits = traits;
         }
 
@@ -66,7 +76,7 @@ namespace Smritea.Internal.Autogen.Model
         /// Name is the domain identifier (e.g., \&quot;preferences\&quot;, \&quot;interests\&quot;, \&quot;demographics\&quot;).
         /// </summary>
         /// <value>Name is the domain identifier (e.g., \&quot;preferences\&quot;, \&quot;interests\&quot;, \&quot;demographics\&quot;).</value>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = true)]
         public string Name { get; set; }
 
         /// <summary>
