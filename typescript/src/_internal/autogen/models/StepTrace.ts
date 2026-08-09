@@ -16,59 +16,59 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ExplainStepTrace
+ * @interface StepTrace
  */
-export interface ExplainStepTrace {
+export interface StepTrace {
     /**
      * DurationMs is the wall-clock duration of the step.Execute() call.
      * @type {number}
-     * @memberof ExplainStepTrace
+     * @memberof StepTrace
      */
     durationMs?: number;
     /**
      * Error is the error string if the step failed, empty on success.
      * @type {string}
-     * @memberof ExplainStepTrace
+     * @memberof StepTrace
      */
     error?: string;
     /**
      * InputJSON is the JSON-serialized step input.
      * @type {string}
-     * @memberof ExplainStepTrace
+     * @memberof StepTrace
      */
     input?: string;
     /**
      * OutputJSON is the JSON-serialized step output.
      * @type {string}
-     * @memberof ExplainStepTrace
+     * @memberof StepTrace
      */
     output?: string;
     /**
      * ResultCount is the number of results the step produced.
      * @type {number}
-     * @memberof ExplainStepTrace
+     * @memberof StepTrace
      */
     resultCount?: number;
     /**
      * StepName is the step's Name() return value.
      * @type {string}
-     * @memberof ExplainStepTrace
+     * @memberof StepTrace
      */
     stepName?: string;
 }
 
 /**
- * Check if a given object implements the ExplainStepTrace interface.
+ * Check if a given object implements the StepTrace interface.
  */
-export function instanceOfExplainStepTrace(value: object): value is ExplainStepTrace {
+export function instanceOfStepTrace(value: object): value is StepTrace {
     return true;
 }
 
-export function ExplainStepTraceFromJSON(json: any): ExplainStepTrace {
-    return ExplainStepTraceFromJSONTyped(json, false);
+export function StepTraceFromJSON(json: any): StepTrace {
+    return StepTraceFromJSONTyped(json, false);
 }
 
-export function ExplainStepTraceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ExplainStepTrace {
+export function StepTraceFromJSONTyped(json: any, ignoreDiscriminator: boolean): StepTrace {
     if (json == null) {
         return json;
     }
@@ -83,11 +83,11 @@ export function ExplainStepTraceFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function ExplainStepTraceToJSON(json: any): ExplainStepTrace {
-    return ExplainStepTraceToJSONTyped(json, false);
+export function StepTraceToJSON(json: any): StepTrace {
+    return StepTraceToJSONTyped(json, false);
 }
 
-export function ExplainStepTraceToJSONTyped(value?: ExplainStepTrace | null, ignoreDiscriminator: boolean = false): any {
+export function StepTraceToJSONTyped(value?: StepTrace | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

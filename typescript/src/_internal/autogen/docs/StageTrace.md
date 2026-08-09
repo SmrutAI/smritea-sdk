@@ -1,20 +1,34 @@
 
-# ModelEnumsRerankerType
+# StageTrace
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
+`durationMs` | number
+`error` | string
+`input` | string
+`output` | string
+`resultCount` | number
+`stageName` | string
+`steps` | [Array&lt;StepTrace&gt;](StepTrace.md)
 
 ## Example
 
 ```typescript
-import type { ModelEnumsRerankerType } from ''
+import type { StageTrace } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-} satisfies ModelEnumsRerankerType
+  "durationMs": null,
+  "error": null,
+  "input": null,
+  "output": null,
+  "resultCount": null,
+  "stageName": null,
+  "steps": null,
+} satisfies StageTrace
 
 console.log(example)
 
@@ -23,7 +37,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as ModelEnumsRerankerType
+const exampleParsed = JSON.parse(exampleJSON) as StageTrace
 console.log(exampleParsed)
 ```
 

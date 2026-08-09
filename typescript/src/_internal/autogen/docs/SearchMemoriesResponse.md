@@ -6,7 +6,7 @@
 
 Name | Type
 ------------ | -------------
-`explainTrace` | [ExplainTrace](ExplainTrace.md)
+`explainTrace` | [Trace](Trace.md)
 `memories` | [Array&lt;SearchMemoryResponse&gt;](SearchMemoryResponse.md)
 
 ## Example

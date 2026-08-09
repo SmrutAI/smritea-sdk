@@ -42,7 +42,7 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="memories">Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content. When ExplicitSkip is true (phatic / non-extractable content), this is empty..</param>
         /// <param name="skippedCount">SkippedCount is the number of facts skipped due to deduplication (exact duplicates)..</param>
         /// <param name="updatedCount">UpdatedCount is the number of facts that resulted in updates to existing memories..</param>
-        public CreateMemoryResponse(ExplainTrace explainTrace = default, bool explicitSkip = default, int factsExtracted = default, List<MemoryResponse> memories = default, int skippedCount = default, int updatedCount = default)
+        public CreateMemoryResponse(Trace explainTrace = default, bool explicitSkip = default, int factsExtracted = default, List<MemoryResponse> memories = default, int skippedCount = default, int updatedCount = default)
         {
             this.ExplainTrace = explainTrace;
             this.ExplicitSkip = explicitSkip;
@@ -56,7 +56,7 @@ namespace Smritea.Internal.Autogen.Model
         /// Gets or Sets ExplainTrace
         /// </summary>
         [DataMember(Name = "explain_trace", EmitDefaultValue = false)]
-        public ExplainTrace ExplainTrace { get; set; }
+        public Trace ExplainTrace { get; set; }
 
         /// <summary>
         /// ExplicitSkip is true when the LLM intentionally extracted no facts; nothing was stored.

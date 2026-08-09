@@ -19,7 +19,7 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
-import ai.smritea.sdk._internal.autogen.model.ExplainStageTrace;
+import ai.smritea.sdk._internal.autogen.model.StageTrace;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -33,31 +33,31 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import ai.smritea.sdk._internal.autogen.ApiClient;
 /**
- * ExplainTrace
+ * Trace
  */
 @JsonPropertyOrder({
-  ExplainTrace.JSON_PROPERTY_STAGES,
-  ExplainTrace.JSON_PROPERTY_TOTAL_MS
+  Trace.JSON_PROPERTY_STAGES,
+  Trace.JSON_PROPERTY_TOTAL_MS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
-public class ExplainTrace {
+public class Trace {
   public static final String JSON_PROPERTY_STAGES = "stages";
   @javax.annotation.Nullable
-  private List<ExplainStageTrace> stages = new ArrayList<>();
+  private List<StageTrace> stages = new ArrayList<>();
 
   public static final String JSON_PROPERTY_TOTAL_MS = "total_ms";
   @javax.annotation.Nullable
   private Integer totalMs;
 
-  public ExplainTrace() { 
+  public Trace() { 
   }
 
-  public ExplainTrace stages(@javax.annotation.Nullable List<ExplainStageTrace> stages) {
+  public Trace stages(@javax.annotation.Nullable List<StageTrace> stages) {
     this.stages = stages;
     return this;
   }
 
-  public ExplainTrace addStagesItem(ExplainStageTrace stagesItem) {
+  public Trace addStagesItem(StageTrace stagesItem) {
     if (this.stages == null) {
       this.stages = new ArrayList<>();
     }
@@ -72,19 +72,19 @@ public class ExplainTrace {
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_STAGES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<ExplainStageTrace> getStages() {
+  public List<StageTrace> getStages() {
     return stages;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_STAGES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setStages(@javax.annotation.Nullable List<ExplainStageTrace> stages) {
+  public void setStages(@javax.annotation.Nullable List<StageTrace> stages) {
     this.stages = stages;
   }
 
 
-  public ExplainTrace totalMs(@javax.annotation.Nullable Integer totalMs) {
+  public Trace totalMs(@javax.annotation.Nullable Integer totalMs) {
     this.totalMs = totalMs;
     return this;
   }
@@ -109,7 +109,7 @@ public class ExplainTrace {
 
 
   /**
-   * Return true if this explain.Trace object is equal to o.
+   * Return true if this Trace object is equal to o.
    */
   @Override
   public boolean equals(Object o) {
@@ -119,9 +119,9 @@ public class ExplainTrace {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ExplainTrace explainTrace = (ExplainTrace) o;
-    return Objects.equals(this.stages, explainTrace.stages) &&
-        Objects.equals(this.totalMs, explainTrace.totalMs);
+    Trace trace = (Trace) o;
+    return Objects.equals(this.stages, trace.stages) &&
+        Objects.equals(this.totalMs, trace.totalMs);
   }
 
   @Override
@@ -132,7 +132,7 @@ public class ExplainTrace {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ExplainTrace {\n");
+    sb.append("class Trace {\n");
     sb.append("    stages: ").append(toIndentedString(stages)).append("\n");
     sb.append("    totalMs: ").append(toIndentedString(totalMs)).append("\n");
     sb.append("}");

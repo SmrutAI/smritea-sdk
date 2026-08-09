@@ -28,17 +28,17 @@ using OpenAPIDateConverter = Smritea.Internal.Autogen.Client.OpenAPIDateConverte
 namespace Smritea.Internal.Autogen.Model
 {
     /// <summary>
-    /// ExplainTrace
+    /// Trace
     /// </summary>
-    [DataContract(Name = "explain.Trace")]
-    public partial class ExplainTrace : IValidatableObject
+    [DataContract(Name = "Trace")]
+    public partial class Trace : IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExplainTrace" /> class.
+        /// Initializes a new instance of the <see cref="Trace" /> class.
         /// </summary>
         /// <param name="stages">Stages contains the trace for each pipeline stage in execution order..</param>
         /// <param name="totalMs">TotalMs is the wall-clock duration of the entire search request in milliseconds..</param>
-        public ExplainTrace(List<ExplainStageTrace> stages = default, int totalMs = default)
+        public Trace(List<StageTrace> stages = default, int totalMs = default)
         {
             this.Stages = stages;
             this.TotalMs = totalMs;
@@ -49,7 +49,7 @@ namespace Smritea.Internal.Autogen.Model
         /// </summary>
         /// <value>Stages contains the trace for each pipeline stage in execution order.</value>
         [DataMember(Name = "stages", EmitDefaultValue = false)]
-        public List<ExplainStageTrace> Stages { get; set; }
+        public List<StageTrace> Stages { get; set; }
 
         /// <summary>
         /// TotalMs is the wall-clock duration of the entire search request in milliseconds.
@@ -65,7 +65,7 @@ namespace Smritea.Internal.Autogen.Model
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("class ExplainTrace {\n");
+            sb.Append("class Trace {\n");
             sb.Append("  Stages: ").Append(Stages).Append("\n");
             sb.Append("  TotalMs: ").Append(TotalMs).Append("\n");
             sb.Append("}\n");

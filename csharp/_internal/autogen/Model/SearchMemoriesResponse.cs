@@ -38,7 +38,7 @@ namespace Smritea.Internal.Autogen.Model
         /// </summary>
         /// <param name="explainTrace">explainTrace.</param>
         /// <param name="memories">memories.</param>
-        public SearchMemoriesResponse(ExplainTrace explainTrace = default, List<SearchMemoryResponse> memories = default)
+        public SearchMemoriesResponse(Trace explainTrace = default, List<SearchMemoryResponse> memories = default)
         {
             this.ExplainTrace = explainTrace;
             this.Memories = memories;
@@ -48,7 +48,7 @@ namespace Smritea.Internal.Autogen.Model
         /// Gets or Sets ExplainTrace
         /// </summary>
         [DataMember(Name = "explain_trace", EmitDefaultValue = false)]
-        public ExplainTrace ExplainTrace { get; set; }
+        public Trace ExplainTrace { get; set; }
 
         /// <summary>
         /// Gets or Sets Memories

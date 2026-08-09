@@ -20,8 +20,8 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from smritea._internal.autogen.smritea_cloud_sdk.models.explain_trace import ExplainTrace
 from smritea._internal.autogen.smritea_cloud_sdk.models.search_memory_response import SearchMemoryResponse
+from smritea._internal.autogen.smritea_cloud_sdk.models.trace import Trace
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +29,7 @@ class SearchMemoriesResponse(BaseModel):
     """
     SearchMemoriesResponse
     """ # noqa: E501
-    explain_trace: Optional[ExplainTrace] = None
+    explain_trace: Optional[Trace] = None
     memories: Optional[List[SearchMemoryResponse]] = None
     __properties: ClassVar[List[str]] = ["explain_trace", "memories"]
 
@@ -94,7 +94,7 @@ class SearchMemoriesResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "explain_trace": ExplainTrace.from_dict(obj["explain_trace"]) if obj.get("explain_trace") is not None else None,
+            "explain_trace": Trace.from_dict(obj["explain_trace"]) if obj.get("explain_trace") is not None else None,
             "memories": [SearchMemoryResponse.from_dict(_item) for _item in obj["memories"]] if obj.get("memories") is not None else None
         })
         return _obj

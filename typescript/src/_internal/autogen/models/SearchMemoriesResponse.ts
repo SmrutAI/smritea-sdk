@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { Trace } from './Trace';
+import {
+    TraceFromJSON,
+    TraceFromJSONTyped,
+    TraceToJSON,
+    TraceToJSONTyped,
+} from './Trace';
 import type { SearchMemoryResponse } from './SearchMemoryResponse';
 import {
     SearchMemoryResponseFromJSON,
@@ -20,13 +27,6 @@ import {
     SearchMemoryResponseToJSON,
     SearchMemoryResponseToJSONTyped,
 } from './SearchMemoryResponse';
-import type { ExplainTrace } from './ExplainTrace';
-import {
-    ExplainTraceFromJSON,
-    ExplainTraceFromJSONTyped,
-    ExplainTraceToJSON,
-    ExplainTraceToJSONTyped,
-} from './ExplainTrace';
 
 /**
  * 
@@ -36,10 +36,10 @@ import {
 export interface SearchMemoriesResponse {
     /**
      * 
-     * @type {ExplainTrace}
+     * @type {Trace}
      * @memberof SearchMemoriesResponse
      */
-    explainTrace?: ExplainTrace;
+    explainTrace?: Trace;
     /**
      * 
      * @type {Array<SearchMemoryResponse>}
@@ -65,7 +65,7 @@ export function SearchMemoriesResponseFromJSONTyped(json: any, ignoreDiscriminat
     }
     return {
         
-        'explainTrace': json['explain_trace'] == null ? undefined : ExplainTraceFromJSON(json['explain_trace']),
+        'explainTrace': json['explain_trace'] == null ? undefined : TraceFromJSON(json['explain_trace']),
         'memories': json['memories'] == null ? undefined : ((json['memories'] as Array<any>).map(SearchMemoryResponseFromJSON)),
     };
 }
@@ -81,7 +81,7 @@ export function SearchMemoriesResponseToJSONTyped(value?: SearchMemoriesResponse
 
     return {
         
-        'explain_trace': ExplainTraceToJSON(value['explainTrace']),
+        'explain_trace': TraceToJSON(value['explainTrace']),
         'memories': value['memories'] == null ? undefined : ((value['memories'] as Array<any>).map(SearchMemoryResponseToJSON)),
     };
 }

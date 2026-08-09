@@ -1,34 +1,20 @@
 
-# ExplainStageTrace
+# SearchMethod
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`durationMs` | number
-`error` | string
-`input` | string
-`output` | string
-`resultCount` | number
-`stageName` | string
-`steps` | [Array&lt;ExplainStepTrace&gt;](ExplainStepTrace.md)
 
 ## Example
 
 ```typescript
-import type { ExplainStageTrace } from ''
+import type { SearchMethod } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "durationMs": null,
-  "error": null,
-  "input": null,
-  "output": null,
-  "resultCount": null,
-  "stageName": null,
-  "steps": null,
-} satisfies ExplainStageTrace
+} satisfies SearchMethod
 
 console.log(example)
 
@@ -37,7 +23,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as ExplainStageTrace
+const exampleParsed = JSON.parse(exampleJSON) as SearchMethod
 console.log(exampleParsed)
 ```
 

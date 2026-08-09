@@ -11,9 +11,9 @@ Name | Type
 `graphDepth` | number
 `limit` | number
 `metadataFilter` | object
-`method` | [ModelEnumsSearchMethod](ModelEnumsSearchMethod.md)
+`method` | [SearchMethod](SearchMethod.md)
 `query` | string
-`rerankerType` | [ModelEnumsRerankerType](ModelEnumsRerankerType.md)
+`rerankerType` | [RerankerType](RerankerType.md)
 `scope` | [MemoryScope](MemoryScope.md)
 `threshold` | number
 `toTime` | string

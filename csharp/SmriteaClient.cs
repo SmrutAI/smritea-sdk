@@ -250,12 +250,12 @@ public class SmriteaClient : IDisposable
 
             if (opts.Method is not null)
             {
-                request.Method = Enum.Parse<ModelEnumsSearchMethod>(opts.Method, ignoreCase: true);
+                request.Method = Enum.Parse<SearchMethod>(opts.Method, ignoreCase: true);
             }
 
             if (opts.RerankerType is not null)
             {
-                request.RerankerType = Enum.Parse<ModelEnumsRerankerType>(opts.RerankerType, ignoreCase: true);
+                request.RerankerType = Enum.Parse<RerankerType>(opts.RerankerType, ignoreCase: true);
             }
 
             if (opts.MetadataFilter is not null)

@@ -15,38 +15,38 @@ import (
 	"encoding/json"
 )
 
-// checks if the ExplainTrace type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &ExplainTrace{}
+// checks if the Trace type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &Trace{}
 
-// ExplainTrace struct for ExplainTrace
-type ExplainTrace struct {
+// Trace struct for Trace
+type Trace struct {
 	// Stages contains the trace for each pipeline stage in execution order.
-	Stages []ExplainStageTrace `json:"stages,omitempty"`
+	Stages []StageTrace `json:"stages,omitempty"`
 	// TotalMs is the wall-clock duration of the entire search request in milliseconds.
 	TotalMs *int32 `json:"total_ms,omitempty"`
 }
 
-// NewExplainTrace instantiates a new ExplainTrace object
+// NewTrace instantiates a new Trace object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewExplainTrace() *ExplainTrace {
-	this := ExplainTrace{}
+func NewTrace() *Trace {
+	this := Trace{}
 	return &this
 }
 
-// NewExplainTraceWithDefaults instantiates a new ExplainTrace object
+// NewTraceWithDefaults instantiates a new Trace object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewExplainTraceWithDefaults() *ExplainTrace {
-	this := ExplainTrace{}
+func NewTraceWithDefaults() *Trace {
+	this := Trace{}
 	return &this
 }
 
 // GetStages returns the Stages field value if set, zero value otherwise.
-func (o *ExplainTrace) GetStages() []ExplainStageTrace {
+func (o *Trace) GetStages() []StageTrace {
 	if o == nil || IsNil(o.Stages) {
-		var ret []ExplainStageTrace
+		var ret []StageTrace
 		return ret
 	}
 	return o.Stages
@@ -54,7 +54,7 @@ func (o *ExplainTrace) GetStages() []ExplainStageTrace {
 
 // GetStagesOk returns a tuple with the Stages field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExplainTrace) GetStagesOk() ([]ExplainStageTrace, bool) {
+func (o *Trace) GetStagesOk() ([]StageTrace, bool) {
 	if o == nil || IsNil(o.Stages) {
 		return nil, false
 	}
@@ -62,7 +62,7 @@ func (o *ExplainTrace) GetStagesOk() ([]ExplainStageTrace, bool) {
 }
 
 // HasStages returns a boolean if a field has been set.
-func (o *ExplainTrace) HasStages() bool {
+func (o *Trace) HasStages() bool {
 	if o != nil && !IsNil(o.Stages) {
 		return true
 	}
@@ -70,13 +70,13 @@ func (o *ExplainTrace) HasStages() bool {
 	return false
 }
 
-// SetStages gets a reference to the given []ExplainStageTrace and assigns it to the Stages field.
-func (o *ExplainTrace) SetStages(v []ExplainStageTrace) {
+// SetStages gets a reference to the given []StageTrace and assigns it to the Stages field.
+func (o *Trace) SetStages(v []StageTrace) {
 	o.Stages = v
 }
 
 // GetTotalMs returns the TotalMs field value if set, zero value otherwise.
-func (o *ExplainTrace) GetTotalMs() int32 {
+func (o *Trace) GetTotalMs() int32 {
 	if o == nil || IsNil(o.TotalMs) {
 		var ret int32
 		return ret
@@ -86,7 +86,7 @@ func (o *ExplainTrace) GetTotalMs() int32 {
 
 // GetTotalMsOk returns a tuple with the TotalMs field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExplainTrace) GetTotalMsOk() (*int32, bool) {
+func (o *Trace) GetTotalMsOk() (*int32, bool) {
 	if o == nil || IsNil(o.TotalMs) {
 		return nil, false
 	}
@@ -94,7 +94,7 @@ func (o *ExplainTrace) GetTotalMsOk() (*int32, bool) {
 }
 
 // HasTotalMs returns a boolean if a field has been set.
-func (o *ExplainTrace) HasTotalMs() bool {
+func (o *Trace) HasTotalMs() bool {
 	if o != nil && !IsNil(o.TotalMs) {
 		return true
 	}
@@ -103,11 +103,11 @@ func (o *ExplainTrace) HasTotalMs() bool {
 }
 
 // SetTotalMs gets a reference to the given int32 and assigns it to the TotalMs field.
-func (o *ExplainTrace) SetTotalMs(v int32) {
+func (o *Trace) SetTotalMs(v int32) {
 	o.TotalMs = &v
 }
 
-func (o ExplainTrace) MarshalJSON() ([]byte, error) {
+func (o Trace) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -115,7 +115,7 @@ func (o ExplainTrace) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o ExplainTrace) ToMap() (map[string]interface{}, error) {
+func (o Trace) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Stages) {
 		toSerialize["stages"] = o.Stages
@@ -126,38 +126,38 @@ func (o ExplainTrace) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-type NullableExplainTrace struct {
-	value *ExplainTrace
+type NullableTrace struct {
+	value *Trace
 	isSet bool
 }
 
-func (v NullableExplainTrace) Get() *ExplainTrace {
+func (v NullableTrace) Get() *Trace {
 	return v.value
 }
 
-func (v *NullableExplainTrace) Set(val *ExplainTrace) {
+func (v *NullableTrace) Set(val *Trace) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableExplainTrace) IsSet() bool {
+func (v NullableTrace) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableExplainTrace) Unset() {
+func (v *NullableTrace) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableExplainTrace(val *ExplainTrace) *NullableExplainTrace {
-	return &NullableExplainTrace{value: val, isSet: true}
+func NewNullableTrace(val *Trace) *NullableTrace {
+	return &NullableTrace{value: val, isSet: true}
 }
 
-func (v NullableExplainTrace) MarshalJSON() ([]byte, error) {
+func (v NullableTrace) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableExplainTrace) UnmarshalJSON(src []byte) error {
+func (v *NullableTrace) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

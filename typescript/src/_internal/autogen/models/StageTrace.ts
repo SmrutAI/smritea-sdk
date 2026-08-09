@@ -13,77 +13,77 @@
  */
 
 import { mapValues } from '../runtime';
-import type { ExplainStepTrace } from './ExplainStepTrace';
+import type { StepTrace } from './StepTrace';
 import {
-    ExplainStepTraceFromJSON,
-    ExplainStepTraceFromJSONTyped,
-    ExplainStepTraceToJSON,
-    ExplainStepTraceToJSONTyped,
-} from './ExplainStepTrace';
+    StepTraceFromJSON,
+    StepTraceFromJSONTyped,
+    StepTraceToJSON,
+    StepTraceToJSONTyped,
+} from './StepTrace';
 
 /**
  * 
  * @export
- * @interface ExplainStageTrace
+ * @interface StageTrace
  */
-export interface ExplainStageTrace {
+export interface StageTrace {
     /**
      * DurationMs is the wall-clock duration of the stage.Execute() call.
      * @type {number}
-     * @memberof ExplainStageTrace
+     * @memberof StageTrace
      */
     durationMs?: number;
     /**
      * Error is the error string if the stage failed, empty on success.
      * @type {string}
-     * @memberof ExplainStageTrace
+     * @memberof StageTrace
      */
     error?: string;
     /**
      * InputJSON is the JSON-serialized stage input.
      * @type {string}
-     * @memberof ExplainStageTrace
+     * @memberof StageTrace
      */
     input?: string;
     /**
      * OutputJSON is the JSON-serialized stage output.
      * @type {string}
-     * @memberof ExplainStageTrace
+     * @memberof StageTrace
      */
     output?: string;
     /**
      * ResultCount is the number of results the stage produced.
      * For seed: len(SeedResults). For graph: len(GraphResult.Memories). For rerank: len(ScoredMemories).
      * @type {number}
-     * @memberof ExplainStageTrace
+     * @memberof StageTrace
      */
     resultCount?: number;
     /**
      * StageName identifies the stage ("seed", "graph", "rerank").
      * @type {string}
-     * @memberof ExplainStageTrace
+     * @memberof StageTrace
      */
     stageName?: string;
     /**
      * Steps contains the trace for each step executed within this stage.
-     * @type {Array<ExplainStepTrace>}
-     * @memberof ExplainStageTrace
+     * @type {Array<StepTrace>}
+     * @memberof StageTrace
      */
-    steps?: Array<ExplainStepTrace>;
+    steps?: Array<StepTrace>;
 }
 
 /**
- * Check if a given object implements the ExplainStageTrace interface.
+ * Check if a given object implements the StageTrace interface.
  */
-export function instanceOfExplainStageTrace(value: object): value is ExplainStageTrace {
+export function instanceOfStageTrace(value: object): value is StageTrace {
     return true;
 }
 
-export function ExplainStageTraceFromJSON(json: any): ExplainStageTrace {
-    return ExplainStageTraceFromJSONTyped(json, false);
+export function StageTraceFromJSON(json: any): StageTrace {
+    return StageTraceFromJSONTyped(json, false);
 }
 
-export function ExplainStageTraceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ExplainStageTrace {
+export function StageTraceFromJSONTyped(json: any, ignoreDiscriminator: boolean): StageTrace {
     if (json == null) {
         return json;
     }
@@ -95,15 +95,15 @@ export function ExplainStageTraceFromJSONTyped(json: any, ignoreDiscriminator: b
         'output': json['output'] == null ? undefined : json['output'],
         'resultCount': json['result_count'] == null ? undefined : json['result_count'],
         'stageName': json['stage_name'] == null ? undefined : json['stage_name'],
-        'steps': json['steps'] == null ? undefined : ((json['steps'] as Array<any>).map(ExplainStepTraceFromJSON)),
+        'steps': json['steps'] == null ? undefined : ((json['steps'] as Array<any>).map(StepTraceFromJSON)),
     };
 }
 
-export function ExplainStageTraceToJSON(json: any): ExplainStageTrace {
-    return ExplainStageTraceToJSONTyped(json, false);
+export function StageTraceToJSON(json: any): StageTrace {
+    return StageTraceToJSONTyped(json, false);
 }
 
-export function ExplainStageTraceToJSONTyped(value?: ExplainStageTrace | null, ignoreDiscriminator: boolean = false): any {
+export function StageTraceToJSONTyped(value?: StageTrace | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -116,7 +116,7 @@ export function ExplainStageTraceToJSONTyped(value?: ExplainStageTrace | null, i
         'output': value['output'],
         'result_count': value['resultCount'],
         'stage_name': value['stageName'],
-        'steps': value['steps'] == null ? undefined : ((value['steps'] as Array<any>).map(ExplainStepTraceToJSON)),
+        'steps': value['steps'] == null ? undefined : ((value['steps'] as Array<any>).map(StepTraceToJSON)),
     };
 }
 

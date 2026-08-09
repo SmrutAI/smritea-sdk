@@ -20,13 +20,13 @@ import {
     MemoryResponseToJSON,
     MemoryResponseToJSONTyped,
 } from './MemoryResponse';
-import type { ExplainTrace } from './ExplainTrace';
+import type { Trace } from './Trace';
 import {
-    ExplainTraceFromJSON,
-    ExplainTraceFromJSONTyped,
-    ExplainTraceToJSON,
-    ExplainTraceToJSONTyped,
-} from './ExplainTrace';
+    TraceFromJSON,
+    TraceFromJSONTyped,
+    TraceToJSON,
+    TraceToJSONTyped,
+} from './Trace';
 
 /**
  * 
@@ -36,10 +36,10 @@ import {
 export interface CreateMemoryResponse {
     /**
      * 
-     * @type {ExplainTrace}
+     * @type {Trace}
      * @memberof CreateMemoryResponse
      */
-    explainTrace?: ExplainTrace;
+    explainTrace?: Trace;
     /**
      * ExplicitSkip is true when the LLM intentionally extracted no facts; nothing was stored.
      * @type {boolean}
@@ -93,7 +93,7 @@ export function CreateMemoryResponseFromJSONTyped(json: any, ignoreDiscriminator
     }
     return {
         
-        'explainTrace': json['explain_trace'] == null ? undefined : ExplainTraceFromJSON(json['explain_trace']),
+        'explainTrace': json['explain_trace'] == null ? undefined : TraceFromJSON(json['explain_trace']),
         'explicitSkip': json['explicit_skip'] == null ? undefined : json['explicit_skip'],
         'factsExtracted': json['facts_extracted'] == null ? undefined : json['facts_extracted'],
         'memories': json['memories'] == null ? undefined : ((json['memories'] as Array<any>).map(MemoryResponseFromJSON)),
@@ -113,7 +113,7 @@ export function CreateMemoryResponseToJSONTyped(value?: CreateMemoryResponse | n
 
     return {
         
-        'explain_trace': ExplainTraceToJSON(value['explainTrace']),
+        'explain_trace': TraceToJSON(value['explainTrace']),
         'explicit_skip': value['explicitSkip'],
         'facts_extracted': value['factsExtracted'],
         'memories': value['memories'] == null ? undefined : ((value['memories'] as Array<any>).map(MemoryResponseToJSON)),

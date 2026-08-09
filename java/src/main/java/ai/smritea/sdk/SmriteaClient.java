@@ -6,12 +6,12 @@ import ai.smritea.sdk._internal.autogen.api.SdkMemoryApi;
 import ai.smritea.sdk._internal.autogen.model.CreateMemoryRequest;
 import ai.smritea.sdk._internal.autogen.model.CreateMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.MemoryResponse;
-import ai.smritea.sdk._internal.autogen.model.ModelEnumsRerankerType;
-import ai.smritea.sdk._internal.autogen.model.ModelEnumsSearchMethod;
 import ai.smritea.sdk._internal.autogen.model.RelativeStandingConfig;
+import ai.smritea.sdk._internal.autogen.model.RerankerType;
 import ai.smritea.sdk._internal.autogen.model.SearchMemoriesResponse;
 import ai.smritea.sdk._internal.autogen.model.SearchMemoryRequest;
 import ai.smritea.sdk._internal.autogen.model.SearchMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.SearchMethod;
 import ai.smritea.sdk.errors.SmriteaAuthError;
 import ai.smritea.sdk.errors.SmriteaDeserializationError;
 import ai.smritea.sdk.errors.SmriteaError;
@@ -235,10 +235,10 @@ public class SmriteaClient {
         request.setValidAt(opts.getValidAt());
       }
       if (opts.getMethod() != null) {
-        request.setMethod(ModelEnumsSearchMethod.fromValue(opts.getMethod()));
+        request.setMethod(SearchMethod.fromValue(opts.getMethod()));
       }
       if (opts.getRerankerType() != null) {
-        request.setRerankerType(ModelEnumsRerankerType.fromValue(opts.getRerankerType()));
+        request.setRerankerType(RerankerType.fromValue(opts.getRerankerType()));
       }
       if (opts.getMetadataFilter() != null) {
         request.setMetadataFilter(opts.getMetadataFilter());

@@ -1,32 +1,24 @@
 
-# ExplainStepTrace
+# Trace
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`durationMs` | number
-`error` | string
-`input` | string
-`output` | string
-`resultCount` | number
-`stepName` | string
+`stages` | [Array&lt;StageTrace&gt;](StageTrace.md)
+`totalMs` | number
 
 ## Example
 
 ```typescript
-import type { ExplainStepTrace } from ''
+import type { Trace } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "durationMs": null,
-  "error": null,
-  "input": null,
-  "output": null,
-  "resultCount": null,
-  "stepName": null,
-} satisfies ExplainStepTrace
+  "stages": null,
+  "totalMs": null,
+} satisfies Trace
 
 console.log(example)
 
@@ -35,7 +27,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as ExplainStepTrace
+const exampleParsed = JSON.parse(exampleJSON) as Trace
 console.log(exampleParsed)
 ```
 

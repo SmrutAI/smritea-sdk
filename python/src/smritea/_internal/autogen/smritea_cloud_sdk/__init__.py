@@ -33,21 +33,21 @@ __all__ = [
     "CreateMemoryRequest",
     "CreateMemoryResponse",
     "EntityExtractionConfig",
-    "ExplainStageTrace",
-    "ExplainStepTrace",
-    "ExplainTrace",
     "FactExtractionConfig",
     "MemoryResponse",
     "MemoryScope",
-    "ModelEnumsRerankerType",
-    "ModelEnumsSearchMethod",
     "PersonaDomainConfig",
     "PersonaExtractionConfig",
     "RelativeStandingConfig",
+    "RerankerType",
     "SearchMemoriesResponse",
     "SearchMemoryRequest",
     "SearchMemoryResponse",
     "SearchMemoryResult",
+    "SearchMethod",
+    "StageTrace",
+    "StepTrace",
+    "Trace",
 ]
 
 # import apis into sdk package
@@ -69,19 +69,19 @@ from smritea._internal.autogen.smritea_cloud_sdk.models.api_error import APIErro
 from smritea._internal.autogen.smritea_cloud_sdk.models.create_memory_request import CreateMemoryRequest as CreateMemoryRequest
 from smritea._internal.autogen.smritea_cloud_sdk.models.create_memory_response import CreateMemoryResponse as CreateMemoryResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.entity_extraction_config import EntityExtractionConfig as EntityExtractionConfig
-from smritea._internal.autogen.smritea_cloud_sdk.models.explain_stage_trace import ExplainStageTrace as ExplainStageTrace
-from smritea._internal.autogen.smritea_cloud_sdk.models.explain_step_trace import ExplainStepTrace as ExplainStepTrace
-from smritea._internal.autogen.smritea_cloud_sdk.models.explain_trace import ExplainTrace as ExplainTrace
 from smritea._internal.autogen.smritea_cloud_sdk.models.fact_extraction_config import FactExtractionConfig as FactExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_response import MemoryResponse as MemoryResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_scope import MemoryScope as MemoryScope
-from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_reranker_type import ModelEnumsRerankerType as ModelEnumsRerankerType
-from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_search_method import ModelEnumsSearchMethod as ModelEnumsSearchMethod
 from smritea._internal.autogen.smritea_cloud_sdk.models.persona_domain_config import PersonaDomainConfig as PersonaDomainConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.persona_extraction_config import PersonaExtractionConfig as PersonaExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.relative_standing_config import RelativeStandingConfig as RelativeStandingConfig
+from smritea._internal.autogen.smritea_cloud_sdk.models.reranker_type import RerankerType as RerankerType
 from smritea._internal.autogen.smritea_cloud_sdk.models.search_memories_response import SearchMemoriesResponse as SearchMemoriesResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.search_memory_request import SearchMemoryRequest as SearchMemoryRequest
 from smritea._internal.autogen.smritea_cloud_sdk.models.search_memory_response import SearchMemoryResponse as SearchMemoryResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.search_memory_result import SearchMemoryResult as SearchMemoryResult
+from smritea._internal.autogen.smritea_cloud_sdk.models.search_method import SearchMethod as SearchMethod
+from smritea._internal.autogen.smritea_cloud_sdk.models.stage_trace import StageTrace as StageTrace
+from smritea._internal.autogen.smritea_cloud_sdk.models.step_trace import StepTrace as StepTrace
+from smritea._internal.autogen.smritea_cloud_sdk.models.trace import Trace as Trace
 

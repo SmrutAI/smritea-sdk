@@ -19,7 +19,7 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
-import ai.smritea.sdk._internal.autogen.model.ExplainStepTrace;
+import ai.smritea.sdk._internal.autogen.model.StepTrace;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -33,19 +33,19 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import ai.smritea.sdk._internal.autogen.ApiClient;
 /**
- * ExplainStageTrace
+ * StageTrace
  */
 @JsonPropertyOrder({
-  ExplainStageTrace.JSON_PROPERTY_DURATION_MS,
-  ExplainStageTrace.JSON_PROPERTY_ERROR,
-  ExplainStageTrace.JSON_PROPERTY_INPUT,
-  ExplainStageTrace.JSON_PROPERTY_OUTPUT,
-  ExplainStageTrace.JSON_PROPERTY_RESULT_COUNT,
-  ExplainStageTrace.JSON_PROPERTY_STAGE_NAME,
-  ExplainStageTrace.JSON_PROPERTY_STEPS
+  StageTrace.JSON_PROPERTY_DURATION_MS,
+  StageTrace.JSON_PROPERTY_ERROR,
+  StageTrace.JSON_PROPERTY_INPUT,
+  StageTrace.JSON_PROPERTY_OUTPUT,
+  StageTrace.JSON_PROPERTY_RESULT_COUNT,
+  StageTrace.JSON_PROPERTY_STAGE_NAME,
+  StageTrace.JSON_PROPERTY_STEPS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
-public class ExplainStageTrace {
+public class StageTrace {
   public static final String JSON_PROPERTY_DURATION_MS = "duration_ms";
   @javax.annotation.Nullable
   private Integer durationMs;
@@ -72,12 +72,12 @@ public class ExplainStageTrace {
 
   public static final String JSON_PROPERTY_STEPS = "steps";
   @javax.annotation.Nullable
-  private List<ExplainStepTrace> steps = new ArrayList<>();
+  private List<StepTrace> steps = new ArrayList<>();
 
-  public ExplainStageTrace() { 
+  public StageTrace() { 
   }
 
-  public ExplainStageTrace durationMs(@javax.annotation.Nullable Integer durationMs) {
+  public StageTrace durationMs(@javax.annotation.Nullable Integer durationMs) {
     this.durationMs = durationMs;
     return this;
   }
@@ -101,7 +101,7 @@ public class ExplainStageTrace {
   }
 
 
-  public ExplainStageTrace error(@javax.annotation.Nullable String error) {
+  public StageTrace error(@javax.annotation.Nullable String error) {
     this.error = error;
     return this;
   }
@@ -125,7 +125,7 @@ public class ExplainStageTrace {
   }
 
 
-  public ExplainStageTrace input(@javax.annotation.Nullable String input) {
+  public StageTrace input(@javax.annotation.Nullable String input) {
     this.input = input;
     return this;
   }
@@ -149,7 +149,7 @@ public class ExplainStageTrace {
   }
 
 
-  public ExplainStageTrace output(@javax.annotation.Nullable String output) {
+  public StageTrace output(@javax.annotation.Nullable String output) {
     this.output = output;
     return this;
   }
@@ -173,7 +173,7 @@ public class ExplainStageTrace {
   }
 
 
-  public ExplainStageTrace resultCount(@javax.annotation.Nullable Integer resultCount) {
+  public StageTrace resultCount(@javax.annotation.Nullable Integer resultCount) {
     this.resultCount = resultCount;
     return this;
   }
@@ -197,7 +197,7 @@ public class ExplainStageTrace {
   }
 
 
-  public ExplainStageTrace stageName(@javax.annotation.Nullable String stageName) {
+  public StageTrace stageName(@javax.annotation.Nullable String stageName) {
     this.stageName = stageName;
     return this;
   }
@@ -221,12 +221,12 @@ public class ExplainStageTrace {
   }
 
 
-  public ExplainStageTrace steps(@javax.annotation.Nullable List<ExplainStepTrace> steps) {
+  public StageTrace steps(@javax.annotation.Nullable List<StepTrace> steps) {
     this.steps = steps;
     return this;
   }
 
-  public ExplainStageTrace addStepsItem(ExplainStepTrace stepsItem) {
+  public StageTrace addStepsItem(StepTrace stepsItem) {
     if (this.steps == null) {
       this.steps = new ArrayList<>();
     }
@@ -241,20 +241,20 @@ public class ExplainStageTrace {
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_STEPS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<ExplainStepTrace> getSteps() {
+  public List<StepTrace> getSteps() {
     return steps;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_STEPS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSteps(@javax.annotation.Nullable List<ExplainStepTrace> steps) {
+  public void setSteps(@javax.annotation.Nullable List<StepTrace> steps) {
     this.steps = steps;
   }
 
 
   /**
-   * Return true if this explain.StageTrace object is equal to o.
+   * Return true if this StageTrace object is equal to o.
    */
   @Override
   public boolean equals(Object o) {
@@ -264,14 +264,14 @@ public class ExplainStageTrace {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ExplainStageTrace explainStageTrace = (ExplainStageTrace) o;
-    return Objects.equals(this.durationMs, explainStageTrace.durationMs) &&
-        Objects.equals(this.error, explainStageTrace.error) &&
-        Objects.equals(this.input, explainStageTrace.input) &&
-        Objects.equals(this.output, explainStageTrace.output) &&
-        Objects.equals(this.resultCount, explainStageTrace.resultCount) &&
-        Objects.equals(this.stageName, explainStageTrace.stageName) &&
-        Objects.equals(this.steps, explainStageTrace.steps);
+    StageTrace stageTrace = (StageTrace) o;
+    return Objects.equals(this.durationMs, stageTrace.durationMs) &&
+        Objects.equals(this.error, stageTrace.error) &&
+        Objects.equals(this.input, stageTrace.input) &&
+        Objects.equals(this.output, stageTrace.output) &&
+        Objects.equals(this.resultCount, stageTrace.resultCount) &&
+        Objects.equals(this.stageName, stageTrace.stageName) &&
+        Objects.equals(this.steps, stageTrace.steps);
   }
 
   @Override
@@ -282,7 +282,7 @@ public class ExplainStageTrace {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ExplainStageTrace {\n");
+    sb.append("class StageTrace {\n");
     sb.append("    durationMs: ").append(toIndentedString(durationMs)).append("\n");
     sb.append("    error: ").append(toIndentedString(error)).append("\n");
     sb.append("    input: ").append(toIndentedString(input)).append("\n");

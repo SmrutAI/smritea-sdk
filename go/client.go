@@ -128,11 +128,11 @@ func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOp
 		req.ToTime = opts.ToTime
 		req.ValidAt = opts.ValidAt
 		if opts.Method != nil {
-			method := autogen.ModelEnumsSearchMethod(*opts.Method)
+			method := autogen.SearchMethod(*opts.Method)
 			req.Method = &method
 		}
 		if opts.RerankerType != nil {
-			rt := autogen.ModelEnumsRerankerType(*opts.RerankerType)
+			rt := autogen.RerankerType(*opts.RerankerType)
 			req.RerankerType = &rt
 		}
 		if opts.MetadataFilter != nil {

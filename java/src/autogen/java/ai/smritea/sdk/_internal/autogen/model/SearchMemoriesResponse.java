@@ -19,8 +19,8 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
-import ai.smritea.sdk._internal.autogen.model.ExplainTrace;
 import ai.smritea.sdk._internal.autogen.model.SearchMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.Trace;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -44,7 +44,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 public class SearchMemoriesResponse {
   public static final String JSON_PROPERTY_EXPLAIN_TRACE = "explain_trace";
   @javax.annotation.Nullable
-  private ExplainTrace explainTrace;
+  private Trace explainTrace;
 
   public static final String JSON_PROPERTY_MEMORIES = "memories";
   @javax.annotation.Nullable
@@ -53,7 +53,7 @@ public class SearchMemoriesResponse {
   public SearchMemoriesResponse() { 
   }
 
-  public SearchMemoriesResponse explainTrace(@javax.annotation.Nullable ExplainTrace explainTrace) {
+  public SearchMemoriesResponse explainTrace(@javax.annotation.Nullable Trace explainTrace) {
     this.explainTrace = explainTrace;
     return this;
   }
@@ -65,14 +65,14 @@ public class SearchMemoriesResponse {
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_EXPLAIN_TRACE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ExplainTrace getExplainTrace() {
+  public Trace getExplainTrace() {
     return explainTrace;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_EXPLAIN_TRACE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setExplainTrace(@javax.annotation.Nullable ExplainTrace explainTrace) {
+  public void setExplainTrace(@javax.annotation.Nullable Trace explainTrace) {
     this.explainTrace = explainTrace;
   }
 

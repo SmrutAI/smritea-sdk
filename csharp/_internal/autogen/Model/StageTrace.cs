@@ -28,71 +28,80 @@ using OpenAPIDateConverter = Smritea.Internal.Autogen.Client.OpenAPIDateConverte
 namespace Smritea.Internal.Autogen.Model
 {
     /// <summary>
-    /// ExplainStepTrace
+    /// StageTrace
     /// </summary>
-    [DataContract(Name = "explain.StepTrace")]
-    public partial class ExplainStepTrace : IValidatableObject
+    [DataContract(Name = "StageTrace")]
+    public partial class StageTrace : IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExplainStepTrace" /> class.
+        /// Initializes a new instance of the <see cref="StageTrace" /> class.
         /// </summary>
-        /// <param name="durationMs">DurationMs is the wall-clock duration of the step.Execute() call..</param>
-        /// <param name="error">Error is the error string if the step failed, empty on success..</param>
-        /// <param name="input">InputJSON is the JSON-serialized step input..</param>
-        /// <param name="output">OutputJSON is the JSON-serialized step output..</param>
-        /// <param name="resultCount">ResultCount is the number of results the step produced..</param>
-        /// <param name="stepName">StepName is the step&#39;s Name() return value..</param>
-        public ExplainStepTrace(int durationMs = default, string error = default, string input = default, string output = default, int resultCount = default, string stepName = default)
+        /// <param name="durationMs">DurationMs is the wall-clock duration of the stage.Execute() call..</param>
+        /// <param name="error">Error is the error string if the stage failed, empty on success..</param>
+        /// <param name="input">InputJSON is the JSON-serialized stage input..</param>
+        /// <param name="output">OutputJSON is the JSON-serialized stage output..</param>
+        /// <param name="resultCount">ResultCount is the number of results the stage produced. For seed: len(SeedResults). For graph: len(GraphResult.Memories). For rerank: len(ScoredMemories)..</param>
+        /// <param name="stageName">StageName identifies the stage (\&quot;seed\&quot;, \&quot;graph\&quot;, \&quot;rerank\&quot;)..</param>
+        /// <param name="steps">Steps contains the trace for each step executed within this stage..</param>
+        public StageTrace(int durationMs = default, string error = default, string input = default, string output = default, int resultCount = default, string stageName = default, List<StepTrace> steps = default)
         {
             this.DurationMs = durationMs;
             this.Error = error;
             this.Input = input;
             this.Output = output;
             this.ResultCount = resultCount;
-            this.StepName = stepName;
+            this.StageName = stageName;
+            this.Steps = steps;
         }
 
         /// <summary>
-        /// DurationMs is the wall-clock duration of the step.Execute() call.
+        /// DurationMs is the wall-clock duration of the stage.Execute() call.
         /// </summary>
-        /// <value>DurationMs is the wall-clock duration of the step.Execute() call.</value>
+        /// <value>DurationMs is the wall-clock duration of the stage.Execute() call.</value>
         [DataMember(Name = "duration_ms", EmitDefaultValue = false)]
         public int DurationMs { get; set; }
 
         /// <summary>
-        /// Error is the error string if the step failed, empty on success.
+        /// Error is the error string if the stage failed, empty on success.
         /// </summary>
-        /// <value>Error is the error string if the step failed, empty on success.</value>
+        /// <value>Error is the error string if the stage failed, empty on success.</value>
         [DataMember(Name = "error", EmitDefaultValue = false)]
         public string Error { get; set; }
 
         /// <summary>
-        /// InputJSON is the JSON-serialized step input.
+        /// InputJSON is the JSON-serialized stage input.
         /// </summary>
-        /// <value>InputJSON is the JSON-serialized step input.</value>
+        /// <value>InputJSON is the JSON-serialized stage input.</value>
         [DataMember(Name = "input", EmitDefaultValue = false)]
         public string Input { get; set; }
 
         /// <summary>
-        /// OutputJSON is the JSON-serialized step output.
+        /// OutputJSON is the JSON-serialized stage output.
         /// </summary>
-        /// <value>OutputJSON is the JSON-serialized step output.</value>
+        /// <value>OutputJSON is the JSON-serialized stage output.</value>
         [DataMember(Name = "output", EmitDefaultValue = false)]
         public string Output { get; set; }
 
         /// <summary>
-        /// ResultCount is the number of results the step produced.
+        /// ResultCount is the number of results the stage produced. For seed: len(SeedResults). For graph: len(GraphResult.Memories). For rerank: len(ScoredMemories).
         /// </summary>
-        /// <value>ResultCount is the number of results the step produced.</value>
+        /// <value>ResultCount is the number of results the stage produced. For seed: len(SeedResults). For graph: len(GraphResult.Memories). For rerank: len(ScoredMemories).</value>
         [DataMember(Name = "result_count", EmitDefaultValue = false)]
         public int ResultCount { get; set; }
 
         /// <summary>
-        /// StepName is the step&#39;s Name() return value.
+        /// StageName identifies the stage (\&quot;seed\&quot;, \&quot;graph\&quot;, \&quot;rerank\&quot;).
         /// </summary>
-        /// <value>StepName is the step&#39;s Name() return value.</value>
-        [DataMember(Name = "step_name", EmitDefaultValue = false)]
-        public string StepName { get; set; }
+        /// <value>StageName identifies the stage (\&quot;seed\&quot;, \&quot;graph\&quot;, \&quot;rerank\&quot;).</value>
+        [DataMember(Name = "stage_name", EmitDefaultValue = false)]
+        public string StageName { get; set; }
+
+        /// <summary>
+        /// Steps contains the trace for each step executed within this stage.
+        /// </summary>
+        /// <value>Steps contains the trace for each step executed within this stage.</value>
+        [DataMember(Name = "steps", EmitDefaultValue = false)]
+        public List<StepTrace> Steps { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -101,13 +110,14 @@ namespace Smritea.Internal.Autogen.Model
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("class ExplainStepTrace {\n");
+            sb.Append("class StageTrace {\n");
             sb.Append("  DurationMs: ").Append(DurationMs).Append("\n");
             sb.Append("  Error: ").Append(Error).Append("\n");
             sb.Append("  Input: ").Append(Input).Append("\n");
             sb.Append("  Output: ").Append(Output).Append("\n");
             sb.Append("  ResultCount: ").Append(ResultCount).Append("\n");
-            sb.Append("  StepName: ").Append(StepName).Append("\n");
+            sb.Append("  StageName: ").Append(StageName).Append("\n");
+            sb.Append("  Steps: ").Append(Steps).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

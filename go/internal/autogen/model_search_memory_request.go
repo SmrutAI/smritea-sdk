@@ -30,10 +30,10 @@ type SearchMemoryRequest struct {
 	Limit *int32 `json:"limit,omitempty"`
 	// MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned.
 	MetadataFilter map[string]interface{} `json:"metadata_filter,omitempty"`
-	Method *ModelEnumsSearchMethod `json:"method,omitempty"`
+	Method *SearchMethod `json:"method,omitempty"`
 	Query string `json:"query"`
 	// RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.
-	RerankerType *ModelEnumsRerankerType `json:"reranker_type,omitempty"`
+	RerankerType *RerankerType `json:"reranker_type,omitempty"`
 	// Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \"no filter\" (searches across all).
 	Scope *MemoryScope `json:"scope,omitempty"`
 	// 0=no filtering (pipeline uses RRF scores, not cosine similarity)
@@ -218,9 +218,9 @@ func (o *SearchMemoryRequest) SetMetadataFilter(v map[string]interface{}) {
 }
 
 // GetMethod returns the Method field value if set, zero value otherwise.
-func (o *SearchMemoryRequest) GetMethod() ModelEnumsSearchMethod {
+func (o *SearchMemoryRequest) GetMethod() SearchMethod {
 	if o == nil || IsNil(o.Method) {
-		var ret ModelEnumsSearchMethod
+		var ret SearchMethod
 		return ret
 	}
 	return *o.Method
@@ -228,7 +228,7 @@ func (o *SearchMemoryRequest) GetMethod() ModelEnumsSearchMethod {
 
 // GetMethodOk returns a tuple with the Method field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *SearchMemoryRequest) GetMethodOk() (*ModelEnumsSearchMethod, bool) {
+func (o *SearchMemoryRequest) GetMethodOk() (*SearchMethod, bool) {
 	if o == nil || IsNil(o.Method) {
 		return nil, false
 	}
@@ -244,8 +244,8 @@ func (o *SearchMemoryRequest) HasMethod() bool {
 	return false
 }
 
-// SetMethod gets a reference to the given ModelEnumsSearchMethod and assigns it to the Method field.
-func (o *SearchMemoryRequest) SetMethod(v ModelEnumsSearchMethod) {
+// SetMethod gets a reference to the given SearchMethod and assigns it to the Method field.
+func (o *SearchMemoryRequest) SetMethod(v SearchMethod) {
 	o.Method = &v
 }
 
@@ -274,9 +274,9 @@ func (o *SearchMemoryRequest) SetQuery(v string) {
 }
 
 // GetRerankerType returns the RerankerType field value if set, zero value otherwise.
-func (o *SearchMemoryRequest) GetRerankerType() ModelEnumsRerankerType {
+func (o *SearchMemoryRequest) GetRerankerType() RerankerType {
 	if o == nil || IsNil(o.RerankerType) {
-		var ret ModelEnumsRerankerType
+		var ret RerankerType
 		return ret
 	}
 	return *o.RerankerType
@@ -284,7 +284,7 @@ func (o *SearchMemoryRequest) GetRerankerType() ModelEnumsRerankerType {
 
 // GetRerankerTypeOk returns a tuple with the RerankerType field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *SearchMemoryRequest) GetRerankerTypeOk() (*ModelEnumsRerankerType, bool) {
+func (o *SearchMemoryRequest) GetRerankerTypeOk() (*RerankerType, bool) {
 	if o == nil || IsNil(o.RerankerType) {
 		return nil, false
 	}
@@ -300,8 +300,8 @@ func (o *SearchMemoryRequest) HasRerankerType() bool {
 	return false
 }
 
-// SetRerankerType gets a reference to the given ModelEnumsRerankerType and assigns it to the RerankerType field.
-func (o *SearchMemoryRequest) SetRerankerType(v ModelEnumsRerankerType) {
+// SetRerankerType gets a reference to the given RerankerType and assigns it to the RerankerType field.
+func (o *SearchMemoryRequest) SetRerankerType(v RerankerType) {
 	o.RerankerType = &v
 }
 

@@ -15,46 +15,44 @@ import (
 	"encoding/json"
 )
 
-// checks if the ExplainStageTrace type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &ExplainStageTrace{}
+// checks if the StepTrace type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &StepTrace{}
 
-// ExplainStageTrace struct for ExplainStageTrace
-type ExplainStageTrace struct {
-	// DurationMs is the wall-clock duration of the stage.Execute() call.
+// StepTrace struct for StepTrace
+type StepTrace struct {
+	// DurationMs is the wall-clock duration of the step.Execute() call.
 	DurationMs *int32 `json:"duration_ms,omitempty"`
-	// Error is the error string if the stage failed, empty on success.
+	// Error is the error string if the step failed, empty on success.
 	Error *string `json:"error,omitempty"`
-	// InputJSON is the JSON-serialized stage input.
+	// InputJSON is the JSON-serialized step input.
 	Input *string `json:"input,omitempty"`
-	// OutputJSON is the JSON-serialized stage output.
+	// OutputJSON is the JSON-serialized step output.
 	Output *string `json:"output,omitempty"`
-	// ResultCount is the number of results the stage produced. For seed: len(SeedResults). For graph: len(GraphResult.Memories). For rerank: len(ScoredMemories).
+	// ResultCount is the number of results the step produced.
 	ResultCount *int32 `json:"result_count,omitempty"`
-	// StageName identifies the stage (\"seed\", \"graph\", \"rerank\").
-	StageName *string `json:"stage_name,omitempty"`
-	// Steps contains the trace for each step executed within this stage.
-	Steps []ExplainStepTrace `json:"steps,omitempty"`
+	// StepName is the step's Name() return value.
+	StepName *string `json:"step_name,omitempty"`
 }
 
-// NewExplainStageTrace instantiates a new ExplainStageTrace object
+// NewStepTrace instantiates a new StepTrace object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewExplainStageTrace() *ExplainStageTrace {
-	this := ExplainStageTrace{}
+func NewStepTrace() *StepTrace {
+	this := StepTrace{}
 	return &this
 }
 
-// NewExplainStageTraceWithDefaults instantiates a new ExplainStageTrace object
+// NewStepTraceWithDefaults instantiates a new StepTrace object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewExplainStageTraceWithDefaults() *ExplainStageTrace {
-	this := ExplainStageTrace{}
+func NewStepTraceWithDefaults() *StepTrace {
+	this := StepTrace{}
 	return &this
 }
 
 // GetDurationMs returns the DurationMs field value if set, zero value otherwise.
-func (o *ExplainStageTrace) GetDurationMs() int32 {
+func (o *StepTrace) GetDurationMs() int32 {
 	if o == nil || IsNil(o.DurationMs) {
 		var ret int32
 		return ret
@@ -64,7 +62,7 @@ func (o *ExplainStageTrace) GetDurationMs() int32 {
 
 // GetDurationMsOk returns a tuple with the DurationMs field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExplainStageTrace) GetDurationMsOk() (*int32, bool) {
+func (o *StepTrace) GetDurationMsOk() (*int32, bool) {
 	if o == nil || IsNil(o.DurationMs) {
 		return nil, false
 	}
@@ -72,7 +70,7 @@ func (o *ExplainStageTrace) GetDurationMsOk() (*int32, bool) {
 }
 
 // HasDurationMs returns a boolean if a field has been set.
-func (o *ExplainStageTrace) HasDurationMs() bool {
+func (o *StepTrace) HasDurationMs() bool {
 	if o != nil && !IsNil(o.DurationMs) {
 		return true
 	}
@@ -81,12 +79,12 @@ func (o *ExplainStageTrace) HasDurationMs() bool {
 }
 
 // SetDurationMs gets a reference to the given int32 and assigns it to the DurationMs field.
-func (o *ExplainStageTrace) SetDurationMs(v int32) {
+func (o *StepTrace) SetDurationMs(v int32) {
 	o.DurationMs = &v
 }
 
 // GetError returns the Error field value if set, zero value otherwise.
-func (o *ExplainStageTrace) GetError() string {
+func (o *StepTrace) GetError() string {
 	if o == nil || IsNil(o.Error) {
 		var ret string
 		return ret
@@ -96,7 +94,7 @@ func (o *ExplainStageTrace) GetError() string {
 
 // GetErrorOk returns a tuple with the Error field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExplainStageTrace) GetErrorOk() (*string, bool) {
+func (o *StepTrace) GetErrorOk() (*string, bool) {
 	if o == nil || IsNil(o.Error) {
 		return nil, false
 	}
@@ -104,7 +102,7 @@ func (o *ExplainStageTrace) GetErrorOk() (*string, bool) {
 }
 
 // HasError returns a boolean if a field has been set.
-func (o *ExplainStageTrace) HasError() bool {
+func (o *StepTrace) HasError() bool {
 	if o != nil && !IsNil(o.Error) {
 		return true
 	}
@@ -113,12 +111,12 @@ func (o *ExplainStageTrace) HasError() bool {
 }
 
 // SetError gets a reference to the given string and assigns it to the Error field.
-func (o *ExplainStageTrace) SetError(v string) {
+func (o *StepTrace) SetError(v string) {
 	o.Error = &v
 }
 
 // GetInput returns the Input field value if set, zero value otherwise.
-func (o *ExplainStageTrace) GetInput() string {
+func (o *StepTrace) GetInput() string {
 	if o == nil || IsNil(o.Input) {
 		var ret string
 		return ret
@@ -128,7 +126,7 @@ func (o *ExplainStageTrace) GetInput() string {
 
 // GetInputOk returns a tuple with the Input field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExplainStageTrace) GetInputOk() (*string, bool) {
+func (o *StepTrace) GetInputOk() (*string, bool) {
 	if o == nil || IsNil(o.Input) {
 		return nil, false
 	}
@@ -136,7 +134,7 @@ func (o *ExplainStageTrace) GetInputOk() (*string, bool) {
 }
 
 // HasInput returns a boolean if a field has been set.
-func (o *ExplainStageTrace) HasInput() bool {
+func (o *StepTrace) HasInput() bool {
 	if o != nil && !IsNil(o.Input) {
 		return true
 	}
@@ -145,12 +143,12 @@ func (o *ExplainStageTrace) HasInput() bool {
 }
 
 // SetInput gets a reference to the given string and assigns it to the Input field.
-func (o *ExplainStageTrace) SetInput(v string) {
+func (o *StepTrace) SetInput(v string) {
 	o.Input = &v
 }
 
 // GetOutput returns the Output field value if set, zero value otherwise.
-func (o *ExplainStageTrace) GetOutput() string {
+func (o *StepTrace) GetOutput() string {
 	if o == nil || IsNil(o.Output) {
 		var ret string
 		return ret
@@ -160,7 +158,7 @@ func (o *ExplainStageTrace) GetOutput() string {
 
 // GetOutputOk returns a tuple with the Output field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExplainStageTrace) GetOutputOk() (*string, bool) {
+func (o *StepTrace) GetOutputOk() (*string, bool) {
 	if o == nil || IsNil(o.Output) {
 		return nil, false
 	}
@@ -168,7 +166,7 @@ func (o *ExplainStageTrace) GetOutputOk() (*string, bool) {
 }
 
 // HasOutput returns a boolean if a field has been set.
-func (o *ExplainStageTrace) HasOutput() bool {
+func (o *StepTrace) HasOutput() bool {
 	if o != nil && !IsNil(o.Output) {
 		return true
 	}
@@ -177,12 +175,12 @@ func (o *ExplainStageTrace) HasOutput() bool {
 }
 
 // SetOutput gets a reference to the given string and assigns it to the Output field.
-func (o *ExplainStageTrace) SetOutput(v string) {
+func (o *StepTrace) SetOutput(v string) {
 	o.Output = &v
 }
 
 // GetResultCount returns the ResultCount field value if set, zero value otherwise.
-func (o *ExplainStageTrace) GetResultCount() int32 {
+func (o *StepTrace) GetResultCount() int32 {
 	if o == nil || IsNil(o.ResultCount) {
 		var ret int32
 		return ret
@@ -192,7 +190,7 @@ func (o *ExplainStageTrace) GetResultCount() int32 {
 
 // GetResultCountOk returns a tuple with the ResultCount field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExplainStageTrace) GetResultCountOk() (*int32, bool) {
+func (o *StepTrace) GetResultCountOk() (*int32, bool) {
 	if o == nil || IsNil(o.ResultCount) {
 		return nil, false
 	}
@@ -200,7 +198,7 @@ func (o *ExplainStageTrace) GetResultCountOk() (*int32, bool) {
 }
 
 // HasResultCount returns a boolean if a field has been set.
-func (o *ExplainStageTrace) HasResultCount() bool {
+func (o *StepTrace) HasResultCount() bool {
 	if o != nil && !IsNil(o.ResultCount) {
 		return true
 	}
@@ -209,75 +207,43 @@ func (o *ExplainStageTrace) HasResultCount() bool {
 }
 
 // SetResultCount gets a reference to the given int32 and assigns it to the ResultCount field.
-func (o *ExplainStageTrace) SetResultCount(v int32) {
+func (o *StepTrace) SetResultCount(v int32) {
 	o.ResultCount = &v
 }
 
-// GetStageName returns the StageName field value if set, zero value otherwise.
-func (o *ExplainStageTrace) GetStageName() string {
-	if o == nil || IsNil(o.StageName) {
+// GetStepName returns the StepName field value if set, zero value otherwise.
+func (o *StepTrace) GetStepName() string {
+	if o == nil || IsNil(o.StepName) {
 		var ret string
 		return ret
 	}
-	return *o.StageName
+	return *o.StepName
 }
 
-// GetStageNameOk returns a tuple with the StageName field value if set, nil otherwise
+// GetStepNameOk returns a tuple with the StepName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExplainStageTrace) GetStageNameOk() (*string, bool) {
-	if o == nil || IsNil(o.StageName) {
+func (o *StepTrace) GetStepNameOk() (*string, bool) {
+	if o == nil || IsNil(o.StepName) {
 		return nil, false
 	}
-	return o.StageName, true
+	return o.StepName, true
 }
 
-// HasStageName returns a boolean if a field has been set.
-func (o *ExplainStageTrace) HasStageName() bool {
-	if o != nil && !IsNil(o.StageName) {
+// HasStepName returns a boolean if a field has been set.
+func (o *StepTrace) HasStepName() bool {
+	if o != nil && !IsNil(o.StepName) {
 		return true
 	}
 
 	return false
 }
 
-// SetStageName gets a reference to the given string and assigns it to the StageName field.
-func (o *ExplainStageTrace) SetStageName(v string) {
-	o.StageName = &v
+// SetStepName gets a reference to the given string and assigns it to the StepName field.
+func (o *StepTrace) SetStepName(v string) {
+	o.StepName = &v
 }
 
-// GetSteps returns the Steps field value if set, zero value otherwise.
-func (o *ExplainStageTrace) GetSteps() []ExplainStepTrace {
-	if o == nil || IsNil(o.Steps) {
-		var ret []ExplainStepTrace
-		return ret
-	}
-	return o.Steps
-}
-
-// GetStepsOk returns a tuple with the Steps field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ExplainStageTrace) GetStepsOk() ([]ExplainStepTrace, bool) {
-	if o == nil || IsNil(o.Steps) {
-		return nil, false
-	}
-	return o.Steps, true
-}
-
-// HasSteps returns a boolean if a field has been set.
-func (o *ExplainStageTrace) HasSteps() bool {
-	if o != nil && !IsNil(o.Steps) {
-		return true
-	}
-
-	return false
-}
-
-// SetSteps gets a reference to the given []ExplainStepTrace and assigns it to the Steps field.
-func (o *ExplainStageTrace) SetSteps(v []ExplainStepTrace) {
-	o.Steps = v
-}
-
-func (o ExplainStageTrace) MarshalJSON() ([]byte, error) {
+func (o StepTrace) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -285,7 +251,7 @@ func (o ExplainStageTrace) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o ExplainStageTrace) ToMap() (map[string]interface{}, error) {
+func (o StepTrace) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.DurationMs) {
 		toSerialize["duration_ms"] = o.DurationMs
@@ -302,47 +268,44 @@ func (o ExplainStageTrace) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ResultCount) {
 		toSerialize["result_count"] = o.ResultCount
 	}
-	if !IsNil(o.StageName) {
-		toSerialize["stage_name"] = o.StageName
-	}
-	if !IsNil(o.Steps) {
-		toSerialize["steps"] = o.Steps
+	if !IsNil(o.StepName) {
+		toSerialize["step_name"] = o.StepName
 	}
 	return toSerialize, nil
 }
 
-type NullableExplainStageTrace struct {
-	value *ExplainStageTrace
+type NullableStepTrace struct {
+	value *StepTrace
 	isSet bool
 }
 
-func (v NullableExplainStageTrace) Get() *ExplainStageTrace {
+func (v NullableStepTrace) Get() *StepTrace {
 	return v.value
 }
 
-func (v *NullableExplainStageTrace) Set(val *ExplainStageTrace) {
+func (v *NullableStepTrace) Set(val *StepTrace) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableExplainStageTrace) IsSet() bool {
+func (v NullableStepTrace) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableExplainStageTrace) Unset() {
+func (v *NullableStepTrace) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableExplainStageTrace(val *ExplainStageTrace) *NullableExplainStageTrace {
-	return &NullableExplainStageTrace{value: val, isSet: true}
+func NewNullableStepTrace(val *StepTrace) *NullableStepTrace {
+	return &NullableStepTrace{value: val, isSet: true}
 }
 
-func (v NullableExplainStageTrace) MarshalJSON() ([]byte, error) {
+func (v NullableStepTrace) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableExplainStageTrace) UnmarshalJSON(src []byte) error {
+func (v *NullableStepTrace) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

@@ -20,7 +20,7 @@ var _ MappedNullable = &SearchMemoriesResponse{}
 
 // SearchMemoriesResponse struct for SearchMemoriesResponse
 type SearchMemoriesResponse struct {
-	ExplainTrace *ExplainTrace `json:"explain_trace,omitempty"`
+	ExplainTrace *Trace `json:"explain_trace,omitempty"`
 	Memories []SearchMemoryResponse `json:"memories,omitempty"`
 }
 
@@ -42,9 +42,9 @@ func NewSearchMemoriesResponseWithDefaults() *SearchMemoriesResponse {
 }
 
 // GetExplainTrace returns the ExplainTrace field value if set, zero value otherwise.
-func (o *SearchMemoriesResponse) GetExplainTrace() ExplainTrace {
+func (o *SearchMemoriesResponse) GetExplainTrace() Trace {
 	if o == nil || IsNil(o.ExplainTrace) {
-		var ret ExplainTrace
+		var ret Trace
 		return ret
 	}
 	return *o.ExplainTrace
@@ -52,7 +52,7 @@ func (o *SearchMemoriesResponse) GetExplainTrace() ExplainTrace {
 
 // GetExplainTraceOk returns a tuple with the ExplainTrace field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *SearchMemoriesResponse) GetExplainTraceOk() (*ExplainTrace, bool) {
+func (o *SearchMemoriesResponse) GetExplainTraceOk() (*Trace, bool) {
 	if o == nil || IsNil(o.ExplainTrace) {
 		return nil, false
 	}
@@ -68,8 +68,8 @@ func (o *SearchMemoriesResponse) HasExplainTrace() bool {
 	return false
 }
 
-// SetExplainTrace gets a reference to the given ExplainTrace and assigns it to the ExplainTrace field.
-func (o *SearchMemoriesResponse) SetExplainTrace(v ExplainTrace) {
+// SetExplainTrace gets a reference to the given Trace and assigns it to the ExplainTrace field.
+func (o *SearchMemoriesResponse) SetExplainTrace(v Trace) {
 	o.ExplainTrace = &v
 }
 

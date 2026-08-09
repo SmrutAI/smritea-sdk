@@ -20,7 +20,7 @@ var _ MappedNullable = &CreateMemoryResponse{}
 
 // CreateMemoryResponse struct for CreateMemoryResponse
 type CreateMemoryResponse struct {
-	ExplainTrace *ExplainTrace `json:"explain_trace,omitempty"`
+	ExplainTrace *Trace `json:"explain_trace,omitempty"`
 	// ExplicitSkip is true when the LLM intentionally extracted no facts; nothing was stored.
 	ExplicitSkip *bool `json:"explicit_skip,omitempty"`
 	// FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, when the LLM finds no facts (ExplicitSkip), or when passthrough applies.
@@ -51,9 +51,9 @@ func NewCreateMemoryResponseWithDefaults() *CreateMemoryResponse {
 }
 
 // GetExplainTrace returns the ExplainTrace field value if set, zero value otherwise.
-func (o *CreateMemoryResponse) GetExplainTrace() ExplainTrace {
+func (o *CreateMemoryResponse) GetExplainTrace() Trace {
 	if o == nil || IsNil(o.ExplainTrace) {
-		var ret ExplainTrace
+		var ret Trace
 		return ret
 	}
 	return *o.ExplainTrace
@@ -61,7 +61,7 @@ func (o *CreateMemoryResponse) GetExplainTrace() ExplainTrace {
 
 // GetExplainTraceOk returns a tuple with the ExplainTrace field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CreateMemoryResponse) GetExplainTraceOk() (*ExplainTrace, bool) {
+func (o *CreateMemoryResponse) GetExplainTraceOk() (*Trace, bool) {
 	if o == nil || IsNil(o.ExplainTrace) {
 		return nil, false
 	}
@@ -77,8 +77,8 @@ func (o *CreateMemoryResponse) HasExplainTrace() bool {
 	return false
 }
 
-// SetExplainTrace gets a reference to the given ExplainTrace and assigns it to the ExplainTrace field.
-func (o *CreateMemoryResponse) SetExplainTrace(v ExplainTrace) {
+// SetExplainTrace gets a reference to the given Trace and assigns it to the ExplainTrace field.
+func (o *CreateMemoryResponse) SetExplainTrace(v Trace) {
 	o.ExplainTrace = &v
 }
 

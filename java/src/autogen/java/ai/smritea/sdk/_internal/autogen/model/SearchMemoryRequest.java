@@ -20,8 +20,8 @@ import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
 import ai.smritea.sdk._internal.autogen.model.MemoryScope;
-import ai.smritea.sdk._internal.autogen.model.ModelEnumsRerankerType;
-import ai.smritea.sdk._internal.autogen.model.ModelEnumsSearchMethod;
+import ai.smritea.sdk._internal.autogen.model.RerankerType;
+import ai.smritea.sdk._internal.autogen.model.SearchMethod;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -74,7 +74,7 @@ public class SearchMemoryRequest {
 
   public static final String JSON_PROPERTY_METHOD = "method";
   @javax.annotation.Nullable
-  private ModelEnumsSearchMethod method;
+  private SearchMethod method;
 
   public static final String JSON_PROPERTY_QUERY = "query";
   @javax.annotation.Nonnull
@@ -82,7 +82,7 @@ public class SearchMemoryRequest {
 
   public static final String JSON_PROPERTY_RERANKER_TYPE = "reranker_type";
   @javax.annotation.Nullable
-  private ModelEnumsRerankerType rerankerType;
+  private RerankerType rerankerType;
 
   public static final String JSON_PROPERTY_SCOPE = "scope";
   @javax.annotation.Nullable
@@ -225,7 +225,7 @@ public class SearchMemoryRequest {
   }
 
 
-  public SearchMemoryRequest method(@javax.annotation.Nullable ModelEnumsSearchMethod method) {
+  public SearchMemoryRequest method(@javax.annotation.Nullable SearchMethod method) {
     this.method = method;
     return this;
   }
@@ -237,14 +237,14 @@ public class SearchMemoryRequest {
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_METHOD, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ModelEnumsSearchMethod getMethod() {
+  public SearchMethod getMethod() {
     return method;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_METHOD, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMethod(@javax.annotation.Nullable ModelEnumsSearchMethod method) {
+  public void setMethod(@javax.annotation.Nullable SearchMethod method) {
     this.method = method;
   }
 
@@ -273,7 +273,7 @@ public class SearchMemoryRequest {
   }
 
 
-  public SearchMemoryRequest rerankerType(@javax.annotation.Nullable ModelEnumsRerankerType rerankerType) {
+  public SearchMemoryRequest rerankerType(@javax.annotation.Nullable RerankerType rerankerType) {
     this.rerankerType = rerankerType;
     return this;
   }
@@ -285,14 +285,14 @@ public class SearchMemoryRequest {
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_RERANKER_TYPE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ModelEnumsRerankerType getRerankerType() {
+  public RerankerType getRerankerType() {
     return rerankerType;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_RERANKER_TYPE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setRerankerType(@javax.annotation.Nullable ModelEnumsRerankerType rerankerType) {
+  public void setRerankerType(@javax.annotation.Nullable RerankerType rerankerType) {
     this.rerankerType = rerankerType;
   }
 

@@ -1,24 +1,20 @@
 
-# ExplainTrace
+# RerankerType
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`stages` | [Array&lt;ExplainStageTrace&gt;](ExplainStageTrace.md)
-`totalMs` | number
 
 ## Example
 
 ```typescript
-import type { ExplainTrace } from ''
+import type { RerankerType } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "stages": null,
-  "totalMs": null,
-} satisfies ExplainTrace
+} satisfies RerankerType
 
 console.log(example)
 
@@ -27,7 +23,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as ExplainTrace
+const exampleParsed = JSON.parse(exampleJSON) as RerankerType
 console.log(exampleParsed)
 ```
 

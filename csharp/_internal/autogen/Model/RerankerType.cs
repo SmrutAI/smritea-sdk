@@ -28,10 +28,10 @@ using OpenAPIDateConverter = Smritea.Internal.Autogen.Client.OpenAPIDateConverte
 namespace Smritea.Internal.Autogen.Model
 {
     /// <summary>
-    /// Defines model_enums.RerankerType
+    /// Defines RerankerType
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum ModelEnumsRerankerType
+    public enum RerankerType
     {
         /// <summary>
         /// Enum RerankerRRF for value: rrf

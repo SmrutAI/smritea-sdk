@@ -30,18 +30,18 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import ai.smritea.sdk._internal.autogen.ApiClient;
 /**
- * ExplainStepTrace
+ * StepTrace
  */
 @JsonPropertyOrder({
-  ExplainStepTrace.JSON_PROPERTY_DURATION_MS,
-  ExplainStepTrace.JSON_PROPERTY_ERROR,
-  ExplainStepTrace.JSON_PROPERTY_INPUT,
-  ExplainStepTrace.JSON_PROPERTY_OUTPUT,
-  ExplainStepTrace.JSON_PROPERTY_RESULT_COUNT,
-  ExplainStepTrace.JSON_PROPERTY_STEP_NAME
+  StepTrace.JSON_PROPERTY_DURATION_MS,
+  StepTrace.JSON_PROPERTY_ERROR,
+  StepTrace.JSON_PROPERTY_INPUT,
+  StepTrace.JSON_PROPERTY_OUTPUT,
+  StepTrace.JSON_PROPERTY_RESULT_COUNT,
+  StepTrace.JSON_PROPERTY_STEP_NAME
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
-public class ExplainStepTrace {
+public class StepTrace {
   public static final String JSON_PROPERTY_DURATION_MS = "duration_ms";
   @javax.annotation.Nullable
   private Integer durationMs;
@@ -66,10 +66,10 @@ public class ExplainStepTrace {
   @javax.annotation.Nullable
   private String stepName;
 
-  public ExplainStepTrace() { 
+  public StepTrace() { 
   }
 
-  public ExplainStepTrace durationMs(@javax.annotation.Nullable Integer durationMs) {
+  public StepTrace durationMs(@javax.annotation.Nullable Integer durationMs) {
     this.durationMs = durationMs;
     return this;
   }
@@ -93,7 +93,7 @@ public class ExplainStepTrace {
   }
 
 
-  public ExplainStepTrace error(@javax.annotation.Nullable String error) {
+  public StepTrace error(@javax.annotation.Nullable String error) {
     this.error = error;
     return this;
   }
@@ -117,7 +117,7 @@ public class ExplainStepTrace {
   }
 
 
-  public ExplainStepTrace input(@javax.annotation.Nullable String input) {
+  public StepTrace input(@javax.annotation.Nullable String input) {
     this.input = input;
     return this;
   }
@@ -141,7 +141,7 @@ public class ExplainStepTrace {
   }
 
 
-  public ExplainStepTrace output(@javax.annotation.Nullable String output) {
+  public StepTrace output(@javax.annotation.Nullable String output) {
     this.output = output;
     return this;
   }
@@ -165,7 +165,7 @@ public class ExplainStepTrace {
   }
 
 
-  public ExplainStepTrace resultCount(@javax.annotation.Nullable Integer resultCount) {
+  public StepTrace resultCount(@javax.annotation.Nullable Integer resultCount) {
     this.resultCount = resultCount;
     return this;
   }
@@ -189,7 +189,7 @@ public class ExplainStepTrace {
   }
 
 
-  public ExplainStepTrace stepName(@javax.annotation.Nullable String stepName) {
+  public StepTrace stepName(@javax.annotation.Nullable String stepName) {
     this.stepName = stepName;
     return this;
   }
@@ -214,7 +214,7 @@ public class ExplainStepTrace {
 
 
   /**
-   * Return true if this explain.StepTrace object is equal to o.
+   * Return true if this StepTrace object is equal to o.
    */
   @Override
   public boolean equals(Object o) {
@@ -224,13 +224,13 @@ public class ExplainStepTrace {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ExplainStepTrace explainStepTrace = (ExplainStepTrace) o;
-    return Objects.equals(this.durationMs, explainStepTrace.durationMs) &&
-        Objects.equals(this.error, explainStepTrace.error) &&
-        Objects.equals(this.input, explainStepTrace.input) &&
-        Objects.equals(this.output, explainStepTrace.output) &&
-        Objects.equals(this.resultCount, explainStepTrace.resultCount) &&
-        Objects.equals(this.stepName, explainStepTrace.stepName);
+    StepTrace stepTrace = (StepTrace) o;
+    return Objects.equals(this.durationMs, stepTrace.durationMs) &&
+        Objects.equals(this.error, stepTrace.error) &&
+        Objects.equals(this.input, stepTrace.input) &&
+        Objects.equals(this.output, stepTrace.output) &&
+        Objects.equals(this.resultCount, stepTrace.resultCount) &&
+        Objects.equals(this.stepName, stepTrace.stepName);
   }
 
   @Override
@@ -241,7 +241,7 @@ public class ExplainStepTrace {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ExplainStepTrace {\n");
+    sb.append("class StepTrace {\n");
     sb.append("    durationMs: ").append(toIndentedString(durationMs)).append("\n");
     sb.append("    error: ").append(toIndentedString(error)).append("\n");
     sb.append("    input: ").append(toIndentedString(input)).append("\n");

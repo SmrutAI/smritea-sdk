@@ -6,7 +6,7 @@
 
 Name | Type
 ------------ | -------------
-`explainTrace` | [ExplainTrace](ExplainTrace.md)
+`explainTrace` | [Trace](Trace.md)
 `explicitSkip` | boolean
 `factsExtracted` | number
 `memories` | [Array&lt;MemoryResponse&gt;](MemoryResponse.md)

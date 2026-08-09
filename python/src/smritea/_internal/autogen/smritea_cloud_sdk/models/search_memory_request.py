@@ -22,8 +22,8 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_scope import MemoryScope
-from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_reranker_type import ModelEnumsRerankerType
-from smritea._internal.autogen.smritea_cloud_sdk.models.model_enums_search_method import ModelEnumsSearchMethod
+from smritea._internal.autogen.smritea_cloud_sdk.models.reranker_type import RerankerType
+from smritea._internal.autogen.smritea_cloud_sdk.models.search_method import SearchMethod
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -36,9 +36,9 @@ class SearchMemoryRequest(BaseModel):
     graph_depth: Optional[Annotated[int, Field(le=5, strict=True)]] = Field(default=None, description="0=use app config, 1-5=override traversal depth")
     limit: Optional[Annotated[int, Field(le=100, strict=True)]] = None
     metadata_filter: Optional[Dict[str, Any]] = Field(default=None, description="MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned.")
-    method: Optional[ModelEnumsSearchMethod] = None
+    method: Optional[SearchMethod] = None
     query: StrictStr
-    reranker_type: Optional[ModelEnumsRerankerType] = Field(default=None, description="RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.")
+    reranker_type: Optional[RerankerType] = Field(default=None, description="RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.")
     scope: Optional[MemoryScope] = Field(default=None, description="Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \"no filter\" (searches across all).")
     threshold: Optional[Union[Annotated[float, Field(le=1, strict=True, ge=0)], Annotated[int, Field(le=1, strict=True, ge=0)]]] = Field(default=None, description="0=no filtering (pipeline uses RRF scores, not cosine similarity)")
     to_time: Optional[StrictStr] = Field(default=None, description="ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.")

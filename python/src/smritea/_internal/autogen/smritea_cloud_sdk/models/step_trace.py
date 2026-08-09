@@ -18,19 +18,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from smritea._internal.autogen.smritea_cloud_sdk.models.explain_stage_trace import ExplainStageTrace
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ExplainTrace(BaseModel):
+class StepTrace(BaseModel):
     """
-    ExplainTrace
+    StepTrace
     """ # noqa: E501
-    stages: Optional[List[ExplainStageTrace]] = Field(default=None, description="Stages contains the trace for each pipeline stage in execution order.")
-    total_ms: Optional[StrictInt] = Field(default=None, description="TotalMs is the wall-clock duration of the entire search request in milliseconds.")
-    __properties: ClassVar[List[str]] = ["stages", "total_ms"]
+    duration_ms: Optional[StrictInt] = Field(default=None, description="DurationMs is the wall-clock duration of the step.Execute() call.")
+    error: Optional[StrictStr] = Field(default=None, description="Error is the error string if the step failed, empty on success.")
+    input: Optional[StrictStr] = Field(default=None, description="InputJSON is the JSON-serialized step input.")
+    output: Optional[StrictStr] = Field(default=None, description="OutputJSON is the JSON-serialized step output.")
+    result_count: Optional[StrictInt] = Field(default=None, description="ResultCount is the number of results the step produced.")
+    step_name: Optional[StrictStr] = Field(default=None, description="StepName is the step's Name() return value.")
+    __properties: ClassVar[List[str]] = ["duration_ms", "error", "input", "output", "result_count", "step_name"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +53,7 @@ class ExplainTrace(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ExplainTrace from a JSON string"""
+        """Create an instance of StepTrace from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,18 +74,11 @@ class ExplainTrace(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in stages (list)
-        _items = []
-        if self.stages:
-            for _item_stages in self.stages:
-                if _item_stages:
-                    _items.append(_item_stages.to_dict())
-            _dict['stages'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ExplainTrace from a dict"""
+        """Create an instance of StepTrace from a dict"""
         if obj is None:
             return None
 
@@ -90,8 +86,12 @@ class ExplainTrace(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "stages": [ExplainStageTrace.from_dict(_item) for _item in obj["stages"]] if obj.get("stages") is not None else None,
-            "total_ms": obj.get("total_ms")
+            "duration_ms": obj.get("duration_ms"),
+            "error": obj.get("error"),
+            "input": obj.get("input"),
+            "output": obj.get("output"),
+            "result_count": obj.get("result_count"),
+            "step_name": obj.get("step_name")
         })
         return _obj
 

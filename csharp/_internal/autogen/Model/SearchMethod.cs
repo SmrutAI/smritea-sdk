@@ -28,10 +28,10 @@ using OpenAPIDateConverter = Smritea.Internal.Autogen.Client.OpenAPIDateConverte
 namespace Smritea.Internal.Autogen.Model
 {
     /// <summary>
-    /// Defines model_enums.SearchMethod
+    /// Defines SearchMethod
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum ModelEnumsSearchMethod
+    public enum SearchMethod
     {
         /// <summary>
         /// Enum SearchMethodInvalid for value: invalid_search_method

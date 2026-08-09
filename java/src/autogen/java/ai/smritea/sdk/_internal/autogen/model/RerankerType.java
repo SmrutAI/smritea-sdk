@@ -26,9 +26,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Gets or Sets model_enums.RerankerType
+ * Gets or Sets RerankerType
  */
-public enum ModelEnumsRerankerType {
+public enum RerankerType {
   
   RerankerRRF("rrf"),
   
@@ -46,7 +46,7 @@ public enum ModelEnumsRerankerType {
 
   private String value;
 
-  ModelEnumsRerankerType(String value) {
+  RerankerType(String value) {
     this.value = value;
   }
 
@@ -61,8 +61,8 @@ public enum ModelEnumsRerankerType {
   }
 
   @JsonCreator
-  public static ModelEnumsRerankerType fromValue(String value) {
-    for (ModelEnumsRerankerType b : ModelEnumsRerankerType.values()) {
+  public static RerankerType fromValue(String value) {
+    for (RerankerType b : RerankerType.values()) {
       if (b.value.equals(value)) {
         return b;
       }

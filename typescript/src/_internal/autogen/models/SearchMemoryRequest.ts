@@ -13,20 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
-import type { ModelEnumsSearchMethod } from './ModelEnumsSearchMethod';
+import type { RerankerType } from './RerankerType';
 import {
-    ModelEnumsSearchMethodFromJSON,
-    ModelEnumsSearchMethodFromJSONTyped,
-    ModelEnumsSearchMethodToJSON,
-    ModelEnumsSearchMethodToJSONTyped,
-} from './ModelEnumsSearchMethod';
-import type { ModelEnumsRerankerType } from './ModelEnumsRerankerType';
-import {
-    ModelEnumsRerankerTypeFromJSON,
-    ModelEnumsRerankerTypeFromJSONTyped,
-    ModelEnumsRerankerTypeToJSON,
-    ModelEnumsRerankerTypeToJSONTyped,
-} from './ModelEnumsRerankerType';
+    RerankerTypeFromJSON,
+    RerankerTypeFromJSONTyped,
+    RerankerTypeToJSON,
+    RerankerTypeToJSONTyped,
+} from './RerankerType';
 import type { MemoryScope } from './MemoryScope';
 import {
     MemoryScopeFromJSON,
@@ -34,6 +27,13 @@ import {
     MemoryScopeToJSON,
     MemoryScopeToJSONTyped,
 } from './MemoryScope';
+import type { SearchMethod } from './SearchMethod';
+import {
+    SearchMethodFromJSON,
+    SearchMethodFromJSONTyped,
+    SearchMethodToJSON,
+    SearchMethodToJSONTyped,
+} from './SearchMethod';
 
 /**
  * 
@@ -75,10 +75,10 @@ export interface SearchMemoryRequest {
     metadataFilter?: object;
     /**
      * 
-     * @type {ModelEnumsSearchMethod}
+     * @type {SearchMethod}
      * @memberof SearchMemoryRequest
      */
-    method?: ModelEnumsSearchMethod;
+    method?: SearchMethod;
     /**
      * 
      * @type {string}
@@ -88,10 +88,10 @@ export interface SearchMemoryRequest {
     /**
      * RerankerType overrides the reranker for this request (optional).
      * If nil, uses app config reranker. Only applies to deep_search method.
-     * @type {ModelEnumsRerankerType}
+     * @type {RerankerType}
      * @memberof SearchMemoryRequest
      */
-    rerankerType?: ModelEnumsRerankerType;
+    rerankerType?: RerankerType;
     /**
      * Scope groups actor, conversation, and source filtering fields.
      * Zero-value fields mean "no filter" (searches across all).
@@ -148,9 +148,9 @@ export function SearchMemoryRequestFromJSONTyped(json: any, ignoreDiscriminator:
         'graphDepth': json['graph_depth'] == null ? undefined : json['graph_depth'],
         'limit': json['limit'] == null ? undefined : json['limit'],
         'metadataFilter': json['metadata_filter'] == null ? undefined : json['metadata_filter'],
-        'method': json['method'] == null ? undefined : ModelEnumsSearchMethodFromJSON(json['method']),
+        'method': json['method'] == null ? undefined : SearchMethodFromJSON(json['method']),
         'query': json['query'],
-        'rerankerType': json['reranker_type'] == null ? undefined : ModelEnumsRerankerTypeFromJSON(json['reranker_type']),
+        'rerankerType': json['reranker_type'] == null ? undefined : RerankerTypeFromJSON(json['reranker_type']),
         'scope': json['scope'] == null ? undefined : MemoryScopeFromJSON(json['scope']),
         'threshold': json['threshold'] == null ? undefined : json['threshold'],
         'toTime': json['to_time'] == null ? undefined : json['to_time'],
@@ -174,9 +174,9 @@ export function SearchMemoryRequestToJSONTyped(value?: SearchMemoryRequest | nul
         'graph_depth': value['graphDepth'],
         'limit': value['limit'],
         'metadata_filter': value['metadataFilter'],
-        'method': ModelEnumsSearchMethodToJSON(value['method']),
+        'method': SearchMethodToJSON(value['method']),
         'query': value['query'],
-        'reranker_type': ModelEnumsRerankerTypeToJSON(value['rerankerType']),
+        'reranker_type': RerankerTypeToJSON(value['rerankerType']),
         'scope': MemoryScopeToJSON(value['scope']),
         'threshold': value['threshold'],
         'to_time': value['toTime'],

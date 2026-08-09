@@ -20,8 +20,8 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
-from smritea._internal.autogen.smritea_cloud_sdk.models.explain_trace import ExplainTrace
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_response import MemoryResponse
+from smritea._internal.autogen.smritea_cloud_sdk.models.trace import Trace
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +29,7 @@ class CreateMemoryResponse(BaseModel):
     """
     CreateMemoryResponse
     """ # noqa: E501
-    explain_trace: Optional[ExplainTrace] = None
+    explain_trace: Optional[Trace] = None
     explicit_skip: Optional[StrictBool] = Field(default=None, description="ExplicitSkip is true when the LLM intentionally extracted no facts; nothing was stored.")
     facts_extracted: Optional[StrictInt] = Field(default=None, description="FactsExtracted is the number of discrete facts the LLM extracted from the input. 0 when extraction is disabled (NoExtract/quick_search), when extraction fails, when the LLM finds no facts (ExplicitSkip), or when passthrough applies.")
     memories: Optional[List[MemoryResponse]] = Field(default=None, description="Memories contains all memories created from the extracted facts. When extraction is disabled or fails, this contains a single memory with the original content. When ExplicitSkip is true (phatic / non-extractable content), this is empty.")
@@ -98,7 +98,7 @@ class CreateMemoryResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "explain_trace": ExplainTrace.from_dict(obj["explain_trace"]) if obj.get("explain_trace") is not None else None,
+            "explain_trace": Trace.from_dict(obj["explain_trace"]) if obj.get("explain_trace") is not None else None,
             "explicit_skip": obj.get("explicit_skip"),
             "facts_extracted": obj.get("facts_extracted"),
             "memories": [MemoryResponse.from_dict(_item) for _item in obj["memories"]] if obj.get("memories") is not None else None,
