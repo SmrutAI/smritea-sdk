@@ -4,7 +4,7 @@ All URIs are relative to *http://api.smritea.ai/api/v1*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**createMemory**](SDKMemoryApi.md#creatememory) | **POST** /api/v1/sdk/memories | Create memory (SDK) |
+| [**createMemory**](SDKMemoryApi.md#creatememoryoperation) | **POST** /api/v1/sdk/memories | Create memory (SDK) |
 | [**deleteMemory**](SDKMemoryApi.md#deletememory) | **DELETE** /api/v1/sdk/memories/{memory_id} | Delete memory (SDK) |
 | [**getMemory**](SDKMemoryApi.md#getmemory) | **GET** /api/v1/sdk/memories/{memory_id} | Get memory by ID (SDK) |
 | [**searchMemories**](SDKMemoryApi.md#searchmemories) | **POST** /api/v1/sdk/memories/search | Search memories (SDK) |
@@ -13,7 +13,7 @@ All URIs are relative to *http://api.smritea.ai/api/v1*
 
 ## createMemory
 
-> MemoryCreateMemoryResponse createMemory(request)
+> CreateMemoryResponse createMemory(request)
 
 Create memory (SDK)
 
@@ -26,7 +26,7 @@ import {
   Configuration,
   SDKMemoryApi,
 } from '';
-import type { CreateMemoryRequest } from '';
+import type { CreateMemoryOperationRequest } from '';
 
 async function example() {
   console.log("🚀 Testing  SDK...");
@@ -37,9 +37,9 @@ async function example() {
   const api = new SDKMemoryApi(config);
 
   const body = {
-    // MemoryCreateMemoryRequest | Memory creation details
+    // CreateMemoryRequest | Memory creation details
     request: ...,
-  } satisfies CreateMemoryRequest;
+  } satisfies CreateMemoryOperationRequest;
 
   try {
     const data = await api.createMemory(body);
@@ -58,11 +58,11 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **request** | [MemoryCreateMemoryRequest](MemoryCreateMemoryRequest.md) | Memory creation details | |
+| **request** | [CreateMemoryRequest](CreateMemoryRequest.md) | Memory creation details | |
 
 ### Return type
 
-[**MemoryCreateMemoryResponse**](MemoryCreateMemoryResponse.md)
+[**CreateMemoryResponse**](CreateMemoryResponse.md)
 
 ### Authorization
 
@@ -165,7 +165,7 @@ example().catch(console.error);
 
 ## getMemory
 
-> MemoryMemoryResponse getMemory(memoryId)
+> MemoryResponse getMemory(memoryId)
 
 Get memory by ID (SDK)
 
@@ -214,7 +214,7 @@ example().catch(console.error);
 
 ### Return type
 
-[**MemoryMemoryResponse**](MemoryMemoryResponse.md)
+[**MemoryResponse**](MemoryResponse.md)
 
 ### Authorization
 
@@ -241,7 +241,7 @@ example().catch(console.error);
 
 ## searchMemories
 
-> MemorySearchMemoriesResponse searchMemories(request)
+> SearchMemoriesResponse searchMemories(request)
 
 Search memories (SDK)
 
@@ -265,7 +265,7 @@ async function example() {
   const api = new SDKMemoryApi(config);
 
   const body = {
-    // MemorySearchMemoryRequest | Search request details
+    // SearchMemoryRequest | Search request details
     request: ...,
   } satisfies SearchMemoriesRequest;
 
@@ -286,11 +286,11 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **request** | [MemorySearchMemoryRequest](MemorySearchMemoryRequest.md) | Search request details | |
+| **request** | [SearchMemoryRequest](SearchMemoryRequest.md) | Search request details | |
 
 ### Return type
 
-[**MemorySearchMemoriesResponse**](MemorySearchMemoriesResponse.md)
+[**SearchMemoriesResponse**](SearchMemoriesResponse.md)
 
 ### Authorization
 

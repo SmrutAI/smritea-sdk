@@ -11,10 +11,12 @@ from smritea._internal.autogen.smritea_cloud_sdk import ApiClient, Configuration
 from smritea._internal.autogen.smritea_cloud_sdk.api.sdk_memory_api import SDKMemoryApi
 from smritea._internal.autogen.smritea_cloud_sdk.exceptions import ApiException
 from smritea._internal.autogen.smritea_cloud_sdk.models import (
-    CommondtoMemoryScope,
-    CommondtoRelativeStandingConfig,
-    MemoryCreateMemoryRequest,
-    MemorySearchMemoryRequest,
+    CreateMemoryRequest,
+    RelativeStandingConfig,
+    SearchMemoryRequest,
+)
+from smritea._internal.autogen.smritea_cloud_sdk.models import (
+    MemoryScope as AutogenMemoryScope,
 )
 from smritea.exceptions import (
     SmriteaAuthError,
@@ -103,7 +105,7 @@ class SmriteaClient:
         # Build autogen scope from the MemoryScope object
         autogen_scope = None
         if scope is not None:
-            autogen_scope = CommondtoMemoryScope(
+            autogen_scope = AutogenMemoryScope(
                 actor_id=scope.actor_id,
                 actor_type=scope.actor_type,
                 actor_name=scope.actor_name,
@@ -115,13 +117,13 @@ class SmriteaClient:
         # Build autogen relative_standing from SDK type
         autogen_relative_standing = None
         if relative_standing is not None:
-            autogen_relative_standing = CommondtoRelativeStandingConfig(
+            autogen_relative_standing = RelativeStandingConfig(
                 importance=relative_standing.importance,
                 decay_factor=relative_standing.decay_factor,
                 decay_function=relative_standing.decay_function,
             )
 
-        request = MemoryCreateMemoryRequest(
+        request = CreateMemoryRequest(
             app_id=self._app_id,
             content=content,
             scope=autogen_scope,
@@ -179,14 +181,14 @@ class SmriteaClient:
         # Build autogen scope from the MemoryScope object
         autogen_scope = None
         if scope is not None:
-            autogen_scope = CommondtoMemoryScope(
+            autogen_scope = AutogenMemoryScope(
                 actor_id=scope.actor_id,
                 actor_type=scope.actor_type,
                 conversation_id=scope.conversation_id,
                 participant_ids=scope.participant_ids,
             )
 
-        request = MemorySearchMemoryRequest(
+        request = SearchMemoryRequest(
             app_id=self._app_id,
             query=query,
             scope=autogen_scope,

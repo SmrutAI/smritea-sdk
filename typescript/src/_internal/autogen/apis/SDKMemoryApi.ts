@@ -15,30 +15,30 @@
 
 import * as runtime from '../runtime';
 import type {
-  CommondtoAPIError,
-  MemoryCreateMemoryRequest,
-  MemoryCreateMemoryResponse,
-  MemoryMemoryResponse,
-  MemorySearchMemoriesResponse,
-  MemorySearchMemoryRequest,
+  APIError,
+  CreateMemoryRequest,
+  CreateMemoryResponse,
+  MemoryResponse,
+  SearchMemoriesResponse,
+  SearchMemoryRequest,
 } from '../models/index';
 import {
-    CommondtoAPIErrorFromJSON,
-    CommondtoAPIErrorToJSON,
-    MemoryCreateMemoryRequestFromJSON,
-    MemoryCreateMemoryRequestToJSON,
-    MemoryCreateMemoryResponseFromJSON,
-    MemoryCreateMemoryResponseToJSON,
-    MemoryMemoryResponseFromJSON,
-    MemoryMemoryResponseToJSON,
-    MemorySearchMemoriesResponseFromJSON,
-    MemorySearchMemoriesResponseToJSON,
-    MemorySearchMemoryRequestFromJSON,
-    MemorySearchMemoryRequestToJSON,
+    APIErrorFromJSON,
+    APIErrorToJSON,
+    CreateMemoryRequestFromJSON,
+    CreateMemoryRequestToJSON,
+    CreateMemoryResponseFromJSON,
+    CreateMemoryResponseToJSON,
+    MemoryResponseFromJSON,
+    MemoryResponseToJSON,
+    SearchMemoriesResponseFromJSON,
+    SearchMemoriesResponseToJSON,
+    SearchMemoryRequestFromJSON,
+    SearchMemoryRequestToJSON,
 } from '../models/index';
 
-export interface CreateMemoryRequest {
-    request: MemoryCreateMemoryRequest;
+export interface CreateMemoryOperationRequest {
+    request: CreateMemoryRequest;
 }
 
 export interface DeleteMemoryRequest {
@@ -50,7 +50,7 @@ export interface GetMemoryRequest {
 }
 
 export interface SearchMemoriesRequest {
-    request: MemorySearchMemoryRequest;
+    request: SearchMemoryRequest;
 }
 
 /**
@@ -61,7 +61,7 @@ export class SDKMemoryApi extends runtime.BaseAPI {
     /**
      * Creates request options for createMemory without sending the request
      */
-    async createMemoryRequestOpts(requestParameters: CreateMemoryRequest): Promise<runtime.RequestOpts> {
+    async createMemoryRequestOpts(requestParameters: CreateMemoryOperationRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
@@ -87,7 +87,7 @@ export class SDKMemoryApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: MemoryCreateMemoryRequestToJSON(requestParameters['request']),
+            body: CreateMemoryRequestToJSON(requestParameters['request']),
         };
     }
 
@@ -95,18 +95,18 @@ export class SDKMemoryApi extends runtime.BaseAPI {
      * Create a new memory with quota and rate limit enforcement
      * Create memory (SDK)
      */
-    async createMemoryRaw(requestParameters: CreateMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MemoryCreateMemoryResponse>> {
+    async createMemoryRaw(requestParameters: CreateMemoryOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateMemoryResponse>> {
         const requestOptions = await this.createMemoryRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => MemoryCreateMemoryResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => CreateMemoryResponseFromJSON(jsonValue));
     }
 
     /**
      * Create a new memory with quota and rate limit enforcement
      * Create memory (SDK)
      */
-    async createMemory(requestParameters: CreateMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MemoryCreateMemoryResponse> {
+    async createMemory(requestParameters: CreateMemoryOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateMemoryResponse> {
         const response = await this.createMemoryRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -196,18 +196,18 @@ export class SDKMemoryApi extends runtime.BaseAPI {
      * Get a single memory by ID with rate limit enforcement
      * Get memory by ID (SDK)
      */
-    async getMemoryRaw(requestParameters: GetMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MemoryMemoryResponse>> {
+    async getMemoryRaw(requestParameters: GetMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MemoryResponse>> {
         const requestOptions = await this.getMemoryRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => MemoryMemoryResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => MemoryResponseFromJSON(jsonValue));
     }
 
     /**
      * Get a single memory by ID with rate limit enforcement
      * Get memory by ID (SDK)
      */
-    async getMemory(requestParameters: GetMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MemoryMemoryResponse> {
+    async getMemory(requestParameters: GetMemoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MemoryResponse> {
         const response = await this.getMemoryRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -241,7 +241,7 @@ export class SDKMemoryApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: MemorySearchMemoryRequestToJSON(requestParameters['request']),
+            body: SearchMemoryRequestToJSON(requestParameters['request']),
         };
     }
 
@@ -249,18 +249,18 @@ export class SDKMemoryApi extends runtime.BaseAPI {
      * Search memories with quota and rate limit enforcement
      * Search memories (SDK)
      */
-    async searchMemoriesRaw(requestParameters: SearchMemoriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MemorySearchMemoriesResponse>> {
+    async searchMemoriesRaw(requestParameters: SearchMemoriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SearchMemoriesResponse>> {
         const requestOptions = await this.searchMemoriesRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => MemorySearchMemoriesResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => SearchMemoriesResponseFromJSON(jsonValue));
     }
 
     /**
      * Search memories with quota and rate limit enforcement
      * Search memories (SDK)
      */
-    async searchMemories(requestParameters: SearchMemoriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MemorySearchMemoriesResponse> {
+    async searchMemories(requestParameters: SearchMemoriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SearchMemoriesResponse> {
         const response = await this.searchMemoriesRaw(requestParameters, initOverrides);
         return await response.value();
     }

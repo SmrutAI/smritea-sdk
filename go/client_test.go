@@ -37,12 +37,12 @@ func newTestClient(t *testing.T, handler http.Handler, maxRetries int) *SmriteaC
 	})
 }
 
-// memJSON serialises a minimal MemoryCreateMemoryResponse using the autogen struct.
+// memJSON serialises a minimal CreateMemoryResponse using the autogen struct.
 // Use this for Add endpoint responses (POST /memories).
 func memJSON(id, content string) []byte {
 	appID := "app-test"
-	resp := autogen.MemoryCreateMemoryResponse{
-		Memories: []autogen.MemoryMemoryResponse{
+	resp := autogen.CreateMemoryResponse{
+		Memories: []autogen.MemoryResponse{
 			{Id: &id, Content: &content, AppId: &appID},
 		},
 	}
@@ -53,12 +53,12 @@ func memJSON(id, content string) []byte {
 	return b
 }
 
-// memSingleJSON serialises a minimal MemoryMemoryResponse using the autogen struct.
+// memSingleJSON serialises a minimal MemoryResponse using the autogen struct.
 // Use this for Get endpoint responses (GET /memories/{id}) which return a bare memory,
 // not the creation envelope.
 func memSingleJSON(id, content string) []byte {
 	appID := "app-test"
-	resp := autogen.MemoryMemoryResponse{
+	resp := autogen.MemoryResponse{
 		Id:      &id,
 		Content: &content,
 		AppId:   &appID,
@@ -79,10 +79,10 @@ func writeJSON(w http.ResponseWriter, status int, body []byte) {
 	}
 }
 
-// errJSON serialises a CommondtoAPIError using the autogen struct so the JSON
+// errJSON serialises an APIError using the autogen struct so the JSON
 // structure stays in sync with the generated code.
 func errJSON(msg string) []byte {
-	b, err := json.Marshal(autogen.CommondtoAPIError{Message: &msg})
+	b, err := json.Marshal(autogen.APIError{Message: &msg})
 	if err != nil {
 		panic(fmt.Sprintf("errJSON: %v", err))
 	}

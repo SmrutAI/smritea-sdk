@@ -28,10 +28,10 @@ public class SmriteaClientTests : IDisposable
     // -----------------------------------------------------------------------
 
     private static string MemCreateJson(string id, string content) =>
-        new MemoryCreateMemoryResponse(
-            memories: new List<MemoryMemoryResponse>
+        new CreateMemoryResponse(
+            memories: new List<MemoryResponse>
             {
-                new MemoryMemoryResponse(id: id, content: content, appId: "app-test"),
+                new MemoryResponse(id: id, content: content, appId: "app-test"),
             }).ToJson();
 
     private SmriteaClient CreateClient(int maxRetries = 2)

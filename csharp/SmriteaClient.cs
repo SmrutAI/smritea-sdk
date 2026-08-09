@@ -76,13 +76,13 @@ public class SmriteaClient : IDisposable
     /// updatedCount).</returns>
     public async Task<MemoryCreationResult> AddAsync(string content, AddOptions? opts = null, CancellationToken ct = default)
     {
-        var request = new MemoryCreateMemoryRequest(appId: this.appId, content: content);
+        var request = new CreateMemoryRequest(appId: this.appId, content: content);
 
         if (opts is not null)
         {
             if (opts.Scope is not null)
             {
-                var scope = new CommondtoMemoryScope();
+                var scope = new Smritea.Internal.Autogen.Model.MemoryScope();
                 if (opts.Scope.ActorId is not null)
                 {
                     scope.ActorId = opts.Scope.ActorId;
@@ -90,7 +90,7 @@ public class SmriteaClient : IDisposable
 
                 if (opts.Scope.ActorType is not null)
                 {
-                    scope.ActorType = Enum.Parse<CommondtoMemoryScope.ActorTypeEnum>(
+                    scope.ActorType = Enum.Parse<Smritea.Internal.Autogen.Model.MemoryScope.ActorTypeEnum>(
                         opts.Scope.ActorType, ignoreCase: true);
                 }
 
@@ -106,7 +106,7 @@ public class SmriteaClient : IDisposable
 
                 if (opts.Scope.SourceType is not null)
                 {
-                    scope.SourceType = Enum.Parse<CommondtoMemoryScope.SourceTypeEnum>(
+                    scope.SourceType = Enum.Parse<Smritea.Internal.Autogen.Model.MemoryScope.SourceTypeEnum>(
                         opts.Scope.SourceType, ignoreCase: true);
                 }
 
@@ -130,7 +130,7 @@ public class SmriteaClient : IDisposable
 
             if (opts.RelativeStanding is not null)
             {
-                var rs = new CommondtoRelativeStandingConfig();
+                var rs = new RelativeStandingConfig();
                 if (opts.RelativeStanding.Importance.HasValue)
                 {
                     rs.Importance = (decimal)opts.RelativeStanding.Importance.Value;
@@ -143,7 +143,7 @@ public class SmriteaClient : IDisposable
 
                 if (opts.RelativeStanding.DecayFunction is not null)
                 {
-                    rs.DecayFunction = Enum.Parse<CommondtoRelativeStandingConfig.DecayFunctionEnum>(
+                    rs.DecayFunction = Enum.Parse<RelativeStandingConfig.DecayFunctionEnum>(
                         opts.RelativeStanding.DecayFunction, ignoreCase: true);
                 }
 
@@ -187,13 +187,13 @@ public class SmriteaClient : IDisposable
         // The autogen constructor validates appId/query and throws ArgumentNullException
         // if they are null. Object initializer syntax calls the constructor first with all
         // defaults (null), which triggers the guard before the setters run.
-        var request = new MemorySearchMemoryRequest(appId: this.appId, query: query);
+        var request = new SearchMemoryRequest(appId: this.appId, query: query);
 
         if (opts is not null)
         {
             if (opts.Scope is not null)
             {
-                var scope = new CommondtoMemoryScope();
+                var scope = new Smritea.Internal.Autogen.Model.MemoryScope();
                 if (opts.Scope.ActorId is not null)
                 {
                     scope.ActorId = opts.Scope.ActorId;
@@ -201,7 +201,7 @@ public class SmriteaClient : IDisposable
 
                 if (opts.Scope.ActorType is not null)
                 {
-                    scope.ActorType = Enum.Parse<CommondtoMemoryScope.ActorTypeEnum>(
+                    scope.ActorType = Enum.Parse<Smritea.Internal.Autogen.Model.MemoryScope.ActorTypeEnum>(
                         opts.Scope.ActorType, ignoreCase: true);
                 }
 

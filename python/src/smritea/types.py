@@ -15,16 +15,16 @@ from typing import Any
 from pydantic import BaseModel
 
 from smritea._internal.autogen.smritea_cloud_sdk.models import (
-    MemoryCreateMemoryResponse as MemoryCreationResult,
+    CreateMemoryResponse as MemoryCreationResult,
 )
 from smritea._internal.autogen.smritea_cloud_sdk.models import (
-    MemoryMemoryResponse as Memory,
+    MemoryResponse as Memory,
 )
 from smritea._internal.autogen.smritea_cloud_sdk.models import (
-    MemorySearchMemoriesResponse,
+    SearchMemoriesResponse,
 )
 from smritea._internal.autogen.smritea_cloud_sdk.models import (
-    MemorySearchMemoryResponse as SearchResult,
+    SearchMemoryResponse as SearchResult,
 )
 
 # ---------------------------------------------------------------------------
@@ -41,7 +41,7 @@ __all__ = [
     "MemoryCreationResult",
     "Memory",
     "SearchResult",
-    "MemorySearchMemoriesResponse",
+    "SearchMemoriesResponse",
     "MemoryScope",
 ]
 

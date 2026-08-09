@@ -1,20 +1,19 @@
 package ai.smritea.sdk.model;
 
-import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
-import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResponse;
-import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResult;
+import ai.smritea.sdk._internal.autogen.model.SearchMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.SearchMemoryResult;
 
 /**
  * A single search result containing a memory and its relevance score. Delegates to the
  * auto-generated types directly, matching the Python/TypeScript/Go SDKs which re-export autogen
  * types as-is.
  *
- * <p>The memory field is a {@link MemorySearchMemoryResult} — the lean search-specific type that
- * excludes internal/operational fields (appId, createdAt, updatedAt). This is distinct from {@link
- * Memory} which wraps the full CRUD response type returned by get/add.
+ * <p>The memory field is a {@link SearchMemoryResult} — the lean search-specific type that excludes
+ * internal/operational fields (appId, createdAt, updatedAt). This is distinct from {@link Memory}
+ * which wraps the full CRUD response type returned by get/add.
  */
 public final class SearchResult {
-  private final MemorySearchMemoryResult memory;
+  private final SearchMemoryResult memory;
   private final Double score;
 
   /**
@@ -24,7 +23,7 @@ public final class SearchResult {
    *
    * @param inner the autogen response object
    */
-  public SearchResult(MemorySearchMemoryResponse inner) {
+  public SearchResult(SearchMemoryResponse inner) {
     this.memory = inner.getMemory();
     this.score = inner.getScore() != null ? inner.getScore().doubleValue() : null;
   }
@@ -35,13 +34,13 @@ public final class SearchResult {
    * @param memory the matched search memory result
    * @param score the relevance score
    */
-  public SearchResult(MemorySearchMemoryResult memory, Double score) {
+  public SearchResult(SearchMemoryResult memory, Double score) {
     this.memory = memory;
     this.score = score;
   }
 
   /** Returns the matched memory (lean search-specific type). */
-  public MemorySearchMemoryResult getMemory() {
+  public SearchMemoryResult getMemory() {
     return memory;
   }
 
@@ -65,7 +64,7 @@ public final class SearchResult {
     if (memory == null) {
       return null;
     }
-    CommondtoMemoryScope scope = memory.getScope();
+    ai.smritea.sdk._internal.autogen.model.MemoryScope scope = memory.getScope();
     return scope != null ? new MemoryScope(scope) : null;
   }
 

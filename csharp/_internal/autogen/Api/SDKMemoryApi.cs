@@ -36,8 +36,8 @@ namespace Smritea.Internal.Autogen.Api
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Memory creation details</param>
-        /// <returns>MemoryCreateMemoryResponse</returns>
-        MemoryCreateMemoryResponse CreateMemory(MemoryCreateMemoryRequest request);
+        /// <returns>CreateMemoryResponse</returns>
+        CreateMemoryResponse CreateMemory(CreateMemoryRequest request);
 
         /// <summary>
         /// Create memory (SDK)
@@ -47,8 +47,8 @@ namespace Smritea.Internal.Autogen.Api
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Memory creation details</param>
-        /// <returns>ApiResponse of MemoryCreateMemoryResponse</returns>
-        ApiResponse<MemoryCreateMemoryResponse> CreateMemoryWithHttpInfo(MemoryCreateMemoryRequest request);
+        /// <returns>ApiResponse of CreateMemoryResponse</returns>
+        ApiResponse<CreateMemoryResponse> CreateMemoryWithHttpInfo(CreateMemoryRequest request);
         /// <summary>
         /// Delete memory (SDK)
         /// </summary>
@@ -78,8 +78,8 @@ namespace Smritea.Internal.Autogen.Api
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="memoryId">Memory ID</param>
-        /// <returns>MemoryMemoryResponse</returns>
-        MemoryMemoryResponse GetMemory(string memoryId);
+        /// <returns>MemoryResponse</returns>
+        MemoryResponse GetMemory(string memoryId);
 
         /// <summary>
         /// Get memory by ID (SDK)
@@ -89,8 +89,8 @@ namespace Smritea.Internal.Autogen.Api
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="memoryId">Memory ID</param>
-        /// <returns>ApiResponse of MemoryMemoryResponse</returns>
-        ApiResponse<MemoryMemoryResponse> GetMemoryWithHttpInfo(string memoryId);
+        /// <returns>ApiResponse of MemoryResponse</returns>
+        ApiResponse<MemoryResponse> GetMemoryWithHttpInfo(string memoryId);
         /// <summary>
         /// Search memories (SDK)
         /// </summary>
@@ -99,8 +99,8 @@ namespace Smritea.Internal.Autogen.Api
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Search request details</param>
-        /// <returns>MemorySearchMemoriesResponse</returns>
-        MemorySearchMemoriesResponse SearchMemories(MemorySearchMemoryRequest request);
+        /// <returns>SearchMemoriesResponse</returns>
+        SearchMemoriesResponse SearchMemories(SearchMemoryRequest request);
 
         /// <summary>
         /// Search memories (SDK)
@@ -110,8 +110,8 @@ namespace Smritea.Internal.Autogen.Api
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Search request details</param>
-        /// <returns>ApiResponse of MemorySearchMemoriesResponse</returns>
-        ApiResponse<MemorySearchMemoriesResponse> SearchMemoriesWithHttpInfo(MemorySearchMemoryRequest request);
+        /// <returns>ApiResponse of SearchMemoriesResponse</returns>
+        ApiResponse<SearchMemoriesResponse> SearchMemoriesWithHttpInfo(SearchMemoryRequest request);
         #endregion Synchronous Operations
     }
 
@@ -130,8 +130,8 @@ namespace Smritea.Internal.Autogen.Api
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Memory creation details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of MemoryCreateMemoryResponse</returns>
-        System.Threading.Tasks.Task<MemoryCreateMemoryResponse> CreateMemoryAsync(MemoryCreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
+        /// <returns>Task of CreateMemoryResponse</returns>
+        System.Threading.Tasks.Task<CreateMemoryResponse> CreateMemoryAsync(CreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create memory (SDK)
@@ -142,8 +142,8 @@ namespace Smritea.Internal.Autogen.Api
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Memory creation details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (MemoryCreateMemoryResponse)</returns>
-        System.Threading.Tasks.Task<ApiResponse<MemoryCreateMemoryResponse>> CreateMemoryWithHttpInfoAsync(MemoryCreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
+        /// <returns>Task of ApiResponse (CreateMemoryResponse)</returns>
+        System.Threading.Tasks.Task<ApiResponse<CreateMemoryResponse>> CreateMemoryWithHttpInfoAsync(CreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
         /// <summary>
         /// Delete memory (SDK)
         /// </summary>
@@ -176,8 +176,8 @@ namespace Smritea.Internal.Autogen.Api
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="memoryId">Memory ID</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of MemoryMemoryResponse</returns>
-        System.Threading.Tasks.Task<MemoryMemoryResponse> GetMemoryAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default);
+        /// <returns>Task of MemoryResponse</returns>
+        System.Threading.Tasks.Task<MemoryResponse> GetMemoryAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get memory by ID (SDK)
@@ -188,8 +188,8 @@ namespace Smritea.Internal.Autogen.Api
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="memoryId">Memory ID</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (MemoryMemoryResponse)</returns>
-        System.Threading.Tasks.Task<ApiResponse<MemoryMemoryResponse>> GetMemoryWithHttpInfoAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default);
+        /// <returns>Task of ApiResponse (MemoryResponse)</returns>
+        System.Threading.Tasks.Task<ApiResponse<MemoryResponse>> GetMemoryWithHttpInfoAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default);
         /// <summary>
         /// Search memories (SDK)
         /// </summary>
@@ -199,8 +199,8 @@ namespace Smritea.Internal.Autogen.Api
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Search request details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of MemorySearchMemoriesResponse</returns>
-        System.Threading.Tasks.Task<MemorySearchMemoriesResponse> SearchMemoriesAsync(MemorySearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
+        /// <returns>Task of SearchMemoriesResponse</returns>
+        System.Threading.Tasks.Task<SearchMemoriesResponse> SearchMemoriesAsync(SearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Search memories (SDK)
@@ -211,8 +211,8 @@ namespace Smritea.Internal.Autogen.Api
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Search request details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (MemorySearchMemoriesResponse)</returns>
-        System.Threading.Tasks.Task<ApiResponse<MemorySearchMemoriesResponse>> SearchMemoriesWithHttpInfoAsync(MemorySearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
+        /// <returns>Task of ApiResponse (SearchMemoriesResponse)</returns>
+        System.Threading.Tasks.Task<ApiResponse<SearchMemoriesResponse>> SearchMemoriesWithHttpInfoAsync(SearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
         #endregion Asynchronous Operations
     }
 
@@ -431,10 +431,10 @@ namespace Smritea.Internal.Autogen.Api
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Memory creation details</param>
-        /// <returns>MemoryCreateMemoryResponse</returns>
-        public MemoryCreateMemoryResponse CreateMemory(MemoryCreateMemoryRequest request)
+        /// <returns>CreateMemoryResponse</returns>
+        public CreateMemoryResponse CreateMemory(CreateMemoryRequest request)
         {
-            Smritea.Internal.Autogen.Client.ApiResponse<MemoryCreateMemoryResponse> localVarResponse = CreateMemoryWithHttpInfo(request);
+            Smritea.Internal.Autogen.Client.ApiResponse<CreateMemoryResponse> localVarResponse = CreateMemoryWithHttpInfo(request);
             return localVarResponse.Data;
         }
 
@@ -443,8 +443,8 @@ namespace Smritea.Internal.Autogen.Api
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Memory creation details</param>
-        /// <returns>ApiResponse of MemoryCreateMemoryResponse</returns>
-        public Smritea.Internal.Autogen.Client.ApiResponse<MemoryCreateMemoryResponse> CreateMemoryWithHttpInfo(MemoryCreateMemoryRequest request)
+        /// <returns>ApiResponse of CreateMemoryResponse</returns>
+        public Smritea.Internal.Autogen.Client.ApiResponse<CreateMemoryResponse> CreateMemoryWithHttpInfo(CreateMemoryRequest request)
         {
             // verify the required parameter 'request' is set
             if (request == null)
@@ -476,7 +476,7 @@ namespace Smritea.Internal.Autogen.Api
             }
 
             // make the HTTP request
-            var localVarResponse = this.Client.Post<MemoryCreateMemoryResponse>("/api/v1/sdk/memories", localVarRequestOptions, this.Configuration);
+            var localVarResponse = this.Client.Post<CreateMemoryResponse>("/api/v1/sdk/memories", localVarRequestOptions, this.Configuration);
 
             if (this.ExceptionFactory != null)
             {
@@ -493,10 +493,10 @@ namespace Smritea.Internal.Autogen.Api
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Memory creation details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of MemoryCreateMemoryResponse</returns>
-        public async System.Threading.Tasks.Task<MemoryCreateMemoryResponse> CreateMemoryAsync(MemoryCreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
+        /// <returns>Task of CreateMemoryResponse</returns>
+        public async System.Threading.Tasks.Task<CreateMemoryResponse> CreateMemoryAsync(CreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
         {
-            Smritea.Internal.Autogen.Client.ApiResponse<MemoryCreateMemoryResponse> localVarResponse = await CreateMemoryWithHttpInfoAsync(request, cancellationToken).ConfigureAwait(false);
+            Smritea.Internal.Autogen.Client.ApiResponse<CreateMemoryResponse> localVarResponse = await CreateMemoryWithHttpInfoAsync(request, cancellationToken).ConfigureAwait(false);
             return localVarResponse.Data;
         }
 
@@ -506,8 +506,8 @@ namespace Smritea.Internal.Autogen.Api
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Memory creation details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (MemoryCreateMemoryResponse)</returns>
-        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<MemoryCreateMemoryResponse>> CreateMemoryWithHttpInfoAsync(MemoryCreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
+        /// <returns>Task of ApiResponse (CreateMemoryResponse)</returns>
+        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<CreateMemoryResponse>> CreateMemoryWithHttpInfoAsync(CreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
         {
             // verify the required parameter 'request' is set
             if (request == null)
@@ -542,7 +542,7 @@ namespace Smritea.Internal.Autogen.Api
 
             // make the HTTP request
 
-            var localVarResponse = await this.AsynchronousClient.PostAsync<MemoryCreateMemoryResponse>("/api/v1/sdk/memories", localVarRequestOptions, this.Configuration, cancellationToken).ConfigureAwait(false);
+            var localVarResponse = await this.AsynchronousClient.PostAsync<CreateMemoryResponse>("/api/v1/sdk/memories", localVarRequestOptions, this.Configuration, cancellationToken).ConfigureAwait(false);
 
             if (this.ExceptionFactory != null)
             {
@@ -681,10 +681,10 @@ namespace Smritea.Internal.Autogen.Api
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="memoryId">Memory ID</param>
-        /// <returns>MemoryMemoryResponse</returns>
-        public MemoryMemoryResponse GetMemory(string memoryId)
+        /// <returns>MemoryResponse</returns>
+        public MemoryResponse GetMemory(string memoryId)
         {
-            Smritea.Internal.Autogen.Client.ApiResponse<MemoryMemoryResponse> localVarResponse = GetMemoryWithHttpInfo(memoryId);
+            Smritea.Internal.Autogen.Client.ApiResponse<MemoryResponse> localVarResponse = GetMemoryWithHttpInfo(memoryId);
             return localVarResponse.Data;
         }
 
@@ -693,8 +693,8 @@ namespace Smritea.Internal.Autogen.Api
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="memoryId">Memory ID</param>
-        /// <returns>ApiResponse of MemoryMemoryResponse</returns>
-        public Smritea.Internal.Autogen.Client.ApiResponse<MemoryMemoryResponse> GetMemoryWithHttpInfo(string memoryId)
+        /// <returns>ApiResponse of MemoryResponse</returns>
+        public Smritea.Internal.Autogen.Client.ApiResponse<MemoryResponse> GetMemoryWithHttpInfo(string memoryId)
         {
             // verify the required parameter 'memoryId' is set
             if (memoryId == null)
@@ -725,7 +725,7 @@ namespace Smritea.Internal.Autogen.Api
             }
 
             // make the HTTP request
-            var localVarResponse = this.Client.Get<MemoryMemoryResponse>("/api/v1/sdk/memories/{memory_id}", localVarRequestOptions, this.Configuration);
+            var localVarResponse = this.Client.Get<MemoryResponse>("/api/v1/sdk/memories/{memory_id}", localVarRequestOptions, this.Configuration);
 
             if (this.ExceptionFactory != null)
             {
@@ -742,10 +742,10 @@ namespace Smritea.Internal.Autogen.Api
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="memoryId">Memory ID</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of MemoryMemoryResponse</returns>
-        public async System.Threading.Tasks.Task<MemoryMemoryResponse> GetMemoryAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default)
+        /// <returns>Task of MemoryResponse</returns>
+        public async System.Threading.Tasks.Task<MemoryResponse> GetMemoryAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default)
         {
-            Smritea.Internal.Autogen.Client.ApiResponse<MemoryMemoryResponse> localVarResponse = await GetMemoryWithHttpInfoAsync(memoryId, cancellationToken).ConfigureAwait(false);
+            Smritea.Internal.Autogen.Client.ApiResponse<MemoryResponse> localVarResponse = await GetMemoryWithHttpInfoAsync(memoryId, cancellationToken).ConfigureAwait(false);
             return localVarResponse.Data;
         }
 
@@ -755,8 +755,8 @@ namespace Smritea.Internal.Autogen.Api
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="memoryId">Memory ID</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (MemoryMemoryResponse)</returns>
-        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<MemoryMemoryResponse>> GetMemoryWithHttpInfoAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default)
+        /// <returns>Task of ApiResponse (MemoryResponse)</returns>
+        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<MemoryResponse>> GetMemoryWithHttpInfoAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default)
         {
             // verify the required parameter 'memoryId' is set
             if (memoryId == null)
@@ -790,7 +790,7 @@ namespace Smritea.Internal.Autogen.Api
 
             // make the HTTP request
 
-            var localVarResponse = await this.AsynchronousClient.GetAsync<MemoryMemoryResponse>("/api/v1/sdk/memories/{memory_id}", localVarRequestOptions, this.Configuration, cancellationToken).ConfigureAwait(false);
+            var localVarResponse = await this.AsynchronousClient.GetAsync<MemoryResponse>("/api/v1/sdk/memories/{memory_id}", localVarRequestOptions, this.Configuration, cancellationToken).ConfigureAwait(false);
 
             if (this.ExceptionFactory != null)
             {
@@ -806,10 +806,10 @@ namespace Smritea.Internal.Autogen.Api
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Search request details</param>
-        /// <returns>MemorySearchMemoriesResponse</returns>
-        public MemorySearchMemoriesResponse SearchMemories(MemorySearchMemoryRequest request)
+        /// <returns>SearchMemoriesResponse</returns>
+        public SearchMemoriesResponse SearchMemories(SearchMemoryRequest request)
         {
-            Smritea.Internal.Autogen.Client.ApiResponse<MemorySearchMemoriesResponse> localVarResponse = SearchMemoriesWithHttpInfo(request);
+            Smritea.Internal.Autogen.Client.ApiResponse<SearchMemoriesResponse> localVarResponse = SearchMemoriesWithHttpInfo(request);
             return localVarResponse.Data;
         }
 
@@ -818,8 +818,8 @@ namespace Smritea.Internal.Autogen.Api
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Search request details</param>
-        /// <returns>ApiResponse of MemorySearchMemoriesResponse</returns>
-        public Smritea.Internal.Autogen.Client.ApiResponse<MemorySearchMemoriesResponse> SearchMemoriesWithHttpInfo(MemorySearchMemoryRequest request)
+        /// <returns>ApiResponse of SearchMemoriesResponse</returns>
+        public Smritea.Internal.Autogen.Client.ApiResponse<SearchMemoriesResponse> SearchMemoriesWithHttpInfo(SearchMemoryRequest request)
         {
             // verify the required parameter 'request' is set
             if (request == null)
@@ -851,7 +851,7 @@ namespace Smritea.Internal.Autogen.Api
             }
 
             // make the HTTP request
-            var localVarResponse = this.Client.Post<MemorySearchMemoriesResponse>("/api/v1/sdk/memories/search", localVarRequestOptions, this.Configuration);
+            var localVarResponse = this.Client.Post<SearchMemoriesResponse>("/api/v1/sdk/memories/search", localVarRequestOptions, this.Configuration);
 
             if (this.ExceptionFactory != null)
             {
@@ -868,10 +868,10 @@ namespace Smritea.Internal.Autogen.Api
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Search request details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of MemorySearchMemoriesResponse</returns>
-        public async System.Threading.Tasks.Task<MemorySearchMemoriesResponse> SearchMemoriesAsync(MemorySearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
+        /// <returns>Task of SearchMemoriesResponse</returns>
+        public async System.Threading.Tasks.Task<SearchMemoriesResponse> SearchMemoriesAsync(SearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
         {
-            Smritea.Internal.Autogen.Client.ApiResponse<MemorySearchMemoriesResponse> localVarResponse = await SearchMemoriesWithHttpInfoAsync(request, cancellationToken).ConfigureAwait(false);
+            Smritea.Internal.Autogen.Client.ApiResponse<SearchMemoriesResponse> localVarResponse = await SearchMemoriesWithHttpInfoAsync(request, cancellationToken).ConfigureAwait(false);
             return localVarResponse.Data;
         }
 
@@ -881,8 +881,8 @@ namespace Smritea.Internal.Autogen.Api
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Search request details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns>Task of ApiResponse (MemorySearchMemoriesResponse)</returns>
-        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<MemorySearchMemoriesResponse>> SearchMemoriesWithHttpInfoAsync(MemorySearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
+        /// <returns>Task of ApiResponse (SearchMemoriesResponse)</returns>
+        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<SearchMemoriesResponse>> SearchMemoriesWithHttpInfoAsync(SearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
         {
             // verify the required parameter 'request' is set
             if (request == null)
@@ -917,7 +917,7 @@ namespace Smritea.Internal.Autogen.Api
 
             // make the HTTP request
 
-            var localVarResponse = await this.AsynchronousClient.PostAsync<MemorySearchMemoriesResponse>("/api/v1/sdk/memories/search", localVarRequestOptions, this.Configuration, cancellationToken).ConfigureAwait(false);
+            var localVarResponse = await this.AsynchronousClient.PostAsync<SearchMemoriesResponse>("/api/v1/sdk/memories/search", localVarRequestOptions, this.Configuration, cancellationToken).ConfigureAwait(false);
 
             if (this.ExceptionFactory != null)
             {

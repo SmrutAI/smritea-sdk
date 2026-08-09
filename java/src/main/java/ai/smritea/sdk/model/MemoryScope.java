@@ -1,10 +1,9 @@
 package ai.smritea.sdk.model;
 
-import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
-
 /**
  * Public-facing scope type representing the actor and conversation context of a memory. Delegates
- * to the auto-generated {@link CommondtoMemoryScope}.
+ * to the auto-generated {@link ai.smritea.sdk._internal.autogen.model.MemoryScope}. Referenced by
+ * fully-qualified name throughout this file since its simple name collides with this class's own.
  *
  * <p>Matches the nested {@code scope} JSON object returned by the API:
  *
@@ -24,7 +23,7 @@ import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
  * from deserialized autogen responses. For tests, use the {@link Builder}.
  */
 public final class MemoryScope {
-  private final CommondtoMemoryScope inner;
+  private final ai.smritea.sdk._internal.autogen.model.MemoryScope inner;
 
   /**
    * Participant IDs stored locally until autogen regeneration picks up {@code participant_ids} from
@@ -39,12 +38,14 @@ public final class MemoryScope {
    *
    * @param inner the autogen scope object
    */
-  public MemoryScope(CommondtoMemoryScope inner) {
+  public MemoryScope(ai.smritea.sdk._internal.autogen.model.MemoryScope inner) {
     this.inner = inner;
     this.participantIds = null;
   }
 
-  private MemoryScope(CommondtoMemoryScope inner, java.util.List<String> participantIds) {
+  private MemoryScope(
+      ai.smritea.sdk._internal.autogen.model.MemoryScope inner,
+      java.util.List<String> participantIds) {
     this.inner = inner;
     this.participantIds = participantIds;
   }
@@ -121,10 +122,10 @@ public final class MemoryScope {
 
   /** Builder for constructing {@link MemoryScope} instances in tests. */
   public static final class Builder {
-    private final CommondtoMemoryScope delegate;
+    private final ai.smritea.sdk._internal.autogen.model.MemoryScope delegate;
 
     private Builder() {
-      delegate = new CommondtoMemoryScope();
+      delegate = new ai.smritea.sdk._internal.autogen.model.MemoryScope();
     }
 
     private java.util.List<String> participantIds;
@@ -140,7 +141,8 @@ public final class MemoryScope {
      * be paired with {@code actorId}.
      */
     public Builder actorType(String actorType) {
-      delegate.setActorType(CommondtoMemoryScope.ActorTypeEnum.fromValue(actorType));
+      delegate.setActorType(
+          ai.smritea.sdk._internal.autogen.model.MemoryScope.ActorTypeEnum.fromValue(actorType));
       return this;
     }
 
@@ -164,7 +166,8 @@ public final class MemoryScope {
      * "api"}. Defaults to {@code "api"} on the server when omitted.
      */
     public Builder sourceType(String sourceType) {
-      delegate.setSourceType(CommondtoMemoryScope.SourceTypeEnum.fromValue(sourceType));
+      delegate.setSourceType(
+          ai.smritea.sdk._internal.autogen.model.MemoryScope.SourceTypeEnum.fromValue(sourceType));
       return this;
     }
 

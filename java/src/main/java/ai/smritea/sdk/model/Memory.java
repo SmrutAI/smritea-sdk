@@ -1,11 +1,10 @@
 package ai.smritea.sdk.model;
 
-import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
-import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.MemoryResponse;
 import java.util.Map;
 
 /**
- * Public-facing Memory type. Delegates to the auto-generated {@link MemoryMemoryResponse}.
+ * Public-facing Memory type. Delegates to the auto-generated {@link MemoryResponse}.
  *
  * <p>Scope fields (actor, conversation, source) are accessed via the nested {@link #getScope()}
  * object, matching the Python/TypeScript/Go/C# SDKs:
@@ -21,7 +20,7 @@ import java.util.Map;
  * autogen responses.
  */
 public final class Memory {
-  private final MemoryMemoryResponse inner;
+  private final MemoryResponse inner;
 
   /**
    * Creates a Memory from the auto-generated response type. Called by SmriteaClient after
@@ -30,7 +29,7 @@ public final class Memory {
    *
    * @param inner the autogen response object
    */
-  public Memory(MemoryMemoryResponse inner) {
+  public Memory(MemoryResponse inner) {
     this.inner = inner;
   }
 
@@ -76,7 +75,7 @@ public final class Memory {
    * }</pre>
    */
   public MemoryScope getScope() {
-    CommondtoMemoryScope scope = inner.getScope();
+    ai.smritea.sdk._internal.autogen.model.MemoryScope scope = inner.getScope();
     return scope != null ? new MemoryScope(scope) : null;
   }
 
@@ -115,14 +114,14 @@ public final class Memory {
 
   /**
    * Builder for constructing {@link Memory} instances with named fields. Internally populates a
-   * {@link MemoryMemoryResponse} and wraps it.
+   * {@link MemoryResponse} and wraps it.
    */
   public static final class Builder {
-    private final MemoryMemoryResponse delegate;
-    private CommondtoMemoryScope scope;
+    private final MemoryResponse delegate;
+    private ai.smritea.sdk._internal.autogen.model.MemoryScope scope;
 
     private Builder(String id, String appId, String content, String createdAt, String updatedAt) {
-      delegate = new MemoryMemoryResponse();
+      delegate = new MemoryResponse();
       delegate.setId(id);
       delegate.setAppId(appId);
       delegate.setContent(content);
@@ -130,9 +129,9 @@ public final class Memory {
       delegate.setUpdatedAt(updatedAt);
     }
 
-    private CommondtoMemoryScope ensureScope() {
+    private ai.smritea.sdk._internal.autogen.model.MemoryScope ensureScope() {
       if (scope == null) {
-        scope = new CommondtoMemoryScope();
+        scope = new ai.smritea.sdk._internal.autogen.model.MemoryScope();
       }
       return scope;
     }
@@ -143,7 +142,10 @@ public final class Memory {
     }
 
     public Builder actorType(String actorType) {
-      ensureScope().setActorType(CommondtoMemoryScope.ActorTypeEnum.fromValue(actorType));
+      ensureScope()
+          .setActorType(
+              ai.smritea.sdk._internal.autogen.model.MemoryScope.ActorTypeEnum.fromValue(
+                  actorType));
       return this;
     }
 

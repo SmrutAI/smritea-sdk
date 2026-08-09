@@ -3,8 +3,8 @@ package ai.smritea.sdk;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import ai.smritea.sdk._internal.autogen.model.MemoryCreateMemoryResponse;
-import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.CreateMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.MemoryResponse;
 import ai.smritea.sdk.errors.SmriteaAuthError;
 import ai.smritea.sdk.errors.SmriteaDeserializationError;
 import ai.smritea.sdk.errors.SmriteaNotFoundError;
@@ -33,9 +33,9 @@ class SmriteaClientTest {
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
   private static String memCreateJson(String id, String content) {
-    MemoryCreateMemoryResponse resp =
-        new MemoryCreateMemoryResponse()
-            .addMemoriesItem(new MemoryMemoryResponse().id(id).content(content).appId("app-test"));
+    CreateMemoryResponse resp =
+        new CreateMemoryResponse()
+            .addMemoriesItem(new MemoryResponse().id(id).content(content).appId("app-test"));
     try {
       return MAPPER.writeValueAsString(resp);
     } catch (Exception e) {

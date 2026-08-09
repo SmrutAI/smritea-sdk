@@ -3,18 +3,18 @@ package smritea
 import "github.com/SmrutAI/smritea-sdk/go/internal/autogen"
 
 // Memory is the canonical return type for a stored memory.
-type Memory = autogen.MemoryMemoryResponse
+type Memory = autogen.MemoryResponse
 
 // MemoryCreationResult is the response from Add(). Contains all memories
 // created from the extracted facts (GetMemories()), plus extraction metadata:
 // GetFactsExtracted(), GetSkippedCount(), GetUpdatedCount().
-type MemoryCreationResult = autogen.MemoryCreateMemoryResponse
+type MemoryCreationResult = autogen.CreateMemoryResponse
 
 // SearchResult is a single ranked search result.
-type SearchResult = autogen.MemorySearchMemoryResponse
+type SearchResult = autogen.SearchMemoryResponse
 
 // SearchMemoriesResponse wraps the list returned by the search endpoint.
-type SearchMemoriesResponse = autogen.MemorySearchMemoriesResponse
+type SearchMemoriesResponse = autogen.SearchMemoriesResponse
 
 // ClientConfig holds constructor options for SmriteaClient.
 type ClientConfig struct {

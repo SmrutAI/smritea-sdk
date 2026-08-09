@@ -1,7 +1,7 @@
 package ai.smritea.sdk.model;
 
-import ai.smritea.sdk._internal.autogen.model.MemoryCreateMemoryResponse;
-import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.CreateMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.MemoryResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
  * }</pre>
  */
 public final class MemoryCreationResult {
-  private final MemoryCreateMemoryResponse inner;
+  private final CreateMemoryResponse inner;
 
   /**
    * Creates a MemoryCreationResult from the auto-generated response type. Called by SmriteaClient
@@ -31,7 +31,7 @@ public final class MemoryCreationResult {
    *
    * @param inner the autogen response object
    */
-  public MemoryCreationResult(MemoryCreateMemoryResponse inner) {
+  public MemoryCreationResult(CreateMemoryResponse inner) {
     this.inner = inner;
   }
 
@@ -41,7 +41,7 @@ public final class MemoryCreationResult {
    * were created.
    */
   public List<Memory> getMemories() {
-    List<MemoryMemoryResponse> raw = inner.getMemories();
+    List<MemoryResponse> raw = inner.getMemories();
     if (raw == null || raw.isEmpty()) {
       return Collections.emptyList();
     }

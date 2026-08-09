@@ -27,16 +27,16 @@ type SDKMemoryAPIService service
 type ApiCreateMemoryRequest struct {
 	ctx context.Context
 	ApiService *SDKMemoryAPIService
-	request *MemoryCreateMemoryRequest
+	request *CreateMemoryRequest
 }
 
 // Memory creation details
-func (r ApiCreateMemoryRequest) Request(request MemoryCreateMemoryRequest) ApiCreateMemoryRequest {
+func (r ApiCreateMemoryRequest) Request(request CreateMemoryRequest) ApiCreateMemoryRequest {
 	r.request = &request
 	return r
 }
 
-func (r ApiCreateMemoryRequest) Execute() (*MemoryCreateMemoryResponse, *http.Response, error) {
+func (r ApiCreateMemoryRequest) Execute() (*CreateMemoryResponse, *http.Response, error) {
 	return r.ApiService.CreateMemoryExecute(r)
 }
 
@@ -56,13 +56,13 @@ func (a *SDKMemoryAPIService) CreateMemory(ctx context.Context) ApiCreateMemoryR
 }
 
 // Execute executes the request
-//  @return MemoryCreateMemoryResponse
-func (a *SDKMemoryAPIService) CreateMemoryExecute(r ApiCreateMemoryRequest) (*MemoryCreateMemoryResponse, *http.Response, error) {
+//  @return CreateMemoryResponse
+func (a *SDKMemoryAPIService) CreateMemoryExecute(r ApiCreateMemoryRequest) (*CreateMemoryResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *MemoryCreateMemoryResponse
+		localVarReturnValue  *CreateMemoryResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SDKMemoryAPIService.CreateMemory")
@@ -135,7 +135,7 @@ func (a *SDKMemoryAPIService) CreateMemoryExecute(r ApiCreateMemoryRequest) (*Me
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -146,7 +146,7 @@ func (a *SDKMemoryAPIService) CreateMemoryExecute(r ApiCreateMemoryRequest) (*Me
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -157,7 +157,7 @@ func (a *SDKMemoryAPIService) CreateMemoryExecute(r ApiCreateMemoryRequest) (*Me
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 402 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -168,7 +168,7 @@ func (a *SDKMemoryAPIService) CreateMemoryExecute(r ApiCreateMemoryRequest) (*Me
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 429 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -179,7 +179,7 @@ func (a *SDKMemoryAPIService) CreateMemoryExecute(r ApiCreateMemoryRequest) (*Me
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -304,7 +304,7 @@ func (a *SDKMemoryAPIService) DeleteMemoryExecute(r ApiDeleteMemoryRequest) (*ht
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -315,7 +315,7 @@ func (a *SDKMemoryAPIService) DeleteMemoryExecute(r ApiDeleteMemoryRequest) (*ht
 			return localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -326,7 +326,7 @@ func (a *SDKMemoryAPIService) DeleteMemoryExecute(r ApiDeleteMemoryRequest) (*ht
 			return localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -337,7 +337,7 @@ func (a *SDKMemoryAPIService) DeleteMemoryExecute(r ApiDeleteMemoryRequest) (*ht
 			return localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 429 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -348,7 +348,7 @@ func (a *SDKMemoryAPIService) DeleteMemoryExecute(r ApiDeleteMemoryRequest) (*ht
 			return localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -369,7 +369,7 @@ type ApiGetMemoryRequest struct {
 	memoryId string
 }
 
-func (r ApiGetMemoryRequest) Execute() (*MemoryMemoryResponse, *http.Response, error) {
+func (r ApiGetMemoryRequest) Execute() (*MemoryResponse, *http.Response, error) {
 	return r.ApiService.GetMemoryExecute(r)
 }
 
@@ -391,13 +391,13 @@ func (a *SDKMemoryAPIService) GetMemory(ctx context.Context, memoryId string) Ap
 }
 
 // Execute executes the request
-//  @return MemoryMemoryResponse
-func (a *SDKMemoryAPIService) GetMemoryExecute(r ApiGetMemoryRequest) (*MemoryMemoryResponse, *http.Response, error) {
+//  @return MemoryResponse
+func (a *SDKMemoryAPIService) GetMemoryExecute(r ApiGetMemoryRequest) (*MemoryResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *MemoryMemoryResponse
+		localVarReturnValue  *MemoryResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SDKMemoryAPIService.GetMemory")
@@ -466,7 +466,7 @@ func (a *SDKMemoryAPIService) GetMemoryExecute(r ApiGetMemoryRequest) (*MemoryMe
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -477,7 +477,7 @@ func (a *SDKMemoryAPIService) GetMemoryExecute(r ApiGetMemoryRequest) (*MemoryMe
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -488,7 +488,7 @@ func (a *SDKMemoryAPIService) GetMemoryExecute(r ApiGetMemoryRequest) (*MemoryMe
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -499,7 +499,7 @@ func (a *SDKMemoryAPIService) GetMemoryExecute(r ApiGetMemoryRequest) (*MemoryMe
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 429 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -510,7 +510,7 @@ func (a *SDKMemoryAPIService) GetMemoryExecute(r ApiGetMemoryRequest) (*MemoryMe
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -537,16 +537,16 @@ func (a *SDKMemoryAPIService) GetMemoryExecute(r ApiGetMemoryRequest) (*MemoryMe
 type ApiSearchMemoriesRequest struct {
 	ctx context.Context
 	ApiService *SDKMemoryAPIService
-	request *MemorySearchMemoryRequest
+	request *SearchMemoryRequest
 }
 
 // Search request details
-func (r ApiSearchMemoriesRequest) Request(request MemorySearchMemoryRequest) ApiSearchMemoriesRequest {
+func (r ApiSearchMemoriesRequest) Request(request SearchMemoryRequest) ApiSearchMemoriesRequest {
 	r.request = &request
 	return r
 }
 
-func (r ApiSearchMemoriesRequest) Execute() (*MemorySearchMemoriesResponse, *http.Response, error) {
+func (r ApiSearchMemoriesRequest) Execute() (*SearchMemoriesResponse, *http.Response, error) {
 	return r.ApiService.SearchMemoriesExecute(r)
 }
 
@@ -566,13 +566,13 @@ func (a *SDKMemoryAPIService) SearchMemories(ctx context.Context) ApiSearchMemor
 }
 
 // Execute executes the request
-//  @return MemorySearchMemoriesResponse
-func (a *SDKMemoryAPIService) SearchMemoriesExecute(r ApiSearchMemoriesRequest) (*MemorySearchMemoriesResponse, *http.Response, error) {
+//  @return SearchMemoriesResponse
+func (a *SDKMemoryAPIService) SearchMemoriesExecute(r ApiSearchMemoriesRequest) (*SearchMemoriesResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *MemorySearchMemoriesResponse
+		localVarReturnValue  *SearchMemoriesResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SDKMemoryAPIService.SearchMemories")
@@ -645,7 +645,7 @@ func (a *SDKMemoryAPIService) SearchMemoriesExecute(r ApiSearchMemoriesRequest) 
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -656,7 +656,7 @@ func (a *SDKMemoryAPIService) SearchMemoriesExecute(r ApiSearchMemoriesRequest) 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -667,7 +667,7 @@ func (a *SDKMemoryAPIService) SearchMemoriesExecute(r ApiSearchMemoriesRequest) 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 402 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -678,7 +678,7 @@ func (a *SDKMemoryAPIService) SearchMemoriesExecute(r ApiSearchMemoriesRequest) 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 429 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -689,7 +689,7 @@ func (a *SDKMemoryAPIService) SearchMemoriesExecute(r ApiSearchMemoriesRequest) 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
-			var v CommondtoAPIError
+			var v APIError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()

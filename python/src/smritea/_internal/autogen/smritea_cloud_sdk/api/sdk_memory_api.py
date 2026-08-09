@@ -18,11 +18,11 @@ from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
 from typing_extensions import Annotated
-from smritea._internal.autogen.smritea_cloud_sdk.models.memory_create_memory_request import MemoryCreateMemoryRequest
-from smritea._internal.autogen.smritea_cloud_sdk.models.memory_create_memory_response import MemoryCreateMemoryResponse
-from smritea._internal.autogen.smritea_cloud_sdk.models.memory_memory_response import MemoryMemoryResponse
-from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memories_response import MemorySearchMemoriesResponse
-from smritea._internal.autogen.smritea_cloud_sdk.models.memory_search_memory_request import MemorySearchMemoryRequest
+from smritea._internal.autogen.smritea_cloud_sdk.models.create_memory_request import CreateMemoryRequest
+from smritea._internal.autogen.smritea_cloud_sdk.models.create_memory_response import CreateMemoryResponse
+from smritea._internal.autogen.smritea_cloud_sdk.models.memory_response import MemoryResponse
+from smritea._internal.autogen.smritea_cloud_sdk.models.search_memories_response import SearchMemoriesResponse
+from smritea._internal.autogen.smritea_cloud_sdk.models.search_memory_request import SearchMemoryRequest
 
 from smritea._internal.autogen.smritea_cloud_sdk.api_client import ApiClient, RequestSerialized
 from smritea._internal.autogen.smritea_cloud_sdk.api_response import ApiResponse
@@ -45,7 +45,7 @@ class SDKMemoryApi:
     @validate_call
     def create_memory(
         self,
-        request: Annotated[MemoryCreateMemoryRequest, Field(description="Memory creation details")],
+        request: Annotated[CreateMemoryRequest, Field(description="Memory creation details")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -58,13 +58,13 @@ class SDKMemoryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> MemoryCreateMemoryResponse:
+    ) -> CreateMemoryResponse:
         """Create memory (SDK)
 
         Create a new memory with quota and rate limit enforcement
 
         :param request: Memory creation details (required)
-        :type request: MemoryCreateMemoryRequest
+        :type request: CreateMemoryRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -96,12 +96,12 @@ class SDKMemoryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "MemoryCreateMemoryResponse",
-            '400': "CommondtoAPIError",
-            '401': "CommondtoAPIError",
-            '402': "CommondtoAPIError",
-            '429': "CommondtoAPIError",
-            '500': "CommondtoAPIError",
+            '201': "CreateMemoryResponse",
+            '400': "APIError",
+            '401': "APIError",
+            '402': "APIError",
+            '429': "APIError",
+            '500': "APIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -117,7 +117,7 @@ class SDKMemoryApi:
     @validate_call
     def create_memory_with_http_info(
         self,
-        request: Annotated[MemoryCreateMemoryRequest, Field(description="Memory creation details")],
+        request: Annotated[CreateMemoryRequest, Field(description="Memory creation details")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -130,13 +130,13 @@ class SDKMemoryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[MemoryCreateMemoryResponse]:
+    ) -> ApiResponse[CreateMemoryResponse]:
         """Create memory (SDK)
 
         Create a new memory with quota and rate limit enforcement
 
         :param request: Memory creation details (required)
-        :type request: MemoryCreateMemoryRequest
+        :type request: CreateMemoryRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -168,12 +168,12 @@ class SDKMemoryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "MemoryCreateMemoryResponse",
-            '400': "CommondtoAPIError",
-            '401': "CommondtoAPIError",
-            '402': "CommondtoAPIError",
-            '429': "CommondtoAPIError",
-            '500': "CommondtoAPIError",
+            '201': "CreateMemoryResponse",
+            '400': "APIError",
+            '401': "APIError",
+            '402': "APIError",
+            '429': "APIError",
+            '500': "APIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -189,7 +189,7 @@ class SDKMemoryApi:
     @validate_call
     def create_memory_without_preload_content(
         self,
-        request: Annotated[MemoryCreateMemoryRequest, Field(description="Memory creation details")],
+        request: Annotated[CreateMemoryRequest, Field(description="Memory creation details")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -208,7 +208,7 @@ class SDKMemoryApi:
         Create a new memory with quota and rate limit enforcement
 
         :param request: Memory creation details (required)
-        :type request: MemoryCreateMemoryRequest
+        :type request: CreateMemoryRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -240,12 +240,12 @@ class SDKMemoryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "MemoryCreateMemoryResponse",
-            '400': "CommondtoAPIError",
-            '401': "CommondtoAPIError",
-            '402': "CommondtoAPIError",
-            '429': "CommondtoAPIError",
-            '500': "CommondtoAPIError",
+            '201': "CreateMemoryResponse",
+            '400': "APIError",
+            '401': "APIError",
+            '402': "APIError",
+            '429': "APIError",
+            '500': "APIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -386,11 +386,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': "CommondtoAPIError",
-            '401': "CommondtoAPIError",
-            '404': "CommondtoAPIError",
-            '429': "CommondtoAPIError",
-            '500': "CommondtoAPIError",
+            '400': "APIError",
+            '401': "APIError",
+            '404': "APIError",
+            '429': "APIError",
+            '500': "APIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -458,11 +458,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': "CommondtoAPIError",
-            '401': "CommondtoAPIError",
-            '404': "CommondtoAPIError",
-            '429': "CommondtoAPIError",
-            '500': "CommondtoAPIError",
+            '400': "APIError",
+            '401': "APIError",
+            '404': "APIError",
+            '429': "APIError",
+            '500': "APIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -530,11 +530,11 @@ class SDKMemoryApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': "CommondtoAPIError",
-            '401': "CommondtoAPIError",
-            '404': "CommondtoAPIError",
-            '429': "CommondtoAPIError",
-            '500': "CommondtoAPIError",
+            '400': "APIError",
+            '401': "APIError",
+            '404': "APIError",
+            '429': "APIError",
+            '500': "APIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -623,7 +623,7 @@ class SDKMemoryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> MemoryMemoryResponse:
+    ) -> MemoryResponse:
         """Get memory by ID (SDK)
 
         Get a single memory by ID with rate limit enforcement
@@ -661,12 +661,12 @@ class SDKMemoryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "MemoryMemoryResponse",
-            '400': "CommondtoAPIError",
-            '401': "CommondtoAPIError",
-            '404': "CommondtoAPIError",
-            '429': "CommondtoAPIError",
-            '500': "CommondtoAPIError",
+            '200': "MemoryResponse",
+            '400': "APIError",
+            '401': "APIError",
+            '404': "APIError",
+            '429': "APIError",
+            '500': "APIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -695,7 +695,7 @@ class SDKMemoryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[MemoryMemoryResponse]:
+    ) -> ApiResponse[MemoryResponse]:
         """Get memory by ID (SDK)
 
         Get a single memory by ID with rate limit enforcement
@@ -733,12 +733,12 @@ class SDKMemoryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "MemoryMemoryResponse",
-            '400': "CommondtoAPIError",
-            '401': "CommondtoAPIError",
-            '404': "CommondtoAPIError",
-            '429': "CommondtoAPIError",
-            '500': "CommondtoAPIError",
+            '200': "MemoryResponse",
+            '400': "APIError",
+            '401': "APIError",
+            '404': "APIError",
+            '429': "APIError",
+            '500': "APIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -805,12 +805,12 @@ class SDKMemoryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "MemoryMemoryResponse",
-            '400': "CommondtoAPIError",
-            '401': "CommondtoAPIError",
-            '404': "CommondtoAPIError",
-            '429': "CommondtoAPIError",
-            '500': "CommondtoAPIError",
+            '200': "MemoryResponse",
+            '400': "APIError",
+            '401': "APIError",
+            '404': "APIError",
+            '429': "APIError",
+            '500': "APIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -886,7 +886,7 @@ class SDKMemoryApi:
     @validate_call
     def search_memories(
         self,
-        request: Annotated[MemorySearchMemoryRequest, Field(description="Search request details")],
+        request: Annotated[SearchMemoryRequest, Field(description="Search request details")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -899,13 +899,13 @@ class SDKMemoryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> MemorySearchMemoriesResponse:
+    ) -> SearchMemoriesResponse:
         """Search memories (SDK)
 
         Search memories with quota and rate limit enforcement
 
         :param request: Search request details (required)
-        :type request: MemorySearchMemoryRequest
+        :type request: SearchMemoryRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -937,12 +937,12 @@ class SDKMemoryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "MemorySearchMemoriesResponse",
-            '400': "CommondtoAPIError",
-            '401': "CommondtoAPIError",
-            '402': "CommondtoAPIError",
-            '429': "CommondtoAPIError",
-            '500': "CommondtoAPIError",
+            '200': "SearchMemoriesResponse",
+            '400': "APIError",
+            '401': "APIError",
+            '402': "APIError",
+            '429': "APIError",
+            '500': "APIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -958,7 +958,7 @@ class SDKMemoryApi:
     @validate_call
     def search_memories_with_http_info(
         self,
-        request: Annotated[MemorySearchMemoryRequest, Field(description="Search request details")],
+        request: Annotated[SearchMemoryRequest, Field(description="Search request details")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -971,13 +971,13 @@ class SDKMemoryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[MemorySearchMemoriesResponse]:
+    ) -> ApiResponse[SearchMemoriesResponse]:
         """Search memories (SDK)
 
         Search memories with quota and rate limit enforcement
 
         :param request: Search request details (required)
-        :type request: MemorySearchMemoryRequest
+        :type request: SearchMemoryRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1009,12 +1009,12 @@ class SDKMemoryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "MemorySearchMemoriesResponse",
-            '400': "CommondtoAPIError",
-            '401': "CommondtoAPIError",
-            '402': "CommondtoAPIError",
-            '429': "CommondtoAPIError",
-            '500': "CommondtoAPIError",
+            '200': "SearchMemoriesResponse",
+            '400': "APIError",
+            '401': "APIError",
+            '402': "APIError",
+            '429': "APIError",
+            '500': "APIError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1030,7 +1030,7 @@ class SDKMemoryApi:
     @validate_call
     def search_memories_without_preload_content(
         self,
-        request: Annotated[MemorySearchMemoryRequest, Field(description="Search request details")],
+        request: Annotated[SearchMemoryRequest, Field(description="Search request details")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1049,7 +1049,7 @@ class SDKMemoryApi:
         Search memories with quota and rate limit enforcement
 
         :param request: Search request details (required)
-        :type request: MemorySearchMemoryRequest
+        :type request: SearchMemoryRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1081,12 +1081,12 @@ class SDKMemoryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "MemorySearchMemoriesResponse",
-            '400': "CommondtoAPIError",
-            '401': "CommondtoAPIError",
-            '402': "CommondtoAPIError",
-            '429': "CommondtoAPIError",
-            '500': "CommondtoAPIError",
+            '200': "SearchMemoriesResponse",
+            '400': "APIError",
+            '401': "APIError",
+            '402': "APIError",
+            '429': "APIError",
+            '500': "APIError",
         }
         response_data = self.api_client.call_api(
             *_param,

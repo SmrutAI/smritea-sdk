@@ -1,17 +1,17 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { SmriteaClient } from '../src/client.js';
 import { ResponseError } from '../src/_internal/autogen/runtime.js';
-import type { MemoryCreateMemoryResponse } from '../src/_internal/autogen/models/index.js';
-import { MemoryCreateMemoryResponseFromJSON } from '../src/_internal/autogen/models/index.js';
+import type { CreateMemoryResponse } from '../src/_internal/autogen/models/index.js';
+import { CreateMemoryResponseFromJSON } from '../src/_internal/autogen/models/index.js';
 
 // ---------------------------------------------------------------------------
 // Test response helpers — build from autogen types so field names stay in sync
 // ---------------------------------------------------------------------------
 
-function memCreateResponse(id: string, content: string): MemoryCreateMemoryResponse {
+function memCreateResponse(id: string, content: string): CreateMemoryResponse {
   // Use the autogen-generated factory so field name mapping (snake_case ↔ camelCase)
   // goes through the same code path as production deserialization.
-  return MemoryCreateMemoryResponseFromJSON({
+  return CreateMemoryResponseFromJSON({
     memories: [{ id, content, app_id: 'app-123' }],
   });
 }

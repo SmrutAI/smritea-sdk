@@ -61,14 +61,14 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 // scoping. Returns a MemoryCreationResult containing all memories created from
 // the extracted facts, plus metadata (FactsExtracted, SkippedCount, UpdatedCount).
 func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOptions) (*MemoryCreationResult, error) {
-	req := autogen.MemoryCreateMemoryRequest{
+	req := autogen.CreateMemoryRequest{
 		AppId:   c.appID,
 		Content: content,
 	}
 
 	if opts != nil {
 		if opts.Scope != nil {
-			req.Scope = &autogen.CommondtoMemoryScope{
+			req.Scope = &autogen.MemoryScope{
 				ActorId:        opts.Scope.ActorID,
 				ActorType:      opts.Scope.ActorType,
 				ActorName:      opts.Scope.ActorName,
@@ -82,7 +82,7 @@ func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOption
 		}
 		req.EventOccurredAt = opts.EventOccurredAt
 		if opts.RelativeStanding != nil {
-			req.RelativeStanding = &autogen.CommondtoRelativeStandingConfig{
+			req.RelativeStanding = &autogen.RelativeStandingConfig{
 				Importance:    opts.RelativeStanding.Importance,
 				DecayFactor:   opts.RelativeStanding.DecayFactor,
 				DecayFunction: opts.RelativeStanding.DecayFunction,
@@ -104,16 +104,16 @@ func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOption
 // similarity threshold, graph traversal depth, and conversation scope.
 // Returns an empty (non-nil) slice when no memories match.
 func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOptions) ([]*SearchResult, error) {
-	// AppId and Query are non-pointer required fields in MemorySearchMemoryRequest
-	// (unlike MemoryCreateMemoryRequest where they are *string).
-	req := autogen.MemorySearchMemoryRequest{
+	// AppId and Query are non-pointer required fields in SearchMemoryRequest
+	// (unlike CreateMemoryRequest where they are *string).
+	req := autogen.SearchMemoryRequest{
 		AppId: c.appID,
 		Query: query,
 	}
 
 	if opts != nil {
 		if opts.Scope != nil {
-			req.Scope = &autogen.CommondtoMemoryScope{
+			req.Scope = &autogen.MemoryScope{
 				ActorId:        opts.Scope.ActorID,
 				ActorType:      opts.Scope.ActorType,
 				ConversationId: opts.Scope.ConversationID,

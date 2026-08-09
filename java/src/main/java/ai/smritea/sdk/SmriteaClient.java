@@ -3,16 +3,15 @@ package ai.smritea.sdk;
 import ai.smritea.sdk._internal.autogen.ApiClient;
 import ai.smritea.sdk._internal.autogen.ApiException;
 import ai.smritea.sdk._internal.autogen.api.SdkMemoryApi;
-import ai.smritea.sdk._internal.autogen.model.CommondtoMemoryScope;
-import ai.smritea.sdk._internal.autogen.model.CommondtoRelativeStandingConfig;
-import ai.smritea.sdk._internal.autogen.model.MemoryCreateMemoryRequest;
-import ai.smritea.sdk._internal.autogen.model.MemoryCreateMemoryResponse;
-import ai.smritea.sdk._internal.autogen.model.MemoryMemoryResponse;
-import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoriesResponse;
-import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryRequest;
-import ai.smritea.sdk._internal.autogen.model.MemorySearchMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.CreateMemoryRequest;
+import ai.smritea.sdk._internal.autogen.model.CreateMemoryResponse;
+import ai.smritea.sdk._internal.autogen.model.MemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.ModelEnumsRerankerType;
 import ai.smritea.sdk._internal.autogen.model.ModelEnumsSearchMethod;
+import ai.smritea.sdk._internal.autogen.model.RelativeStandingConfig;
+import ai.smritea.sdk._internal.autogen.model.SearchMemoriesResponse;
+import ai.smritea.sdk._internal.autogen.model.SearchMemoryRequest;
+import ai.smritea.sdk._internal.autogen.model.SearchMemoryResponse;
 import ai.smritea.sdk.errors.SmriteaAuthError;
 import ai.smritea.sdk.errors.SmriteaDeserializationError;
 import ai.smritea.sdk.errors.SmriteaError;
@@ -110,20 +109,22 @@ public class SmriteaClient {
    * @throws SmriteaError on any API error
    */
   public MemoryCreationResult add(String content, AddOptions opts) {
-    MemoryCreateMemoryRequest request = new MemoryCreateMemoryRequest();
+    CreateMemoryRequest request = new CreateMemoryRequest();
     request.setAppId(appId);
     request.setContent(content);
 
     if (opts != null) {
       MemoryScope scope = opts.getScope();
       if (scope != null) {
-        CommondtoMemoryScope autogenScope = new CommondtoMemoryScope();
+        ai.smritea.sdk._internal.autogen.model.MemoryScope autogenScope =
+            new ai.smritea.sdk._internal.autogen.model.MemoryScope();
         if (scope.getActorId() != null) {
           autogenScope.setActorId(scope.getActorId());
         }
         if (scope.getActorType() != null) {
           autogenScope.setActorType(
-              CommondtoMemoryScope.ActorTypeEnum.fromValue(scope.getActorType()));
+              ai.smritea.sdk._internal.autogen.model.MemoryScope.ActorTypeEnum.fromValue(
+                  scope.getActorType()));
         }
         if (scope.getActorName() != null) {
           autogenScope.setActorName(scope.getActorName());
@@ -133,7 +134,8 @@ public class SmriteaClient {
         }
         if (scope.getSourceType() != null) {
           autogenScope.setSourceType(
-              CommondtoMemoryScope.SourceTypeEnum.fromValue(scope.getSourceType()));
+              ai.smritea.sdk._internal.autogen.model.MemoryScope.SourceTypeEnum.fromValue(
+                  scope.getSourceType()));
         }
         if (scope.getParticipantIds() != null && !scope.getParticipantIds().isEmpty()) {
           autogenScope.setParticipantIds(scope.getParticipantIds());
@@ -148,7 +150,7 @@ public class SmriteaClient {
       }
       RelativeStanding rs = opts.getRelativeStanding();
       if (rs != null) {
-        CommondtoRelativeStandingConfig autogenRs = new CommondtoRelativeStandingConfig();
+        RelativeStandingConfig autogenRs = new RelativeStandingConfig();
         if (rs.getImportance() != null) {
           autogenRs.setImportance(BigDecimal.valueOf(rs.getImportance()));
         }
@@ -157,7 +159,7 @@ public class SmriteaClient {
         }
         if (rs.getDecayFunction() != null) {
           autogenRs.setDecayFunction(
-              CommondtoRelativeStandingConfig.DecayFunctionEnum.fromValue(rs.getDecayFunction()));
+              RelativeStandingConfig.DecayFunctionEnum.fromValue(rs.getDecayFunction()));
         }
         request.setRelativeStanding(autogenRs);
       }
@@ -166,10 +168,10 @@ public class SmriteaClient {
     return executeWithRetry(
         () -> {
           try {
-            MemoryCreateMemoryResponse resp = api.createMemory(request);
+            CreateMemoryResponse resp = api.createMemory(request);
             if (resp == null) {
               throw new SmriteaDeserializationError(
-                  "server returned null body for add() — expected a MemoryCreateMemoryResponse"
+                  "server returned null body for add() — expected a CreateMemoryResponse"
                       + " object");
             }
             return new MemoryCreationResult(resp);
@@ -189,20 +191,22 @@ public class SmriteaClient {
    * @throws SmriteaError on any API error
    */
   public List<SearchResult> search(String query, SearchOptions opts) {
-    MemorySearchMemoryRequest request = new MemorySearchMemoryRequest();
+    SearchMemoryRequest request = new SearchMemoryRequest();
     request.setAppId(appId);
     request.setQuery(query);
 
     if (opts != null) {
       MemoryScope scope = opts.getScope();
       if (scope != null) {
-        CommondtoMemoryScope autogenScope = new CommondtoMemoryScope();
+        ai.smritea.sdk._internal.autogen.model.MemoryScope autogenScope =
+            new ai.smritea.sdk._internal.autogen.model.MemoryScope();
         if (scope.getActorId() != null) {
           autogenScope.setActorId(scope.getActorId());
         }
         if (scope.getActorType() != null) {
           autogenScope.setActorType(
-              CommondtoMemoryScope.ActorTypeEnum.fromValue(scope.getActorType()));
+              ai.smritea.sdk._internal.autogen.model.MemoryScope.ActorTypeEnum.fromValue(
+                  scope.getActorType()));
         }
         if (scope.getConversationId() != null) {
           autogenScope.setConversationId(scope.getConversationId());
@@ -244,8 +248,8 @@ public class SmriteaClient {
     return executeWithRetry(
         () -> {
           try {
-            MemorySearchMemoriesResponse resp = api.searchMemories(request);
-            List<MemorySearchMemoryResponse> memories = resp.getMemories();
+            SearchMemoriesResponse resp = api.searchMemories(request);
+            List<SearchMemoryResponse> memories = resp.getMemories();
             if (memories == null || memories.isEmpty()) {
               return Collections.emptyList();
             }
@@ -272,10 +276,10 @@ public class SmriteaClient {
     return executeWithRetry(
         () -> {
           try {
-            MemoryMemoryResponse resp = api.getMemory(memoryId);
+            MemoryResponse resp = api.getMemory(memoryId);
             if (resp == null) {
               throw new SmriteaDeserializationError(
-                  "server returned null body for get() — expected a MemoryMemoryResponse object");
+                  "server returned null body for get() — expected a MemoryResponse object");
             }
             return new Memory(resp);
           } catch (ApiException e) {

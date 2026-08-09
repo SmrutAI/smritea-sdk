@@ -7,9 +7,9 @@
  */
 
 export type {
-  MemoryCreateMemoryResponse as MemoryCreationResult,
-  MemoryMemoryResponse as Memory,
-  MemorySearchMemoryResponse as SearchResult,
+  CreateMemoryResponse as MemoryCreationResult,
+  MemoryResponse as Memory,
+  SearchMemoryResponse as SearchResult,
 } from './_internal/autogen/models/index.js';
 // MemoryCreationResult is the response from add(). Contains all memories
 // created from the extracted facts (memories[]), plus extraction metadata:
