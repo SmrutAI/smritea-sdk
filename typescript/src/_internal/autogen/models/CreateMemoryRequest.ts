@@ -112,11 +112,11 @@ export interface CreateMemoryRequest {
     relativeStanding?: RelativeStandingConfig;
     /**
      * Scope groups actor, conversation, and source context fields.
-     * ActorID and ActorType within scope follow the same cross-field rules as before.
+     * ActorID and ActorType are required for memory creation (scoped storage).
      * @type {MemoryScope}
      * @memberof CreateMemoryRequest
      */
-    scope?: MemoryScope;
+    scope: MemoryScope;
 }
 
 /**
@@ -125,6 +125,7 @@ export interface CreateMemoryRequest {
 export function instanceOfCreateMemoryRequest(value: object): value is CreateMemoryRequest {
     if (!('appId' in value) || value['appId'] === undefined) return false;
     if (!('content' in value) || value['content'] === undefined) return false;
+    if (!('scope' in value) || value['scope'] === undefined) return false;
     return true;
 }
 
@@ -146,7 +147,7 @@ export function CreateMemoryRequestFromJSONTyped(json: any, ignoreDiscriminator:
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'personaExtractionOverrides': json['persona_extraction_overrides'] == null ? undefined : PersonaExtractionConfigFromJSON(json['persona_extraction_overrides']),
         'relativeStanding': json['relative_standing'] == null ? undefined : RelativeStandingConfigFromJSON(json['relative_standing']),
-        'scope': json['scope'] == null ? undefined : MemoryScopeFromJSON(json['scope']),
+        'scope': MemoryScopeFromJSON(json['scope']),
     };
 }
 

@@ -49,7 +49,7 @@ export class SmriteaClient {
                 sourceType: options.scope.sourceType,
                 participantIds: options.scope.participantIds,
               }
-            : undefined,
+            : {},
           metadata: options?.metadata as never,
           eventOccurredAt: options?.eventOccurredAt,
           relativeStanding: options?.relativeStanding

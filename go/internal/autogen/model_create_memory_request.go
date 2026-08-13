@@ -38,8 +38,8 @@ type CreateMemoryRequest struct {
 	PersonaExtractionOverrides *PersonaExtractionConfig `json:"persona_extraction_overrides,omitempty"`
 	// RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are applied (importance=1.0, decay_factor=0.2, decay_function=exponential).
 	RelativeStanding *RelativeStandingConfig `json:"relative_standing,omitempty"`
-	// Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before.
-	Scope *MemoryScope `json:"scope,omitempty"`
+	// Scope groups actor, conversation, and source context fields. ActorID and ActorType are required for memory creation (scoped storage).
+	Scope MemoryScope `json:"scope"`
 }
 
 type _CreateMemoryRequest CreateMemoryRequest
@@ -48,10 +48,11 @@ type _CreateMemoryRequest CreateMemoryRequest
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateMemoryRequest(appId string, content string) *CreateMemoryRequest {
+func NewCreateMemoryRequest(appId string, content string, scope MemoryScope) *CreateMemoryRequest {
 	this := CreateMemoryRequest{}
 	this.AppId = appId
 	this.Content = content
+	this.Scope = scope
 	return &this
 }
 
@@ -303,36 +304,28 @@ func (o *CreateMemoryRequest) SetRelativeStanding(v RelativeStandingConfig) {
 	o.RelativeStanding = &v
 }
 
-// GetScope returns the Scope field value if set, zero value otherwise.
+// GetScope returns the Scope field value
 func (o *CreateMemoryRequest) GetScope() MemoryScope {
-	if o == nil || IsNil(o.Scope) {
+	if o == nil {
 		var ret MemoryScope
 		return ret
 	}
-	return *o.Scope
+
+	return o.Scope
 }
 
-// GetScopeOk returns a tuple with the Scope field value if set, nil otherwise
+// GetScopeOk returns a tuple with the Scope field value
 // and a boolean to check if the value has been set.
 func (o *CreateMemoryRequest) GetScopeOk() (*MemoryScope, bool) {
-	if o == nil || IsNil(o.Scope) {
+	if o == nil {
 		return nil, false
 	}
-	return o.Scope, true
+	return &o.Scope, true
 }
 
-// HasScope returns a boolean if a field has been set.
-func (o *CreateMemoryRequest) HasScope() bool {
-	if o != nil && !IsNil(o.Scope) {
-		return true
-	}
-
-	return false
-}
-
-// SetScope gets a reference to the given MemoryScope and assigns it to the Scope field.
+// SetScope sets field value
 func (o *CreateMemoryRequest) SetScope(v MemoryScope) {
-	o.Scope = &v
+	o.Scope = v
 }
 
 func (o CreateMemoryRequest) MarshalJSON() ([]byte, error) {
@@ -365,9 +358,7 @@ func (o CreateMemoryRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RelativeStanding) {
 		toSerialize["relative_standing"] = o.RelativeStanding
 	}
-	if !IsNil(o.Scope) {
-		toSerialize["scope"] = o.Scope
-	}
+	toSerialize["scope"] = o.Scope
 	return toSerialize, nil
 }
 
@@ -378,6 +369,7 @@ func (o *CreateMemoryRequest) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"app_id",
 		"content",
+		"scope",
 	}
 
 	allProperties := make(map[string]interface{})

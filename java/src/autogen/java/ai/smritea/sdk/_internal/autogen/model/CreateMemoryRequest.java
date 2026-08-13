@@ -83,7 +83,7 @@ public class CreateMemoryRequest {
   private RelativeStandingConfig relativeStanding;
 
   public static final String JSON_PROPERTY_SCOPE = "scope";
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   private MemoryScope scope;
 
   public CreateMemoryRequest() { 
@@ -281,26 +281,26 @@ public class CreateMemoryRequest {
   }
 
 
-  public CreateMemoryRequest scope(@javax.annotation.Nullable MemoryScope scope) {
+  public CreateMemoryRequest scope(@javax.annotation.Nonnull MemoryScope scope) {
     this.scope = scope;
     return this;
   }
 
   /**
-   * Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before.
+   * Scope groups actor, conversation, and source context fields. ActorID and ActorType are required for memory creation (scoped storage).
    * @return scope
    */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_SCOPE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_SCOPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public MemoryScope getScope() {
     return scope;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_SCOPE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setScope(@javax.annotation.Nullable MemoryScope scope) {
+  @JsonProperty(value = JSON_PROPERTY_SCOPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setScope(@javax.annotation.Nonnull MemoryScope scope) {
     this.scope = scope;
   }
 

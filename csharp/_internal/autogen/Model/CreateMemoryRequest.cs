@@ -49,7 +49,7 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="metadata">Metadata contains flexible memory metadata (optional).</param>
         /// <param name="personaExtractionOverrides">PersonaExtractionOverrides overrides App-level persona extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values. This is a stub for v1 - the actual LLM-based persona extraction is deferred to a future task..</param>
         /// <param name="relativeStanding">RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are applied (importance&#x3D;1.0, decay_factor&#x3D;0.2, decay_function&#x3D;exponential)..</param>
-        /// <param name="scope">Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before..</param>
+        /// <param name="scope">Scope groups actor, conversation, and source context fields. ActorID and ActorType are required for memory creation (scoped storage). (required).</param>
         public CreateMemoryRequest(string appId = default, string content = default, EntityExtractionConfig entityExtractionOverrides = default, string eventOccurredAt = default, FactExtractionConfig factExtractionOverrides = default, Object metadata = default, PersonaExtractionConfig personaExtractionOverrides = default, RelativeStandingConfig relativeStanding = default, MemoryScope scope = default)
         {
             // to ensure "appId" is required (not null)
@@ -64,13 +64,18 @@ namespace Smritea.Internal.Autogen.Model
                 throw new ArgumentNullException("content is a required property for CreateMemoryRequest and cannot be null");
             }
             this.Content = content;
+            // to ensure "scope" is required (not null)
+            if (scope == null)
+            {
+                throw new ArgumentNullException("scope is a required property for CreateMemoryRequest and cannot be null");
+            }
+            this.Scope = scope;
             this.EntityExtractionOverrides = entityExtractionOverrides;
             this.EventOccurredAt = eventOccurredAt;
             this.FactExtractionOverrides = factExtractionOverrides;
             this.Metadata = metadata;
             this.PersonaExtractionOverrides = personaExtractionOverrides;
             this.RelativeStanding = relativeStanding;
-            this.Scope = scope;
         }
 
         /// <summary>
@@ -130,10 +135,10 @@ namespace Smritea.Internal.Autogen.Model
         public RelativeStandingConfig RelativeStanding { get; set; }
 
         /// <summary>
-        /// Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before.
+        /// Scope groups actor, conversation, and source context fields. ActorID and ActorType are required for memory creation (scoped storage).
         /// </summary>
-        /// <value>Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before.</value>
-        [DataMember(Name = "scope", EmitDefaultValue = false)]
+        /// <value>Scope groups actor, conversation, and source context fields. ActorID and ActorType are required for memory creation (scoped storage).</value>
+        [DataMember(Name = "scope", IsRequired = true, EmitDefaultValue = true)]
         public MemoryScope Scope { get; set; }
 
         /// <summary>

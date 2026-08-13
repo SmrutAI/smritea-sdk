@@ -41,7 +41,7 @@ class CreateMemoryRequest(BaseModel):
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Metadata contains flexible memory metadata (optional)")
     persona_extraction_overrides: Optional[PersonaExtractionConfig] = Field(default=None, description="PersonaExtractionOverrides overrides App-level persona extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values. This is a stub for v1 - the actual LLM-based persona extraction is deferred to a future task.")
     relative_standing: Optional[RelativeStandingConfig] = Field(default=None, description="RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are applied (importance=1.0, decay_factor=0.2, decay_function=exponential).")
-    scope: Optional[MemoryScope] = Field(default=None, description="Scope groups actor, conversation, and source context fields. ActorID and ActorType within scope follow the same cross-field rules as before.")
+    scope: MemoryScope = Field(description="Scope groups actor, conversation, and source context fields. ActorID and ActorType are required for memory creation (scoped storage).")
     __properties: ClassVar[List[str]] = ["app_id", "content", "entity_extraction_overrides", "event_occurred_at", "fact_extraction_overrides", "metadata", "persona_extraction_overrides", "relative_standing", "scope"]
 
     model_config = ConfigDict(

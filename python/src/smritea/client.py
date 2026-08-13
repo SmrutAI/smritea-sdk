@@ -102,8 +102,7 @@ class SmriteaClient:
                 f"metadata must be a dictionary, got {type(metadata).__name__}", 400
             )
 
-        # Build autogen scope from the MemoryScope object
-        autogen_scope = None
+        # Build autogen scope from the MemoryScope object (scope is required by the backend)
         if scope is not None:
             autogen_scope = AutogenMemoryScope(
                 actor_id=scope.actor_id,
@@ -113,6 +112,8 @@ class SmriteaClient:
                 source_type=scope.source_type,
                 participant_ids=scope.participant_ids,
             )
+        else:
+            autogen_scope = AutogenMemoryScope()
 
         # Build autogen relative_standing from SDK type
         autogen_relative_standing = None

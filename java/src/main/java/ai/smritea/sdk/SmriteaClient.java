@@ -112,6 +112,7 @@ public class SmriteaClient {
     CreateMemoryRequest request = new CreateMemoryRequest();
     request.setAppId(appId);
     request.setContent(content);
+    request.setScope(new ai.smritea.sdk._internal.autogen.model.MemoryScope());
 
     if (opts != null) {
       MemoryScope scope = opts.getScope();

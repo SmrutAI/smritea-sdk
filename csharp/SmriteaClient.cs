@@ -76,7 +76,7 @@ public class SmriteaClient : IDisposable
     /// updatedCount).</returns>
     public async Task<MemoryCreationResult> AddAsync(string content, AddOptions? opts = null, CancellationToken ct = default)
     {
-        var request = new CreateMemoryRequest(appId: this.appId, content: content);
+        var request = new CreateMemoryRequest(appId: this.appId, content: content, scope: new Smritea.Internal.Autogen.Model.MemoryScope());
 
         if (opts is not null)
         {

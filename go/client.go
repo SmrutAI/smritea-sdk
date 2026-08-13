@@ -64,11 +64,12 @@ func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOption
 	req := autogen.CreateMemoryRequest{
 		AppId:   c.appID,
 		Content: content,
+		Scope:   autogen.MemoryScope{},
 	}
 
 	if opts != nil {
 		if opts.Scope != nil {
-			req.Scope = &autogen.MemoryScope{
+			req.Scope = autogen.MemoryScope{
 				ActorId:        opts.Scope.ActorID,
 				ActorType:      opts.Scope.ActorType,
 				ActorName:      opts.Scope.ActorName,
