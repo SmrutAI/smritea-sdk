@@ -30,7 +30,7 @@ from smritea._internal.autogen.smritea_cloud_sdk.models import (
 # ---------------------------------------------------------------------------
 # Re-export auto-gen return types under canonical SDK names.
 # These are the real pydantic model classes produced by the openapi-generator.
-# Regenerated from smritea-cloud via: cd ../smritea-cloud && make generate-public-sdk
+# Regenerated from the platform's OpenAPI spec via: make generate-public-sdk
 # ---------------------------------------------------------------------------
 # MemoryCreationResult is the response from add(). Contains all memories
 # created from the extracted facts (memories[]), plus extraction metadata:

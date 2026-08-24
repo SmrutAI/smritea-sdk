@@ -4,9 +4,24 @@ title: smritea SDK — Java
 status: stable
 tags:
 - readme
+stale_after: 2026-12-31
+generated:
+  by: Tushar Dwivedi
+  at: 2026-08-25T00:00:00Z
 ---
 
 # smritea SDK — Java
+
+
+| Section | What it covers |
+|---------|----------------|
+| [Installation](#installation) | Maven |
+| [Get your API key](#get-your-api-key) | Sign up at smritea.ai — free account, no credit card required |
+| [Quickstart](#quickstart) | Quickstart |
+| [Constructor](#constructor) | All methods are synchronous and return values directly. For async use, wrap calls in a |
+| [Methods](#methods) | Methods |
+| [Error handling](#error-handling) | Error handling |
+| [`Memory` type reference](#memory-type-reference) | Memory type reference |
 
 Java SDK for the [smritea](https://smritea.ai) AI memory system.
 

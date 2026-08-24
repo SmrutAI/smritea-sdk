@@ -4,9 +4,24 @@ title: smritea SDK — Python
 status: stable
 tags:
 - readme
+stale_after: 2026-12-31
+generated:
+  by: Tushar Dwivedi
+  at: 2026-08-25T00:00:00Z
 ---
 
 # smritea SDK — Python
+
+
+| Section | What it covers |
+|---------|----------------|
+| [Installation](#installation) | Requires Python 3.9+. |
+| [Get your API key](#get-your-api-key) | Sign up at smritea.ai — free account, no credit card required |
+| [Quickstart](#quickstart) | Quickstart |
+| [Constructor](#constructor) | Constructor |
+| [Methods](#methods) | Methods |
+| [Error handling](#error-handling) | Error handling |
+| [`Memory` type reference](#memory-type-reference) | Memory type reference |
 
 Python SDK for the [smritea](https://smritea.ai) AI memory system.
 

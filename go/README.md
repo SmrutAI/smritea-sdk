@@ -4,9 +4,24 @@ title: smritea SDK — Go
 status: stable
 tags:
 - readme
+stale_after: 2026-12-31
+generated:
+  by: Tushar Dwivedi
+  at: 2026-08-25T00:00:00Z
 ---
 
 # smritea SDK — Go
+
+
+| Section | What it covers |
+|---------|----------------|
+| [Installation](#installation) | Requires Go 1.22+. |
+| [Get your API key](#get-your-api-key) | Sign up at smritea.ai — free account, no credit card required |
+| [Quickstart](#quickstart) | Quickstart |
+| [Constructor](#constructor) | Constructor |
+| [Methods](#methods) | Methods |
+| [Error handling](#error-handling) | Error handling |
+| [`Memory` type reference](#memory-type-reference) | Memory type reference |
 
 Go SDK for the [smritea](https://smritea.ai) AI memory system.
 

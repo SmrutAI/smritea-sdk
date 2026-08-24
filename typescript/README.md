@@ -4,9 +4,24 @@ title: smritea SDK — TypeScript / Node.js
 status: stable
 tags:
 - readme
+stale_after: 2026-12-31
+generated:
+  by: Tushar Dwivedi
+  at: 2026-08-25T00:00:00Z
 ---
 
 # smritea SDK — TypeScript / Node.js
+
+
+| Section | What it covers |
+|---------|----------------|
+| [Installation](#installation) | Requires Node.js 18+. Ships as ESM + CJS with bundled type declarations. |
+| [Get your API key](#get-your-api-key) | Sign up at smritea.ai — free account, no credit card required |
+| [Quickstart](#quickstart) | Quickstart |
+| [Constructor](#constructor) | Constructor |
+| [Methods](#methods) | All methods are async and return Promises. |
+| [Error handling](#error-handling) | Error handling |
+| [`Memory` type reference](#memory-type-reference) | All fields use camelCase. |
 
 TypeScript SDK for the [smritea](https://smritea.ai) AI memory system.
 

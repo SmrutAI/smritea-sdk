@@ -4,6 +4,10 @@ title: smritea SDK
 status: stable
 tags:
 - readme
+stale_after: 2026-12-31
+generated:
+  by: Tushar Dwivedi
+  at: 2026-08-25T00:00:00Z
 ---
 
 # smritea SDK
@@ -423,7 +427,7 @@ const client = new SmriteaClient({
 ## Development
 
 ```bash
-# Regenerate auto-gen SDK layer (run after API changes in smritea-cloud)
+# Regenerate auto-gen SDK layer (run after backend API changes)
 make generate
 
 # Tests
