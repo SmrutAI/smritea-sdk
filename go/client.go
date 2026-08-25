@@ -139,6 +139,7 @@ func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOp
 		if opts.MetadataFilter != nil {
 			req.MetadataFilter = opts.MetadataFilter
 		}
+		req.SpeakerActorId = opts.SpeakerActorID
 	}
 
 	return withRetry[[]*SearchResult](ctx, c.maxRetries, func() ([]*SearchResult, error) {

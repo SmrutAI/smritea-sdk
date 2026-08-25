@@ -46,6 +46,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   SearchMemoryRequest.JSON_PROPERTY_QUERY,
   SearchMemoryRequest.JSON_PROPERTY_RERANKER_TYPE,
   SearchMemoryRequest.JSON_PROPERTY_SCOPE,
+  SearchMemoryRequest.JSON_PROPERTY_SPEAKER_ACTOR_ID,
   SearchMemoryRequest.JSON_PROPERTY_THRESHOLD,
   SearchMemoryRequest.JSON_PROPERTY_TO_TIME,
   SearchMemoryRequest.JSON_PROPERTY_VALID_AT
@@ -87,6 +88,10 @@ public class SearchMemoryRequest {
   public static final String JSON_PROPERTY_SCOPE = "scope";
   @javax.annotation.Nullable
   private MemoryScope scope;
+
+  public static final String JSON_PROPERTY_SPEAKER_ACTOR_ID = "speaker_actor_id";
+  @javax.annotation.Nullable
+  private String speakerActorId;
 
   public static final String JSON_PROPERTY_THRESHOLD = "threshold";
   @javax.annotation.Nullable
@@ -321,6 +326,30 @@ public class SearchMemoryRequest {
   }
 
 
+  public SearchMemoryRequest speakerActorId(@javax.annotation.Nullable String speakerActorId) {
+    this.speakerActorId = speakerActorId;
+    return this;
+  }
+
+  /**
+   * SpeakerActorID identifies which actor is making this search request. It is NEVER used for filtering — it does not narrow, exclude, or bias which memories are returned. It exists purely for identification: audit logging, telemetry, and any future personalization/access-control hook that needs to know \&quot;who is asking\&quot; independent of \&quot;which memories to include.\&quot; That second concern (result filtering) is entirely owned by Scope below. Deliberately top-level, not nested inside Scope, so it can never be confused with — or accidentally coupled to — the filter fields. Optional: omit if the caller has no meaningful requester identity (e.g. an anonymous or system-initiated search).
+   * @return speakerActorId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SPEAKER_ACTOR_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getSpeakerActorId() {
+    return speakerActorId;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SPEAKER_ACTOR_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSpeakerActorId(@javax.annotation.Nullable String speakerActorId) {
+    this.speakerActorId = speakerActorId;
+  }
+
+
   public SearchMemoryRequest threshold(@javax.annotation.Nullable BigDecimal threshold) {
     this.threshold = threshold;
     return this;
@@ -416,6 +445,7 @@ public class SearchMemoryRequest {
         Objects.equals(this.query, searchMemoryRequest.query) &&
         Objects.equals(this.rerankerType, searchMemoryRequest.rerankerType) &&
         Objects.equals(this.scope, searchMemoryRequest.scope) &&
+        Objects.equals(this.speakerActorId, searchMemoryRequest.speakerActorId) &&
         Objects.equals(this.threshold, searchMemoryRequest.threshold) &&
         Objects.equals(this.toTime, searchMemoryRequest.toTime) &&
         Objects.equals(this.validAt, searchMemoryRequest.validAt);
@@ -423,7 +453,7 @@ public class SearchMemoryRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(appId, fromTime, graphDepth, limit, metadataFilter, method, query, rerankerType, scope, threshold, toTime, validAt);
+    return Objects.hash(appId, fromTime, graphDepth, limit, metadataFilter, method, query, rerankerType, scope, speakerActorId, threshold, toTime, validAt);
   }
 
   @Override
@@ -439,6 +469,7 @@ public class SearchMemoryRequest {
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    rerankerType: ").append(toIndentedString(rerankerType)).append("\n");
     sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
+    sb.append("    speakerActorId: ").append(toIndentedString(speakerActorId)).append("\n");
     sb.append("    threshold: ").append(toIndentedString(threshold)).append("\n");
     sb.append("    toTime: ").append(toIndentedString(toTime)).append("\n");
     sb.append("    validAt: ").append(toIndentedString(validAt)).append("\n");
@@ -532,6 +563,11 @@ public class SearchMemoryRequest {
     // add `scope` to the URL query string
     if (getScope() != null) {
       joiner.add(getScope().toUrlQueryString(prefix + "scope" + suffix));
+    }
+
+    // add `speaker_actor_id` to the URL query string
+    if (getSpeakerActorId() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sspeaker_actor_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSpeakerActorId()))));
     }
 
     // add `threshold` to the URL query string

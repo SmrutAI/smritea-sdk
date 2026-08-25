@@ -431,6 +431,46 @@ func TestSearch_TemporalFilter_PassedThrough(t *testing.T) {
 	}
 }
 
+func TestSearch_SpeakerActorID_PassedThrough(t *testing.T) {
+	// Assert that SpeakerActorID set via the fluent builder is serialised into
+	// the outbound request body as top-level speaker_actor_id by the autogen client.
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		speaker, ok := body["speaker_actor_id"].(string)
+		if !ok || speaker != "agent-ravi" {
+			http.Error(w, fmt.Sprintf("wrong speaker_actor_id: %v", body["speaker_actor_id"]), http.StatusBadRequest)
+			return
+		}
+		// Speaker identity must never leak into the scope filter.
+		if scope, ok := body["scope"].(map[string]any); ok {
+			if _, leaked := scope["actor_id"]; leaked {
+				http.Error(w, "speaker id leaked into scope filter", http.StatusBadRequest)
+				return
+			}
+		}
+		writeJSON(w, http.StatusOK, []byte(`{"memories":[]}`))
+	})
+	client := newTestClient(t, handler, 1)
+
+	opts := NewSearchOptions().WithSpeakerActorID("agent-ravi")
+
+	_, err := client.Search(context.Background(), "query", opts)
+	if err != nil {
+		t.Fatalf("Search speaker actor id: unexpected error: %v", err)
+	}
+}
+
+func TestSearchOptions_SpeakerActorID_Builder(t *testing.T) {
+	opts := NewSearchOptions().WithSpeakerActorID("agent-ravi")
+	if opts.SpeakerActorID == nil || *opts.SpeakerActorID != "agent-ravi" {
+		t.Fatalf("expected SpeakerActorID agent-ravi, got %v", opts.SpeakerActorID)
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Get
 // ---------------------------------------------------------------------------

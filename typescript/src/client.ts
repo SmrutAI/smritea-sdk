@@ -70,6 +70,7 @@ export class SmriteaClient {
         request: {
           appId: this.appId,
           query,
+          speakerActorId: options?.speakerActorId,
           scope: options?.scope
             ? {
                 actorId: options.scope.actorId,

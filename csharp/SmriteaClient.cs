@@ -191,6 +191,11 @@ public class SmriteaClient : IDisposable
 
         if (opts is not null)
         {
+            if (opts.SpeakerActorId is not null)
+            {
+                request.SpeakerActorId = opts.SpeakerActorId;
+            }
+
             if (opts.Scope is not null)
             {
                 var scope = new Smritea.Internal.Autogen.Model.MemoryScope();

@@ -100,6 +100,21 @@ export interface SearchMemoryRequest {
      */
     scope?: MemoryScope;
     /**
+     * SpeakerActorID identifies which actor is making this search request.
+     * It is NEVER used for filtering — it does not narrow, exclude, or bias
+     * which memories are returned. It exists purely for identification: audit
+     * logging, telemetry, and any future personalization/access-control hook
+     * that needs to know "who is asking" independent of "which memories to
+     * include." That second concern (result filtering) is entirely owned by
+     * Scope below. Deliberately top-level, not nested inside Scope, so it can
+     * never be confused with — or accidentally coupled to — the filter fields.
+     * Optional: omit if the caller has no meaningful requester identity (e.g.
+     * an anonymous or system-initiated search).
+     * @type {string}
+     * @memberof SearchMemoryRequest
+     */
+    speakerActorId?: string;
+    /**
      * 0=no filtering (pipeline uses RRF scores, not cosine similarity)
      * @type {number}
      * @memberof SearchMemoryRequest
@@ -152,6 +167,7 @@ export function SearchMemoryRequestFromJSONTyped(json: any, ignoreDiscriminator:
         'query': json['query'],
         'rerankerType': json['reranker_type'] == null ? undefined : RerankerTypeFromJSON(json['reranker_type']),
         'scope': json['scope'] == null ? undefined : MemoryScopeFromJSON(json['scope']),
+        'speakerActorId': json['speaker_actor_id'] == null ? undefined : json['speaker_actor_id'],
         'threshold': json['threshold'] == null ? undefined : json['threshold'],
         'toTime': json['to_time'] == null ? undefined : json['to_time'],
         'validAt': json['valid_at'] == null ? undefined : json['valid_at'],
@@ -178,6 +194,7 @@ export function SearchMemoryRequestToJSONTyped(value?: SearchMemoryRequest | nul
         'query': value['query'],
         'reranker_type': RerankerTypeToJSON(value['rerankerType']),
         'scope': MemoryScopeToJSON(value['scope']),
+        'speaker_actor_id': value['speakerActorId'],
         'threshold': value['threshold'],
         'to_time': value['toTime'],
         'valid_at': value['validAt'],

@@ -130,6 +130,29 @@ describe('actor scope mapping', () => {
     expect(arg.request.scope?.actorId).toBe('bot-1');
     expect(arg.request.scope?.actorType).toBe('agent');
   });
+
+  it('search() passes speakerActorId through when set', async () => {
+    const { client, mockApi } = createClientWithMock();
+    mockApi.searchMemories.mockResolvedValue({ memories: [] });
+
+    await client.search('find stuff', { speakerActorId: 'agent-ravi' });
+
+    expect(mockApi.searchMemories).toHaveBeenCalledOnce();
+    const arg = mockApi.searchMemories.mock.calls[0][0];
+    expect(arg.request.speakerActorId).toBe('agent-ravi');
+    // Must remain top-level, never inside scope
+    expect(arg.request.scope).toBeUndefined();
+  });
+
+  it('search() omits speakerActorId when not set', async () => {
+    const { client, mockApi } = createClientWithMock();
+    mockApi.searchMemories.mockResolvedValue({ memories: [] });
+
+    await client.search('find stuff');
+
+    const arg = mockApi.searchMemories.mock.calls[0][0];
+    expect(arg.request.speakerActorId).toBeUndefined();
+  });
 });
 
 // ---------------------------------------------------------------------------

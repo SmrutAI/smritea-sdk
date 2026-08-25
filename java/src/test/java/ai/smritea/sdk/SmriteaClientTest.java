@@ -177,6 +177,18 @@ class SmriteaClientTest {
     assertEquals("mem-v1", results.get(0).getMemory().getId());
   }
 
+  @Test
+  void testSearch_SendsSpeakerActorIdTopLevel(WireMockRuntimeInfo wm) {
+    stubFor(post("/api/v1/sdk/memories/search").willReturn(okJson("{\"memories\":[]}")));
+
+    SmriteaClient client = clientFor(wm);
+    client.search("find stuff", new SearchOptions().withSpeakerActorId("agent-ravi"));
+
+    verify(
+        postRequestedFor(urlEqualTo("/api/v1/sdk/memories/search"))
+            .withRequestBody(matchingJsonPath("$.speaker_actor_id", equalTo("agent-ravi"))));
+  }
+
   // -----------------------------------------------------------------------
   // Get
   // -----------------------------------------------------------------------

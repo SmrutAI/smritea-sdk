@@ -40,10 +40,11 @@ class SearchMemoryRequest(BaseModel):
     query: StrictStr
     reranker_type: Optional[RerankerType] = Field(default=None, description="RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method.")
     scope: Optional[MemoryScope] = Field(default=None, description="Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \"no filter\" (searches across all).")
+    speaker_actor_id: Optional[Annotated[str, Field(strict=True, max_length=64)]] = Field(default=None, description="SpeakerActorID identifies which actor is making this search request. It is NEVER used for filtering — it does not narrow, exclude, or bias which memories are returned. It exists purely for identification: audit logging, telemetry, and any future personalization/access-control hook that needs to know \"who is asking\" independent of \"which memories to include.\" That second concern (result filtering) is entirely owned by Scope below. Deliberately top-level, not nested inside Scope, so it can never be confused with — or accidentally coupled to — the filter fields. Optional: omit if the caller has no meaningful requester identity (e.g. an anonymous or system-initiated search).")
     threshold: Optional[Union[Annotated[float, Field(le=1, strict=True, ge=0)], Annotated[int, Field(le=1, strict=True, ge=0)]]] = Field(default=None, description="0=no filtering (pipeline uses RRF scores, not cosine similarity)")
     to_time: Optional[StrictStr] = Field(default=None, description="ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.")
     valid_at: Optional[StrictStr] = Field(default=None, description="ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from <= ValidAt AND (active_to is null OR active_to >= ValidAt) Mutually exclusive with FromTime/ToTime.")
-    __properties: ClassVar[List[str]] = ["app_id", "from_time", "graph_depth", "limit", "metadata_filter", "method", "query", "reranker_type", "scope", "threshold", "to_time", "valid_at"]
+    __properties: ClassVar[List[str]] = ["app_id", "from_time", "graph_depth", "limit", "metadata_filter", "method", "query", "reranker_type", "scope", "speaker_actor_id", "threshold", "to_time", "valid_at"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -108,6 +109,7 @@ class SearchMemoryRequest(BaseModel):
             "query": obj.get("query"),
             "reranker_type": obj.get("reranker_type"),
             "scope": MemoryScope.from_dict(obj["scope"]) if obj.get("scope") is not None else None,
+            "speaker_actor_id": obj.get("speaker_actor_id"),
             "threshold": obj.get("threshold"),
             "to_time": obj.get("to_time"),
             "valid_at": obj.get("valid_at")

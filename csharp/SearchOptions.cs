@@ -11,6 +11,15 @@ namespace Smritea.Sdk;
 /// </summary>
 public sealed class SearchOptions
 {
+    /// <summary>
+    /// Gets the non-filtering speaker identity for this search — identifies who is asking the
+    /// query. NEVER used for filtering; it does not narrow or bias which memories are returned.
+    /// The backend resolves it to the speaker's entity for speaker-context query augmentation
+    /// and audit attribution. Independent of <see cref="Scope"/>, which remains the only
+    /// filtering mechanism. Null for anonymous or system-initiated searches. Max 64 characters.
+    /// </summary>
+    public string? SpeakerActorId { get; private set; }
+
     /// <summary>Gets the scope containing actor and conversation context.</summary>
     public MemoryScope? Scope { get; private set; }
 
@@ -48,6 +57,15 @@ public sealed class SearchOptions
     /// $contains inside $or is rejected with HTTP 400.
     /// </summary>
     public Dictionary<string, object>? MetadataFilter { get; private set; }
+
+    /// <summary>Sets the non-filtering speaker identity ("who is asking") for this search.</summary>
+    /// <param name="speakerActorId">The speaker actor ID. Never used as a filter by the backend.</param>
+    /// <returns>The current instance for method chaining.</returns>
+    public SearchOptions WithSpeakerActorId(string speakerActorId)
+    {
+        this.SpeakerActorId = speakerActorId;
+        return this;
+    }
 
     /// <summary>Sets the scope containing actor and conversation context.</summary>
     /// <param name="scope">The scope object grouping actor and conversation fields.</param>

@@ -163,6 +163,23 @@ public class SmriteaClientTests : IDisposable
         Assert.Equal("mem-t1", results[0].Memory!.Id);
     }
 
+    [Fact]
+    public async Task SearchAsync_SpeakerActorId_SentTopLevelInRequest()
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories/search").UsingPost()
+                .WithBody(b => b != null && b.Contains("\"speaker_actor_id\":\"agent-ravi\"")))
+            .RespondWith(Response.Create().WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody("{\"memories\":[]}"));
+
+        using var client = CreateClient();
+        var opts = new SearchOptions().WithSpeakerActorId("agent-ravi");
+        var results = await client.SearchAsync("find stuff", opts);
+
+        Assert.NotNull(results);
+        Assert.Empty(results);
+    }
+
     // -----------------------------------------------------------------------
     // Get
     // -----------------------------------------------------------------------

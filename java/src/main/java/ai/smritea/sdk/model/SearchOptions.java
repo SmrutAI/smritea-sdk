@@ -12,6 +12,7 @@ package ai.smritea.sdk.model;
  * }</pre>
  */
 public final class SearchOptions {
+  private String speakerActorId;
   private MemoryScope scope;
   private Integer limit;
   private Float threshold;
@@ -25,6 +26,21 @@ public final class SearchOptions {
 
   /** Creates a new SearchOptions with all fields unset. */
   public SearchOptions() {}
+
+  /**
+   * Sets the non-filtering speaker identity for this search. Identifies who is asking the query —
+   * NEVER used for filtering; it does not narrow or bias which memories are returned. The backend
+   * resolves it to the speaker's entity for speaker-context query augmentation and audit
+   * attribution. Independent of scope, which remains the only filtering mechanism. Omit for
+   * anonymous or system-initiated searches. Max 64 characters.
+   *
+   * @param speakerActorId the speaker actor ID
+   * @return this instance for chaining
+   */
+  public SearchOptions withSpeakerActorId(String speakerActorId) {
+    this.speakerActorId = speakerActorId;
+    return this;
+  }
 
   /**
    * Sets the memory scope (actor and conversation context).
@@ -101,6 +117,11 @@ public final class SearchOptions {
   public SearchOptions withValidAt(String validAt) {
     this.validAt = validAt;
     return this;
+  }
+
+  /** Returns the non-filtering speaker actor ID ("who is asking"). */
+  public String getSpeakerActorId() {
+    return speakerActorId;
   }
 
   /** Returns the memory scope. */

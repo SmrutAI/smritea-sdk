@@ -78,6 +78,15 @@ export interface AddOptions {
 }
 
 export interface SearchOptions {
+  /**
+   * Identifies who is asking this search query. NEVER used for filtering — it
+   * does not narrow or bias which memories are returned. The backend resolves
+   * it to the speaker's entity and uses it for speaker-context query
+   * augmentation and audit attribution. Independent of `scope`, which remains
+   * the only filtering mechanism. Omit for anonymous or system-initiated
+   * searches. Max 64 characters.
+   */
+  speakerActorId?: string;
   scope?: MemoryScope;
   limit?: number;
   threshold?: number;

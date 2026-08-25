@@ -197,6 +197,9 @@ public class SmriteaClient {
     request.setQuery(query);
 
     if (opts != null) {
+      if (opts.getSpeakerActorId() != null) {
+        request.setSpeakerActorId(opts.getSpeakerActorId());
+      }
       MemoryScope scope = opts.getScope();
       if (scope != null) {
         ai.smritea.sdk._internal.autogen.model.MemoryScope autogenScope =

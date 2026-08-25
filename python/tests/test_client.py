@@ -182,6 +182,33 @@ class TestSearchActorScope:
         assert call_args.to_time == '2024-12-31T23:59:59Z'
         assert call_args.valid_at == '2024-06-15T12:00:00Z'
 
+    def test_search_with_speaker_actor_id(self, client, mock_api):
+        """Test speaker_actor_id is passed top-level and never inside scope."""
+        mock_response = MagicMock()
+        mock_response.memories = []
+        mock_api.search_memories.return_value = mock_response
+
+        result = client.search('query', speaker_actor_id='agent-ravi')
+
+        assert result == []
+        mock_api.search_memories.assert_called_once()
+        call_args = mock_api.search_memories.call_args[0][0]
+        assert call_args.speaker_actor_id == 'agent-ravi'
+        # scope untouched by speaker identity
+        assert call_args.scope is None or getattr(call_args.scope, 'actor_id', None) != 'agent-ravi'
+
+    def test_search_without_speaker_actor_id(self, client, mock_api):
+        """Test speaker_actor_id defaults to None (omitted)."""
+        mock_response = MagicMock()
+        mock_response.memories = []
+        mock_api.search_memories.return_value = mock_response
+
+        client.search('query')
+
+        mock_api.search_memories.assert_called_once()
+        call_args = mock_api.search_memories.call_args[0][0]
+        assert call_args.speaker_actor_id is None
+
 
 # ==============================================================================
 # Test 3: Error mapping from ApiException

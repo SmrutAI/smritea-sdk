@@ -138,6 +138,7 @@ class SmriteaClient:
         self,
         query: str,
         *,
+        speaker_actor_id: str | None = None,
         scope: MemoryScope | None = None,
         limit: int | None = None,
         threshold: float | None = None,
@@ -153,6 +154,13 @@ class SmriteaClient:
 
         Args:
             query: Natural language search query.
+            speaker_actor_id: Identifies who is asking this query. NEVER used for
+                filtering — it does not narrow or bias which memories are returned.
+                The backend resolves it to the speaker's entity and uses it for
+                speaker-context query augmentation and audit attribution.
+                Independent of ``scope``, which remains the only filtering
+                mechanism. Omit for anonymous or system-initiated searches.
+                Max 64 characters.
             scope: Optional MemoryScope object for actor and conversation context.
             limit: Maximum number of results. None = use app default.
             threshold: Minimum relevance score filter (0.0–1.0).
@@ -192,6 +200,7 @@ class SmriteaClient:
         request = SearchMemoryRequest(
             app_id=self._app_id,
             query=query,
+            speaker_actor_id=speaker_actor_id,
             scope=autogen_scope,
             limit=limit,
             threshold=threshold,

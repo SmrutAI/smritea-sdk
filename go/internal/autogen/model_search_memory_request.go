@@ -36,6 +36,8 @@ type SearchMemoryRequest struct {
 	RerankerType *RerankerType `json:"reranker_type,omitempty"`
 	// Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \"no filter\" (searches across all).
 	Scope *MemoryScope `json:"scope,omitempty"`
+	// SpeakerActorID identifies which actor is making this search request. It is NEVER used for filtering — it does not narrow, exclude, or bias which memories are returned. It exists purely for identification: audit logging, telemetry, and any future personalization/access-control hook that needs to know \"who is asking\" independent of \"which memories to include.\" That second concern (result filtering) is entirely owned by Scope below. Deliberately top-level, not nested inside Scope, so it can never be confused with — or accidentally coupled to — the filter fields. Optional: omit if the caller has no meaningful requester identity (e.g. an anonymous or system-initiated search).
+	SpeakerActorId *string `json:"speaker_actor_id,omitempty"`
 	// 0=no filtering (pipeline uses RRF scores, not cosine similarity)
 	Threshold *float32 `json:"threshold,omitempty"`
 	// ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.
@@ -337,6 +339,38 @@ func (o *SearchMemoryRequest) SetScope(v MemoryScope) {
 	o.Scope = &v
 }
 
+// GetSpeakerActorId returns the SpeakerActorId field value if set, zero value otherwise.
+func (o *SearchMemoryRequest) GetSpeakerActorId() string {
+	if o == nil || IsNil(o.SpeakerActorId) {
+		var ret string
+		return ret
+	}
+	return *o.SpeakerActorId
+}
+
+// GetSpeakerActorIdOk returns a tuple with the SpeakerActorId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SearchMemoryRequest) GetSpeakerActorIdOk() (*string, bool) {
+	if o == nil || IsNil(o.SpeakerActorId) {
+		return nil, false
+	}
+	return o.SpeakerActorId, true
+}
+
+// HasSpeakerActorId returns a boolean if a field has been set.
+func (o *SearchMemoryRequest) HasSpeakerActorId() bool {
+	if o != nil && !IsNil(o.SpeakerActorId) {
+		return true
+	}
+
+	return false
+}
+
+// SetSpeakerActorId gets a reference to the given string and assigns it to the SpeakerActorId field.
+func (o *SearchMemoryRequest) SetSpeakerActorId(v string) {
+	o.SpeakerActorId = &v
+}
+
 // GetThreshold returns the Threshold field value if set, zero value otherwise.
 func (o *SearchMemoryRequest) GetThreshold() float32 {
 	if o == nil || IsNil(o.Threshold) {
@@ -465,6 +499,9 @@ func (o SearchMemoryRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Scope) {
 		toSerialize["scope"] = o.Scope
+	}
+	if !IsNil(o.SpeakerActorId) {
+		toSerialize["speaker_actor_id"] = o.SpeakerActorId
 	}
 	if !IsNil(o.Threshold) {
 		toSerialize["threshold"] = o.Threshold

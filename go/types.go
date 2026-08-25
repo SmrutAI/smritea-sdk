@@ -140,10 +140,17 @@ func (o *AddOptions) WithRelativeStanding(r *RelativeStanding) *AddOptions {
 //	opts := smritea.NewSearchOptions().WithScope(smritea.NewMemoryScope().WithActorID("actor-42")).WithLimit(10)
 //	results, err := client.Search(ctx, "query", opts)
 type SearchOptions struct {
-	Scope      *MemoryScope
-	Limit      *int32
-	Threshold  *float32
-	GraphDepth *int32
+	// SpeakerActorID identifies who is asking this search query. NEVER used for
+	// filtering — it does not narrow or bias which memories are returned. The
+	// backend resolves it to the speaker's entity and uses it for
+	// speaker-context query augmentation and audit attribution. Independent of
+	// Scope, which remains the only filtering mechanism. Nil = anonymous or
+	// system-initiated search. Max 64 characters.
+	SpeakerActorID *string
+	Scope          *MemoryScope
+	Limit          *int32
+	Threshold      *float32
+	GraphDepth     *int32
 	// FromTime is an ISO-8601 datetime string — only return memories created at or after this time.
 	FromTime *string
 	// ToTime is an ISO-8601 datetime string — only return memories created at or before this time.
@@ -168,6 +175,14 @@ type SearchOptions struct {
 
 // NewSearchOptions returns a new empty SearchOptions ready for fluent configuration.
 func NewSearchOptions() *SearchOptions { return &SearchOptions{} }
+
+// WithSpeakerActorID sets the non-filtering speaker identity for this search.
+// The backend resolves it to the speaker's entity for speaker-context query
+// augmentation and audit attribution; it never narrows results.
+func (o *SearchOptions) WithSpeakerActorID(id string) *SearchOptions {
+	o.SpeakerActorID = &id
+	return o
+}
 
 // WithScope sets the actor and conversation context for this search operation.
 func (o *SearchOptions) WithScope(s *MemoryScope) *SearchOptions { o.Scope = s; return o }
