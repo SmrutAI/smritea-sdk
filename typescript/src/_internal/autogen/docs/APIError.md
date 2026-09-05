@@ -8,6 +8,7 @@ Name | Type
 ------------ | -------------
 `code` | string
 `message` | string
+`retryable` | boolean
 
 ## Example
 
@@ -18,6 +19,7 @@ import type { APIError } from ''
 const example = {
   "code": null,
   "message": null,
+  "retryable": null,
 } satisfies APIError
 
 console.log(example)

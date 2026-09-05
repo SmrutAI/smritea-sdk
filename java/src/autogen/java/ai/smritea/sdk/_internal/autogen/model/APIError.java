@@ -34,7 +34,8 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
  */
 @JsonPropertyOrder({
   APIError.JSON_PROPERTY_CODE,
-  APIError.JSON_PROPERTY_MESSAGE
+  APIError.JSON_PROPERTY_MESSAGE,
+  APIError.JSON_PROPERTY_RETRYABLE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class APIError {
@@ -45,6 +46,10 @@ public class APIError {
   public static final String JSON_PROPERTY_MESSAGE = "message";
   @javax.annotation.Nullable
   private String message;
+
+  public static final String JSON_PROPERTY_RETRYABLE = "retryable";
+  @javax.annotation.Nullable
+  private Boolean retryable;
 
   public APIError() { 
   }
@@ -97,6 +102,30 @@ public class APIError {
   }
 
 
+  public APIError retryable(@javax.annotation.Nullable Boolean retryable) {
+    this.retryable = retryable;
+    return this;
+  }
+
+  /**
+   * Retryable reports whether the client should retry (additive, spec doc-175); set by the error middleware, always true for 429.
+   * @return retryable
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_RETRYABLE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getRetryable() {
+    return retryable;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_RETRYABLE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setRetryable(@javax.annotation.Nullable Boolean retryable) {
+    this.retryable = retryable;
+  }
+
+
   /**
    * Return true if this APIError object is equal to o.
    */
@@ -110,12 +139,13 @@ public class APIError {
     }
     APIError apIError = (APIError) o;
     return Objects.equals(this.code, apIError.code) &&
-        Objects.equals(this.message, apIError.message);
+        Objects.equals(this.message, apIError.message) &&
+        Objects.equals(this.retryable, apIError.retryable);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message);
+    return Objects.hash(code, message, retryable);
   }
 
   @Override
@@ -124,6 +154,7 @@ public class APIError {
     sb.append("class APIError {\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    retryable: ").append(toIndentedString(retryable)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -179,6 +210,11 @@ public class APIError {
     // add `message` to the URL query string
     if (getMessage() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%smessage%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMessage()))));
+    }
+
+    // add `retryable` to the URL query string
+    if (getRetryable() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%sretryable%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getRetryable()))));
     }
 
     return joiner.toString();

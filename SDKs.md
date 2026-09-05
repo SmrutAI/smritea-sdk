@@ -53,10 +53,10 @@ Naming conventions across all five SDK implementations.
 
 ## Table 3: Exception / Error Class Names
 
-> **Status (errkit alignment, docs/plans/175-errkit-unified-error-handling.md in smritea-cloud)**: C#
-> has been converted to the full 9-category errkit hierarchy (`Code`/`HTTPStatus`/`Retryable` base
-> fields, category-exact subclass names). Python, TypeScript, Go, and Java still use the pre-errkit
-> hierarchy shown below and are converted in separate tasks of the same wave.
+> **Status (errkit alignment, docs/plans/175-errkit-unified-error-handling.md in smritea-cloud)**: all
+> five languages (Python, TypeScript, Go, Java, C#) are converted to the full 9-category errkit
+> hierarchy — `Code`/`HTTPStatus`/`Retryable` base fields with category-exact subclass names, as shown
+> in the table below.
 
 | HTTP status     | Python                        | TypeScript                    | Go                            | Java                          | C#                                |
 |-----------------|-------------------------------|-------------------------------|-------------------------------|-------------------------------|-----------------------------------|

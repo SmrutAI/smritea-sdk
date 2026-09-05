@@ -24,6 +24,8 @@ type APIError struct {
 	Code *string `json:"code,omitempty"`
 	// Message is a human-readable description of what went wrong.
 	Message *string `json:"message,omitempty"`
+	// Retryable reports whether the client should retry (additive, spec doc-175); set by the error middleware, always true for 429.
+	Retryable *bool `json:"retryable,omitempty"`
 }
 
 // NewAPIError instantiates a new APIError object
@@ -107,6 +109,38 @@ func (o *APIError) SetMessage(v string) {
 	o.Message = &v
 }
 
+// GetRetryable returns the Retryable field value if set, zero value otherwise.
+func (o *APIError) GetRetryable() bool {
+	if o == nil || IsNil(o.Retryable) {
+		var ret bool
+		return ret
+	}
+	return *o.Retryable
+}
+
+// GetRetryableOk returns a tuple with the Retryable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *APIError) GetRetryableOk() (*bool, bool) {
+	if o == nil || IsNil(o.Retryable) {
+		return nil, false
+	}
+	return o.Retryable, true
+}
+
+// HasRetryable returns a boolean if a field has been set.
+func (o *APIError) HasRetryable() bool {
+	if o != nil && !IsNil(o.Retryable) {
+		return true
+	}
+
+	return false
+}
+
+// SetRetryable gets a reference to the given bool and assigns it to the Retryable field.
+func (o *APIError) SetRetryable(v bool) {
+	o.Retryable = &v
+}
+
 func (o APIError) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -122,6 +156,9 @@ func (o APIError) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Message) {
 		toSerialize["message"] = o.Message
+	}
+	if !IsNil(o.Retryable) {
+		toSerialize["retryable"] = o.Retryable
 	}
 	return toSerialize, nil
 }

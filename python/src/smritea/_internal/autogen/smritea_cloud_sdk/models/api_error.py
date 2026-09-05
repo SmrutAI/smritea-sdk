@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,7 +29,8 @@ class APIError(BaseModel):
     """ # noqa: E501
     code: Optional[StrictStr] = Field(default=None, description="Code is a machine-readable error code (e.g., \"validation_error\", \"not_found\").")
     message: Optional[StrictStr] = Field(default=None, description="Message is a human-readable description of what went wrong.")
-    __properties: ClassVar[List[str]] = ["code", "message"]
+    retryable: Optional[StrictBool] = Field(default=None, description="Retryable reports whether the client should retry (additive, spec doc-175); set by the error middleware, always true for 429.")
+    __properties: ClassVar[List[str]] = ["code", "message", "retryable"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,7 +84,8 @@ class APIError(BaseModel):
 
         _obj = cls.model_validate({
             "code": obj.get("code"),
-            "message": obj.get("message")
+            "message": obj.get("message"),
+            "retryable": obj.get("retryable")
         })
         return _obj
 

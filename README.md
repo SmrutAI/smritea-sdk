@@ -345,11 +345,11 @@ except SmriteaError as e:
 ```typescript
 // TypeScript
 import {
-  SmriteaAuthError,
+  SmriteaUnauthorizedError,
   SmriteaNotFoundError,
-  SmriteaRateLimitError,
-  SmriteaQuotaError,
-  SmriteaValidationError,
+  SmriteaTooManyRequestsError,
+  SmriteaPaymentRequiredError,
+  SmriteaBadRequestError,
   SmriteaError,
 } from 'smritea-sdk';
 
@@ -357,30 +357,30 @@ try {
   await client.delete('mem_unknown');
 } catch (e) {
   if (e instanceof SmriteaNotFoundError) console.log('Memory not found');
-  if (e instanceof SmriteaRateLimitError) console.log(`Retry after ${e.retryAfter}s`);
-  if (e instanceof SmriteaAuthError) console.log('Invalid API key');
+  if (e instanceof SmriteaTooManyRequestsError) console.log(`Retry after ${e.retryAfter}s`);
+  if (e instanceof SmriteaUnauthorizedError) console.log('Invalid API key');
 }
 ```
 
 **Exception reference**
 
-C# has been converted to the full 9-category errkit hierarchy; Python/TS/Go/Java still use the
-pre-errkit names shown in the left column (converted in separate tasks of the same wave).
+All language SDKs now use the unified 9-category errkit hierarchy:
 
 | Exception (Python/TS/Go/Java) | Exception (C#)                    | HTTP  | When                                                  |
 |-------------------------------|------------------------------------|-------|-------------------------------------------------------|
-| `SmriteaValidationError`      | `SmriteaBadRequestException`       | 400   | Invalid request parameters                            |
-| `SmriteaAuthError`            | `SmriteaUnauthorizedException`     | 401   | Invalid or missing API key                            |
-| `SmriteaQuotaError`           | `SmriteaPaymentRequiredException`  | 402   | Organisation quota exceeded                           |
-| n/a                           | `SmriteaForbiddenException`        | 403   | Authenticated but not permitted to perform this action |
+| `SmriteaBadRequestError`      | `SmriteaBadRequestException`       | 400   | Invalid request parameters                            |
+| `SmriteaUnauthorizedError`    | `SmriteaUnauthorizedException`     | 401   | Invalid or missing API key                            |
+| `SmriteaPaymentRequiredError` | `SmriteaPaymentRequiredException`  | 402   | Organisation quota exceeded                           |
+| `SmriteaForbiddenError`       | `SmriteaForbiddenException`        | 403   | Authenticated but not permitted to perform this action |
 | `SmriteaNotFoundError`        | `SmriteaNotFoundException`         | 404   | Memory ID does not exist                              |
-| n/a                           | `SmriteaConflictException`         | 409   | Request conflicts with the current state of the resource |
-| n/a                           | `SmriteaUnprocessableException`    | 422   | Well-formed request that is semantically invalid      |
-| `SmriteaRateLimitError`       | `SmriteaTooManyRequestsException`  | 429   | Rate limit hit — check `.retry_after` / `.retryAfter` / `.RetryAfter` |
+| `SmriteaConflictError`        | `SmriteaConflictException`         | 409   | Request conflicts with the current state of the resource |
+| `SmriteaUnprocessableError`   | `SmriteaUnprocessableException`    | 422   | Well-formed request that is semantically invalid      |
+| `SmriteaTooManyRequestsError` | `SmriteaTooManyRequestsException`  | 429   | Rate limit hit — check `.retry_after` / `.retryAfter` / `.RetryAfter` |
 | `SmriteaError`                | `SmriteaException`                 | other | Unexpected server error (5xx / unknown)               |
 
-Every C# exception also carries `Code` (server wire code), `HTTPStatus`, `Retryable`, and `Body`
-(full parsed response body).
+All exceptions carry `code` / `Code` (server wire code), `httpStatus` / `HTTPStatus` (HTTP status code),
+`retryable` / `Retryable` (retryability flag), and access to the full parsed response body.
+`SmriteaTooManyRequestsError` also carries `retryAfter` / `RetryAfter` (seconds) from the `Retry-After` header.
 
 ---
 

@@ -38,10 +38,12 @@ namespace Smritea.Internal.Autogen.Model
         /// </summary>
         /// <param name="code">Code is a machine-readable error code (e.g., \&quot;validation_error\&quot;, \&quot;not_found\&quot;)..</param>
         /// <param name="message">Message is a human-readable description of what went wrong..</param>
-        public APIError(string code = default, string message = default)
+        /// <param name="retryable">Retryable reports whether the client should retry (additive, spec doc-175); set by the error middleware, always true for 429..</param>
+        public APIError(string code = default, string message = default, bool retryable = default)
         {
             this.Code = code;
             this.Message = message;
+            this.Retryable = retryable;
         }
 
         /// <summary>
@@ -59,6 +61,13 @@ namespace Smritea.Internal.Autogen.Model
         public string Message { get; set; }
 
         /// <summary>
+        /// Retryable reports whether the client should retry (additive, spec doc-175); set by the error middleware, always true for 429.
+        /// </summary>
+        /// <value>Retryable reports whether the client should retry (additive, spec doc-175); set by the error middleware, always true for 429.</value>
+        [DataMember(Name = "retryable", EmitDefaultValue = true)]
+        public bool Retryable { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -68,6 +77,7 @@ namespace Smritea.Internal.Autogen.Model
             sb.Append("class APIError {\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  Message: ").Append(Message).Append("\n");
+            sb.Append("  Retryable: ").Append(Retryable).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

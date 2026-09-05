@@ -31,6 +31,13 @@ export interface APIError {
      * @memberof APIError
      */
     message?: string;
+    /**
+     * Retryable reports whether the client should retry (additive, spec doc-175);
+     * set by the error middleware, always true for 429.
+     * @type {boolean}
+     * @memberof APIError
+     */
+    retryable?: boolean;
 }
 
 /**
@@ -52,6 +59,7 @@ export function APIErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         
         'code': json['code'] == null ? undefined : json['code'],
         'message': json['message'] == null ? undefined : json['message'],
+        'retryable': json['retryable'] == null ? undefined : json['retryable'],
     };
 }
 
@@ -68,6 +76,7 @@ export function APIErrorToJSONTyped(value?: APIError | null, ignoreDiscriminator
         
         'code': value['code'],
         'message': value['message'],
+        'retryable': value['retryable'],
     };
 }
 
