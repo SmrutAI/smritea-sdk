@@ -219,7 +219,7 @@ public class SmriteaClientTests : IDisposable
     // -----------------------------------------------------------------------
 
     [Fact]
-    public async Task AddAsync_401_ThrowsSmriteaAuthException()
+    public async Task AddAsync_401_ThrowsSmriteaUnauthorizedException()
     {
         _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
             .RespondWith(Response.Create().WithStatusCode(401)
@@ -227,10 +227,10 @@ public class SmriteaClientTests : IDisposable
                 .WithBody("{\"detail\":\"invalid api key\"}"));
 
         using var client = CreateClient();
-        var ex = await Assert.ThrowsAsync<SmriteaAuthException>(
+        var ex = await Assert.ThrowsAsync<SmriteaUnauthorizedException>(
             () => client.AddAsync("x"));
 
-        Assert.Equal(401, ex.StatusCode);
+        Assert.Equal(401, ex.HTTPStatus);
     }
 
     [Fact]
@@ -247,7 +247,7 @@ public class SmriteaClientTests : IDisposable
     }
 
     [Fact]
-    public async Task AddAsync_400_ThrowsSmriteaValidationException()
+    public async Task AddAsync_400_ThrowsSmriteaBadRequestException()
     {
         _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
             .RespondWith(Response.Create().WithStatusCode(400)
@@ -255,12 +255,12 @@ public class SmriteaClientTests : IDisposable
                 .WithBody("{\"detail\":\"content required\"}"));
 
         using var client = CreateClient();
-        await Assert.ThrowsAsync<SmriteaValidationException>(
+        await Assert.ThrowsAsync<SmriteaBadRequestException>(
             () => client.AddAsync(""));
     }
 
     [Fact]
-    public async Task AddAsync_402_ThrowsSmriteaQuotaException()
+    public async Task AddAsync_402_ThrowsSmriteaPaymentRequiredException()
     {
         _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
             .RespondWith(Response.Create().WithStatusCode(402)
@@ -268,8 +268,66 @@ public class SmriteaClientTests : IDisposable
                 .WithBody("{\"detail\":\"quota exceeded\"}"));
 
         using var client = CreateClient();
-        await Assert.ThrowsAsync<SmriteaQuotaException>(
+        await Assert.ThrowsAsync<SmriteaPaymentRequiredException>(
             () => client.AddAsync("x"));
+    }
+
+    [Fact]
+    public async Task AddAsync_403_ThrowsSmriteaForbiddenException()
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
+            .RespondWith(Response.Create().WithStatusCode(403)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody("{\"detail\":\"forbidden\"}"));
+
+        using var client = CreateClient();
+        await Assert.ThrowsAsync<SmriteaForbiddenException>(
+            () => client.AddAsync("x"));
+    }
+
+    [Fact]
+    public async Task AddAsync_409_ThrowsSmriteaConflictException()
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
+            .RespondWith(Response.Create().WithStatusCode(409)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody("{\"detail\":\"conflict\"}"));
+
+        using var client = CreateClient();
+        await Assert.ThrowsAsync<SmriteaConflictException>(
+            () => client.AddAsync("x"));
+    }
+
+    [Fact]
+    public async Task AddAsync_422_ThrowsSmriteaUnprocessableException()
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
+            .RespondWith(Response.Create().WithStatusCode(422)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody("{\"detail\":\"unprocessable\"}"));
+
+        using var client = CreateClient();
+        await Assert.ThrowsAsync<SmriteaUnprocessableException>(
+            () => client.AddAsync("x"));
+    }
+
+    [Fact]
+    public async Task AddAsync_ErrorResponse_MapsCodeAndRetryableFields()
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
+            .RespondWith(Response.Create().WithStatusCode(400)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody("{\"code\":\"MEMORY_VALIDATION_FAILED\",\"message\":\"content required\",\"retryable\":true}"));
+
+        using var client = CreateClient();
+        var ex = await Assert.ThrowsAsync<SmriteaBadRequestException>(
+            () => client.AddAsync(""));
+
+        Assert.Equal("MEMORY_VALIDATION_FAILED", ex.Code);
+        Assert.Equal("content required", ex.Message);
+        Assert.Equal(400, ex.HTTPStatus);
+        Assert.True(ex.Retryable);
+        Assert.NotNull(ex.Body);
     }
 
     // -----------------------------------------------------------------------
@@ -302,16 +360,16 @@ public class SmriteaClientTests : IDisposable
     }
 
     [Fact]
-    public async Task AddAsync_429_Exhausted_ThrowsSmriteaRateLimitException()
+    public async Task AddAsync_429_Exhausted_ThrowsSmriteaTooManyRequestsException()
     {
-        // maxRetries=2 means 3 total attempts; all return 429 -> SmriteaRateLimitException
+        // maxRetries=2 means 3 total attempts; all return 429 -> SmriteaTooManyRequestsException
         _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
             .RespondWith(Response.Create().WithStatusCode(429)
                 .WithHeader("Retry-After", "1")
                 .WithBody("{\"detail\":\"rate limited\"}"));
 
         using var client = CreateClient();
-        var ex = await Assert.ThrowsAsync<SmriteaRateLimitException>(
+        var ex = await Assert.ThrowsAsync<SmriteaTooManyRequestsException>(
             () => client.AddAsync("x"));
 
         Assert.NotNull(ex.RetryAfter);

@@ -53,16 +53,28 @@ Naming conventions across all five SDK implementations.
 
 ## Table 3: Exception / Error Class Names
 
+> **Status (errkit alignment, docs/plans/175-errkit-unified-error-handling.md in smritea-cloud)**: C#
+> has been converted to the full 9-category errkit hierarchy (`Code`/`HTTPStatus`/`Retryable` base
+> fields, category-exact subclass names). Python, TypeScript, Go, and Java still use the pre-errkit
+> hierarchy shown below and are converted in separate tasks of the same wave.
+
 | HTTP status     | Python                        | TypeScript                    | Go                            | Java                          | C#                                |
 |-----------------|-------------------------------|-------------------------------|-------------------------------|-------------------------------|-----------------------------------|
-| base            | `SmriteaError`                | `SmriteaError`                | `SmriteaError`                | `SmriteaError`                | `SmriteaException`                |
-| 400             | `SmriteaValidationError`      | `SmriteaValidationError`      | `SmriteaValidationError`      | `SmriteaValidationError`      | `SmriteaValidationException`      |
-| 401             | `SmriteaAuthError`            | `SmriteaAuthError`            | `SmriteaAuthError`            | `SmriteaAuthError`            | `SmriteaAuthException`            |
-| 402             | `SmriteaQuotaError`           | `SmriteaQuotaError`           | `SmriteaQuotaError`           | `SmriteaQuotaError`           | `SmriteaQuotaException`           |
-| 404             | `SmriteaNotFoundError`        | `SmriteaNotFoundError`        | `SmriteaNotFoundError`        | `SmriteaNotFoundError`        | `SmriteaNotFoundException`        |
-| 429             | `SmriteaRateLimitError`       | `SmriteaRateLimitError`       | `SmriteaRateLimitError`       | `SmriteaRateLimitError`       | `SmriteaRateLimitException`       |
+| base (5xx/unknown) | `SmriteaError`             | `SmriteaError`                | `SmriteaError`                | `SmriteaError`                | `SmriteaException`                |
+| 400 Bad Request | `SmriteaBadRequestError`      | `SmriteaBadRequestError`      | `SmriteaBadRequestError`      | `SmriteaBadRequestError`      | `SmriteaBadRequestException`      |
+| 401 Unauthorized | `SmriteaUnauthorizedError`   | `SmriteaUnauthorizedError`    | `SmriteaUnauthorizedError`    | `SmriteaUnauthorizedError`    | `SmriteaUnauthorizedException`    |
+| 402 Payment Required | `SmriteaPaymentRequiredError` | `SmriteaPaymentRequiredError` | `SmriteaPaymentRequiredError` | `SmriteaPaymentRequiredError` | `SmriteaPaymentRequiredException` |
+| 403 Forbidden   | `SmriteaForbiddenError`       | `SmriteaForbiddenError`       | `SmriteaForbiddenError`       | `SmriteaForbiddenError`       | `SmriteaForbiddenException`       |
+| 404 Not Found   | `SmriteaNotFoundError`        | `SmriteaNotFoundError`        | `SmriteaNotFoundError`        | `SmriteaNotFoundError`        | `SmriteaNotFoundException`        |
+| 409 Conflict    | `SmriteaConflictError`        | `SmriteaConflictError`        | `SmriteaConflictError`        | `SmriteaConflictError`        | `SmriteaConflictException`        |
+| 422 Unprocessable | `SmriteaUnprocessableError` | `SmriteaUnprocessableError`   | `SmriteaUnprocessableError`   | `SmriteaUnprocessableError`   | `SmriteaUnprocessableException`   |
+| 429 Too Many Requests | `SmriteaTooManyRequestsError` | `SmriteaTooManyRequestsError` | `SmriteaTooManyRequestsError` | `SmriteaTooManyRequestsError` | `SmriteaTooManyRequestsException` |
 | deserialization | `SmriteaDeserializationError` | `SmriteaDeserializationError` | `SmriteaDeserializationError` | `SmriteaDeserializationError` | `SmriteaDeserializationException` |
 
 > **C# naming convention**: C# uses `*Exception` suffix (e.g. `SmriteaException`) instead of
 > `*Error` — this is intentional to follow C# idioms (`ArgumentException`, `HttpRequestException`).
 > All other languages use `*Error`.
+>
+> **C# base fields (errkit alignment)**: every C# exception carries `Code` (server wire code),
+> `HTTPStatus`, `Retryable`, and `Body` (full parsed response body). `SmriteaTooManyRequestsException`
+> additionally carries `RetryAfter`.

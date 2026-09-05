@@ -17,11 +17,14 @@ function memCreateResponse(id: string, content: string): CreateMemoryResponse {
 }
 import {
   SmriteaError,
-  SmriteaAuthError,
-  SmriteaValidationError,
+  SmriteaBadRequestError,
+  SmriteaUnauthorizedError,
+  SmriteaPaymentRequiredError,
+  SmriteaForbiddenError,
   SmriteaNotFoundError,
-  SmriteaQuotaError,
-  SmriteaRateLimitError,
+  SmriteaConflictError,
+  SmriteaUnprocessableError,
+  SmriteaTooManyRequestsError,
 } from '../src/errors.js';
 
 // ---------------------------------------------------------------------------
@@ -196,11 +199,14 @@ describe('temporal filter fields', () => {
 
 describe('error mapping', () => {
   const statusToError: Array<[number, new (...args: any[]) => SmriteaError]> = [
-    [400, SmriteaValidationError],
-    [401, SmriteaAuthError],
-    [402, SmriteaQuotaError],
+    [400, SmriteaBadRequestError],
+    [401, SmriteaUnauthorizedError],
+    [402, SmriteaPaymentRequiredError],
+    [403, SmriteaForbiddenError],
     [404, SmriteaNotFoundError],
-    [429, SmriteaRateLimitError],
+    [409, SmriteaConflictError],
+    [422, SmriteaUnprocessableError],
+    [429, SmriteaTooManyRequestsError],
     [500, SmriteaError],
   ];
 
@@ -222,8 +228,8 @@ describe('error mapping', () => {
       await client.add('content');
       expect.unreachable('should have thrown');
     } catch (err) {
-      expect(err).toBeInstanceOf(SmriteaRateLimitError);
-      expect((err as SmriteaRateLimitError).retryAfter).toBe(10);
+      expect(err).toBeInstanceOf(SmriteaTooManyRequestsError);
+      expect((err as SmriteaTooManyRequestsError).retryAfter).toBe(10);
     }
   });
 
@@ -236,7 +242,7 @@ describe('error mapping', () => {
     await expect(client.add('content')).rejects.toMatchObject({
       name: 'SmriteaNotFoundError',
       message: 'Memory not found',
-      statusCode: 404,
+      httpStatus: 404,
     });
   });
 
@@ -245,7 +251,73 @@ describe('error mapping', () => {
     mockApi.createMemory.mockRejectedValue(new Error('network failure'));
 
     await expect(client.add('content')).rejects.toBeInstanceOf(SmriteaError);
-    await expect(client.add('content')).rejects.not.toBeInstanceOf(SmriteaAuthError);
+    await expect(client.add('content')).rejects.not.toBeInstanceOf(SmriteaUnauthorizedError);
+  });
+
+  it('HTTP 403 maps to SmriteaForbiddenError', async () => {
+    const { client, mockApi } = createClientWithMock({ maxRetries: 0 });
+    mockApi.createMemory.mockRejectedValue(makeResponseError(403));
+
+    await expect(client.add('content')).rejects.toBeInstanceOf(SmriteaForbiddenError);
+  });
+
+  it('HTTP 409 maps to SmriteaConflictError', async () => {
+    const { client, mockApi } = createClientWithMock({ maxRetries: 0 });
+    mockApi.createMemory.mockRejectedValue(makeResponseError(409));
+
+    await expect(client.add('content')).rejects.toBeInstanceOf(SmriteaConflictError);
+  });
+
+  it('HTTP 422 maps to SmriteaUnprocessableError', async () => {
+    const { client, mockApi } = createClientWithMock({ maxRetries: 0 });
+    mockApi.createMemory.mockRejectedValue(makeResponseError(422));
+
+    await expect(client.add('content')).rejects.toBeInstanceOf(SmriteaUnprocessableError);
+  });
+
+  it('parses retryable field from response body', async () => {
+    const { client, mockApi } = createClientWithMock({ maxRetries: 0 });
+    mockApi.createMemory.mockRejectedValue(
+      makeResponseError(400, undefined, 'Bad request', { message: 'Bad request', retryable: true }),
+    );
+
+    try {
+      await client.add('content');
+      expect.unreachable('should have thrown');
+    } catch (err) {
+      expect(err).toBeInstanceOf(SmriteaBadRequestError);
+      expect((err as SmriteaBadRequestError).retryable).toBe(true);
+    }
+  });
+
+  it('defaults retryable to false when not in response body', async () => {
+    const { client, mockApi } = createClientWithMock({ maxRetries: 0 });
+    mockApi.createMemory.mockRejectedValue(
+      makeResponseError(400, undefined, 'Bad request', { message: 'Bad request' }),
+    );
+
+    try {
+      await client.add('content');
+      expect.unreachable('should have thrown');
+    } catch (err) {
+      expect(err).toBeInstanceOf(SmriteaBadRequestError);
+      expect((err as SmriteaBadRequestError).retryable).toBe(false);
+    }
+  });
+
+  it('HTTP 429 always has retryable=true regardless of response body', async () => {
+    const { client, mockApi } = createClientWithMock({ maxRetries: 0 });
+    mockApi.createMemory.mockRejectedValue(
+      makeResponseError(429, '5', 'Too many requests', { message: 'Too many requests', retryable: false }),
+    );
+
+    try {
+      await client.add('content');
+      expect.unreachable('should have thrown');
+    } catch (err) {
+      expect(err).toBeInstanceOf(SmriteaTooManyRequestsError);
+      expect((err as SmriteaTooManyRequestsError).retryable).toBe(true);
+    }
   });
 });
 
@@ -282,11 +354,11 @@ describe('retry logic', () => {
     expect(mockApi.createMemory).toHaveBeenCalledTimes(3);
   });
 
-  it('maxRetries=0 raises SmriteaRateLimitError immediately without retrying', async () => {
+  it('maxRetries=0 raises SmriteaTooManyRequestsError immediately without retrying', async () => {
     const { client, mockApi } = createClientWithMock({ maxRetries: 0 });
     mockApi.createMemory.mockRejectedValue(makeResponseError(429, '5'));
 
-    await expect(client.add('content')).rejects.toBeInstanceOf(SmriteaRateLimitError);
+    await expect(client.add('content')).rejects.toBeInstanceOf(SmriteaTooManyRequestsError);
     expect(mockApi.createMemory).toHaveBeenCalledTimes(1);
   });
 
@@ -301,7 +373,7 @@ describe('retry logic', () => {
     const promise = client.add('content');
 
     // Attach rejection handler before advancing timers to avoid unhandled rejection
-    const assertion = expect(promise).rejects.toBeInstanceOf(SmriteaRateLimitError);
+    const assertion = expect(promise).rejects.toBeInstanceOf(SmriteaTooManyRequestsError);
 
     await vi.runAllTimersAsync();
 

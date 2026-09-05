@@ -10,10 +10,13 @@ export type {
 } from './types.js';
 export {
   SmriteaError,
-  SmriteaAuthError,
-  SmriteaDeserializationError,
+  SmriteaBadRequestError,
+  SmriteaUnauthorizedError,
+  SmriteaPaymentRequiredError,
+  SmriteaForbiddenError,
   SmriteaNotFoundError,
-  SmriteaValidationError,
-  SmriteaQuotaError,
-  SmriteaRateLimitError,
+  SmriteaConflictError,
+  SmriteaUnprocessableError,
+  SmriteaTooManyRequestsError,
+  SmriteaDeserializationError,
 } from './errors.js';

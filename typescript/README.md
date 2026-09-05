@@ -182,11 +182,14 @@ const results = await client.search('', { actorId: 'alice', actorType: 'user', l
 
 ```typescript
 import {
-  SmriteaAuthError,
+  SmriteaBadRequestError,
+  SmriteaUnauthorizedError,
+  SmriteaPaymentRequiredError,
+  SmriteaForbiddenError,
   SmriteaNotFoundError,
-  SmriteaRateLimitError,
-  SmriteaQuotaError,
-  SmriteaValidationError,
+  SmriteaConflictError,
+  SmriteaUnprocessableError,
+  SmriteaTooManyRequestsError,
   SmriteaError,
 } from 'smritea-sdk';
 
@@ -194,19 +197,22 @@ try {
   await client.delete('mem_unknown');
 } catch (e) {
   if (e instanceof SmriteaNotFoundError) console.log('Memory not found');
-  if (e instanceof SmriteaRateLimitError) console.log(`Retry after ${e.retryAfter}s`);
-  if (e instanceof SmriteaAuthError) console.log('Invalid API key');
-  if (e instanceof SmriteaQuotaError) console.log('Plan quota exceeded');
+  if (e instanceof SmriteaTooManyRequestsError) console.log(`Retry after ${e.retryAfter}s`);
+  if (e instanceof SmriteaUnauthorizedError) console.log('Invalid API key');
+  if (e instanceof SmriteaPaymentRequiredError) console.log('Plan quota exceeded');
 }
 ```
 
 | Exception | HTTP | When |
 |---|---|---|
-| `SmriteaAuthError` | 401 | Invalid or missing API key |
-| `SmriteaValidationError` | 400 | Invalid request parameters |
+| `SmriteaBadRequestError` | 400 | Invalid request parameters |
+| `SmriteaUnauthorizedError` | 401 | Invalid or missing API key |
+| `SmriteaPaymentRequiredError` | 402 | Organisation quota exceeded |
+| `SmriteaForbiddenError` | 403 | Access denied |
 | `SmriteaNotFoundError` | 404 | Memory ID does not exist |
-| `SmriteaQuotaError` | 402 | Organisation quota exceeded |
-| `SmriteaRateLimitError` | 429 | Rate limit hit — check `.retryAfter` |
+| `SmriteaConflictError` | 409 | Resource conflict |
+| `SmriteaUnprocessableError` | 422 | Unprocessable entity |
+| `SmriteaTooManyRequestsError` | 429 | Rate limit hit — check `.retryAfter` |
 | `SmriteaError` | other | Unexpected server error |
 
 ---

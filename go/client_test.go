@@ -525,12 +525,12 @@ func TestAdd_401_MapsToAuthError(t *testing.T) {
 	client := newTestClient(t, handler, 1)
 
 	_, err := client.Add(context.Background(), "x", nil)
-	var authErr *SmriteaAuthError
+	var authErr *SmriteaUnauthorizedError
 	if !errors.As(err, &authErr) {
-		t.Fatalf("expected SmriteaAuthError, got %T: %v", err, err)
+		t.Fatalf("expected SmriteaUnauthorizedError, got %T: %v", err, err)
 	}
-	if authErr.StatusCode != http.StatusUnauthorized {
-		t.Errorf("StatusCode = %d, want 401", authErr.StatusCode)
+	if authErr.HTTPStatus != http.StatusUnauthorized {
+		t.Errorf("HTTPStatus = %d, want 401", authErr.HTTPStatus)
 	}
 }
 
@@ -554,9 +554,9 @@ func TestAdd_400_MapsToValidationError(t *testing.T) {
 	client := newTestClient(t, handler, 1)
 
 	_, err := client.Add(context.Background(), "", nil)
-	var valErr *SmriteaValidationError
+	var valErr *SmriteaBadRequestError
 	if !errors.As(err, &valErr) {
-		t.Fatalf("expected SmriteaValidationError, got %T: %v", err, err)
+		t.Fatalf("expected SmriteaBadRequestError, got %T: %v", err, err)
 	}
 }
 
@@ -567,9 +567,9 @@ func TestAdd_402_MapsToQuotaError(t *testing.T) {
 	client := newTestClient(t, handler, 1)
 
 	_, err := client.Add(context.Background(), "x", nil)
-	var quotaErr *SmriteaQuotaError
+	var quotaErr *SmriteaPaymentRequiredError
 	if !errors.As(err, &quotaErr) {
-		t.Fatalf("expected SmriteaQuotaError, got %T: %v", err, err)
+		t.Fatalf("expected SmriteaPaymentRequiredError, got %T: %v", err, err)
 	}
 }
 
@@ -612,13 +612,13 @@ func TestAdd_429_Exhausted_MapsToRateLimitError(t *testing.T) {
 		w.Header().Set("Retry-After", "1")
 		writeJSON(w, http.StatusTooManyRequests, errJSON("rate limited"))
 	})
-	// maxRetries=1 → 2 total attempts; both return 429 → SmriteaRateLimitError.
+	// maxRetries=1 → 2 total attempts; both return 429 → SmriteaTooManyRequestsError.
 	client := newTestClient(t, handler, 1)
 
 	_, err := client.Add(context.Background(), "x", nil)
-	var rlErr *SmriteaRateLimitError
+	var rlErr *SmriteaTooManyRequestsError
 	if !errors.As(err, &rlErr) {
-		t.Fatalf("expected SmriteaRateLimitError, got %T: %v", err, err)
+		t.Fatalf("expected SmriteaTooManyRequestsError, got %T: %v", err, err)
 	}
 	if rlErr.RetryAfter == nil || *rlErr.RetryAfter != 1 {
 		t.Errorf("RetryAfter = %v, want ptr(1)", rlErr.RetryAfter)
@@ -631,7 +631,7 @@ func TestAdd_429_Exhausted_MapsToRateLimitError(t *testing.T) {
 func TestWithRetry_ContextCanceledDuringRetrySleep(t *testing.T) {
 	// Tests withRetry directly (no HTTP) so there is no race between the HTTP
 	// body read and context cancellation.
-	// fn() returns SmriteaRateLimitError immediately; withRetry enters the
+	// fn() returns SmriteaTooManyRequestsError immediately; withRetry enters the
 	// retry select (27 s sleep); we cancel — expect context.Canceled unwrapped.
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -644,8 +644,8 @@ func TestWithRetry_ContextCanceledDuringRetrySleep(t *testing.T) {
 		if signaled.CompareAndSwap(false, true) {
 			close(firstCallDone)
 		}
-		return nil, &SmriteaRateLimitError{
-			SmriteaError: SmriteaError{Message: "rate limited", StatusCode: 429},
+		return nil, &SmriteaTooManyRequestsError{
+			SmriteaError: SmriteaError{Message: "rate limited", HTTPStatus: 429},
 			RetryAfter:   &retryAfter,
 		}
 	}

@@ -322,21 +322,21 @@ All methods raise typed exceptions that map directly to HTTP status codes.
 # Python
 from smritea import (
     SmriteaClient,
-    SmriteaAuthError,
+    SmriteaUnauthorizedError,
     SmriteaNotFoundError,
-    SmriteaRateLimitError,
-    SmriteaQuotaError,
-    SmriteaValidationError,
+    SmriteaTooManyRequestsError,
+    SmriteaPaymentRequiredError,
+    SmriteaBadRequestError,
     SmriteaError,
 )
 
 try:
     results = client.search("preferences", actor_id="alice", actor_type="user")
-except SmriteaAuthError:
+except SmriteaUnauthorizedError:
     print("Check your API key")
-except SmriteaRateLimitError as e:
+except SmriteaTooManyRequestsError as e:
     print(f"Rate limited — retry after {e.retry_after}s")
-except SmriteaQuotaError:
+except SmriteaPaymentRequiredError:
     print("Plan quota exceeded")
 except SmriteaError as e:
     print(f"Unexpected error: {e}")
@@ -364,14 +364,23 @@ try {
 
 **Exception reference**
 
-| Exception (Python/TS/Go/Java) | Exception (C#)              | HTTP  | When                                                  |
-|-------------------------------|-----------------------------|-------|-------------------------------------------------------|
-| `SmriteaAuthError`            | `SmriteaAuthException`      | 401   | Invalid or missing API key                            |
-| `SmriteaValidationError`      | `SmriteaValidationException`| 400   | Invalid request parameters                            |
-| `SmriteaNotFoundError`        | `SmriteaNotFoundException`  | 404   | Memory ID does not exist                              |
-| `SmriteaQuotaError`           | `SmriteaQuotaException`     | 402   | Organisation quota exceeded                           |
-| `SmriteaRateLimitError`       | `SmriteaRateLimitException` | 429   | Rate limit hit — check `.retry_after` / `.retryAfter` / `.RetryAfter` |
-| `SmriteaError`                | `SmriteaException`          | other | Unexpected server error                               |
+C# has been converted to the full 9-category errkit hierarchy; Python/TS/Go/Java still use the
+pre-errkit names shown in the left column (converted in separate tasks of the same wave).
+
+| Exception (Python/TS/Go/Java) | Exception (C#)                    | HTTP  | When                                                  |
+|-------------------------------|------------------------------------|-------|-------------------------------------------------------|
+| `SmriteaValidationError`      | `SmriteaBadRequestException`       | 400   | Invalid request parameters                            |
+| `SmriteaAuthError`            | `SmriteaUnauthorizedException`     | 401   | Invalid or missing API key                            |
+| `SmriteaQuotaError`           | `SmriteaPaymentRequiredException`  | 402   | Organisation quota exceeded                           |
+| n/a                           | `SmriteaForbiddenException`        | 403   | Authenticated but not permitted to perform this action |
+| `SmriteaNotFoundError`        | `SmriteaNotFoundException`         | 404   | Memory ID does not exist                              |
+| n/a                           | `SmriteaConflictException`         | 409   | Request conflicts with the current state of the resource |
+| n/a                           | `SmriteaUnprocessableException`    | 422   | Well-formed request that is semantically invalid      |
+| `SmriteaRateLimitError`       | `SmriteaTooManyRequestsException`  | 429   | Rate limit hit — check `.retry_after` / `.retryAfter` / `.RetryAfter` |
+| `SmriteaError`                | `SmriteaException`                 | other | Unexpected server error (5xx / unknown)               |
+
+Every C# exception also carries `Code` (server wire code), `HTTPStatus`, `Retryable`, and `Body`
+(full parsed response body).
 
 ---
 

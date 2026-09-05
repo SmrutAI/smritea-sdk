@@ -4,53 +4,55 @@
  */
 
 export class SmriteaError extends Error {
-  statusCode?: number;
-  errorCode: string;
+  httpStatus?: number;
+  code: string;
   body?: unknown;
+  retryable: boolean;
 
-  constructor(message: string, statusCode?: number, errorCode?: string, body?: unknown) {
+  constructor(message: string, httpStatus?: number, code?: string, body?: unknown, retryable = false) {
     super(message);
     this.name = 'SmriteaError';
-    this.statusCode = statusCode;
-    this.errorCode = errorCode ?? 'INTERNAL_ERROR';
+    this.httpStatus = httpStatus;
+    this.code = code ?? 'INTERNAL_ERROR';
     this.body = body;
+    this.retryable = retryable;
     // Maintain proper prototype chain in TypeScript/transpiled environments
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
 /** HTTP 401 -- invalid or missing API key. */
-export class SmriteaAuthError extends SmriteaError {
-  constructor(message: string, statusCode?: number, errorCode?: string, body?: unknown) {
-    super(message, statusCode ?? 401, errorCode, body);
-    this.name = 'SmriteaAuthError';
+export class SmriteaUnauthorizedError extends SmriteaError {
+  constructor(message: string, httpStatus?: number, code?: string, body?: unknown, retryable = false) {
+    super(message, httpStatus ?? 401, code, body, retryable);
+    this.name = 'SmriteaUnauthorizedError';
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
 /** HTTP 404 -- memory not found. */
 export class SmriteaNotFoundError extends SmriteaError {
-  constructor(message: string, statusCode?: number, errorCode?: string, body?: unknown) {
-    super(message, statusCode ?? 404, errorCode, body);
+  constructor(message: string, httpStatus?: number, code?: string, body?: unknown, retryable = false) {
+    super(message, httpStatus ?? 404, code, body, retryable);
     this.name = 'SmriteaNotFoundError';
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
 /** HTTP 400 -- request validation failed. */
-export class SmriteaValidationError extends SmriteaError {
-  constructor(message: string, statusCode?: number, errorCode?: string, body?: unknown) {
-    super(message, statusCode ?? 400, errorCode, body);
-    this.name = 'SmriteaValidationError';
+export class SmriteaBadRequestError extends SmriteaError {
+  constructor(message: string, httpStatus?: number, code?: string, body?: unknown, retryable = false) {
+    super(message, httpStatus ?? 400, code, body, retryable);
+    this.name = 'SmriteaBadRequestError';
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
 /** HTTP 402 -- quota exceeded for this organization. */
-export class SmriteaQuotaError extends SmriteaError {
-  constructor(message: string, statusCode?: number, errorCode?: string, body?: unknown) {
-    super(message, statusCode ?? 402, errorCode, body);
-    this.name = 'SmriteaQuotaError';
+export class SmriteaPaymentRequiredError extends SmriteaError {
+  constructor(message: string, httpStatus?: number, code?: string, body?: unknown, retryable = false) {
+    super(message, httpStatus ?? 402, code, body, retryable);
+    this.name = 'SmriteaPaymentRequiredError';
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
@@ -61,8 +63,8 @@ export class SmriteaQuotaError extends SmriteaError {
  * error that produced a malformed body.
  */
 export class SmriteaDeserializationError extends SmriteaError {
-  constructor(message: string, statusCode?: number, errorCode?: string, body?: unknown) {
-    super(message, statusCode, errorCode, body);
+  constructor(message: string, httpStatus?: number, code?: string, body?: unknown, retryable = false) {
+    super(message, httpStatus, code, body, retryable);
     this.name = 'SmriteaDeserializationError';
     Object.setPrototypeOf(this, new.target.prototype);
   }
@@ -75,13 +77,40 @@ export class SmriteaDeserializationError extends SmriteaError {
  * if provided. This is informational — the SDK already waited this long
  * during its automatic retry attempts.
  */
-export class SmriteaRateLimitError extends SmriteaError {
+export class SmriteaTooManyRequestsError extends SmriteaError {
   retryAfter?: number;
 
-  constructor(message: string, statusCode?: number, retryAfter?: number, errorCode?: string, body?: unknown) {
-    super(message, statusCode ?? 429, errorCode, body);
-    this.name = 'SmriteaRateLimitError';
+  constructor(message: string, httpStatus?: number, retryAfter?: number, code?: string, body?: unknown, retryable = true) {
+    super(message, httpStatus ?? 429, code, body, retryable);
+    this.name = 'SmriteaTooManyRequestsError';
     this.retryAfter = retryAfter;
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+/** HTTP 403 -- access denied. */
+export class SmriteaForbiddenError extends SmriteaError {
+  constructor(message: string, httpStatus?: number, code?: string, body?: unknown, retryable = false) {
+    super(message, httpStatus ?? 403, code, body, retryable);
+    this.name = 'SmriteaForbiddenError';
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+/** HTTP 409 -- resource conflict. */
+export class SmriteaConflictError extends SmriteaError {
+  constructor(message: string, httpStatus?: number, code?: string, body?: unknown, retryable = false) {
+    super(message, httpStatus ?? 409, code, body, retryable);
+    this.name = 'SmriteaConflictError';
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+/** HTTP 422 -- unprocessable entity. */
+export class SmriteaUnprocessableError extends SmriteaError {
+  constructor(message: string, httpStatus?: number, code?: string, body?: unknown, retryable = false) {
+    super(message, httpStatus ?? 422, code, body, retryable);
+    this.name = 'SmriteaUnprocessableError';
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
@@ -91,22 +120,29 @@ export class SmriteaRateLimitError extends SmriteaError {
  * @param status - HTTP response status code
  * @param message - Error message from the response body
  * @param retryAfter - Value of the Retry-After header (for 429 responses)
- * @param errorCode - Error code from the response body
+ * @param code - Error code from the response body
  * @param body - Full parsed HTTP response body
+ * @param retryable - Whether the error should be retried (used except for 429, which is always retryable)
  */
-export function throwForStatus(status: number, message: string, retryAfter?: number, errorCode?: string, body?: unknown): never {
+export function throwForStatus(status: number, message: string, retryAfter?: number, code?: string, body?: unknown, retryable?: boolean): never {
   switch (status) {
     case 400:
-      throw new SmriteaValidationError(message, status, errorCode, body);
+      throw new SmriteaBadRequestError(message, status, code, body, retryable);
     case 401:
-      throw new SmriteaAuthError(message, status, errorCode, body);
+      throw new SmriteaUnauthorizedError(message, status, code, body, retryable);
     case 402:
-      throw new SmriteaQuotaError(message, status, errorCode, body);
+      throw new SmriteaPaymentRequiredError(message, status, code, body, retryable);
+    case 403:
+      throw new SmriteaForbiddenError(message, status, code, body, retryable);
     case 404:
-      throw new SmriteaNotFoundError(message, status, errorCode, body);
+      throw new SmriteaNotFoundError(message, status, code, body, retryable);
+    case 409:
+      throw new SmriteaConflictError(message, status, code, body, retryable);
+    case 422:
+      throw new SmriteaUnprocessableError(message, status, code, body, retryable);
     case 429:
-      throw new SmriteaRateLimitError(message, status, retryAfter, errorCode, body);
+      throw new SmriteaTooManyRequestsError(message, status, retryAfter, code, body, true);
     default:
-      throw new SmriteaError(message, status, errorCode, body);
+      throw new SmriteaError(message, status, code, body, retryable);
   }
 }

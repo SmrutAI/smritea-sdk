@@ -10,12 +10,15 @@ import pytest
 
 from smritea import SmriteaClient
 from smritea.exceptions import (
-    SmriteaAuthError,
+    SmriteaBadRequestError,
+    SmriteaConflictError,
     SmriteaError,
+    SmriteaForbiddenError,
     SmriteaNotFoundError,
-    SmriteaQuotaError,
-    SmriteaRateLimitError,
-    SmriteaValidationError,
+    SmriteaPaymentRequiredError,
+    SmriteaTooManyRequestsError,
+    SmriteaUnauthorizedError,
+    SmriteaUnprocessableError,
 )
 from smritea.types import MemoryScope
 from smritea._internal.autogen.smritea_cloud_sdk.exceptions import ApiException
@@ -219,42 +222,55 @@ class TestErrorMapping:
     """Test mapping of HTTP status codes to typed exceptions."""
 
     def test_400_validation_error(self, client, mock_api):
-        """HTTP 400 raises SmriteaValidationError."""
+        """HTTP 400 raises SmriteaBadRequestError."""
         exc = ApiException(status=400)
         exc.body = '{"code": "VALIDATION_ERROR", "message": "validation failed"}'
         exc.headers = {}
         mock_api.create_memory.side_effect = exc
 
-        with pytest.raises(SmriteaValidationError) as exc_info:
+        with pytest.raises(SmriteaBadRequestError) as exc_info:
             client.add('content')
 
-        assert exc_info.value.status_code == 400
+        assert exc_info.value.http_status == 400
         assert exc_info.value.message == 'validation failed'
-        assert exc_info.value.error_code == 'VALIDATION_ERROR'
+        assert exc_info.value.code == 'VALIDATION_ERROR'
+        assert exc_info.value.retryable is False
 
     def test_401_auth_error(self, client, mock_api):
-        """HTTP 401 raises SmriteaAuthError."""
+        """HTTP 401 raises SmriteaUnauthorizedError."""
         exc = ApiException(status=401)
         exc.body = 'unauthorized'
         exc.headers = {}
         mock_api.create_memory.side_effect = exc
 
-        with pytest.raises(SmriteaAuthError) as exc_info:
+        with pytest.raises(SmriteaUnauthorizedError) as exc_info:
             client.add('content')
 
-        assert exc_info.value.status_code == 401
+        assert exc_info.value.http_status == 401
 
     def test_402_quota_error(self, client, mock_api):
-        """HTTP 402 raises SmriteaQuotaError."""
+        """HTTP 402 raises SmriteaPaymentRequiredError."""
         exc = ApiException(status=402)
         exc.body = 'quota exceeded'
         exc.headers = {}
         mock_api.create_memory.side_effect = exc
 
-        with pytest.raises(SmriteaQuotaError) as exc_info:
+        with pytest.raises(SmriteaPaymentRequiredError) as exc_info:
             client.add('content')
 
-        assert exc_info.value.status_code == 402
+        assert exc_info.value.http_status == 402
+
+    def test_403_forbidden_error(self, client, mock_api):
+        """HTTP 403 raises SmriteaForbiddenError."""
+        exc = ApiException(status=403)
+        exc.body = 'forbidden'
+        exc.headers = {}
+        mock_api.create_memory.side_effect = exc
+
+        with pytest.raises(SmriteaForbiddenError) as exc_info:
+            client.add('content')
+
+        assert exc_info.value.http_status == 403
 
     def test_404_not_found_error(self, client, mock_api):
         """HTTP 404 raises SmriteaNotFoundError."""
@@ -266,21 +282,46 @@ class TestErrorMapping:
         with pytest.raises(SmriteaNotFoundError) as exc_info:
             client.get('nonexistent')
 
-        assert exc_info.value.status_code == 404
+        assert exc_info.value.http_status == 404
+
+    def test_409_conflict_error(self, client, mock_api):
+        """HTTP 409 raises SmriteaConflictError."""
+        exc = ApiException(status=409)
+        exc.body = 'conflict'
+        exc.headers = {}
+        mock_api.create_memory.side_effect = exc
+
+        with pytest.raises(SmriteaConflictError) as exc_info:
+            client.add('content')
+
+        assert exc_info.value.http_status == 409
+
+    def test_422_unprocessable_error(self, client, mock_api):
+        """HTTP 422 raises SmriteaUnprocessableError."""
+        exc = ApiException(status=422)
+        exc.body = 'unprocessable'
+        exc.headers = {}
+        mock_api.create_memory.side_effect = exc
+
+        with pytest.raises(SmriteaUnprocessableError) as exc_info:
+            client.add('content')
+
+        assert exc_info.value.http_status == 422
 
     def test_429_rate_limit_error(self, client, mock_api):
-        """HTTP 429 raises SmriteaRateLimitError without retries (max_retries=0)."""
+        """HTTP 429 raises SmriteaTooManyRequestsError without retries (max_retries=0)."""
         exc = ApiException(status=429)
         exc.body = 'rate limited'
         exc.headers = {}
         mock_api.create_memory.side_effect = exc
 
         client._max_retries = 0
-        with pytest.raises(SmriteaRateLimitError) as exc_info:
+        with pytest.raises(SmriteaTooManyRequestsError) as exc_info:
             client.add('content')
 
-        assert exc_info.value.status_code == 429
+        assert exc_info.value.http_status == 429
         assert exc_info.value.retry_after is None
+        assert exc_info.value.retryable is True
 
     def test_429_with_retry_after_header(self, client, mock_api):
         """HTTP 429 with Retry-After header populates retry_after field."""
@@ -290,7 +331,7 @@ class TestErrorMapping:
         mock_api.create_memory.side_effect = exc
 
         client._max_retries = 0
-        with pytest.raises(SmriteaRateLimitError) as exc_info:
+        with pytest.raises(SmriteaTooManyRequestsError) as exc_info:
             client.add('content')
 
         assert exc_info.value.retry_after == 10
@@ -306,8 +347,21 @@ class TestErrorMapping:
         with pytest.raises(SmriteaError) as exc_info:
             client.add('content')
 
-        assert exc_info.value.status_code == 500
-        assert not isinstance(exc_info.value, SmriteaValidationError)
+        assert exc_info.value.http_status == 500
+        assert not isinstance(exc_info.value, SmriteaBadRequestError)
+
+    def test_error_retryable_flag_from_body(self, client, mock_api):
+        """retryable flag from response body is propagated onto the typed exception."""
+        exc = ApiException(status=500)
+        exc.body = '{"code": "INTERNAL_ERROR", "message": "internal error", "retryable": true}'
+        exc.headers = {}
+        mock_api.create_memory.side_effect = exc
+
+        client._max_retries = 0
+        with pytest.raises(SmriteaError) as exc_info:
+            client.add('content')
+
+        assert exc_info.value.retryable is True
 
     def test_non_api_exception_wrapped(self, client, mock_api):
         """Non-ApiException errors are wrapped as SmriteaError."""
@@ -354,7 +408,7 @@ class TestRetryLogic:
         mock_api.create_memory.side_effect = exc
 
         client._max_retries = 0
-        with pytest.raises(SmriteaRateLimitError):
+        with pytest.raises(SmriteaTooManyRequestsError):
             client.add('content')
 
         assert mock_api.create_memory.call_count == 1
@@ -369,7 +423,7 @@ class TestRetryLogic:
         mock_api.create_memory.side_effect = exc
 
         client._max_retries = 2
-        with pytest.raises(SmriteaRateLimitError):
+        with pytest.raises(SmriteaTooManyRequestsError):
             client.add('content')
 
         # max_retries=2 means: attempt 0, attempt 1, attempt 2 (all fail)

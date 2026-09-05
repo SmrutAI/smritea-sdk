@@ -185,33 +185,39 @@ try
     var results = await client.SearchAsync("preferences",
         new SearchOptions().WithActorId("alice").WithActorType("user"));
 }
-catch (SmriteaAuthException)
+catch (SmriteaUnauthorizedException)
 {
     Console.WriteLine("Check your API key");
 }
-catch (SmriteaRateLimitException ex)
+catch (SmriteaTooManyRequestsException ex)
 {
     Console.WriteLine($"Rate limited — retry after {ex.RetryAfter}s");
 }
-catch (SmriteaQuotaException)
+catch (SmriteaPaymentRequiredException)
 {
     Console.WriteLine("Plan quota exceeded");
 }
 catch (SmriteaException ex)
 {
-    Console.WriteLine($"Unexpected error: {ex.Message}");
+    Console.WriteLine($"Unexpected error: {ex.Message} (code={ex.Code}, retryable={ex.Retryable})");
 }
 ```
 
 | Exception | HTTP | When |
 |---|---|---|
-| `SmriteaAuthException` | 401 | Invalid or missing API key |
-| `SmriteaValidationException` | 400 | Invalid request parameters |
+| `SmriteaBadRequestException` | 400 | Invalid request parameters |
+| `SmriteaUnauthorizedException` | 401 | Invalid or missing API key |
+| `SmriteaPaymentRequiredException` | 402 | Organisation quota exceeded |
+| `SmriteaForbiddenException` | 403 | Authenticated but not permitted to perform this action |
 | `SmriteaNotFoundException` | 404 | Memory ID does not exist |
-| `SmriteaQuotaException` | 402 | Organisation quota exceeded |
-| `SmriteaRateLimitException` | 429 | Rate limit hit — check `.RetryAfter` |
+| `SmriteaConflictException` | 409 | Request conflicts with the current state of the resource |
+| `SmriteaUnprocessableException` | 422 | Well-formed request that is semantically invalid |
+| `SmriteaTooManyRequestsException` | 429 | Rate limit hit — check `.RetryAfter` |
 | `SmriteaDeserializationException` | — | Server returned an unexpected response body |
-| `SmriteaException` | other | Unexpected server error |
+| `SmriteaException` | other | Unexpected server error (5xx / unknown) |
+
+Every exception carries `Code` (the server's machine-readable wire code), `HTTPStatus`, `Retryable`,
+and `Body` (the full parsed response body).
 
 ---
 

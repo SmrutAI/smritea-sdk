@@ -193,7 +193,7 @@ func (c *SmriteaClient) GetAll(_ context.Context) ([]*Memory, error) {
 }
 
 // withRetry executes fn up to maxRetries+1 times, retrying only on
-// SmriteaRateLimitError. Other errors are returned immediately. After all
+// SmriteaTooManyRequestsError. Other errors are returned immediately. After all
 // retries are exhausted, a SmriteaError is returned.
 func withRetry[T any](ctx context.Context, maxRetries int, fn func() (T, error)) (T, error) {
 	for attempt := 0; attempt <= maxRetries; attempt++ {
@@ -202,7 +202,7 @@ func withRetry[T any](ctx context.Context, maxRetries int, fn func() (T, error))
 			return result, nil
 		}
 
-		var rateErr *SmriteaRateLimitError
+		var rateErr *SmriteaTooManyRequestsError
 		if errors.As(err, &rateErr) && attempt < maxRetries {
 			delay := retryDelay(attempt, rateErr.RetryAfter)
 			select {

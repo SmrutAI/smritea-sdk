@@ -19,12 +19,15 @@ from smritea._internal.autogen.smritea_cloud_sdk.models import (
     MemoryScope as AutogenMemoryScope,
 )
 from smritea.exceptions import (
-    SmriteaAuthError,
+    SmriteaBadRequestError,
+    SmriteaConflictError,
     SmriteaError,
+    SmriteaForbiddenError,
     SmriteaNotFoundError,
-    SmriteaQuotaError,
-    SmriteaRateLimitError,
-    SmriteaValidationError,
+    SmriteaPaymentRequiredError,
+    SmriteaTooManyRequestsError,
+    SmriteaUnauthorizedError,
+    SmriteaUnprocessableError,
 )
 from smritea.types import Memory, MemoryCreationResult, MemoryScope, RelativeStanding, SearchResult
 
@@ -98,7 +101,7 @@ class SmriteaClient:
             skipped_count, updated_count.
         """
         if metadata is not None and not isinstance(metadata, dict):
-            raise SmriteaValidationError(
+            raise SmriteaBadRequestError(
                 f"metadata must be a dictionary, got {type(metadata).__name__}", 400
             )
 
@@ -316,25 +319,52 @@ class SmriteaClient:
             status = exc.status
             message = "Unknown error"
             error_code = "INTERNAL_ERROR"
+            retryable = False
             body_dict: dict | None = None
             try:
                 body_dict = json.loads(exc.body) if isinstance(exc.body, (str, bytes)) else exc.body
                 message = body_dict.get("message", "Unknown error")
                 error_code = body_dict.get("code", "INTERNAL_ERROR")
+                retryable = bool(body_dict.get("retryable", False))
             except (json.JSONDecodeError, TypeError, KeyError):
-                pass  # defaults ("Unknown error" / "INTERNAL_ERROR") are preserved
+                pass  # defaults ("Unknown error" / "INTERNAL_ERROR" / False) are preserved
             if status == 400:
-                raise SmriteaValidationError(message, status, error_code, body_dict) from exc
+                raise SmriteaBadRequestError(
+                    message, status, error_code, body_dict, retryable
+                ) from exc
             if status == 401:
-                raise SmriteaAuthError(message, status, error_code, body_dict) from exc
+                raise SmriteaUnauthorizedError(
+                    message, status, error_code, body_dict, retryable
+                ) from exc
             if status == 402:
-                raise SmriteaQuotaError(message, status, error_code, body_dict) from exc
+                raise SmriteaPaymentRequiredError(
+                    message, status, error_code, body_dict, retryable
+                ) from exc
+            if status == 403:
+                raise SmriteaForbiddenError(
+                    message, status, error_code, body_dict, retryable
+                ) from exc
             if status == 404:
-                raise SmriteaNotFoundError(message, status, error_code, body_dict) from exc
+                raise SmriteaNotFoundError(
+                    message, status, error_code, body_dict, retryable
+                ) from exc
+            if status == 409:
+                raise SmriteaConflictError(
+                    message, status, error_code, body_dict, retryable
+                ) from exc
+            if status == 422:
+                raise SmriteaUnprocessableError(
+                    message, status, error_code, body_dict, retryable
+                ) from exc
             if status == 429:
                 retry_after = self._parse_retry_after(exc)
-                raise SmriteaRateLimitError(
-                    message, status, retry_after=retry_after, error_code=error_code, body=body_dict
+                raise SmriteaTooManyRequestsError(
+                    message,
+                    status,
+                    retry_after=retry_after,
+                    code=error_code,
+                    body=body_dict,
+                    retryable=True,
                 ) from exc
-            raise SmriteaError(message, status, error_code, body_dict) from exc
+            raise SmriteaError(message, status, error_code, body_dict, retryable) from exc
         raise SmriteaError(str(exc)) from exc

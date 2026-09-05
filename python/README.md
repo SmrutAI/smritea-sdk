@@ -178,21 +178,21 @@ results = client.search("", actor_id="alice", actor_type="user", limit=100)
 ```python
 from smritea import (
     SmriteaClient,
-    SmriteaAuthError,
+    SmriteaUnauthorizedError,
     SmriteaNotFoundError,
-    SmriteaRateLimitError,
-    SmriteaQuotaError,
-    SmriteaValidationError,
+    SmriteaTooManyRequestsError,
+    SmriteaPaymentRequiredError,
+    SmriteaBadRequestError,
     SmriteaError,
 )
 
 try:
     results = client.search("preferences", actor_id="alice", actor_type="user")
-except SmriteaAuthError:
+except SmriteaUnauthorizedError:
     print("Check your API key")
-except SmriteaRateLimitError as e:
+except SmriteaTooManyRequestsError as e:
     print(f"Rate limited — retry after {e.retry_after}s")
-except SmriteaQuotaError:
+except SmriteaPaymentRequiredError:
     print("Plan quota exceeded")
 except SmriteaError as e:
     print(f"Unexpected error: {e}")
@@ -200,12 +200,19 @@ except SmriteaError as e:
 
 | Exception | HTTP | When |
 |---|---|---|
-| `SmriteaAuthError` | 401 | Invalid or missing API key |
-| `SmriteaValidationError` | 400 | Invalid request parameters |
+| `SmriteaBadRequestError` | 400 | Invalid request parameters |
+| `SmriteaUnauthorizedError` | 401 | Invalid or missing API key |
+| `SmriteaPaymentRequiredError` | 402 | Organisation quota exceeded |
+| `SmriteaForbiddenError` | 403 | Caller is not permitted to perform this action |
 | `SmriteaNotFoundError` | 404 | Memory ID does not exist |
-| `SmriteaQuotaError` | 402 | Organisation quota exceeded |
-| `SmriteaRateLimitError` | 429 | Rate limit hit — check `.retry_after` |
+| `SmriteaConflictError` | 409 | Request conflicts with the current state of the resource |
+| `SmriteaUnprocessableError` | 422 | Request was well-formed but semantically invalid |
+| `SmriteaTooManyRequestsError` | 429 | Rate limit hit — check `.retry_after` |
 | `SmriteaError` | other | Unexpected server error |
+
+Every exception carries `message`, `http_status`, `code` (the server's stable machine-readable wire
+code), `retryable` (`True` when the server marked the error safe to retry), and the full parsed response
+`body`.
 
 ---
 

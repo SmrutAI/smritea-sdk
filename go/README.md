@@ -204,17 +204,17 @@ results, err := client.Search(ctx, "preferences",
     smritea.NewSearchOptions().WithScope(
         smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")))
 if err != nil {
-    var authErr *smritea.SmriteaAuthError
-    var rateLimitErr *smritea.SmriteaRateLimitError
-    var quotaErr *smritea.SmriteaQuotaError
+    var authErr *smritea.SmriteaUnauthorizedError
+    var tooManyErr *smritea.SmriteaTooManyRequestsError
+    var paymentErr *smritea.SmriteaPaymentRequiredError
     var smriteaErr *smritea.SmriteaError
 
     switch {
     case errors.As(err, &authErr):
         fmt.Println("Check your API key")
-    case errors.As(err, &rateLimitErr):
-        fmt.Printf("Rate limited — retry after %ds\n", rateLimitErr.RetryAfter)
-    case errors.As(err, &quotaErr):
+    case errors.As(err, &tooManyErr):
+        fmt.Printf("Rate limited — retry after %ds\n", *tooManyErr.RetryAfter)
+    case errors.As(err, &paymentErr):
         fmt.Println("Plan quota exceeded")
     case errors.As(err, &smriteaErr):
         fmt.Printf("Unexpected error: %s\n", smriteaErr.Message)
@@ -226,12 +226,18 @@ if err != nil {
 
 | Error type | HTTP | When |
 |---|---|---|
-| `SmriteaAuthError` | 401 | Invalid or missing API key |
-| `SmriteaValidationError` | 400 | Invalid request parameters |
+| `SmriteaBadRequestError` | 400 | Invalid request parameters |
+| `SmriteaUnauthorizedError` | 401 | Invalid or missing API key |
+| `SmriteaPaymentRequiredError` | 402 | Organisation quota exceeded |
+| `SmriteaForbiddenError` | 403 | Access denied |
 | `SmriteaNotFoundError` | 404 | Memory ID does not exist |
-| `SmriteaQuotaError` | 402 | Organisation quota exceeded |
-| `SmriteaRateLimitError` | 429 | Rate limit hit — check `.RetryAfter` |
+| `SmriteaConflictError` | 409 | Conflicting resource state |
+| `SmriteaUnprocessableError` | 422 | Request understood but cannot be processed |
+| `SmriteaTooManyRequestsError` | 429 | Rate limit hit — check `.RetryAfter` |
 | `SmriteaError` | other | Unexpected server error |
+
+Every error type also carries `.Code` (machine-readable wire code), `.HTTPStatus`, and `.Retryable`
+(parsed from the response body's optional `retryable` field, always `true` for 429).
 
 ---
 

@@ -12,13 +12,16 @@ import ai.smritea.sdk._internal.autogen.model.SearchMemoriesResponse;
 import ai.smritea.sdk._internal.autogen.model.SearchMemoryRequest;
 import ai.smritea.sdk._internal.autogen.model.SearchMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.SearchMethod;
-import ai.smritea.sdk.errors.SmriteaAuthError;
+import ai.smritea.sdk.errors.SmriteaBadRequestError;
+import ai.smritea.sdk.errors.SmriteaConflictError;
 import ai.smritea.sdk.errors.SmriteaDeserializationError;
 import ai.smritea.sdk.errors.SmriteaError;
+import ai.smritea.sdk.errors.SmriteaForbiddenError;
 import ai.smritea.sdk.errors.SmriteaNotFoundError;
-import ai.smritea.sdk.errors.SmriteaQuotaError;
-import ai.smritea.sdk.errors.SmriteaRateLimitError;
-import ai.smritea.sdk.errors.SmriteaValidationError;
+import ai.smritea.sdk.errors.SmriteaPaymentRequiredError;
+import ai.smritea.sdk.errors.SmriteaTooManyRequestsError;
+import ai.smritea.sdk.errors.SmriteaUnauthorizedError;
+import ai.smritea.sdk.errors.SmriteaUnprocessableError;
 import ai.smritea.sdk.model.AddOptions;
 import ai.smritea.sdk.model.Memory;
 import ai.smritea.sdk.model.MemoryCreationResult;
@@ -341,7 +344,7 @@ public class SmriteaClient {
     for (int attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         return fn.get();
-      } catch (SmriteaRateLimitError e) {
+      } catch (SmriteaTooManyRequestsError e) {
         if (attempt < maxRetries) {
           double delay = retryDelay(attempt, e.getRetryAfter());
           try {
@@ -356,13 +359,13 @@ public class SmriteaClient {
       } catch (SmriteaError e) {
         throw e;
       } catch (Exception e) {
-        throw new SmriteaError(e.getMessage(), null, null);
+        throw new SmriteaError(e.getMessage(), null);
       }
     }
     // Unreachable: the loop always returns on success or throws on non-retriable errors.
-    // On the final attempt, SmriteaRateLimitError is rethrown directly.
+    // On the final attempt, SmriteaTooManyRequestsError is rethrown directly.
     // This satisfies the Java compiler's requirement for a return/throw after the loop.
-    throw new SmriteaError("max retries exceeded", null, null);
+    throw new SmriteaError("max retries exceeded", null);
   }
 
   /**
@@ -419,22 +422,30 @@ public class SmriteaClient {
     int httpStatus = e.getCode();
     ExtractedErrorFields fields = extractErrorFieldsWithBody(e.getResponseBody());
     String message = fields.message;
-    String errorCode = fields.errorCode;
+    String code = fields.errorCode;
     Object body = fields.body;
+    boolean retryable = fields.retryable || httpStatus == 429;
     switch (httpStatus) {
       case 400:
-        return new SmriteaValidationError(message, httpStatus, errorCode, body);
+        return new SmriteaBadRequestError(message, httpStatus, code, retryable, body);
       case 401:
-        return new SmriteaAuthError(message, httpStatus, errorCode, body);
+        return new SmriteaUnauthorizedError(message, httpStatus, code, retryable, body);
       case 402:
-        return new SmriteaQuotaError(message, httpStatus, errorCode, body);
+        return new SmriteaPaymentRequiredError(message, httpStatus, code, retryable, body);
+      case 403:
+        return new SmriteaForbiddenError(message, httpStatus, code, retryable, body);
       case 404:
-        return new SmriteaNotFoundError(message, httpStatus, errorCode, body);
+        return new SmriteaNotFoundError(message, httpStatus, code, retryable, body);
+      case 409:
+        return new SmriteaConflictError(message, httpStatus, code, retryable, body);
+      case 422:
+        return new SmriteaUnprocessableError(message, httpStatus, code, retryable, body);
       case 429:
         Integer retryAfter = parseRetryAfter(getRetryAfterHeader(e));
-        return new SmriteaRateLimitError(message, httpStatus, retryAfter, errorCode, body);
+        return new SmriteaTooManyRequestsError(
+            message, httpStatus, retryAfter, code, retryable, body);
       default:
-        return new SmriteaError(message, httpStatus, errorCode, body);
+        return new SmriteaError(message, httpStatus, code, retryable, body);
     }
   }
 
@@ -442,29 +453,31 @@ public class SmriteaClient {
   private static class ExtractedErrorFields {
     final String message;
     final String errorCode;
+    final boolean retryable;
     final Object body;
 
-    ExtractedErrorFields(String message, String errorCode, Object body) {
+    ExtractedErrorFields(String message, String errorCode, boolean retryable, Object body) {
       this.message = message;
       this.errorCode = errorCode;
+      this.retryable = retryable;
       this.body = body;
     }
   }
 
   /**
-   * Parses the JSON response body once and extracts both the human-readable {@code "message"} and
-   * machine-readable {@code "code"} fields from the server's error payload, along with the full
-   * parsed body. Falls back to "Unknown error" / "INTERNAL_ERROR" if the body is absent,
-   * unparseable, or missing the expected fields. Never returns the raw response body as the
-   * message.
+   * Parses the JSON response body once and extracts the human-readable {@code "message"}, the
+   * machine-readable {@code "code"}, and the optional boolean {@code "retryable"} field from the
+   * server's error payload, along with the full parsed body. Falls back to "Unknown error" /
+   * "INTERNAL_ERROR" / {@code false} if the body is absent, unparseable, or missing the expected
+   * fields. Never returns the raw response body as the message.
    *
    * @param body the raw JSON response body, possibly null
-   * @return ExtractedErrorFields with message, errorCode, and parsed body (or null if parsing
-   *     fails)
+   * @return ExtractedErrorFields with message, errorCode, retryable, and parsed body (or null if
+   *     parsing fails)
    */
   private ExtractedErrorFields extractErrorFieldsWithBody(String body) {
     if (body == null || body.isEmpty()) {
-      return new ExtractedErrorFields("Unknown error", "INTERNAL_ERROR", null);
+      return new ExtractedErrorFields("Unknown error", "INTERNAL_ERROR", false, null);
     }
 
     try {
@@ -493,10 +506,18 @@ public class SmriteaClient {
         }
       }
 
-      return new ExtractedErrorFields(message, errorCode, parsedBody);
+      boolean retryable = false;
+      if (json != null && json.has("retryable")) {
+        com.fasterxml.jackson.databind.JsonNode retryableNode = json.get("retryable");
+        if (retryableNode != null && retryableNode.isBoolean()) {
+          retryable = retryableNode.asBoolean();
+        }
+      }
+
+      return new ExtractedErrorFields(message, errorCode, retryable, parsedBody);
     } catch (Exception e) {
       // JSON parsing failed — body is not valid JSON
-      return new ExtractedErrorFields("Unknown error", "INTERNAL_ERROR", null);
+      return new ExtractedErrorFields("Unknown error", "INTERNAL_ERROR", false, null);
     }
   }
 

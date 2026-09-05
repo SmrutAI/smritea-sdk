@@ -5,12 +5,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import ai.smritea.sdk._internal.autogen.model.CreateMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.MemoryResponse;
-import ai.smritea.sdk.errors.SmriteaAuthError;
+import ai.smritea.sdk.errors.SmriteaBadRequestError;
+import ai.smritea.sdk.errors.SmriteaConflictError;
 import ai.smritea.sdk.errors.SmriteaDeserializationError;
+import ai.smritea.sdk.errors.SmriteaError;
+import ai.smritea.sdk.errors.SmriteaForbiddenError;
 import ai.smritea.sdk.errors.SmriteaNotFoundError;
-import ai.smritea.sdk.errors.SmriteaQuotaError;
-import ai.smritea.sdk.errors.SmriteaRateLimitError;
-import ai.smritea.sdk.errors.SmriteaValidationError;
+import ai.smritea.sdk.errors.SmriteaPaymentRequiredError;
+import ai.smritea.sdk.errors.SmriteaTooManyRequestsError;
+import ai.smritea.sdk.errors.SmriteaUnauthorizedError;
+import ai.smritea.sdk.errors.SmriteaUnprocessableError;
 import ai.smritea.sdk.model.AddOptions;
 import ai.smritea.sdk.model.Memory;
 import ai.smritea.sdk.model.MemoryCreationResult;
@@ -236,9 +240,11 @@ class SmriteaClientTest {
                     .withBody("{\"detail\":\"invalid api key\"}")));
 
     SmriteaClient client = clientFor(wm);
-    SmriteaAuthError err = assertThrows(SmriteaAuthError.class, () -> client.add("x", null));
+    SmriteaUnauthorizedError err =
+        assertThrows(SmriteaUnauthorizedError.class, () -> client.add("x", null));
 
-    assertEquals(401, err.getStatusCode());
+    assertEquals(401, err.getHttpStatus());
+    assertFalse(err.isRetryable());
   }
 
   @Test
@@ -256,6 +262,60 @@ class SmriteaClientTest {
   }
 
   @Test
+  void testAdd_403_MapsToForbiddenError(WireMockRuntimeInfo wm) {
+    stubFor(
+        post("/api/v1/sdk/memories")
+            .willReturn(
+                aResponse()
+                    .withStatus(403)
+                    .withHeader("Content-Type", "application/json")
+                    .withBody("{\"detail\":\"access denied\"}")));
+
+    SmriteaClient client = clientFor(wm);
+    SmriteaForbiddenError err =
+        assertThrows(SmriteaForbiddenError.class, () -> client.add("x", null));
+
+    assertEquals(403, err.getHttpStatus());
+    assertFalse(err.isRetryable());
+  }
+
+  @Test
+  void testAdd_409_MapsToConflictError(WireMockRuntimeInfo wm) {
+    stubFor(
+        post("/api/v1/sdk/memories")
+            .willReturn(
+                aResponse()
+                    .withStatus(409)
+                    .withHeader("Content-Type", "application/json")
+                    .withBody("{\"detail\":\"conflicting state\"}")));
+
+    SmriteaClient client = clientFor(wm);
+    SmriteaConflictError err =
+        assertThrows(SmriteaConflictError.class, () -> client.add("x", null));
+
+    assertEquals(409, err.getHttpStatus());
+    assertFalse(err.isRetryable());
+  }
+
+  @Test
+  void testAdd_422_MapsToUnprocessableError(WireMockRuntimeInfo wm) {
+    stubFor(
+        post("/api/v1/sdk/memories")
+            .willReturn(
+                aResponse()
+                    .withStatus(422)
+                    .withHeader("Content-Type", "application/json")
+                    .withBody("{\"detail\":\"cannot process\"}")));
+
+    SmriteaClient client = clientFor(wm);
+    SmriteaUnprocessableError err =
+        assertThrows(SmriteaUnprocessableError.class, () -> client.add("x", null));
+
+    assertEquals(422, err.getHttpStatus());
+    assertFalse(err.isRetryable());
+  }
+
+  @Test
   void testAdd_400_MapsToValidationError(WireMockRuntimeInfo wm) {
     stubFor(
         post("/api/v1/sdk/memories")
@@ -266,7 +326,7 @@ class SmriteaClientTest {
                     .withBody("{\"detail\":\"content required\"}")));
 
     SmriteaClient client = clientFor(wm);
-    assertThrows(SmriteaValidationError.class, () -> client.add("", null));
+    assertThrows(SmriteaBadRequestError.class, () -> client.add("", null));
   }
 
   @Test
@@ -280,7 +340,7 @@ class SmriteaClientTest {
                     .withBody("{\"detail\":\"quota exceeded\"}")));
 
     SmriteaClient client = clientFor(wm);
-    assertThrows(SmriteaQuotaError.class, () -> client.add("x", null));
+    assertThrows(SmriteaPaymentRequiredError.class, () -> client.add("x", null));
   }
 
   // -----------------------------------------------------------------------
@@ -314,7 +374,7 @@ class SmriteaClientTest {
 
   @Test
   void testAdd_429_Exhausted_MapsToRateLimitError(WireMockRuntimeInfo wm) {
-    // maxRetries=2 means 3 total attempts; all return 429 -> SmriteaRateLimitError
+    // maxRetries=2 means 3 total attempts; all return 429 -> SmriteaTooManyRequestsError
     stubFor(
         post("/api/v1/sdk/memories")
             .willReturn(
@@ -324,11 +384,50 @@ class SmriteaClientTest {
                     .withBody("{\"detail\":\"rate limited\"}")));
 
     SmriteaClient client = clientFor(wm);
-    SmriteaRateLimitError err =
-        assertThrows(SmriteaRateLimitError.class, () -> client.add("x", null));
+    SmriteaTooManyRequestsError err =
+        assertThrows(SmriteaTooManyRequestsError.class, () -> client.add("x", null));
 
     assertNotNull(err.getRetryAfter());
     assertEquals(1, err.getRetryAfter());
+    assertTrue(err.isRetryable());
+  }
+
+  @Test
+  void testAdd_503_RetryableFieldFromBody_SetsIsRetryableTrue(WireMockRuntimeInfo wm) {
+    stubFor(
+        post("/api/v1/sdk/memories")
+            .willReturn(
+                aResponse()
+                    .withStatus(503)
+                    .withBody(
+                        "{\"message\":\"try"
+                            + " later\",\"code\":\"UNAVAILABLE\",\"retryable\":true}")));
+
+    SmriteaClient client = clientFor(wm);
+    SmriteaError err = assertThrows(SmriteaError.class, () -> client.add("x", null));
+
+    assertTrue(
+        err.isRetryable(),
+        "isRetryable() must be true when the response body's \"retryable\" field is true, even for"
+            + " a non-429 status");
+  }
+
+  @Test
+  void testAdd_400_NoRetryableFieldInBody_SetsIsRetryableFalse(WireMockRuntimeInfo wm) {
+    stubFor(
+        post("/api/v1/sdk/memories")
+            .willReturn(
+                aResponse()
+                    .withStatus(400)
+                    .withBody("{\"message\":\"bad input\",\"code\":\"BAD_INPUT\"}")));
+
+    SmriteaClient client = clientFor(wm);
+    SmriteaBadRequestError err =
+        assertThrows(SmriteaBadRequestError.class, () -> client.add("x", null));
+
+    assertFalse(
+        err.isRetryable(),
+        "isRetryable() must default to false when the response body omits the \"retryable\" field");
   }
 
   // -----------------------------------------------------------------------

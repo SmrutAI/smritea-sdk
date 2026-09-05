@@ -425,38 +425,43 @@ public class SmriteaClient : IDisposable
 
     /// <summary>
     /// Converts an <see cref="ApiException"/> into the appropriate typed SDK exception.
-    /// Matches the Java/Go/Python mapError function exactly.
+    /// Matches the Java/Go/Python mapError function exactly. Maps 1:1 onto the server's errkit
+    /// HTTP categories (see docs/plans/175-errkit-unified-error-handling.md in smritea-cloud).
     /// </summary>
     /// <param name="e">The autogen API exception to convert.</param>
     /// <returns>A typed <see cref="SmriteaException"/> matching the HTTP status code.</returns>
     private static SmriteaException MapError(ApiException e)
     {
         var httpStatus = e.ErrorCode;
-        var (message, errorCode, body) = ExtractErrorFieldsWithBody(e.ErrorContent as string);
+        var (message, code, bodyRetryable, body) = ExtractErrorFieldsWithBody(e.ErrorContent as string);
+        var retryable = bodyRetryable || httpStatus == 429;
         return httpStatus switch
         {
-            400 => new SmriteaValidationException(message, httpStatus, errorCode, body),
-            401 => new SmriteaAuthException(message, httpStatus, errorCode, body),
-            402 => new SmriteaQuotaException(message, httpStatus, errorCode, body),
-            404 => new SmriteaNotFoundException(message, httpStatus, errorCode, body),
-            429 => new SmriteaRateLimitException(message, httpStatus, ParseRetryAfter(GetRetryAfterHeader(e)), errorCode, body),
-            _ => new SmriteaException(message, httpStatus, errorCode, body),
+            400 => new SmriteaBadRequestException(message, httpStatus, code, retryable, body),
+            401 => new SmriteaUnauthorizedException(message, httpStatus, code, retryable, body),
+            402 => new SmriteaPaymentRequiredException(message, httpStatus, code, retryable, body),
+            403 => new SmriteaForbiddenException(message, httpStatus, code, retryable, body),
+            404 => new SmriteaNotFoundException(message, httpStatus, code, retryable, body),
+            409 => new SmriteaConflictException(message, httpStatus, code, retryable, body),
+            422 => new SmriteaUnprocessableException(message, httpStatus, code, retryable, body),
+            429 => new SmriteaTooManyRequestsException(message, httpStatus, ParseRetryAfter(GetRetryAfterHeader(e)), code, retryable, body),
+            _ => new SmriteaException(message, httpStatus, code, retryable, body),
         };
     }
 
     /// <summary>
-    /// Parses the JSON response body once and extracts both the human-readable "message"
-    /// and machine-readable "code" fields from the server's error payload, along with the full
-    /// parsed body. Falls back to ("Unknown error", "INTERNAL_ERROR") if the body is absent or
-    /// unparseable. Never returns the raw response body as the message.
+    /// Parses the JSON response body once and extracts the human-readable "message", the
+    /// machine-readable "code", and the "retryable" fields from the server's error payload,
+    /// along with the full parsed body. Falls back to ("Unknown error", "INTERNAL_ERROR", false)
+    /// if the body is absent or unparseable. Never returns the raw response body as the message.
     /// </summary>
     /// <param name="body">The raw JSON response body string, possibly null.</param>
-    /// <returns>A tuple of (message, errorCode, parsedBody) where parsedBody is null if parsing fails.</returns>
-    private static (string Message, string ErrorCode, object? Body) ExtractErrorFieldsWithBody(string? body)
+    /// <returns>A tuple of (message, code, retryable, parsedBody) where parsedBody is null if parsing fails.</returns>
+    private static (string Message, string Code, bool Retryable, object? Body) ExtractErrorFieldsWithBody(string? body)
     {
         if (string.IsNullOrEmpty(body))
         {
-            return ("Unknown error", "INTERNAL_ERROR", null);
+            return ("Unknown error", "INTERNAL_ERROR", false, null);
         }
 
         try
@@ -475,22 +480,29 @@ public class SmriteaClient : IDisposable
                 }
             }
 
-            var errorCode = "INTERNAL_ERROR";
+            var code = "INTERNAL_ERROR";
             if (root.TryGetProperty("code", out var codeProp) && codeProp.ValueKind == System.Text.Json.JsonValueKind.String)
             {
                 var extracted = codeProp.GetString();
                 if (!string.IsNullOrEmpty(extracted))
                 {
-                    errorCode = extracted;
+                    code = extracted;
                 }
             }
 
-            return (message, errorCode, parsedBody);
+            var retryable = false;
+            if (root.TryGetProperty("retryable", out var retryableProp)
+                && (retryableProp.ValueKind == System.Text.Json.JsonValueKind.True || retryableProp.ValueKind == System.Text.Json.JsonValueKind.False))
+            {
+                retryable = retryableProp.GetBoolean();
+            }
+
+            return (message, code, retryable, parsedBody);
         }
         catch
         {
             // JSON parsing failed — body is not valid JSON
-            return ("Unknown error", "INTERNAL_ERROR", null);
+            return ("Unknown error", "INTERNAL_ERROR", false, null);
         }
     }
 
@@ -501,11 +513,11 @@ public class SmriteaClient : IDisposable
     /// Never returns the raw response body as the message.
     /// </summary>
     /// <param name="body">The raw JSON response body string, possibly null.</param>
-    /// <returns>A tuple of (message, errorCode).</returns>
-    private static (string Message, string ErrorCode) ExtractErrorFields(string? body)
+    /// <returns>A tuple of (message, code).</returns>
+    private static (string Message, string Code) ExtractErrorFields(string? body)
     {
-        var (message, errorCode, _) = ExtractErrorFieldsWithBody(body);
-        return (message, errorCode);
+        var (message, code, _, _) = ExtractErrorFieldsWithBody(body);
+        return (message, code);
     }
 
     // ---------------------------------------------------------------------------
@@ -514,22 +526,22 @@ public class SmriteaClient : IDisposable
 
     /// <summary>
     /// Executes <paramref name="fn"/> up to <c>maxRetries + 1</c> times, retrying only on
-    /// <see cref="SmriteaRateLimitException"/>. Other errors propagate immediately.
-    /// After all retries are exhausted, the last <see cref="SmriteaRateLimitException"/> is rethrown.
+    /// <see cref="SmriteaTooManyRequestsException"/>. Other errors propagate immediately.
+    /// After all retries are exhausted, the last <see cref="SmriteaTooManyRequestsException"/> is rethrown.
     /// </summary>
     /// <param name="fn">The async function to execute, receiving a <see cref="CancellationToken"/>.</param>
     /// <param name="ct">Cancellation token forwarded to <paramref name="fn"/> and delay calls.</param>
     /// <returns>A <see cref="Task{TResult}"/> resolving to the result of <paramref name="fn"/>.</returns>
     private async Task<T> ExecuteWithRetryAsync<T>(Func<CancellationToken, Task<T>> fn, CancellationToken ct)
     {
-        SmriteaRateLimitException? lastRateLimitEx = null;
+        SmriteaTooManyRequestsException? lastRateLimitEx = null;
         for (var attempt = 0; attempt <= this.maxRetries; attempt++)
         {
             try
             {
                 return await fn(ct);
             }
-            catch (SmriteaRateLimitException ex)
+            catch (SmriteaTooManyRequestsException ex)
             {
                 lastRateLimitEx = ex;
                 if (attempt < this.maxRetries)

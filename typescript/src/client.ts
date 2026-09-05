@@ -2,12 +2,15 @@ import { Configuration, ResponseError } from './_internal/autogen/runtime.js';
 import { SDKMemoryApi } from './_internal/autogen/apis/SDKMemoryApi.js';
 import type { AddOptions, Memory, MemoryCreationResult, SearchOptions, SearchResult, SmriteaClientConfig } from './types.js';
 import {
-  SmriteaAuthError,
+  SmriteaBadRequestError,
+  SmriteaConflictError,
   SmriteaError,
+  SmriteaForbiddenError,
   SmriteaNotFoundError,
-  SmriteaQuotaError,
-  SmriteaRateLimitError,
-  SmriteaValidationError,
+  SmriteaPaymentRequiredError,
+  SmriteaTooManyRequestsError,
+  SmriteaUnauthorizedError,
+  SmriteaUnprocessableError,
 } from './errors.js';
 
 const RETRY_CAP_MS = 30_000;
@@ -31,7 +34,7 @@ export class SmriteaClient {
     if (options?.metadata !== undefined) {
       const m = options.metadata;
       if (typeof m !== 'object' || m === null || Array.isArray(m)) {
-        throw new SmriteaValidationError('metadata must be a plain object (dictionary)', 400);
+        throw new SmriteaBadRequestError('metadata must be a plain object (dictionary)', 400);
       }
     }
 
@@ -121,7 +124,7 @@ export class SmriteaClient {
    * 1. Retry-After header value (seconds), capped at 30 s.
    * 2. Exponential backoff (1 s, 2 s, 4 s, …) with ±25 % jitter, capped at 30 s.
    *
-   * After all retries are exhausted the 429 is re-raised as SmriteaRateLimitError
+   * After all retries are exhausted the 429 is re-raised as SmriteaTooManyRequestsError
    * with retryAfter populated from the final response header if available.
    */
   private async withRetry<T>(fn: () => Promise<T>): Promise<T> {
@@ -169,31 +172,37 @@ export class SmriteaClient {
       const status = err.response.status;
       const errorData = await this.extractErrorData(err.response);
       const message = errorData.message || err.message;
-      const errorCode = errorData.code;
+      const code = errorData.code;
       const body = errorData.body;
+      const retryable = errorData.retryable;
       switch (status) {
-        case 400: throw new SmriteaValidationError(message, status, errorCode, body);
-        case 401: throw new SmriteaAuthError(message, status, errorCode, body);
-        case 402: throw new SmriteaQuotaError(message, status, errorCode, body);
-        case 404: throw new SmriteaNotFoundError(message, status, errorCode, body);
-        case 429: throw new SmriteaRateLimitError(message, status, this.parseRetryAfter(err.response), errorCode, body);
-        default: throw new SmriteaError(message, status, errorCode, body);
+        case 400: throw new SmriteaBadRequestError(message, status, code, body, retryable);
+        case 401: throw new SmriteaUnauthorizedError(message, status, code, body, retryable);
+        case 402: throw new SmriteaPaymentRequiredError(message, status, code, body, retryable);
+        case 403: throw new SmriteaForbiddenError(message, status, code, body, retryable);
+        case 404: throw new SmriteaNotFoundError(message, status, code, body, retryable);
+        case 409: throw new SmriteaConflictError(message, status, code, body, retryable);
+        case 422: throw new SmriteaUnprocessableError(message, status, code, body, retryable);
+        case 429: throw new SmriteaTooManyRequestsError(message, status, this.parseRetryAfter(err.response), code, body, true);
+        default: throw new SmriteaError(message, status, code, body, retryable);
       }
     }
     throw new SmriteaError(String(err));
   }
 
-  /** Attempt to extract error data ("message" and "code" fields) from the response body JSON. */
-  private async extractErrorData(response: Response): Promise<{ message: string; code?: string; body?: unknown }> {
+  /** Attempt to extract error data ("message", "code", and "retryable" fields) from the response body JSON. */
+  private async extractErrorData(response: Response): Promise<{ message: string; code?: string; body?: unknown; retryable?: boolean }> {
     try {
       const body = await response.clone().json();
       if (body && typeof body === 'object') {
         const message = (body as Record<string, unknown>).message;
         const code = (body as Record<string, unknown>).code;
+        const retryable = (body as Record<string, unknown>).retryable;
         if (typeof message === 'string' && message) {
           return {
             message,
             code: typeof code === 'string' ? code : undefined,
+            retryable: typeof retryable === 'boolean' ? retryable : undefined,
             body,
           };
         }

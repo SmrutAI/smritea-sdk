@@ -66,21 +66,42 @@ optional. In `add()`, all 5 scope fields are mapped. In `search()`, `actor_id`,
 
 ## Error Hierarchy
 
-Every implementation must define this exact hierarchy, mapping HTTP status codes:
+Every implementation must define this exact hierarchy, mapping HTTP status codes 1:1 onto the
+server's errkit HTTP categories (see `docs/plans/175-errkit-unified-error-handling.md` in the
+`smritea-cloud` repo for the server-side category contract this mirrors):
 
-| HTTP        | Exception class          |
-|-------------|--------------------------|
-| 400         | `SmriteaValidationError` |
-| 401         | `SmriteaAuthError`       |
-| 402         | `SmriteaQuotaError`      |
-| 404         | `SmriteaNotFoundError`   |
-| 429         | `SmriteaRateLimitError`  |
-| 5xx / other | `SmriteaError` (base)    |
+| HTTP        | Exception class            |
+|-------------|-----------------------------|
+| 400         | `SmriteaBadRequestError`    |
+| 401         | `SmriteaUnauthorizedError`  |
+| 402         | `SmriteaPaymentRequiredError` |
+| 403         | `SmriteaForbiddenError`     |
+| 404         | `SmriteaNotFoundError`      |
+| 409         | `SmriteaConflictError`      |
+| 422         | `SmriteaUnprocessableError` |
+| 429         | `SmriteaTooManyRequestsError` |
+| 5xx / other | `SmriteaError` (base)       |
 
-All exception classes inherit from `SmriteaError` and carry at minimum `message` and `status_code`.
+Coverage is complete for all 9 errkit HTTP categories: every status class above plus the `SmriteaError`
+base for 5xx/unknown. A separate deserialization-error class (not tied to any HTTP status) is raised
+when a response body cannot be parsed as the expected error envelope at all.
 
-`SmriteaRateLimitError` MUST also carry a `retry_after` field (nullable/optional integer, seconds).
+All exception classes inherit from `SmriteaError` and carry at minimum:
+
+- `message` — human-readable error message
+- `Code` — the server's stable machine-readable wire code (e.g. `MEMORY_NOT_FOUND`); field name uses
+  language-idiomatic casing per SDK (e.g. `code` in Python, `Code` in Go/C#)
+- `HTTPStatus` — the HTTP status code the error was raised for; same per-language casing rule as `Code`
+- `Retryable` — boolean, `true` when the server marked the error retryable; same per-language casing rule
+- the full parsed response body, for callers that need fields beyond the four above
+
+`SmriteaTooManyRequestsError` MUST also carry a `retry_after` field (nullable/optional integer, seconds).
 This is populated from the server's `Retry-After` response header when present.
+
+**Each language SDK stays standalone**: this hierarchy is hand-written and hand-mapped independently
+in every language, per the SDK contract above — the polyglot SDK does not depend on or consume
+`errkit-ts` (or any other errkit language binding) at runtime. Only the category *shape* and status-code
+mapping are kept in lockstep with the server; the implementation in each language is self-contained.
 
 ---
 
@@ -95,7 +116,7 @@ Every SDK implementation MUST implement automatic retry on HTTP 429 with the fol
     - Otherwise: exponential backoff — `1s × 2^attempt` with ±25 % random jitter.
 3. **Hard cap**: sleep duration must never exceed **30 seconds**, regardless of what the server says.
 4. **Jitter**: always apply jitter to exponential backoff to avoid thundering herd from concurrent clients.
-5. **Final raise**: after all retries are exhausted, raise `SmriteaRateLimitError` with `retry_after`
+5. **Final raise**: after all retries are exhausted, raise `SmriteaTooManyRequestsError` with `retry_after`
    populated from the last response header (so callers can inspect it if they implement their own logic).
 
 Reference implementation in Python (`client.py`):

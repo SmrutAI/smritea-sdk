@@ -204,34 +204,42 @@ List<SearchResult> results = client.search("", new SearchOptions()
 ## Error handling
 
 ```java
-import ai.smritea.sdk.errors.SmriteaAuthError;
-import ai.smritea.sdk.errors.SmriteaRateLimitError;
-import ai.smritea.sdk.errors.SmriteaQuotaError;
+import ai.smritea.sdk.errors.SmriteaUnauthorizedError;
+import ai.smritea.sdk.errors.SmriteaTooManyRequestsError;
+import ai.smritea.sdk.errors.SmriteaPaymentRequiredError;
 import ai.smritea.sdk.errors.SmriteaError;
 
 try {
     List<SearchResult> results = client.search("preferences",
         new SearchOptions().withActorId("alice").withActorType("user"));
-} catch (SmriteaAuthError e) {
+} catch (SmriteaUnauthorizedError e) {
     System.out.println("Check your API key");
-} catch (SmriteaRateLimitError e) {
+} catch (SmriteaTooManyRequestsError e) {
     System.out.printf("Rate limited — retry after %ds%n", e.getRetryAfter());
-} catch (SmriteaQuotaError e) {
+} catch (SmriteaPaymentRequiredError e) {
     System.out.println("Plan quota exceeded");
 } catch (SmriteaError e) {
-    System.out.printf("Unexpected error: %s%n", e.getMessage());
+    System.out.printf("Unexpected error: %s (code=%s, retryable=%b)%n",
+        e.getMessage(), e.getCode(), e.isRetryable());
 }
 ```
 
 | Exception | HTTP | When |
 |---|---|---|
-| `SmriteaAuthError` | 401 | Invalid or missing API key |
-| `SmriteaValidationError` | 400 | Invalid request parameters |
+| `SmriteaBadRequestError` | 400 | Invalid request parameters |
+| `SmriteaUnauthorizedError` | 401 | Invalid or missing API key |
+| `SmriteaPaymentRequiredError` | 402 | Organisation quota exceeded |
+| `SmriteaForbiddenError` | 403 | Caller is authenticated but not permitted to perform the action |
 | `SmriteaNotFoundError` | 404 | Memory ID does not exist |
-| `SmriteaQuotaError` | 402 | Organisation quota exceeded |
-| `SmriteaRateLimitError` | 429 | Rate limit hit — check `.getRetryAfter()` |
+| `SmriteaConflictError` | 409 | Request conflicts with existing state |
+| `SmriteaUnprocessableError` | 422 | Request body is well-formed but semantically invalid |
+| `SmriteaTooManyRequestsError` | 429 | Rate limit hit — check `.getRetryAfter()` |
 | `SmriteaDeserializationError` | — | Server returned an unexpected response body |
 | `SmriteaError` | other | Unexpected server error |
+
+Every exception carries `getCode()` (the server's machine-readable wire code, e.g.
+`MEMORY_NOT_FOUND`), `getHttpStatus()`, and `isRetryable()`, in addition to `getBody()` for the
+full parsed response body.
 
 ---
 
