@@ -80,7 +80,7 @@ example().catch(console.error);
 | **201** | Memory created successfully |  -  |
 | **400** | Invalid request |  -  |
 | **401** | Unauthorized - invalid or missing API key |  -  |
-| **402** | Quota exhausted - upgrade your plan |  -  |
+| **402** | Quota exhausted - payment required |  -  |
 | **429** | Rate limit exceeded - please retry later |  -  |
 | **500** | Internal server error |  -  |
 
@@ -308,7 +308,7 @@ example().catch(console.error);
 | **200** | Search results |  -  |
 | **400** | Invalid request |  -  |
 | **401** | Unauthorized - invalid or missing API key |  -  |
-| **402** | Quota exhausted - upgrade your plan |  -  |
+| **402** | Quota exhausted - payment required |  -  |
 | **429** | Rate limit exceeded - please retry later |  -  |
 | **500** | Internal server error |  -  |
 
