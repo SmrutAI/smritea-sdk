@@ -170,8 +170,10 @@ await client.DeleteAsync("mem_abc123");
 
 ```csharp
 var results = await client.SearchAsync("",
-    new SearchOptions().WithActorId("alice").WithActorType("user").WithLimit(100));
+    new SearchOptions().WithActorId("alice").WithActorType("user").WithLimit(20));
 ```
+
+`limit` is 1-20; omit it to use the app's `top_n`.
 
 ---
 

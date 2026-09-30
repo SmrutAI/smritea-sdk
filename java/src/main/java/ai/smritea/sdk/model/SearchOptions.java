@@ -54,9 +54,9 @@ public final class SearchOptions {
   }
 
   /**
-   * Sets the maximum number of results to return.
+   * Sets the number of results, 1-20; omit it to use the app's top_n.
    *
-   * @param limit the result limit
+   * @param limit the number of results (1-20)
    * @return this instance for chaining
    */
   public SearchOptions withLimit(Integer limit) {
@@ -76,9 +76,9 @@ public final class SearchOptions {
   }
 
   /**
-   * Sets the graph traversal depth for graph-aware search.
+   * Sets the graph traversal depth for graph-aware search, 1-5; omit it to use the system default.
    *
-   * @param graphDepth the graph depth
+   * @param graphDepth the graph traversal depth (1-5)
    * @return this instance for chaining
    */
   public SearchOptions withGraphDepth(Integer graphDepth) {

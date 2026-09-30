@@ -185,8 +185,10 @@ err := client.Delete(ctx, "mem_abc123")
 ```go
 results, _ := client.Search(ctx, "",
     smritea.NewSearchOptions().WithScope(
-        smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")).WithLimit(100))
+        smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")).WithLimit(20))
 ```
+
+`limit` is 1-20; omit it to use the app's `top_n`.
 
 ---
 

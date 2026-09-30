@@ -26,12 +26,8 @@ type PersonaExtractionConfig struct {
 	Domains []PersonaDomainConfig `json:"domains,omitempty"`
 	// Enabled controls whether persona extraction is active. When false, no persona traits are extracted from memory content. Unlike Entity/Fact extraction, persona has no multi-pass reflection — it runs a single LLM call.
 	Enabled *bool `json:"enabled,omitempty"`
-	// MaxTokens is the maximum completion tokens for LLM responses.
-	MaxTokens *int32 `json:"max_tokens,omitempty"`
-	// Model is the LLM model to use (empty = use provider default).
+	// Model has no effect today: the model comes from the system AI connection. Reserved for model selection by criteria, allowed only for apps that use their own AI (custom AI / BYOK).
 	Model *string `json:"model,omitempty"`
-	// Temperature controls LLM randomness for extraction.
-	Temperature *float32 `json:"temperature,omitempty"`
 }
 
 // NewPersonaExtractionConfig instantiates a new PersonaExtractionConfig object
@@ -147,38 +143,6 @@ func (o *PersonaExtractionConfig) SetEnabled(v bool) {
 	o.Enabled = &v
 }
 
-// GetMaxTokens returns the MaxTokens field value if set, zero value otherwise.
-func (o *PersonaExtractionConfig) GetMaxTokens() int32 {
-	if o == nil || IsNil(o.MaxTokens) {
-		var ret int32
-		return ret
-	}
-	return *o.MaxTokens
-}
-
-// GetMaxTokensOk returns a tuple with the MaxTokens field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *PersonaExtractionConfig) GetMaxTokensOk() (*int32, bool) {
-	if o == nil || IsNil(o.MaxTokens) {
-		return nil, false
-	}
-	return o.MaxTokens, true
-}
-
-// HasMaxTokens returns a boolean if a field has been set.
-func (o *PersonaExtractionConfig) HasMaxTokens() bool {
-	if o != nil && !IsNil(o.MaxTokens) {
-		return true
-	}
-
-	return false
-}
-
-// SetMaxTokens gets a reference to the given int32 and assigns it to the MaxTokens field.
-func (o *PersonaExtractionConfig) SetMaxTokens(v int32) {
-	o.MaxTokens = &v
-}
-
 // GetModel returns the Model field value if set, zero value otherwise.
 func (o *PersonaExtractionConfig) GetModel() string {
 	if o == nil || IsNil(o.Model) {
@@ -211,38 +175,6 @@ func (o *PersonaExtractionConfig) SetModel(v string) {
 	o.Model = &v
 }
 
-// GetTemperature returns the Temperature field value if set, zero value otherwise.
-func (o *PersonaExtractionConfig) GetTemperature() float32 {
-	if o == nil || IsNil(o.Temperature) {
-		var ret float32
-		return ret
-	}
-	return *o.Temperature
-}
-
-// GetTemperatureOk returns a tuple with the Temperature field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *PersonaExtractionConfig) GetTemperatureOk() (*float32, bool) {
-	if o == nil || IsNil(o.Temperature) {
-		return nil, false
-	}
-	return o.Temperature, true
-}
-
-// HasTemperature returns a boolean if a field has been set.
-func (o *PersonaExtractionConfig) HasTemperature() bool {
-	if o != nil && !IsNil(o.Temperature) {
-		return true
-	}
-
-	return false
-}
-
-// SetTemperature gets a reference to the given float32 and assigns it to the Temperature field.
-func (o *PersonaExtractionConfig) SetTemperature(v float32) {
-	o.Temperature = &v
-}
-
 func (o PersonaExtractionConfig) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -262,14 +194,8 @@ func (o PersonaExtractionConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Enabled) {
 		toSerialize["enabled"] = o.Enabled
 	}
-	if !IsNil(o.MaxTokens) {
-		toSerialize["max_tokens"] = o.MaxTokens
-	}
 	if !IsNil(o.Model) {
 		toSerialize["model"] = o.Model
-	}
-	if !IsNil(o.Temperature) {
-		toSerialize["temperature"] = o.Temperature
 	}
 	return toSerialize, nil
 }

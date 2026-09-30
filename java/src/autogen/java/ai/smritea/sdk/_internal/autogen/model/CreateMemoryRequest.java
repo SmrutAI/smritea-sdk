@@ -19,8 +19,8 @@ import java.util.StringJoiner;
 import java.util.Objects;
 import java.util.Map;
 import java.util.HashMap;
-import ai.smritea.sdk._internal.autogen.model.EntityExtractionConfig;
-import ai.smritea.sdk._internal.autogen.model.FactExtractionConfig;
+import ai.smritea.sdk._internal.autogen.model.EntityExtractionOverrides;
+import ai.smritea.sdk._internal.autogen.model.FactExtractionOverrides;
 import ai.smritea.sdk._internal.autogen.model.MemoryScope;
 import ai.smritea.sdk._internal.autogen.model.PersonaExtractionConfig;
 import ai.smritea.sdk._internal.autogen.model.RelativeStandingConfig;
@@ -60,7 +60,7 @@ public class CreateMemoryRequest {
 
   public static final String JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES = "entity_extraction_overrides";
   @javax.annotation.Nullable
-  private EntityExtractionConfig entityExtractionOverrides;
+  private EntityExtractionOverrides entityExtractionOverrides;
 
   public static final String JSON_PROPERTY_EVENT_OCCURRED_AT = "event_occurred_at";
   @javax.annotation.Nullable
@@ -68,7 +68,7 @@ public class CreateMemoryRequest {
 
   public static final String JSON_PROPERTY_FACT_EXTRACTION_OVERRIDES = "fact_extraction_overrides";
   @javax.annotation.Nullable
-  private FactExtractionConfig factExtractionOverrides;
+  private FactExtractionOverrides factExtractionOverrides;
 
   public static final String JSON_PROPERTY_METADATA = "metadata";
   @javax.annotation.Nullable
@@ -137,26 +137,26 @@ public class CreateMemoryRequest {
   }
 
 
-  public CreateMemoryRequest entityExtractionOverrides(@javax.annotation.Nullable EntityExtractionConfig entityExtractionOverrides) {
+  public CreateMemoryRequest entityExtractionOverrides(@javax.annotation.Nullable EntityExtractionOverrides entityExtractionOverrides) {
     this.entityExtractionOverrides = entityExtractionOverrides;
     return this;
   }
 
   /**
-   * EntityExtractionOverrides overrides App-level entity extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values.
+   * EntityExtractionOverrides is the per-request entity extraction override (nil &#x3D; none). Only model is read today (it has no effect); reflection passes are set only in app config.
    * @return entityExtractionOverrides
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public EntityExtractionConfig getEntityExtractionOverrides() {
+  public EntityExtractionOverrides getEntityExtractionOverrides() {
     return entityExtractionOverrides;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setEntityExtractionOverrides(@javax.annotation.Nullable EntityExtractionConfig entityExtractionOverrides) {
+  public void setEntityExtractionOverrides(@javax.annotation.Nullable EntityExtractionOverrides entityExtractionOverrides) {
     this.entityExtractionOverrides = entityExtractionOverrides;
   }
 
@@ -185,26 +185,26 @@ public class CreateMemoryRequest {
   }
 
 
-  public CreateMemoryRequest factExtractionOverrides(@javax.annotation.Nullable FactExtractionConfig factExtractionOverrides) {
+  public CreateMemoryRequest factExtractionOverrides(@javax.annotation.Nullable FactExtractionOverrides factExtractionOverrides) {
     this.factExtractionOverrides = factExtractionOverrides;
     return this;
   }
 
   /**
-   * FactExtractionOverrides overrides App-level fact extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values.
+   * FactExtractionOverrides is the per-request fact extraction override (nil &#x3D; none). Only model is read today (it has no effect); reflection passes are set only in app config.
    * @return factExtractionOverrides
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_FACT_EXTRACTION_OVERRIDES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public FactExtractionConfig getFactExtractionOverrides() {
+  public FactExtractionOverrides getFactExtractionOverrides() {
     return factExtractionOverrides;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_FACT_EXTRACTION_OVERRIDES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setFactExtractionOverrides(@javax.annotation.Nullable FactExtractionConfig factExtractionOverrides) {
+  public void setFactExtractionOverrides(@javax.annotation.Nullable FactExtractionOverrides factExtractionOverrides) {
     this.factExtractionOverrides = factExtractionOverrides;
   }
 

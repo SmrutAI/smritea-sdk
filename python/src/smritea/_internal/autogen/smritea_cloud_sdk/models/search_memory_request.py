@@ -33,8 +33,8 @@ class SearchMemoryRequest(BaseModel):
     """ # noqa: E501
     app_id: StrictStr
     from_time: Optional[StrictStr] = Field(default=None, description="FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime.")
-    graph_depth: Optional[Annotated[int, Field(le=5, strict=True)]] = Field(default=None, description="0=use app config, 1-5=override traversal depth")
-    limit: Optional[Annotated[int, Field(le=100, strict=True)]] = None
+    graph_depth: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="0 = system graph_max_hops; 1..services.search.graph_max_hops_max")
+    limit: Optional[Annotated[int, Field(le=20, strict=True)]] = Field(default=None, description="0 = app top_n; 1-20 (= services.search.top_n_max)")
     metadata_filter: Optional[Dict[str, Any]] = Field(default=None, description="MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned.")
     method: Optional[SearchMethod] = None
     query: StrictStr

@@ -309,8 +309,10 @@ Raises / throws `SmriteaNotFoundError` if the ID does not exist.
 
 ```python
 # Workaround until get_all is available
-results = client.search("", actor_id="alice", actor_type="user", limit=100)
+results = client.search("", actor_id="alice", actor_type="user", limit=20)
 ```
+
+`limit` is 1-20; omit it to use the app's `top_n`.
 
 ---
 

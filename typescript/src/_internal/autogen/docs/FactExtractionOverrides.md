@@ -1,32 +1,26 @@
 
-# FactExtractionConfig
+# FactExtractionOverrides
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`maxPasses` | number
-`maxTokens` | number
 `minImportance` | number
 `model` | string
 `strategy` | string
-`temperature` | number
 
 ## Example
 
 ```typescript
-import type { FactExtractionConfig } from ''
+import type { FactExtractionOverrides } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "maxPasses": null,
-  "maxTokens": null,
   "minImportance": null,
   "model": null,
   "strategy": null,
-  "temperature": null,
-} satisfies FactExtractionConfig
+} satisfies FactExtractionOverrides
 
 console.log(example)
 
@@ -35,7 +29,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as FactExtractionConfig
+const exampleParsed = JSON.parse(exampleJSON) as FactExtractionOverrides
 console.log(exampleParsed)
 ```
 

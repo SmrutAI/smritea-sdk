@@ -173,8 +173,10 @@ await client.delete('mem_abc123');
 > Use `search()` with a broad query as a workaround:
 
 ```typescript
-const results = await client.search('', { actorId: 'alice', actorType: 'user', limit: 100 });
+const results = await client.search('', { actorId: 'alice', actorType: 'user', limit: 20 });
 ```
+
+`limit` is 1-20; omit it to use the app's `top_n`.
 
 ---
 

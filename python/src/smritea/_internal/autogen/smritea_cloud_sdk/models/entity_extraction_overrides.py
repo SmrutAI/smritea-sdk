@@ -19,20 +19,22 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from smritea._internal.autogen.smritea_cloud_sdk.models.persona_domain_config import PersonaDomainConfig
+from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PersonaExtractionConfig(BaseModel):
+class EntityExtractionOverrides(BaseModel):
     """
-    PersonaExtractionConfig
+    EntityExtractionOverrides
     """ # noqa: E501
-    actor_types: Optional[List[StrictStr]] = Field(default=None, description="ActorTypes filters which actor types to extract personas for (empty = all types). Valid types: user, agent, system")
-    domains: Optional[List[PersonaDomainConfig]] = Field(default=None, description="Domains specifies which persona domains to extract. Each domain defines a category of traits (preferences, interests, etc.).")
-    enabled: Optional[StrictBool] = Field(default=None, description="Enabled controls whether persona extraction is active. When false, no persona traits are extracted from memory content. Unlike Entity/Fact extraction, persona has no multi-pass reflection — it runs a single LLM call.")
+    context_window: Optional[Annotated[int, Field(le=50, strict=True, ge=0)]] = None
+    enable_context: Optional[StrictBool] = None
+    entity_types: Optional[List[StrictStr]] = None
+    fallback_messages: Optional[Annotated[int, Field(le=10, strict=True, ge=0)]] = None
+    min_confidence: Optional[Union[Annotated[float, Field(le=1, strict=True, ge=0)], Annotated[int, Field(le=1, strict=True, ge=0)]]] = None
     model: Optional[StrictStr] = Field(default=None, description="Model has no effect today: the model comes from the system AI connection. Reserved for model selection by criteria, allowed only for apps that use their own AI (custom AI / BYOK).")
-    __properties: ClassVar[List[str]] = ["actor_types", "domains", "enabled", "model"]
+    __properties: ClassVar[List[str]] = ["context_window", "enable_context", "entity_types", "fallback_messages", "min_confidence", "model"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +54,7 @@ class PersonaExtractionConfig(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PersonaExtractionConfig from a JSON string"""
+        """Create an instance of EntityExtractionOverrides from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,18 +75,11 @@ class PersonaExtractionConfig(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in domains (list)
-        _items = []
-        if self.domains:
-            for _item_domains in self.domains:
-                if _item_domains:
-                    _items.append(_item_domains.to_dict())
-            _dict['domains'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PersonaExtractionConfig from a dict"""
+        """Create an instance of EntityExtractionOverrides from a dict"""
         if obj is None:
             return None
 
@@ -92,9 +87,11 @@ class PersonaExtractionConfig(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "actor_types": obj.get("actor_types"),
-            "domains": [PersonaDomainConfig.from_dict(_item) for _item in obj["domains"]] if obj.get("domains") is not None else None,
-            "enabled": obj.get("enabled"),
+            "context_window": obj.get("context_window"),
+            "enable_context": obj.get("enable_context"),
+            "entity_types": obj.get("entity_types"),
+            "fallback_messages": obj.get("fallback_messages"),
+            "min_confidence": obj.get("min_confidence"),
             "model": obj.get("model")
         })
         return _obj

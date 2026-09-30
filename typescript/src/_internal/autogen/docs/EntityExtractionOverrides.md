@@ -1,5 +1,5 @@
 
-# EntityExtractionConfig
+# EntityExtractionOverrides
 
 
 ## Properties
@@ -10,16 +10,13 @@ Name | Type
 `enableContext` | boolean
 `entityTypes` | Array&lt;string&gt;
 `fallbackMessages` | number
-`maxPasses` | number
-`maxTokens` | number
 `minConfidence` | number
 `model` | string
-`temperature` | number
 
 ## Example
 
 ```typescript
-import type { EntityExtractionConfig } from ''
+import type { EntityExtractionOverrides } from ''
 
 // TODO: Update the object below with actual values
 const example = {
@@ -27,12 +24,9 @@ const example = {
   "enableContext": null,
   "entityTypes": null,
   "fallbackMessages": null,
-  "maxPasses": null,
-  "maxTokens": null,
   "minConfidence": null,
   "model": null,
-  "temperature": null,
-} satisfies EntityExtractionConfig
+} satisfies EntityExtractionOverrides
 
 console.log(example)
 
@@ -41,7 +35,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as EntityExtractionConfig
+const exampleParsed = JSON.parse(exampleJSON) as EntityExtractionOverrides
 console.log(exampleParsed)
 ```
 

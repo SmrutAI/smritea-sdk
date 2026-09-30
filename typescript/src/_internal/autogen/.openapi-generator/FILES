@@ -4,8 +4,8 @@ apis/index.ts
 docs/APIError.md
 docs/CreateMemoryRequest.md
 docs/CreateMemoryResponse.md
-docs/EntityExtractionConfig.md
-docs/FactExtractionConfig.md
+docs/EntityExtractionOverrides.md
+docs/FactExtractionOverrides.md
 docs/MemoryResponse.md
 docs/MemoryScope.md
 docs/PersonaDomainConfig.md
@@ -25,8 +25,8 @@ index.ts
 models/APIError.ts
 models/CreateMemoryRequest.ts
 models/CreateMemoryResponse.ts
-models/EntityExtractionConfig.ts
-models/FactExtractionConfig.ts
+models/EntityExtractionOverrides.ts
+models/FactExtractionOverrides.ts
 models/MemoryResponse.ts
 models/MemoryScope.ts
 models/PersonaDomainConfig.ts

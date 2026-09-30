@@ -25,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,9 +39,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   PersonaExtractionConfig.JSON_PROPERTY_ACTOR_TYPES,
   PersonaExtractionConfig.JSON_PROPERTY_DOMAINS,
   PersonaExtractionConfig.JSON_PROPERTY_ENABLED,
-  PersonaExtractionConfig.JSON_PROPERTY_MAX_TOKENS,
-  PersonaExtractionConfig.JSON_PROPERTY_MODEL,
-  PersonaExtractionConfig.JSON_PROPERTY_TEMPERATURE
+  PersonaExtractionConfig.JSON_PROPERTY_MODEL
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class PersonaExtractionConfig {
@@ -58,17 +55,9 @@ public class PersonaExtractionConfig {
   @javax.annotation.Nullable
   private Boolean enabled;
 
-  public static final String JSON_PROPERTY_MAX_TOKENS = "max_tokens";
-  @javax.annotation.Nullable
-  private Integer maxTokens;
-
   public static final String JSON_PROPERTY_MODEL = "model";
   @javax.annotation.Nullable
   private String model;
-
-  public static final String JSON_PROPERTY_TEMPERATURE = "temperature";
-  @javax.annotation.Nullable
-  private BigDecimal temperature;
 
   public PersonaExtractionConfig() { 
   }
@@ -161,39 +150,13 @@ public class PersonaExtractionConfig {
   }
 
 
-  public PersonaExtractionConfig maxTokens(@javax.annotation.Nullable Integer maxTokens) {
-    this.maxTokens = maxTokens;
-    return this;
-  }
-
-  /**
-   * MaxTokens is the maximum completion tokens for LLM responses.
-   * minimum: 0
-   * maximum: 16384
-   * @return maxTokens
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_MAX_TOKENS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Integer getMaxTokens() {
-    return maxTokens;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_MAX_TOKENS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMaxTokens(@javax.annotation.Nullable Integer maxTokens) {
-    this.maxTokens = maxTokens;
-  }
-
-
   public PersonaExtractionConfig model(@javax.annotation.Nullable String model) {
     this.model = model;
     return this;
   }
 
   /**
-   * Model is the LLM model to use (empty &#x3D; use provider default).
+   * Model has no effect today: the model comes from the system AI connection. Reserved for model selection by criteria, allowed only for apps that use their own AI (custom AI / BYOK).
    * @return model
    */
   @javax.annotation.Nullable
@@ -208,32 +171,6 @@ public class PersonaExtractionConfig {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setModel(@javax.annotation.Nullable String model) {
     this.model = model;
-  }
-
-
-  public PersonaExtractionConfig temperature(@javax.annotation.Nullable BigDecimal temperature) {
-    this.temperature = temperature;
-    return this;
-  }
-
-  /**
-   * Temperature controls LLM randomness for extraction.
-   * minimum: 0
-   * maximum: 2
-   * @return temperature
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_TEMPERATURE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public BigDecimal getTemperature() {
-    return temperature;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_TEMPERATURE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setTemperature(@javax.annotation.Nullable BigDecimal temperature) {
-    this.temperature = temperature;
   }
 
 
@@ -252,14 +189,12 @@ public class PersonaExtractionConfig {
     return Objects.equals(this.actorTypes, personaExtractionConfig.actorTypes) &&
         Objects.equals(this.domains, personaExtractionConfig.domains) &&
         Objects.equals(this.enabled, personaExtractionConfig.enabled) &&
-        Objects.equals(this.maxTokens, personaExtractionConfig.maxTokens) &&
-        Objects.equals(this.model, personaExtractionConfig.model) &&
-        Objects.equals(this.temperature, personaExtractionConfig.temperature);
+        Objects.equals(this.model, personaExtractionConfig.model);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(actorTypes, domains, enabled, maxTokens, model, temperature);
+    return Objects.hash(actorTypes, domains, enabled, model);
   }
 
   @Override
@@ -269,9 +204,7 @@ public class PersonaExtractionConfig {
     sb.append("    actorTypes: ").append(toIndentedString(actorTypes)).append("\n");
     sb.append("    domains: ").append(toIndentedString(domains)).append("\n");
     sb.append("    enabled: ").append(toIndentedString(enabled)).append("\n");
-    sb.append("    maxTokens: ").append(toIndentedString(maxTokens)).append("\n");
     sb.append("    model: ").append(toIndentedString(model)).append("\n");
-    sb.append("    temperature: ").append(toIndentedString(temperature)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -343,19 +276,9 @@ public class PersonaExtractionConfig {
       joiner.add(String.format(java.util.Locale.ROOT, "%senabled%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getEnabled()))));
     }
 
-    // add `max_tokens` to the URL query string
-    if (getMaxTokens() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%smax_tokens%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMaxTokens()))));
-    }
-
     // add `model` to the URL query string
     if (getModel() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%smodel%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getModel()))));
-    }
-
-    // add `temperature` to the URL query string
-    if (getTemperature() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%stemperature%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getTemperature()))));
     }
 
     return joiner.toString();

@@ -25,8 +25,9 @@ type SearchMemoryRequest struct {
 	AppId string `json:"app_id"`
 	// FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime.
 	FromTime *string `json:"from_time,omitempty"`
-	// 0=use app config, 1-5=override traversal depth
+	// 0 = system graph_max_hops; 1..services.search.graph_max_hops_max
 	GraphDepth *int32 `json:"graph_depth,omitempty"`
+	// 0 = app top_n; 1-20 (= services.search.top_n_max)
 	Limit *int32 `json:"limit,omitempty"`
 	// MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned.
 	MetadataFilter map[string]interface{} `json:"metadata_filter,omitempty"`

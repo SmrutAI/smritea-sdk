@@ -26,12 +26,12 @@ type CreateMemoryRequest struct {
 	AppId string `json:"app_id"`
 	// Content is the memory content (required, min 1 char)
 	Content string `json:"content"`
-	// EntityExtractionOverrides overrides App-level entity extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.
-	EntityExtractionOverrides *EntityExtractionConfig `json:"entity_extraction_overrides,omitempty"`
+	// EntityExtractionOverrides is the per-request entity extraction override (nil = none). Only model is read today (it has no effect); reflection passes are set only in app config.
+	EntityExtractionOverrides *EntityExtractionOverrides `json:"entity_extraction_overrides,omitempty"`
 	// EventOccurredAt is the timestamp when this content was created or occurred (optional). Used by the extraction LLM to resolve relative temporal expressions like \"last year\" or \"yesterday\". If nil, defaults to time.Now() inside the pipeline.
 	EventOccurredAt *string `json:"event_occurred_at,omitempty"`
-	// FactExtractionOverrides overrides App-level fact extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.
-	FactExtractionOverrides *FactExtractionConfig `json:"fact_extraction_overrides,omitempty"`
+	// FactExtractionOverrides is the per-request fact extraction override (nil = none). Only model is read today (it has no effect); reflection passes are set only in app config.
+	FactExtractionOverrides *FactExtractionOverrides `json:"fact_extraction_overrides,omitempty"`
 	// Metadata contains flexible memory metadata (optional)
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 	// PersonaExtractionOverrides overrides App-level persona extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values. This is a stub for v1 - the actual LLM-based persona extraction is deferred to a future task.
@@ -113,9 +113,9 @@ func (o *CreateMemoryRequest) SetContent(v string) {
 }
 
 // GetEntityExtractionOverrides returns the EntityExtractionOverrides field value if set, zero value otherwise.
-func (o *CreateMemoryRequest) GetEntityExtractionOverrides() EntityExtractionConfig {
+func (o *CreateMemoryRequest) GetEntityExtractionOverrides() EntityExtractionOverrides {
 	if o == nil || IsNil(o.EntityExtractionOverrides) {
-		var ret EntityExtractionConfig
+		var ret EntityExtractionOverrides
 		return ret
 	}
 	return *o.EntityExtractionOverrides
@@ -123,7 +123,7 @@ func (o *CreateMemoryRequest) GetEntityExtractionOverrides() EntityExtractionCon
 
 // GetEntityExtractionOverridesOk returns a tuple with the EntityExtractionOverrides field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CreateMemoryRequest) GetEntityExtractionOverridesOk() (*EntityExtractionConfig, bool) {
+func (o *CreateMemoryRequest) GetEntityExtractionOverridesOk() (*EntityExtractionOverrides, bool) {
 	if o == nil || IsNil(o.EntityExtractionOverrides) {
 		return nil, false
 	}
@@ -139,8 +139,8 @@ func (o *CreateMemoryRequest) HasEntityExtractionOverrides() bool {
 	return false
 }
 
-// SetEntityExtractionOverrides gets a reference to the given EntityExtractionConfig and assigns it to the EntityExtractionOverrides field.
-func (o *CreateMemoryRequest) SetEntityExtractionOverrides(v EntityExtractionConfig) {
+// SetEntityExtractionOverrides gets a reference to the given EntityExtractionOverrides and assigns it to the EntityExtractionOverrides field.
+func (o *CreateMemoryRequest) SetEntityExtractionOverrides(v EntityExtractionOverrides) {
 	o.EntityExtractionOverrides = &v
 }
 
@@ -177,9 +177,9 @@ func (o *CreateMemoryRequest) SetEventOccurredAt(v string) {
 }
 
 // GetFactExtractionOverrides returns the FactExtractionOverrides field value if set, zero value otherwise.
-func (o *CreateMemoryRequest) GetFactExtractionOverrides() FactExtractionConfig {
+func (o *CreateMemoryRequest) GetFactExtractionOverrides() FactExtractionOverrides {
 	if o == nil || IsNil(o.FactExtractionOverrides) {
-		var ret FactExtractionConfig
+		var ret FactExtractionOverrides
 		return ret
 	}
 	return *o.FactExtractionOverrides
@@ -187,7 +187,7 @@ func (o *CreateMemoryRequest) GetFactExtractionOverrides() FactExtractionConfig 
 
 // GetFactExtractionOverridesOk returns a tuple with the FactExtractionOverrides field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CreateMemoryRequest) GetFactExtractionOverridesOk() (*FactExtractionConfig, bool) {
+func (o *CreateMemoryRequest) GetFactExtractionOverridesOk() (*FactExtractionOverrides, bool) {
 	if o == nil || IsNil(o.FactExtractionOverrides) {
 		return nil, false
 	}
@@ -203,8 +203,8 @@ func (o *CreateMemoryRequest) HasFactExtractionOverrides() bool {
 	return false
 }
 
-// SetFactExtractionOverrides gets a reference to the given FactExtractionConfig and assigns it to the FactExtractionOverrides field.
-func (o *CreateMemoryRequest) SetFactExtractionOverrides(v FactExtractionConfig) {
+// SetFactExtractionOverrides gets a reference to the given FactExtractionOverrides and assigns it to the FactExtractionOverrides field.
+func (o *CreateMemoryRequest) SetFactExtractionOverrides(v FactExtractionOverrides) {
 	o.FactExtractionOverrides = &v
 }
 

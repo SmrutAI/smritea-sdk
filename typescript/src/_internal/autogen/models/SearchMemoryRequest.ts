@@ -55,13 +55,13 @@ export interface SearchMemoryRequest {
      */
     fromTime?: string;
     /**
-     * 0=use app config, 1-5=override traversal depth
+     * 0 = system graph_max_hops; 1..services.search.graph_max_hops_max
      * @type {number}
      * @memberof SearchMemoryRequest
      */
     graphDepth?: number;
     /**
-     * 
+     * 0 = app top_n; 1-20 (= services.search.top_n_max)
      * @type {number}
      * @memberof SearchMemoryRequest
      */

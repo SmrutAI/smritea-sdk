@@ -39,17 +39,13 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="actorTypes">ActorTypes filters which actor types to extract personas for (empty &#x3D; all types). Valid types: user, agent, system.</param>
         /// <param name="domains">Domains specifies which persona domains to extract. Each domain defines a category of traits (preferences, interests, etc.)..</param>
         /// <param name="enabled">Enabled controls whether persona extraction is active. When false, no persona traits are extracted from memory content. Unlike Entity/Fact extraction, persona has no multi-pass reflection — it runs a single LLM call..</param>
-        /// <param name="maxTokens">MaxTokens is the maximum completion tokens for LLM responses..</param>
-        /// <param name="model">Model is the LLM model to use (empty &#x3D; use provider default)..</param>
-        /// <param name="temperature">Temperature controls LLM randomness for extraction..</param>
-        public PersonaExtractionConfig(List<string> actorTypes = default, List<PersonaDomainConfig> domains = default, bool enabled = default, int maxTokens = default, string model = default, decimal temperature = default)
+        /// <param name="model">Model has no effect today: the model comes from the system AI connection. Reserved for model selection by criteria, allowed only for apps that use their own AI (custom AI / BYOK)..</param>
+        public PersonaExtractionConfig(List<string> actorTypes = default, List<PersonaDomainConfig> domains = default, bool enabled = default, string model = default)
         {
             this.ActorTypes = actorTypes;
             this.Domains = domains;
             this.Enabled = enabled;
-            this.MaxTokens = maxTokens;
             this.Model = model;
-            this.Temperature = temperature;
         }
 
         /// <summary>
@@ -74,25 +70,11 @@ namespace Smritea.Internal.Autogen.Model
         public bool Enabled { get; set; }
 
         /// <summary>
-        /// MaxTokens is the maximum completion tokens for LLM responses.
+        /// Model has no effect today: the model comes from the system AI connection. Reserved for model selection by criteria, allowed only for apps that use their own AI (custom AI / BYOK).
         /// </summary>
-        /// <value>MaxTokens is the maximum completion tokens for LLM responses.</value>
-        [DataMember(Name = "max_tokens", EmitDefaultValue = false)]
-        public int MaxTokens { get; set; }
-
-        /// <summary>
-        /// Model is the LLM model to use (empty &#x3D; use provider default).
-        /// </summary>
-        /// <value>Model is the LLM model to use (empty &#x3D; use provider default).</value>
+        /// <value>Model has no effect today: the model comes from the system AI connection. Reserved for model selection by criteria, allowed only for apps that use their own AI (custom AI / BYOK).</value>
         [DataMember(Name = "model", EmitDefaultValue = false)]
         public string Model { get; set; }
-
-        /// <summary>
-        /// Temperature controls LLM randomness for extraction.
-        /// </summary>
-        /// <value>Temperature controls LLM randomness for extraction.</value>
-        [DataMember(Name = "temperature", EmitDefaultValue = false)]
-        public decimal Temperature { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -105,9 +87,7 @@ namespace Smritea.Internal.Autogen.Model
             sb.Append("  ActorTypes: ").Append(ActorTypes).Append("\n");
             sb.Append("  Domains: ").Append(Domains).Append("\n");
             sb.Append("  Enabled: ").Append(Enabled).Append("\n");
-            sb.Append("  MaxTokens: ").Append(MaxTokens).Append("\n");
             sb.Append("  Model: ").Append(Model).Append("\n");
-            sb.Append("  Temperature: ").Append(Temperature).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -128,30 +108,6 @@ namespace Smritea.Internal.Autogen.Model
         /// <returns>Validation Result</returns>
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            // MaxTokens (int) maximum
-            if (this.MaxTokens > (int)16384)
-            {
-                yield return new ValidationResult("Invalid value for MaxTokens, must be a value less than or equal to 16384.", new [] { "MaxTokens" });
-            }
-
-            // MaxTokens (int) minimum
-            if (this.MaxTokens < (int)0)
-            {
-                yield return new ValidationResult("Invalid value for MaxTokens, must be a value greater than or equal to 0.", new [] { "MaxTokens" });
-            }
-
-            // Temperature (decimal) maximum
-            if (this.Temperature > (decimal)2)
-            {
-                yield return new ValidationResult("Invalid value for Temperature, must be a value less than or equal to 2.", new [] { "Temperature" });
-            }
-
-            // Temperature (decimal) minimum
-            if (this.Temperature < (decimal)0)
-            {
-                yield return new ValidationResult("Invalid value for Temperature, must be a value greater than or equal to 0.", new [] { "Temperature" });
-            }
-
             yield break;
         }
     }

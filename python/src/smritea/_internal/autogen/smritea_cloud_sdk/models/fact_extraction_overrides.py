@@ -24,17 +24,14 @@ from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FactExtractionConfig(BaseModel):
+class FactExtractionOverrides(BaseModel):
     """
-    FactExtractionConfig
+    FactExtractionOverrides
     """ # noqa: E501
-    max_passes: Optional[Annotated[int, Field(le=5, strict=True, ge=-1)]] = Field(default=None, description="MaxPasses controls how many extraction passes to perform. -1 = explicitly skip fact extraction (sentinel value). 0 = not specified (Go zero value), use default. 1-5 = run N extraction passes. Default is 1 (single pass) so that fact extraction is enabled by default.")
-    max_tokens: Optional[Annotated[int, Field(le=16384, strict=True, ge=0)]] = Field(default=None, description="MaxTokens is the maximum completion tokens for LLM responses. 0 = not set (use default). TODO(https://linear.app/bityantriki/issue/BIT-83): revert gte=0 to gte=100 once pedantigo applies defaults to nested structs during Validate()")
-    min_importance: Optional[Union[Annotated[float, Field(le=1, strict=True, ge=0)], Annotated[int, Field(le=1, strict=True, ge=0)]]] = Field(default=None, description="MinImportance is the minimum importance threshold for extracted facts (0.0 to 1.0). Facts below this threshold are filtered out.")
-    model: Optional[StrictStr] = Field(default=None, description="Model is the LLM model to use (empty = use provider default).")
-    strategy: Optional[StrictStr] = Field(default=None, description="Strategy is the fact extraction strategy to use. Default: \"llm_fact_extraction\"")
-    temperature: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0)], Annotated[int, Field(le=2, strict=True, ge=0)]]] = Field(default=None, description="Temperature controls LLM randomness (0.0 = deterministic, higher = creative).")
-    __properties: ClassVar[List[str]] = ["max_passes", "max_tokens", "min_importance", "model", "strategy", "temperature"]
+    min_importance: Optional[Union[Annotated[float, Field(le=1, strict=True, ge=0)], Annotated[int, Field(le=1, strict=True, ge=0)]]] = None
+    model: Optional[StrictStr] = Field(default=None, description="Model has no effect today: the model comes from the system AI connection. Reserved for model selection by criteria, allowed only for apps that use their own AI (custom AI / BYOK).")
+    strategy: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["min_importance", "model", "strategy"]
 
     @field_validator('strategy')
     def strategy_validate_enum(cls, value):
@@ -64,7 +61,7 @@ class FactExtractionConfig(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FactExtractionConfig from a JSON string"""
+        """Create an instance of FactExtractionOverrides from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -89,7 +86,7 @@ class FactExtractionConfig(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FactExtractionConfig from a dict"""
+        """Create an instance of FactExtractionOverrides from a dict"""
         if obj is None:
             return None
 
@@ -97,12 +94,9 @@ class FactExtractionConfig(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "max_passes": obj.get("max_passes"),
-            "max_tokens": obj.get("max_tokens"),
             "min_importance": obj.get("min_importance"),
             "model": obj.get("model"),
-            "strategy": obj.get("strategy"),
-            "temperature": obj.get("temperature")
+            "strategy": obj.get("strategy")
         })
         return _obj
 

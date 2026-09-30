@@ -21,8 +21,8 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from smritea._internal.autogen.smritea_cloud_sdk.models.entity_extraction_config import EntityExtractionConfig
-from smritea._internal.autogen.smritea_cloud_sdk.models.fact_extraction_config import FactExtractionConfig
+from smritea._internal.autogen.smritea_cloud_sdk.models.entity_extraction_overrides import EntityExtractionOverrides
+from smritea._internal.autogen.smritea_cloud_sdk.models.fact_extraction_overrides import FactExtractionOverrides
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_scope import MemoryScope
 from smritea._internal.autogen.smritea_cloud_sdk.models.persona_extraction_config import PersonaExtractionConfig
 from smritea._internal.autogen.smritea_cloud_sdk.models.relative_standing_config import RelativeStandingConfig
@@ -35,9 +35,9 @@ class CreateMemoryRequest(BaseModel):
     """ # noqa: E501
     app_id: Annotated[str, Field(min_length=1, strict=True, max_length=24)] = Field(description="AppID is the application identifier (required)")
     content: Annotated[str, Field(min_length=1, strict=True)] = Field(description="Content is the memory content (required, min 1 char)")
-    entity_extraction_overrides: Optional[EntityExtractionConfig] = Field(default=None, description="EntityExtractionOverrides overrides App-level entity extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.")
+    entity_extraction_overrides: Optional[EntityExtractionOverrides] = Field(default=None, description="EntityExtractionOverrides is the per-request entity extraction override (nil = none). Only model is read today (it has no effect); reflection passes are set only in app config.")
     event_occurred_at: Optional[StrictStr] = Field(default=None, description="EventOccurredAt is the timestamp when this content was created or occurred (optional). Used by the extraction LLM to resolve relative temporal expressions like \"last year\" or \"yesterday\". If nil, defaults to time.Now() inside the pipeline.")
-    fact_extraction_overrides: Optional[FactExtractionConfig] = Field(default=None, description="FactExtractionOverrides overrides App-level fact extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values.")
+    fact_extraction_overrides: Optional[FactExtractionOverrides] = Field(default=None, description="FactExtractionOverrides is the per-request fact extraction override (nil = none). Only model is read today (it has no effect); reflection passes are set only in app config.")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Metadata contains flexible memory metadata (optional)")
     persona_extraction_overrides: Optional[PersonaExtractionConfig] = Field(default=None, description="PersonaExtractionOverrides overrides App-level persona extraction config (nil = use App defaults). Only non-zero fields in overrides replace app-level values. This is a stub for v1 - the actual LLM-based persona extraction is deferred to a future task.")
     relative_standing: Optional[RelativeStandingConfig] = Field(default=None, description="RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are applied (importance=1.0, decay_factor=0.2, decay_function=exponential).")
@@ -112,9 +112,9 @@ class CreateMemoryRequest(BaseModel):
         _obj = cls.model_validate({
             "app_id": obj.get("app_id"),
             "content": obj.get("content"),
-            "entity_extraction_overrides": EntityExtractionConfig.from_dict(obj["entity_extraction_overrides"]) if obj.get("entity_extraction_overrides") is not None else None,
+            "entity_extraction_overrides": EntityExtractionOverrides.from_dict(obj["entity_extraction_overrides"]) if obj.get("entity_extraction_overrides") is not None else None,
             "event_occurred_at": obj.get("event_occurred_at"),
-            "fact_extraction_overrides": FactExtractionConfig.from_dict(obj["fact_extraction_overrides"]) if obj.get("fact_extraction_overrides") is not None else None,
+            "fact_extraction_overrides": FactExtractionOverrides.from_dict(obj["fact_extraction_overrides"]) if obj.get("fact_extraction_overrides") is not None else None,
             "metadata": obj.get("metadata"),
             "persona_extraction_overrides": PersonaExtractionConfig.from_dict(obj["persona_extraction_overrides"]) if obj.get("persona_extraction_overrides") is not None else None,
             "relative_standing": RelativeStandingConfig.from_dict(obj["relative_standing"]) if obj.get("relative_standing") is not None else None,

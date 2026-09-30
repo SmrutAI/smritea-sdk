@@ -20,13 +20,6 @@ import {
     PersonaExtractionConfigToJSON,
     PersonaExtractionConfigToJSONTyped,
 } from './PersonaExtractionConfig';
-import type { FactExtractionConfig } from './FactExtractionConfig';
-import {
-    FactExtractionConfigFromJSON,
-    FactExtractionConfigFromJSONTyped,
-    FactExtractionConfigToJSON,
-    FactExtractionConfigToJSONTyped,
-} from './FactExtractionConfig';
 import type { RelativeStandingConfig } from './RelativeStandingConfig';
 import {
     RelativeStandingConfigFromJSON,
@@ -41,13 +34,20 @@ import {
     MemoryScopeToJSON,
     MemoryScopeToJSONTyped,
 } from './MemoryScope';
-import type { EntityExtractionConfig } from './EntityExtractionConfig';
+import type { EntityExtractionOverrides } from './EntityExtractionOverrides';
 import {
-    EntityExtractionConfigFromJSON,
-    EntityExtractionConfigFromJSONTyped,
-    EntityExtractionConfigToJSON,
-    EntityExtractionConfigToJSONTyped,
-} from './EntityExtractionConfig';
+    EntityExtractionOverridesFromJSON,
+    EntityExtractionOverridesFromJSONTyped,
+    EntityExtractionOverridesToJSON,
+    EntityExtractionOverridesToJSONTyped,
+} from './EntityExtractionOverrides';
+import type { FactExtractionOverrides } from './FactExtractionOverrides';
+import {
+    FactExtractionOverridesFromJSON,
+    FactExtractionOverridesFromJSONTyped,
+    FactExtractionOverridesToJSON,
+    FactExtractionOverridesToJSONTyped,
+} from './FactExtractionOverrides';
 
 /**
  * 
@@ -68,12 +68,12 @@ export interface CreateMemoryRequest {
      */
     content: string;
     /**
-     * EntityExtractionOverrides overrides App-level entity extraction config (nil = use App defaults).
-     * Only non-zero fields in overrides replace app-level values.
-     * @type {EntityExtractionConfig}
+     * EntityExtractionOverrides is the per-request entity extraction override (nil = none).
+     * Only model is read today (it has no effect); reflection passes are set only in app config.
+     * @type {EntityExtractionOverrides}
      * @memberof CreateMemoryRequest
      */
-    entityExtractionOverrides?: EntityExtractionConfig;
+    entityExtractionOverrides?: EntityExtractionOverrides;
     /**
      * EventOccurredAt is the timestamp when this content was created or occurred (optional).
      * Used by the extraction LLM to resolve relative temporal expressions like "last year" or "yesterday".
@@ -83,12 +83,12 @@ export interface CreateMemoryRequest {
      */
     eventOccurredAt?: string;
     /**
-     * FactExtractionOverrides overrides App-level fact extraction config (nil = use App defaults).
-     * Only non-zero fields in overrides replace app-level values.
-     * @type {FactExtractionConfig}
+     * FactExtractionOverrides is the per-request fact extraction override (nil = none).
+     * Only model is read today (it has no effect); reflection passes are set only in app config.
+     * @type {FactExtractionOverrides}
      * @memberof CreateMemoryRequest
      */
-    factExtractionOverrides?: FactExtractionConfig;
+    factExtractionOverrides?: FactExtractionOverrides;
     /**
      * Metadata contains flexible memory metadata (optional)
      * @type {object}
@@ -141,9 +141,9 @@ export function CreateMemoryRequestFromJSONTyped(json: any, ignoreDiscriminator:
         
         'appId': json['app_id'],
         'content': json['content'],
-        'entityExtractionOverrides': json['entity_extraction_overrides'] == null ? undefined : EntityExtractionConfigFromJSON(json['entity_extraction_overrides']),
+        'entityExtractionOverrides': json['entity_extraction_overrides'] == null ? undefined : EntityExtractionOverridesFromJSON(json['entity_extraction_overrides']),
         'eventOccurredAt': json['event_occurred_at'] == null ? undefined : json['event_occurred_at'],
-        'factExtractionOverrides': json['fact_extraction_overrides'] == null ? undefined : FactExtractionConfigFromJSON(json['fact_extraction_overrides']),
+        'factExtractionOverrides': json['fact_extraction_overrides'] == null ? undefined : FactExtractionOverridesFromJSON(json['fact_extraction_overrides']),
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'personaExtractionOverrides': json['persona_extraction_overrides'] == null ? undefined : PersonaExtractionConfigFromJSON(json['persona_extraction_overrides']),
         'relativeStanding': json['relative_standing'] == null ? undefined : RelativeStandingConfigFromJSON(json['relative_standing']),
@@ -164,9 +164,9 @@ export function CreateMemoryRequestToJSONTyped(value?: CreateMemoryRequest | nul
         
         'app_id': value['appId'],
         'content': value['content'],
-        'entity_extraction_overrides': EntityExtractionConfigToJSON(value['entityExtractionOverrides']),
+        'entity_extraction_overrides': EntityExtractionOverridesToJSON(value['entityExtractionOverrides']),
         'event_occurred_at': value['eventOccurredAt'],
-        'fact_extraction_overrides': FactExtractionConfigToJSON(value['factExtractionOverrides']),
+        'fact_extraction_overrides': FactExtractionOverridesToJSON(value['factExtractionOverrides']),
         'metadata': value['metadata'],
         'persona_extraction_overrides': PersonaExtractionConfigToJSON(value['personaExtractionOverrides']),
         'relative_standing': RelativeStandingConfigToJSON(value['relativeStanding']),

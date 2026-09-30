@@ -56,8 +56,8 @@ namespace Smritea.Internal.Autogen.Model
         /// </summary>
         /// <param name="appId">appId (required).</param>
         /// <param name="fromTime">FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime..</param>
-        /// <param name="graphDepth">0&#x3D;use app config, 1-5&#x3D;override traversal depth.</param>
-        /// <param name="limit">limit.</param>
+        /// <param name="graphDepth">0 &#x3D; system graph_max_hops; 1..services.search.graph_max_hops_max.</param>
+        /// <param name="limit">0 &#x3D; app top_n; 1-20 (&#x3D; services.search.top_n_max).</param>
         /// <param name="metadataFilter">MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned..</param>
         /// <param name="method">method.</param>
         /// <param name="query">query (required).</param>
@@ -108,15 +108,16 @@ namespace Smritea.Internal.Autogen.Model
         public string FromTime { get; set; }
 
         /// <summary>
-        /// 0&#x3D;use app config, 1-5&#x3D;override traversal depth
+        /// 0 &#x3D; system graph_max_hops; 1..services.search.graph_max_hops_max
         /// </summary>
-        /// <value>0&#x3D;use app config, 1-5&#x3D;override traversal depth</value>
+        /// <value>0 &#x3D; system graph_max_hops; 1..services.search.graph_max_hops_max</value>
         [DataMember(Name = "graph_depth", EmitDefaultValue = false)]
         public int GraphDepth { get; set; }
 
         /// <summary>
-        /// Gets or Sets Limit
+        /// 0 &#x3D; app top_n; 1-20 (&#x3D; services.search.top_n_max)
         /// </summary>
+        /// <value>0 &#x3D; app top_n; 1-20 (&#x3D; services.search.top_n_max)</value>
         [DataMember(Name = "limit", EmitDefaultValue = false)]
         public int Limit { get; set; }
 
@@ -209,16 +210,16 @@ namespace Smritea.Internal.Autogen.Model
         /// <returns>Validation Result</returns>
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            // GraphDepth (int) maximum
-            if (this.GraphDepth > (int)5)
+            // GraphDepth (int) minimum
+            if (this.GraphDepth < (int)0)
             {
-                yield return new ValidationResult("Invalid value for GraphDepth, must be a value less than or equal to 5.", new [] { "GraphDepth" });
+                yield return new ValidationResult("Invalid value for GraphDepth, must be a value greater than or equal to 0.", new [] { "GraphDepth" });
             }
 
             // Limit (int) maximum
-            if (this.Limit > (int)100)
+            if (this.Limit > (int)20)
             {
-                yield return new ValidationResult("Invalid value for Limit, must be a value less than or equal to 100.", new [] { "Limit" });
+                yield return new ValidationResult("Invalid value for Limit, must be a value less than or equal to 20.", new [] { "Limit" });
             }
 
             // SpeakerActorId (string) maxLength

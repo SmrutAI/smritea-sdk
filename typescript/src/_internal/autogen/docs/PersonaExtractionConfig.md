@@ -9,9 +9,7 @@ Name | Type
 `actorTypes` | Array&lt;string&gt;
 `domains` | [Array&lt;PersonaDomainConfig&gt;](PersonaDomainConfig.md)
 `enabled` | boolean
-`maxTokens` | number
 `model` | string
-`temperature` | number
 
 ## Example
 
@@ -23,9 +21,7 @@ const example = {
   "actorTypes": null,
   "domains": null,
   "enabled": null,
-  "maxTokens": null,
   "model": null,
-  "temperature": null,
 } satisfies PersonaExtractionConfig
 
 console.log(example)

@@ -32,8 +32,8 @@ __all__ = [
     "APIError",
     "CreateMemoryRequest",
     "CreateMemoryResponse",
-    "EntityExtractionConfig",
-    "FactExtractionConfig",
+    "EntityExtractionOverrides",
+    "FactExtractionOverrides",
     "MemoryResponse",
     "MemoryScope",
     "PersonaDomainConfig",
@@ -68,8 +68,8 @@ from smritea._internal.autogen.smritea_cloud_sdk.exceptions import ApiException 
 from smritea._internal.autogen.smritea_cloud_sdk.models.api_error import APIError as APIError
 from smritea._internal.autogen.smritea_cloud_sdk.models.create_memory_request import CreateMemoryRequest as CreateMemoryRequest
 from smritea._internal.autogen.smritea_cloud_sdk.models.create_memory_response import CreateMemoryResponse as CreateMemoryResponse
-from smritea._internal.autogen.smritea_cloud_sdk.models.entity_extraction_config import EntityExtractionConfig as EntityExtractionConfig
-from smritea._internal.autogen.smritea_cloud_sdk.models.fact_extraction_config import FactExtractionConfig as FactExtractionConfig
+from smritea._internal.autogen.smritea_cloud_sdk.models.entity_extraction_overrides import EntityExtractionOverrides as EntityExtractionOverrides
+from smritea._internal.autogen.smritea_cloud_sdk.models.fact_extraction_overrides import FactExtractionOverrides as FactExtractionOverrides
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_response import MemoryResponse as MemoryResponse
 from smritea._internal.autogen.smritea_cloud_sdk.models.memory_scope import MemoryScope as MemoryScope
 from smritea._internal.autogen.smritea_cloud_sdk.models.persona_domain_config import PersonaDomainConfig as PersonaDomainConfig

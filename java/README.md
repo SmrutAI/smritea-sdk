@@ -196,8 +196,10 @@ client.delete("mem_abc123");
 List<SearchResult> results = client.search("", new SearchOptions()
     .withActorId("alice")
     .withActorType("user")
-    .withLimit(100));
+    .withLimit(20));
 ```
+
+`limit` is 1-20; omit it to use the app's `top_n`.
 
 ---
 

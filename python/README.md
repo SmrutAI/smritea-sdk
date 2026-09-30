@@ -168,8 +168,10 @@ client.delete("mem_abc123")
 > Use `search()` with a broad query as a workaround:
 
 ```python
-results = client.search("", actor_id="alice", actor_type="user", limit=100)
+results = client.search("", actor_id="alice", actor_type="user", limit=20)
 ```
+
+`limit` is 1-20; omit it to use the app's `top_n`.
 
 ---
 

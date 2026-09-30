@@ -50,23 +50,12 @@ export interface PersonaExtractionConfig {
      */
     enabled?: boolean;
     /**
-     * MaxTokens is the maximum completion tokens for LLM responses.
-     * @type {number}
-     * @memberof PersonaExtractionConfig
-     */
-    maxTokens?: number;
-    /**
-     * Model is the LLM model to use (empty = use provider default).
+     * Model has no effect today: the model comes from the system AI connection. Reserved for model
+     * selection by criteria, allowed only for apps that use their own AI (custom AI / BYOK).
      * @type {string}
      * @memberof PersonaExtractionConfig
      */
     model?: string;
-    /**
-     * Temperature controls LLM randomness for extraction.
-     * @type {number}
-     * @memberof PersonaExtractionConfig
-     */
-    temperature?: number;
 }
 
 /**
@@ -89,9 +78,7 @@ export function PersonaExtractionConfigFromJSONTyped(json: any, ignoreDiscrimina
         'actorTypes': json['actor_types'] == null ? undefined : json['actor_types'],
         'domains': json['domains'] == null ? undefined : ((json['domains'] as Array<any>).map(PersonaDomainConfigFromJSON)),
         'enabled': json['enabled'] == null ? undefined : json['enabled'],
-        'maxTokens': json['max_tokens'] == null ? undefined : json['max_tokens'],
         'model': json['model'] == null ? undefined : json['model'],
-        'temperature': json['temperature'] == null ? undefined : json['temperature'],
     };
 }
 
@@ -109,9 +96,7 @@ export function PersonaExtractionConfigToJSONTyped(value?: PersonaExtractionConf
         'actor_types': value['actorTypes'],
         'domains': value['domains'] == null ? undefined : ((value['domains'] as Array<any>).map(PersonaDomainConfigToJSON)),
         'enabled': value['enabled'],
-        'max_tokens': value['maxTokens'],
         'model': value['model'],
-        'temperature': value['temperature'],
     };
 }
 

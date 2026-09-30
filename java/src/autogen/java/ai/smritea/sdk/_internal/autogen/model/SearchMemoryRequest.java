@@ -162,8 +162,8 @@ public class SearchMemoryRequest {
   }
 
   /**
-   * 0&#x3D;use app config, 1-5&#x3D;override traversal depth
-   * maximum: 5
+   * 0 &#x3D; system graph_max_hops; 1..services.search.graph_max_hops_max
+   * minimum: 0
    * @return graphDepth
    */
   @javax.annotation.Nullable
@@ -187,8 +187,8 @@ public class SearchMemoryRequest {
   }
 
   /**
-   * Get limit
-   * maximum: 100
+   * 0 &#x3D; app top_n; 1-20 (&#x3D; services.search.top_n_max)
+   * maximum: 20
    * @return limit
    */
   @javax.annotation.Nullable

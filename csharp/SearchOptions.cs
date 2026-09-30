@@ -23,13 +23,13 @@ public sealed class SearchOptions
     /// <summary>Gets the scope containing actor and conversation context.</summary>
     public MemoryScope? Scope { get; private set; }
 
-    /// <summary>Gets the maximum number of results to return.</summary>
+    /// <summary>Gets the number of results (1-20); null uses the app's top_n.</summary>
     public int? Limit { get; private set; }
 
     /// <summary>Gets the minimum similarity threshold (0.0–1.0).</summary>
     public float? Threshold { get; private set; }
 
-    /// <summary>Gets the graph traversal depth for graph-augmented search.</summary>
+    /// <summary>Gets the graph traversal depth (1-5); null uses the system default.</summary>
     public int? GraphDepth { get; private set; }
 
     /// <summary>Gets iSO-8601 datetime string — only return memories created at or after this time.</summary>
@@ -76,8 +76,8 @@ public sealed class SearchOptions
         return this;
     }
 
-    /// <summary>Sets the maximum number of results to return.</summary>
-    /// <param name="limit">The maximum number of results (must be positive).</param>
+    /// <summary>Sets the number of results, 1-20; omit it to use the app's top_n.</summary>
+    /// <param name="limit">The number of results (1-20).</param>
     /// <returns>The current instance for method chaining.</returns>
     public SearchOptions WithLimit(int limit)
     {
@@ -94,8 +94,8 @@ public sealed class SearchOptions
         return this;
     }
 
-    /// <summary>Sets the graph traversal depth for graph-augmented search.</summary>
-    /// <param name="graphDepth">The number of graph hops to traverse when expanding results.</param>
+    /// <summary>Sets the graph traversal depth, 1-5; omit it to use the system default.</summary>
+    /// <param name="graphDepth">The number of graph hops to traverse when expanding results (1-5).</param>
     /// <returns>The current instance for method chaining.</returns>
     public SearchOptions WithGraphDepth(int graphDepth)
     {

@@ -33,21 +33,18 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import ai.smritea.sdk._internal.autogen.ApiClient;
 /**
- * EntityExtractionConfig
+ * EntityExtractionOverrides
  */
 @JsonPropertyOrder({
-  EntityExtractionConfig.JSON_PROPERTY_CONTEXT_WINDOW,
-  EntityExtractionConfig.JSON_PROPERTY_ENABLE_CONTEXT,
-  EntityExtractionConfig.JSON_PROPERTY_ENTITY_TYPES,
-  EntityExtractionConfig.JSON_PROPERTY_FALLBACK_MESSAGES,
-  EntityExtractionConfig.JSON_PROPERTY_MAX_PASSES,
-  EntityExtractionConfig.JSON_PROPERTY_MAX_TOKENS,
-  EntityExtractionConfig.JSON_PROPERTY_MIN_CONFIDENCE,
-  EntityExtractionConfig.JSON_PROPERTY_MODEL,
-  EntityExtractionConfig.JSON_PROPERTY_TEMPERATURE
+  EntityExtractionOverrides.JSON_PROPERTY_CONTEXT_WINDOW,
+  EntityExtractionOverrides.JSON_PROPERTY_ENABLE_CONTEXT,
+  EntityExtractionOverrides.JSON_PROPERTY_ENTITY_TYPES,
+  EntityExtractionOverrides.JSON_PROPERTY_FALLBACK_MESSAGES,
+  EntityExtractionOverrides.JSON_PROPERTY_MIN_CONFIDENCE,
+  EntityExtractionOverrides.JSON_PROPERTY_MODEL
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
-public class EntityExtractionConfig {
+public class EntityExtractionOverrides {
   public static final String JSON_PROPERTY_CONTEXT_WINDOW = "context_window";
   @javax.annotation.Nullable
   private Integer contextWindow;
@@ -64,14 +61,6 @@ public class EntityExtractionConfig {
   @javax.annotation.Nullable
   private Integer fallbackMessages;
 
-  public static final String JSON_PROPERTY_MAX_PASSES = "max_passes";
-  @javax.annotation.Nullable
-  private Integer maxPasses;
-
-  public static final String JSON_PROPERTY_MAX_TOKENS = "max_tokens";
-  @javax.annotation.Nullable
-  private Integer maxTokens;
-
   public static final String JSON_PROPERTY_MIN_CONFIDENCE = "min_confidence";
   @javax.annotation.Nullable
   private BigDecimal minConfidence;
@@ -80,20 +69,16 @@ public class EntityExtractionConfig {
   @javax.annotation.Nullable
   private String model;
 
-  public static final String JSON_PROPERTY_TEMPERATURE = "temperature";
-  @javax.annotation.Nullable
-  private BigDecimal temperature;
-
-  public EntityExtractionConfig() { 
+  public EntityExtractionOverrides() { 
   }
 
-  public EntityExtractionConfig contextWindow(@javax.annotation.Nullable Integer contextWindow) {
+  public EntityExtractionOverrides contextWindow(@javax.annotation.Nullable Integer contextWindow) {
     this.contextWindow = contextWindow;
     return this;
   }
 
   /**
-   * ContextWindow is the number of previous messages to include in context. Only used when EnableContext is true. 0 means use default (10 messages).
+   * Get contextWindow
    * minimum: 0
    * maximum: 50
    * @return contextWindow
@@ -113,13 +98,13 @@ public class EntityExtractionConfig {
   }
 
 
-  public EntityExtractionConfig enableContext(@javax.annotation.Nullable Boolean enableContext) {
+  public EntityExtractionOverrides enableContext(@javax.annotation.Nullable Boolean enableContext) {
     this.enableContext = enableContext;
     return this;
   }
 
   /**
-   * EnableContext enables context-aware extraction using conversation history. When true, extraction considers previous messages in the conversation for better entity resolution and relationship detection.
+   * Get enableContext
    * @return enableContext
    */
   @javax.annotation.Nullable
@@ -137,12 +122,12 @@ public class EntityExtractionConfig {
   }
 
 
-  public EntityExtractionConfig entityTypes(@javax.annotation.Nullable List<String> entityTypes) {
+  public EntityExtractionOverrides entityTypes(@javax.annotation.Nullable List<String> entityTypes) {
     this.entityTypes = entityTypes;
     return this;
   }
 
-  public EntityExtractionConfig addEntityTypesItem(String entityTypesItem) {
+  public EntityExtractionOverrides addEntityTypesItem(String entityTypesItem) {
     if (this.entityTypes == null) {
       this.entityTypes = new ArrayList<>();
     }
@@ -151,7 +136,7 @@ public class EntityExtractionConfig {
   }
 
   /**
-   * EntityTypes filters which entity types to extract (empty &#x3D; all types). Valid types: person, organization, concept, location, event, product, other
+   * Get entityTypes
    * @return entityTypes
    */
   @javax.annotation.Nullable
@@ -169,13 +154,13 @@ public class EntityExtractionConfig {
   }
 
 
-  public EntityExtractionConfig fallbackMessages(@javax.annotation.Nullable Integer fallbackMessages) {
+  public EntityExtractionOverrides fallbackMessages(@javax.annotation.Nullable Integer fallbackMessages) {
     this.fallbackMessages = fallbackMessages;
     return this;
   }
 
   /**
-   * FallbackMessages is the minimum number of messages to include even if the conversation is shorter than ContextWindow. Prevents empty context.
+   * Get fallbackMessages
    * minimum: 0
    * maximum: 10
    * @return fallbackMessages
@@ -195,65 +180,13 @@ public class EntityExtractionConfig {
   }
 
 
-  public EntityExtractionConfig maxPasses(@javax.annotation.Nullable Integer maxPasses) {
-    this.maxPasses = maxPasses;
-    return this;
-  }
-
-  /**
-   * MaxPasses controls how many extraction passes to perform. -1 &#x3D; explicitly skip entity extraction (sentinel value). 0 &#x3D; not specified (Go zero value), use default. 1-5 &#x3D; run N extraction passes. Multiple passes can improve extraction quality but increase cost and latency.
-   * minimum: -1
-   * maximum: 5
-   * @return maxPasses
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_MAX_PASSES, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Integer getMaxPasses() {
-    return maxPasses;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_MAX_PASSES, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMaxPasses(@javax.annotation.Nullable Integer maxPasses) {
-    this.maxPasses = maxPasses;
-  }
-
-
-  public EntityExtractionConfig maxTokens(@javax.annotation.Nullable Integer maxTokens) {
-    this.maxTokens = maxTokens;
-    return this;
-  }
-
-  /**
-   * MaxTokens is the maximum completion tokens for LLM responses. 0 &#x3D; not set (use default). Higher values allow more entities but increase cost. TODO(https://linear.app/bityantriki/issue/BIT-83): revert gte&#x3D;0 to gte&#x3D;100 once pedantigo applies defaults to nested structs during Validate()
-   * minimum: 0
-   * maximum: 16384
-   * @return maxTokens
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_MAX_TOKENS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Integer getMaxTokens() {
-    return maxTokens;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_MAX_TOKENS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMaxTokens(@javax.annotation.Nullable Integer maxTokens) {
-    this.maxTokens = maxTokens;
-  }
-
-
-  public EntityExtractionConfig minConfidence(@javax.annotation.Nullable BigDecimal minConfidence) {
+  public EntityExtractionOverrides minConfidence(@javax.annotation.Nullable BigDecimal minConfidence) {
     this.minConfidence = minConfidence;
     return this;
   }
 
   /**
-   * MinConfidence is the minimum confidence threshold for extracted entities (0.0 to 1.0). Entities below this threshold are filtered out.
+   * Get minConfidence
    * minimum: 0
    * maximum: 1
    * @return minConfidence
@@ -273,13 +206,13 @@ public class EntityExtractionConfig {
   }
 
 
-  public EntityExtractionConfig model(@javax.annotation.Nullable String model) {
+  public EntityExtractionOverrides model(@javax.annotation.Nullable String model) {
     this.model = model;
     return this;
   }
 
   /**
-   * Model is the LLM model to use (empty &#x3D; use provider default). Examples: \&quot;gpt-4\&quot;, \&quot;gpt-3.5-turbo\&quot;, \&quot;llama-3.3-70b-versatile\&quot;
+   * Model has no effect today: the model comes from the system AI connection. Reserved for model selection by criteria, allowed only for apps that use their own AI (custom AI / BYOK).
    * @return model
    */
   @javax.annotation.Nullable
@@ -297,34 +230,8 @@ public class EntityExtractionConfig {
   }
 
 
-  public EntityExtractionConfig temperature(@javax.annotation.Nullable BigDecimal temperature) {
-    this.temperature = temperature;
-    return this;
-  }
-
   /**
-   * Temperature controls LLM randomness (0.0 &#x3D; deterministic, higher &#x3D; creative). For extraction, lower values (0.0-0.3) are recommended for consistency.
-   * minimum: 0
-   * maximum: 2
-   * @return temperature
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_TEMPERATURE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public BigDecimal getTemperature() {
-    return temperature;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_TEMPERATURE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setTemperature(@javax.annotation.Nullable BigDecimal temperature) {
-    this.temperature = temperature;
-  }
-
-
-  /**
-   * Return true if this EntityExtractionConfig object is equal to o.
+   * Return true if this EntityExtractionOverrides object is equal to o.
    */
   @Override
   public boolean equals(Object o) {
@@ -334,36 +241,30 @@ public class EntityExtractionConfig {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    EntityExtractionConfig entityExtractionConfig = (EntityExtractionConfig) o;
-    return Objects.equals(this.contextWindow, entityExtractionConfig.contextWindow) &&
-        Objects.equals(this.enableContext, entityExtractionConfig.enableContext) &&
-        Objects.equals(this.entityTypes, entityExtractionConfig.entityTypes) &&
-        Objects.equals(this.fallbackMessages, entityExtractionConfig.fallbackMessages) &&
-        Objects.equals(this.maxPasses, entityExtractionConfig.maxPasses) &&
-        Objects.equals(this.maxTokens, entityExtractionConfig.maxTokens) &&
-        Objects.equals(this.minConfidence, entityExtractionConfig.minConfidence) &&
-        Objects.equals(this.model, entityExtractionConfig.model) &&
-        Objects.equals(this.temperature, entityExtractionConfig.temperature);
+    EntityExtractionOverrides entityExtractionOverrides = (EntityExtractionOverrides) o;
+    return Objects.equals(this.contextWindow, entityExtractionOverrides.contextWindow) &&
+        Objects.equals(this.enableContext, entityExtractionOverrides.enableContext) &&
+        Objects.equals(this.entityTypes, entityExtractionOverrides.entityTypes) &&
+        Objects.equals(this.fallbackMessages, entityExtractionOverrides.fallbackMessages) &&
+        Objects.equals(this.minConfidence, entityExtractionOverrides.minConfidence) &&
+        Objects.equals(this.model, entityExtractionOverrides.model);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(contextWindow, enableContext, entityTypes, fallbackMessages, maxPasses, maxTokens, minConfidence, model, temperature);
+    return Objects.hash(contextWindow, enableContext, entityTypes, fallbackMessages, minConfidence, model);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class EntityExtractionConfig {\n");
+    sb.append("class EntityExtractionOverrides {\n");
     sb.append("    contextWindow: ").append(toIndentedString(contextWindow)).append("\n");
     sb.append("    enableContext: ").append(toIndentedString(enableContext)).append("\n");
     sb.append("    entityTypes: ").append(toIndentedString(entityTypes)).append("\n");
     sb.append("    fallbackMessages: ").append(toIndentedString(fallbackMessages)).append("\n");
-    sb.append("    maxPasses: ").append(toIndentedString(maxPasses)).append("\n");
-    sb.append("    maxTokens: ").append(toIndentedString(maxTokens)).append("\n");
     sb.append("    minConfidence: ").append(toIndentedString(minConfidence)).append("\n");
     sb.append("    model: ").append(toIndentedString(model)).append("\n");
-    sb.append("    temperature: ").append(toIndentedString(temperature)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -435,16 +336,6 @@ public class EntityExtractionConfig {
       joiner.add(String.format(java.util.Locale.ROOT, "%sfallback_messages%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getFallbackMessages()))));
     }
 
-    // add `max_passes` to the URL query string
-    if (getMaxPasses() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%smax_passes%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMaxPasses()))));
-    }
-
-    // add `max_tokens` to the URL query string
-    if (getMaxTokens() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%smax_tokens%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMaxTokens()))));
-    }
-
     // add `min_confidence` to the URL query string
     if (getMinConfidence() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%smin_confidence%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMinConfidence()))));
@@ -453,11 +344,6 @@ public class EntityExtractionConfig {
     // add `model` to the URL query string
     if (getModel() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%smodel%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getModel()))));
-    }
-
-    // add `temperature` to the URL query string
-    if (getTemperature() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%stemperature%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getTemperature()))));
     }
 
     return joiner.toString();

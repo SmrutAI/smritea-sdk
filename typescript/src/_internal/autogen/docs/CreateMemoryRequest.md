@@ -8,9 +8,9 @@ Name | Type
 ------------ | -------------
 `appId` | string
 `content` | string
-`entityExtractionOverrides` | [EntityExtractionConfig](EntityExtractionConfig.md)
+`entityExtractionOverrides` | [EntityExtractionOverrides](EntityExtractionOverrides.md)
 `eventOccurredAt` | string
-`factExtractionOverrides` | [FactExtractionConfig](FactExtractionConfig.md)
+`factExtractionOverrides` | [FactExtractionOverrides](FactExtractionOverrides.md)
 `metadata` | object
 `personaExtractionOverrides` | [PersonaExtractionConfig](PersonaExtractionConfig.md)
 `relativeStanding` | [RelativeStandingConfig](RelativeStandingConfig.md)

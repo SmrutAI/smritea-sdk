@@ -165,9 +165,9 @@ class SmriteaClient:
                 mechanism. Omit for anonymous or system-initiated searches.
                 Max 64 characters.
             scope: Optional MemoryScope object for actor and conversation context.
-            limit: Maximum number of results. None = use app default.
+            limit: Number of results, 1-20; omit to use the app's top_n.
             threshold: Minimum relevance score filter (0.0–1.0).
-            graph_depth: Graph traversal depth override.
+            graph_depth: Graph traversal depth, 1-5; omit to use the system default.
             from_time: ISO-8601 datetime — only return memories created at or after this time.
             to_time: ISO-8601 datetime — only return memories created at or before this time.
             valid_at: ISO-8601 datetime — return memories valid at exactly this point in time.
