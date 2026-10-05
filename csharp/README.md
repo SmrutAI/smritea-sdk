@@ -124,8 +124,7 @@ var results = await client.SearchAsync("dietary restrictions",
     new SearchOptions()
         .WithActorId("alice")
         .WithActorType("user")
-        .WithLimit(5)
-        .WithThreshold(0.7f));         // min relevance score 0.0–1.0
+        .WithLimit(5));
 foreach (var r in results)
     Console.WriteLine($"{r.Score}  {r.Content}");
 ```
@@ -138,7 +137,6 @@ Results are ordered by relevance (descending). Each result exposes `Score` (0.0�
 | `ActorId` | `string?` | `null` | Filter by actor ID |
 | `ActorType` | `string?` | `null` | Filter by actor type |
 | `Limit` | `int?` | app default | Max results to return |
-| `Threshold` | `float?` | `null` | Min relevance score 0.0–1.0 |
 | `GraphDepth` | `int?` | `null` | Graph traversal depth override |
 | `ConversationId` | `string?` | `null` | Conversation context |
 
@@ -173,7 +171,7 @@ var results = await client.SearchAsync("",
     new SearchOptions().WithActorId("alice").WithActorType("user").WithLimit(20));
 ```
 
-`limit` is 1-20; omit it to use the app's `top_n`.
+`limit` must not exceed the server's `top_n_max` (default 20); a larger value returns a 400 error. Omit it to use the app's `top_n`.
 
 ---
 

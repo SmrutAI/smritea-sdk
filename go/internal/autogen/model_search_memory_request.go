@@ -27,7 +27,7 @@ type SearchMemoryRequest struct {
 	FromTime *string `json:"from_time,omitempty"`
 	// 0 = system graph_max_hops; 1..services.search.graph_max_hops_max
 	GraphDepth *int32 `json:"graph_depth,omitempty"`
-	// 0 = app top_n; 1-20 (= services.search.top_n_max)
+	// 0 = app top_n; must be <= services.search.top_n_max (checked in the service layer).
 	Limit *int32 `json:"limit,omitempty"`
 	// MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned.
 	MetadataFilter map[string]interface{} `json:"metadata_filter,omitempty"`
@@ -39,8 +39,6 @@ type SearchMemoryRequest struct {
 	Scope *MemoryScope `json:"scope,omitempty"`
 	// SpeakerActorID identifies which actor is making this search request. It is NEVER used for filtering — it does not narrow, exclude, or bias which memories are returned. It exists purely for identification: audit logging, telemetry, and any future personalization/access-control hook that needs to know \"who is asking\" independent of \"which memories to include.\" That second concern (result filtering) is entirely owned by Scope below. Deliberately top-level, not nested inside Scope, so it can never be confused with — or accidentally coupled to — the filter fields. Optional: omit if the caller has no meaningful requester identity (e.g. an anonymous or system-initiated search).
 	SpeakerActorId *string `json:"speaker_actor_id,omitempty"`
-	// 0=no filtering (pipeline uses RRF scores, not cosine similarity)
-	Threshold *float32 `json:"threshold,omitempty"`
 	// ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.
 	ToTime *string `json:"to_time,omitempty"`
 	// ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from <= ValidAt AND (active_to is null OR active_to >= ValidAt) Mutually exclusive with FromTime/ToTime.
@@ -372,38 +370,6 @@ func (o *SearchMemoryRequest) SetSpeakerActorId(v string) {
 	o.SpeakerActorId = &v
 }
 
-// GetThreshold returns the Threshold field value if set, zero value otherwise.
-func (o *SearchMemoryRequest) GetThreshold() float32 {
-	if o == nil || IsNil(o.Threshold) {
-		var ret float32
-		return ret
-	}
-	return *o.Threshold
-}
-
-// GetThresholdOk returns a tuple with the Threshold field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *SearchMemoryRequest) GetThresholdOk() (*float32, bool) {
-	if o == nil || IsNil(o.Threshold) {
-		return nil, false
-	}
-	return o.Threshold, true
-}
-
-// HasThreshold returns a boolean if a field has been set.
-func (o *SearchMemoryRequest) HasThreshold() bool {
-	if o != nil && !IsNil(o.Threshold) {
-		return true
-	}
-
-	return false
-}
-
-// SetThreshold gets a reference to the given float32 and assigns it to the Threshold field.
-func (o *SearchMemoryRequest) SetThreshold(v float32) {
-	o.Threshold = &v
-}
-
 // GetToTime returns the ToTime field value if set, zero value otherwise.
 func (o *SearchMemoryRequest) GetToTime() string {
 	if o == nil || IsNil(o.ToTime) {
@@ -503,9 +469,6 @@ func (o SearchMemoryRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.SpeakerActorId) {
 		toSerialize["speaker_actor_id"] = o.SpeakerActorId
-	}
-	if !IsNil(o.Threshold) {
-		toSerialize["threshold"] = o.Threshold
 	}
 	if !IsNil(o.ToTime) {
 		toSerialize["to_time"] = o.ToTime

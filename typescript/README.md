@@ -123,7 +123,6 @@ const results = await client.search('dietary restrictions', {
   actorType: 'user',
   limit: 5,
   method: 'deep_search',  // "quick_search" | "deep_search" | "context_aware_search"
-  threshold: 0.7,          // min relevance score 0.0–1.0
 });
 results.forEach(r => console.log(r.score, r.content));
 ```
@@ -142,7 +141,6 @@ Results are ordered by relevance (descending). Each result exposes `score` (0.0�
 | `actorType` | `undefined` | Filter by actor type |
 | `limit` | app default | Max results to return |
 | `method` | app default | Search strategy |
-| `threshold` | `undefined` | Min relevance score 0.0–1.0 |
 | `graphDepth` | `undefined` | Graph traversal depth override |
 | `conversationId` | `undefined` | Conversation context |
 
@@ -176,7 +174,7 @@ await client.delete('mem_abc123');
 const results = await client.search('', { actorId: 'alice', actorType: 'user', limit: 20 });
 ```
 
-`limit` is 1-20; omit it to use the app's `top_n`.
+`limit` must not exceed the server's `top_n_max` (default 20); a larger value returns a 400 error. Omit it to use the app's `top_n`.
 
 ---
 

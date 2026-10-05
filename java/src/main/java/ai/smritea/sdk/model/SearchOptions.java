@@ -15,7 +15,6 @@ public final class SearchOptions {
   private String speakerActorId;
   private MemoryScope scope;
   private Integer limit;
-  private Float threshold;
   private Integer graphDepth;
   private String fromTime;
   private String toTime;
@@ -54,24 +53,14 @@ public final class SearchOptions {
   }
 
   /**
-   * Sets the number of results, 1-20; omit it to use the app's top_n.
+   * Sets the number of results. It must not exceed the server's top_n_max (default 20). Omit it to
+   * use the app's top_n.
    *
-   * @param limit the number of results (1-20)
+   * @param limit the number of results (at most the server's top_n_max)
    * @return this instance for chaining
    */
   public SearchOptions withLimit(Integer limit) {
     this.limit = limit;
-    return this;
-  }
-
-  /**
-   * Sets the minimum relevance threshold for results.
-   *
-   * @param threshold the score threshold
-   * @return this instance for chaining
-   */
-  public SearchOptions withThreshold(Float threshold) {
-    this.threshold = threshold;
     return this;
   }
 
@@ -132,11 +121,6 @@ public final class SearchOptions {
   /** Returns the result limit. */
   public Integer getLimit() {
     return limit;
-  }
-
-  /** Returns the score threshold. */
-  public Float getThreshold() {
-    return threshold;
   }
 
   /** Returns the graph depth. */

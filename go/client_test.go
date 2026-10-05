@@ -198,17 +198,17 @@ func TestAddOptions_Builder(t *testing.T) {
 }
 
 func TestSearchOptions_Builder(t *testing.T) {
-	opts := NewSearchOptions().WithLimit(10).WithThreshold(0.8)
+	opts := NewSearchOptions().WithLimit(10).WithGraphDepth(2)
 
 	if opts.Limit == nil || *opts.Limit != 10 {
 		t.Errorf("WithLimit: got %v, want 10", opts.Limit)
 	}
-	if opts.Threshold == nil || *opts.Threshold != 0.8 {
-		t.Errorf("WithThreshold: got %v, want 0.8", opts.Threshold)
+	if opts.GraphDepth == nil || *opts.GraphDepth != 2 {
+		t.Errorf("WithGraphDepth: got %v, want 2", opts.GraphDepth)
 	}
 	// Unset fields remain nil
-	if opts.GraphDepth != nil {
-		t.Errorf("GraphDepth should be nil, got %v", *opts.GraphDepth)
+	if opts.FromTime != nil {
+		t.Errorf("FromTime should be nil, got %v", *opts.FromTime)
 	}
 }
 

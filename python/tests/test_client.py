@@ -152,7 +152,6 @@ class TestSearchActorScope:
                 conversation_id='conv-123',
             ),
             limit=10,
-            threshold=0.5,
             graph_depth=2,
         )
 
@@ -160,7 +159,6 @@ class TestSearchActorScope:
         assert call_args.scope.actor_id == 'alice'
         assert call_args.scope.actor_type == 'user'
         assert call_args.limit == 10
-        assert call_args.threshold == 0.5
         assert call_args.graph_depth == 2
         assert call_args.scope.conversation_id == 'conv-123'
 

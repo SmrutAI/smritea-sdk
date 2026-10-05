@@ -102,7 +102,7 @@ func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOption
 
 // Search retrieves memories ranked by relevance to the given query.
 // The optional SearchOptions control actor scoping, result count,
-// similarity threshold, graph traversal depth, and conversation scope.
+// graph traversal depth, and conversation scope.
 // Returns an empty (non-nil) slice when no memories match.
 func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOptions) ([]*SearchResult, error) {
 	// AppId and Query are non-pointer required fields in SearchMemoryRequest
@@ -123,7 +123,6 @@ func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOp
 		}
 		// SearchOptions uses *int32 to match the autogen types directly.
 		req.Limit = opts.Limit
-		req.Threshold = opts.Threshold
 		req.GraphDepth = opts.GraphDepth
 		req.FromTime = opts.FromTime
 		req.ToTime = opts.ToTime

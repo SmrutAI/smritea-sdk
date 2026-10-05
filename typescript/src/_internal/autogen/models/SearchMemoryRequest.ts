@@ -61,7 +61,7 @@ export interface SearchMemoryRequest {
      */
     graphDepth?: number;
     /**
-     * 0 = app top_n; 1-20 (= services.search.top_n_max)
+     * 0 = app top_n; must be <= services.search.top_n_max (checked in the service layer).
      * @type {number}
      * @memberof SearchMemoryRequest
      */
@@ -115,12 +115,6 @@ export interface SearchMemoryRequest {
      */
     speakerActorId?: string;
     /**
-     * 0=no filtering (pipeline uses RRF scores, not cosine similarity)
-     * @type {number}
-     * @memberof SearchMemoryRequest
-     */
-    threshold?: number;
-    /**
      * ToTime is the end of the time range filter (ISO 8601 format).
      * Must be used together with FromTime.
      * @type {string}
@@ -168,7 +162,6 @@ export function SearchMemoryRequestFromJSONTyped(json: any, ignoreDiscriminator:
         'rerankerType': json['reranker_type'] == null ? undefined : RerankerTypeFromJSON(json['reranker_type']),
         'scope': json['scope'] == null ? undefined : MemoryScopeFromJSON(json['scope']),
         'speakerActorId': json['speaker_actor_id'] == null ? undefined : json['speaker_actor_id'],
-        'threshold': json['threshold'] == null ? undefined : json['threshold'],
         'toTime': json['to_time'] == null ? undefined : json['to_time'],
         'validAt': json['valid_at'] == null ? undefined : json['valid_at'],
     };
@@ -195,7 +188,6 @@ export function SearchMemoryRequestToJSONTyped(value?: SearchMemoryRequest | nul
         'reranker_type': RerankerTypeToJSON(value['rerankerType']),
         'scope': MemoryScopeToJSON(value['scope']),
         'speaker_actor_id': value['speakerActorId'],
-        'threshold': value['threshold'],
         'to_time': value['toTime'],
         'valid_at': value['validAt'],
     };

@@ -88,9 +88,8 @@ export interface SearchOptions {
    */
   speakerActorId?: string;
   scope?: MemoryScope;
-  /** Number of results, 1-20; omit to use the app's top_n. */
+  /** Number of results. It must not exceed the server's top_n_max (default 20). Omit to use the app's top_n. */
   limit?: number;
-  threshold?: number;
   /** Graph traversal depth, 1-5; omit to use the system default. */
   graphDepth?: number;
   /** ISO-8601 datetime string — only return memories created at or after this time. */

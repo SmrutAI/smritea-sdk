@@ -23,11 +23,8 @@ public sealed class SearchOptions
     /// <summary>Gets the scope containing actor and conversation context.</summary>
     public MemoryScope? Scope { get; private set; }
 
-    /// <summary>Gets the number of results (1-20); null uses the app's top_n.</summary>
+    /// <summary>Gets the number of results; null uses the app's top_n. The value must not exceed the server's top_n_max (default 20).</summary>
     public int? Limit { get; private set; }
-
-    /// <summary>Gets the minimum similarity threshold (0.0–1.0).</summary>
-    public float? Threshold { get; private set; }
 
     /// <summary>Gets the graph traversal depth (1-5); null uses the system default.</summary>
     public int? GraphDepth { get; private set; }
@@ -76,21 +73,12 @@ public sealed class SearchOptions
         return this;
     }
 
-    /// <summary>Sets the number of results, 1-20; omit it to use the app's top_n.</summary>
-    /// <param name="limit">The number of results (1-20).</param>
+    /// <summary>Sets the number of results. It must not exceed the server's top_n_max (default 20). Omit it to use the app's top_n.</summary>
+    /// <param name="limit">The number of results (at most the server's top_n_max).</param>
     /// <returns>The current instance for method chaining.</returns>
     public SearchOptions WithLimit(int limit)
     {
         this.Limit = limit;
-        return this;
-    }
-
-    /// <summary>Sets the minimum similarity threshold.</summary>
-    /// <param name="threshold">The minimum score threshold in the range 0.0 to 1.0.</param>
-    /// <returns>The current instance for method chaining.</returns>
-    public SearchOptions WithThreshold(float threshold)
-    {
-        this.Threshold = threshold;
         return this;
     }
 

@@ -149,7 +149,6 @@ type SearchOptions struct {
 	SpeakerActorID *string
 	Scope          *MemoryScope
 	Limit          *int32
-	Threshold      *float32
 	GraphDepth     *int32
 	// FromTime is an ISO-8601 datetime string — only return memories created at or after this time.
 	FromTime *string
@@ -187,11 +186,9 @@ func (o *SearchOptions) WithSpeakerActorID(id string) *SearchOptions {
 // WithScope sets the actor and conversation context for this search operation.
 func (o *SearchOptions) WithScope(s *MemoryScope) *SearchOptions { o.Scope = s; return o }
 
-// WithLimit sets the number of results, 1-20; omit it to use the app's top_n.
+// WithLimit sets the number of results. It must not exceed the server's top_n_max
+// (default 20); omit it to use the app's top_n.
 func (o *SearchOptions) WithLimit(n int32) *SearchOptions { o.Limit = &n; return o }
-
-// WithThreshold sets the minimum similarity threshold.
-func (o *SearchOptions) WithThreshold(t float32) *SearchOptions { o.Threshold = &t; return o }
 
 // WithGraphDepth sets the graph traversal depth, 1-5; omit it to use the system default.
 func (o *SearchOptions) WithGraphDepth(d int32) *SearchOptions { o.GraphDepth = &d; return o }

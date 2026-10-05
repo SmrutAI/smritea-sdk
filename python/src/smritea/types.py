@@ -127,7 +127,6 @@ class SearchOptions(BaseModel):
 
     scope: MemoryScope | None = None
     limit: int | None = None
-    threshold: float | None = None
     graph_depth: int | None = None
     from_time: str | None = None
     """ISO-8601 datetime string — only return memories created at or after this time."""

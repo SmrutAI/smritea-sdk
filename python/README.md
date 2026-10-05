@@ -123,7 +123,6 @@ results = client.search(
     actor_id="alice",
     actor_type="user",
     limit=5,
-    threshold=0.7,          # min relevance score 0.0–1.0
 )
 for r in results:
     print(r.score, r.content)
@@ -137,7 +136,6 @@ Results are ordered by relevance (descending). Each result exposes `score` (0.0�
 | `actor_id` | `None` | Filter by actor ID |
 | `actor_type` | `None` | Filter by actor type |
 | `limit` | app default | Max results to return |
-| `threshold` | `None` | Min relevance score 0.0–1.0 |
 | `graph_depth` | `None` | Graph traversal depth override |
 | `conversation_id` | `None` | Conversation context |
 
@@ -171,7 +169,7 @@ client.delete("mem_abc123")
 results = client.search("", actor_id="alice", actor_type="user", limit=20)
 ```
 
-`limit` is 1-20; omit it to use the app's `top_n`.
+`limit` must not exceed the server's `top_n_max` (default 20); a larger value returns a 400 error. Omit it to use the app's `top_n`.
 
 ---
 

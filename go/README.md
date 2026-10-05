@@ -137,8 +137,7 @@ fmt.Println(memory.Id) // mem_...
 results, err := client.Search(ctx, "dietary restrictions",
     smritea.NewSearchOptions().
         WithScope(smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")).
-        WithLimit(5).
-        WithThreshold(0.7))          // min relevance score 0.0–1.0
+        WithLimit(5))
 for _, r := range results {
     fmt.Println(r.Score, r.Memory.Content)
 }
@@ -152,7 +151,6 @@ Results are ordered by relevance (descending). Each result exposes `Score` (0.0�
 | `ActorID` | `*string` | `nil` | Filter by actor ID |
 | `ActorType` | `*string` | `nil` | Filter by actor type |
 | `Limit` | `*int32` | app default | Max results to return |
-| `Threshold` | `*float32` | `nil` | Min relevance score 0.0–1.0 |
 | `GraphDepth` | `*int32` | `nil` | Graph traversal depth override |
 | `ConversationID` | `*string` | `nil` | Conversation context |
 
@@ -188,7 +186,7 @@ results, _ := client.Search(ctx, "",
         smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")).WithLimit(20))
 ```
 
-`limit` is 1-20; omit it to use the app's `top_n`.
+`limit` must not exceed the server's `top_n_max` (default 20); a larger value returns a 400 error. Omit it to use the app's `top_n`.
 
 ---
 

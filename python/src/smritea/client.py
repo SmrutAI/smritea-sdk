@@ -144,7 +144,6 @@ class SmriteaClient:
         speaker_actor_id: str | None = None,
         scope: MemoryScope | None = None,
         limit: int | None = None,
-        threshold: float | None = None,
         graph_depth: int | None = None,
         from_time: str | None = None,
         to_time: str | None = None,
@@ -165,8 +164,8 @@ class SmriteaClient:
                 mechanism. Omit for anonymous or system-initiated searches.
                 Max 64 characters.
             scope: Optional MemoryScope object for actor and conversation context.
-            limit: Number of results, 1-20; omit to use the app's top_n.
-            threshold: Minimum relevance score filter (0.0–1.0).
+            limit: Number of results. It must not exceed the server's top_n_max
+                (default 20). Omit to use the app's top_n.
             graph_depth: Graph traversal depth, 1-5; omit to use the system default.
             from_time: ISO-8601 datetime — only return memories created at or after this time.
             to_time: ISO-8601 datetime — only return memories created at or before this time.
@@ -206,7 +205,6 @@ class SmriteaClient:
             speaker_actor_id=speaker_actor_id,
             scope=autogen_scope,
             limit=limit,
-            threshold=threshold,
             graph_depth=graph_depth,
             from_time=from_time,
             to_time=to_time,

@@ -147,8 +147,7 @@ List<SearchResult> results = client.search("dietary restrictions",
     new SearchOptions()
         .withActorId("alice")
         .withActorType("user")
-        .withLimit(5)
-        .withThreshold(0.7f));           // min relevance score 0.0–1.0
+        .withLimit(5));
 for (SearchResult r : results) {
     System.out.println(r.getScore() + "  " + r.getContent());
 }
@@ -162,7 +161,6 @@ Results are ordered by relevance (descending). Each result exposes `getScore()` 
 | `withActorId(v)` | `String` | `null` | Filter by actor ID |
 | `withActorType(v)` | `String` | `null` | Filter by actor type |
 | `withLimit(v)` | `Integer` | app default | Max results to return |
-| `withThreshold(v)` | `Float` | `null` | Min relevance score 0.0–1.0 |
 | `withGraphDepth(v)` | `Integer` | `null` | Graph traversal depth override |
 | `withConversationId(v)` | `String` | `null` | Conversation context |
 
@@ -199,7 +197,7 @@ List<SearchResult> results = client.search("", new SearchOptions()
     .withLimit(20));
 ```
 
-`limit` is 1-20; omit it to use the app's `top_n`.
+`limit` must not exceed the server's `top_n_max` (default 20); a larger value returns a 400 error. Omit it to use the app's `top_n`.
 
 ---
 

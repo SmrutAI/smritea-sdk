@@ -190,7 +190,7 @@ public class SmriteaClient {
    * when no memories match.
    *
    * @param query the search query text
-   * @param opts optional parameters controlling actor scoping, result count, threshold, etc.
+   * @param opts optional parameters controlling actor scoping, result count, graph depth, etc.
    * @return a list of SearchResult instances, never null
    * @throws SmriteaError on any API error
    */
@@ -225,9 +225,6 @@ public class SmriteaClient {
       }
       if (opts.getLimit() != null) {
         request.setLimit(opts.getLimit());
-      }
-      if (opts.getThreshold() != null) {
-        request.setThreshold(BigDecimal.valueOf(opts.getThreshold()));
       }
       if (opts.getGraphDepth() != null) {
         request.setGraphDepth(opts.getGraphDepth());

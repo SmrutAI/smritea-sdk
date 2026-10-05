@@ -57,17 +57,16 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="appId">appId (required).</param>
         /// <param name="fromTime">FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime..</param>
         /// <param name="graphDepth">0 &#x3D; system graph_max_hops; 1..services.search.graph_max_hops_max.</param>
-        /// <param name="limit">0 &#x3D; app top_n; 1-20 (&#x3D; services.search.top_n_max).</param>
+        /// <param name="limit">0 &#x3D; app top_n; must be &lt;&#x3D; services.search.top_n_max (checked in the service layer)..</param>
         /// <param name="metadataFilter">MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned..</param>
         /// <param name="method">method.</param>
         /// <param name="query">query (required).</param>
         /// <param name="rerankerType">RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method..</param>
         /// <param name="scope">Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \&quot;no filter\&quot; (searches across all)..</param>
         /// <param name="speakerActorId">SpeakerActorID identifies which actor is making this search request. It is NEVER used for filtering — it does not narrow, exclude, or bias which memories are returned. It exists purely for identification: audit logging, telemetry, and any future personalization/access-control hook that needs to know \&quot;who is asking\&quot; independent of \&quot;which memories to include.\&quot; That second concern (result filtering) is entirely owned by Scope below. Deliberately top-level, not nested inside Scope, so it can never be confused with — or accidentally coupled to — the filter fields. Optional: omit if the caller has no meaningful requester identity (e.g. an anonymous or system-initiated search)..</param>
-        /// <param name="threshold">0&#x3D;no filtering (pipeline uses RRF scores, not cosine similarity).</param>
         /// <param name="toTime">ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime..</param>
         /// <param name="validAt">ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from &lt;&#x3D; ValidAt AND (active_to is null OR active_to &gt;&#x3D; ValidAt) Mutually exclusive with FromTime/ToTime..</param>
-        public SearchMemoryRequest(string appId = default, string fromTime = default, int graphDepth = default, int limit = default, Object metadataFilter = default, SearchMethod? method = default, string query = default, RerankerType? rerankerType = default, MemoryScope scope = default, string speakerActorId = default, decimal threshold = default, string toTime = default, string validAt = default)
+        public SearchMemoryRequest(string appId = default, string fromTime = default, int graphDepth = default, int limit = default, Object metadataFilter = default, SearchMethod? method = default, string query = default, RerankerType? rerankerType = default, MemoryScope scope = default, string speakerActorId = default, string toTime = default, string validAt = default)
         {
             // to ensure "appId" is required (not null)
             if (appId == null)
@@ -89,7 +88,6 @@ namespace Smritea.Internal.Autogen.Model
             this.RerankerType = rerankerType;
             this.Scope = scope;
             this.SpeakerActorId = speakerActorId;
-            this.Threshold = threshold;
             this.ToTime = toTime;
             this.ValidAt = validAt;
         }
@@ -115,9 +113,9 @@ namespace Smritea.Internal.Autogen.Model
         public int GraphDepth { get; set; }
 
         /// <summary>
-        /// 0 &#x3D; app top_n; 1-20 (&#x3D; services.search.top_n_max)
+        /// 0 &#x3D; app top_n; must be &lt;&#x3D; services.search.top_n_max (checked in the service layer).
         /// </summary>
-        /// <value>0 &#x3D; app top_n; 1-20 (&#x3D; services.search.top_n_max)</value>
+        /// <value>0 &#x3D; app top_n; must be &lt;&#x3D; services.search.top_n_max (checked in the service layer).</value>
         [DataMember(Name = "limit", EmitDefaultValue = false)]
         public int Limit { get; set; }
 
@@ -147,13 +145,6 @@ namespace Smritea.Internal.Autogen.Model
         /// <value>SpeakerActorID identifies which actor is making this search request. It is NEVER used for filtering — it does not narrow, exclude, or bias which memories are returned. It exists purely for identification: audit logging, telemetry, and any future personalization/access-control hook that needs to know \&quot;who is asking\&quot; independent of \&quot;which memories to include.\&quot; That second concern (result filtering) is entirely owned by Scope below. Deliberately top-level, not nested inside Scope, so it can never be confused with — or accidentally coupled to — the filter fields. Optional: omit if the caller has no meaningful requester identity (e.g. an anonymous or system-initiated search).</value>
         [DataMember(Name = "speaker_actor_id", EmitDefaultValue = false)]
         public string SpeakerActorId { get; set; }
-
-        /// <summary>
-        /// 0&#x3D;no filtering (pipeline uses RRF scores, not cosine similarity)
-        /// </summary>
-        /// <value>0&#x3D;no filtering (pipeline uses RRF scores, not cosine similarity)</value>
-        [DataMember(Name = "threshold", EmitDefaultValue = false)]
-        public decimal Threshold { get; set; }
 
         /// <summary>
         /// ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.
@@ -187,7 +178,6 @@ namespace Smritea.Internal.Autogen.Model
             sb.Append("  RerankerType: ").Append(RerankerType).Append("\n");
             sb.Append("  Scope: ").Append(Scope).Append("\n");
             sb.Append("  SpeakerActorId: ").Append(SpeakerActorId).Append("\n");
-            sb.Append("  Threshold: ").Append(Threshold).Append("\n");
             sb.Append("  ToTime: ").Append(ToTime).Append("\n");
             sb.Append("  ValidAt: ").Append(ValidAt).Append("\n");
             sb.Append("}\n");
@@ -216,28 +206,10 @@ namespace Smritea.Internal.Autogen.Model
                 yield return new ValidationResult("Invalid value for GraphDepth, must be a value greater than or equal to 0.", new [] { "GraphDepth" });
             }
 
-            // Limit (int) maximum
-            if (this.Limit > (int)20)
-            {
-                yield return new ValidationResult("Invalid value for Limit, must be a value less than or equal to 20.", new [] { "Limit" });
-            }
-
             // SpeakerActorId (string) maxLength
             if (this.SpeakerActorId != null && this.SpeakerActorId.Length > 64)
             {
                 yield return new ValidationResult("Invalid value for SpeakerActorId, length must be less than 64.", new [] { "SpeakerActorId" });
-            }
-
-            // Threshold (decimal) maximum
-            if (this.Threshold > (decimal)1)
-            {
-                yield return new ValidationResult("Invalid value for Threshold, must be a value less than or equal to 1.", new [] { "Threshold" });
-            }
-
-            // Threshold (decimal) minimum
-            if (this.Threshold < (decimal)0)
-            {
-                yield return new ValidationResult("Invalid value for Threshold, must be a value greater than or equal to 0.", new [] { "Threshold" });
             }
 
             yield break;

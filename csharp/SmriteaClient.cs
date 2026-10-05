@@ -228,11 +228,6 @@ public class SmriteaClient : IDisposable
                 request.Limit = opts.Limit.Value;
             }
 
-            if (opts.Threshold is not null)
-            {
-                request.Threshold = (decimal)opts.Threshold.Value;
-            }
-
             if (opts.GraphDepth is not null)
             {
                 request.GraphDepth = opts.GraphDepth.Value;

@@ -206,6 +206,8 @@ console.log(memory.id); // mem_...
 | `metadata`         | `metadata`             | `Metadata`     | `metadata`       | `Metadata`     | `None`   | Arbitrary key-value dict / object       |
 | `conversation_id`  | `conversationId`       | `ConversationID` | `conversationId` | `ConversationId` | `None` | Conversation context                    |
 
+Responses return `conversation_id` in the service's normalized form (`cnv_` + 16 hex chars); filters accept either form.
+
 ---
 
 ### `search` — Semantic search
@@ -218,7 +220,6 @@ results = client.search(
     actor_type="user",
     limit=5,
     method="deep_search",   # optional: "quick_search" | "deep_search" | "context_aware_search"
-    threshold=0.7,           # optional: min relevance score (0.0–1.0)
 )
 for r in results:
     print(r.score, r.content)
@@ -231,7 +232,6 @@ const results = await client.search('dietary restrictions', {
   actorType: 'user',
   limit: 5,
   method: 'deep_search',
-  threshold: 0.7,
 });
 results.forEach(r => console.log(r.score, r.content));
 ```
@@ -255,9 +255,10 @@ Results are ordered by relevance (descending). Each result exposes `score` (floa
 | `actor_type`       | `actorType`            | `ActorType`    | `actorType`      | `ActorType`    | `None`      | Filter by actor type           |
 | `limit`            | `limit`                | `Limit`        | `limit`          | `Limit`        | app default | Max results to return          |
 | `method`           | `method`               | `Method`       | `method`         | `Method`       | app default | Search strategy                |
-| `threshold`        | `threshold`            | `Threshold`    | `threshold`      | `Threshold`    | `None`      | Min relevance score 0.0–1.0    |
 | `graph_depth`      | `graphDepth`           | `GraphDepth`   | `graphDepth`     | `GraphDepth`   | `None`      | Graph traversal depth override |
 | `conversation_id`  | `conversationId`       | `ConversationID` | `conversationId` | `ConversationId` | `None`   | Conversation context           |
+
+Responses return `conversation_id` in the service's normalized form (`cnv_` + 16 hex chars); filters accept either form.
 
 ---
 
@@ -312,7 +313,7 @@ Raises / throws `SmriteaNotFoundError` if the ID does not exist.
 results = client.search("", actor_id="alice", actor_type="user", limit=20)
 ```
 
-`limit` is 1-20; omit it to use the app's `top_n`.
+`limit` must not exceed the server's `top_n_max` (default 20); a larger value returns a 400 error. Omit it to use the app's `top_n`.
 
 ---
 
@@ -402,6 +403,8 @@ All exceptions carry `code` / `Code` (server wire code), `httpStatus` / `HTTPSta
 | `active_to`       | `activeTo`         | `ActiveTo`     | `getActiveTo()`      | `ActiveTo`     | string? | ISO 8601 — when memory expires       |
 | `created_at`      | `createdAt`        | `CreatedAt`    | `getCreatedAt()`     | `CreatedAt`    | string  | ISO 8601 creation timestamp          |
 | `updated_at`      | `updatedAt`        | `UpdatedAt`    | `getUpdatedAt()`     | `UpdatedAt`    | string  | ISO 8601 last update timestamp       |
+
+Responses return `conversation_id` in the service's normalized form (`cnv_` + 16 hex chars); filters accept either form.
 
 > Python fields use `snake_case`; TypeScript fields use `camelCase`; Go and C# fields use `PascalCase`; Java uses `getFieldName()` getter methods.
 

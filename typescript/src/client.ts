@@ -83,7 +83,6 @@ export class SmriteaClient {
               }
             : undefined,
           limit: options?.limit,
-          threshold: options?.threshold,
           graphDepth: options?.graphDepth,
           fromTime: options?.fromTime,
           toTime: options?.toTime,

@@ -27,7 +27,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.math.BigDecimal;
 import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -47,7 +46,6 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
   SearchMemoryRequest.JSON_PROPERTY_RERANKER_TYPE,
   SearchMemoryRequest.JSON_PROPERTY_SCOPE,
   SearchMemoryRequest.JSON_PROPERTY_SPEAKER_ACTOR_ID,
-  SearchMemoryRequest.JSON_PROPERTY_THRESHOLD,
   SearchMemoryRequest.JSON_PROPERTY_TO_TIME,
   SearchMemoryRequest.JSON_PROPERTY_VALID_AT
 })
@@ -92,10 +90,6 @@ public class SearchMemoryRequest {
   public static final String JSON_PROPERTY_SPEAKER_ACTOR_ID = "speaker_actor_id";
   @javax.annotation.Nullable
   private String speakerActorId;
-
-  public static final String JSON_PROPERTY_THRESHOLD = "threshold";
-  @javax.annotation.Nullable
-  private BigDecimal threshold;
 
   public static final String JSON_PROPERTY_TO_TIME = "to_time";
   @javax.annotation.Nullable
@@ -187,8 +181,7 @@ public class SearchMemoryRequest {
   }
 
   /**
-   * 0 &#x3D; app top_n; 1-20 (&#x3D; services.search.top_n_max)
-   * maximum: 20
+   * 0 &#x3D; app top_n; must be &lt;&#x3D; services.search.top_n_max (checked in the service layer).
    * @return limit
    */
   @javax.annotation.Nullable
@@ -350,32 +343,6 @@ public class SearchMemoryRequest {
   }
 
 
-  public SearchMemoryRequest threshold(@javax.annotation.Nullable BigDecimal threshold) {
-    this.threshold = threshold;
-    return this;
-  }
-
-  /**
-   * 0&#x3D;no filtering (pipeline uses RRF scores, not cosine similarity)
-   * minimum: 0
-   * maximum: 1
-   * @return threshold
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_THRESHOLD, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public BigDecimal getThreshold() {
-    return threshold;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_THRESHOLD, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setThreshold(@javax.annotation.Nullable BigDecimal threshold) {
-    this.threshold = threshold;
-  }
-
-
   public SearchMemoryRequest toTime(@javax.annotation.Nullable String toTime) {
     this.toTime = toTime;
     return this;
@@ -446,14 +413,13 @@ public class SearchMemoryRequest {
         Objects.equals(this.rerankerType, searchMemoryRequest.rerankerType) &&
         Objects.equals(this.scope, searchMemoryRequest.scope) &&
         Objects.equals(this.speakerActorId, searchMemoryRequest.speakerActorId) &&
-        Objects.equals(this.threshold, searchMemoryRequest.threshold) &&
         Objects.equals(this.toTime, searchMemoryRequest.toTime) &&
         Objects.equals(this.validAt, searchMemoryRequest.validAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(appId, fromTime, graphDepth, limit, metadataFilter, method, query, rerankerType, scope, speakerActorId, threshold, toTime, validAt);
+    return Objects.hash(appId, fromTime, graphDepth, limit, metadataFilter, method, query, rerankerType, scope, speakerActorId, toTime, validAt);
   }
 
   @Override
@@ -470,7 +436,6 @@ public class SearchMemoryRequest {
     sb.append("    rerankerType: ").append(toIndentedString(rerankerType)).append("\n");
     sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
     sb.append("    speakerActorId: ").append(toIndentedString(speakerActorId)).append("\n");
-    sb.append("    threshold: ").append(toIndentedString(threshold)).append("\n");
     sb.append("    toTime: ").append(toIndentedString(toTime)).append("\n");
     sb.append("    validAt: ").append(toIndentedString(validAt)).append("\n");
     sb.append("}");
@@ -568,11 +533,6 @@ public class SearchMemoryRequest {
     // add `speaker_actor_id` to the URL query string
     if (getSpeakerActorId() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%sspeaker_actor_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSpeakerActorId()))));
-    }
-
-    // add `threshold` to the URL query string
-    if (getThreshold() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sthreshold%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getThreshold()))));
     }
 
     // add `to_time` to the URL query string

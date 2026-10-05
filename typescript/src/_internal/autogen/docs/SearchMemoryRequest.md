@@ -16,7 +16,6 @@ Name | Type
 `rerankerType` | [RerankerType](RerankerType.md)
 `scope` | [MemoryScope](MemoryScope.md)
 `speakerActorId` | string
-`threshold` | number
 `toTime` | string
 `validAt` | string
 
@@ -37,7 +36,6 @@ const example = {
   "rerankerType": null,
   "scope": null,
   "speakerActorId": null,
-  "threshold": null,
   "toTime": null,
   "validAt": null,
 } satisfies SearchMemoryRequest
