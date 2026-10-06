@@ -42,12 +42,6 @@ import {
  */
 export interface SearchMemoryRequest {
     /**
-     * 
-     * @type {string}
-     * @memberof SearchMemoryRequest
-     */
-    appId: string;
-    /**
      * FromTime is the start of a time-range filter, RFC 3339. Returns memories whose validity period overlaps
      * [from_time, ∞): memories still valid at from_time or valid after it. Can be used alone (open-ended).
      * With to_time the range is [from_time, to_time]. Cannot be combined with valid_at.
@@ -139,7 +133,6 @@ export interface SearchMemoryRequest {
  * Check if a given object implements the SearchMemoryRequest interface.
  */
 export function instanceOfSearchMemoryRequest(value: object): value is SearchMemoryRequest {
-    if (!('appId' in value) || value['appId'] === undefined) return false;
     if (!('query' in value) || value['query'] === undefined) return false;
     return true;
 }
@@ -154,7 +147,6 @@ export function SearchMemoryRequestFromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'appId': json['app_id'],
         'fromTime': json['from_time'] == null ? undefined : json['from_time'],
         'graphDepth': json['graph_depth'] == null ? undefined : json['graph_depth'],
         'limit': json['limit'] == null ? undefined : json['limit'],
@@ -180,7 +172,6 @@ export function SearchMemoryRequestToJSONTyped(value?: SearchMemoryRequest | nul
 
     return {
         
-        'app_id': value['appId'],
         'from_time': value['fromTime'],
         'graph_depth': value['graphDepth'],
         'limit': value['limit'],

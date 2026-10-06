@@ -170,48 +170,52 @@ public class SdkMemoryApi {
   /**
    * Create memory (SDK)
    * Create a new memory with quota and rate limit enforcement
+   * @param xAppID App ID (required)
    * @param request Memory creation details (required)
    * @return CreateMemoryResponse
    * @throws ApiException if fails to make API call
    */
-  public CreateMemoryResponse createMemory(@javax.annotation.Nonnull CreateMemoryRequest request) throws ApiException {
-    return createMemory(request, null);
+  public CreateMemoryResponse createMemory(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull CreateMemoryRequest request) throws ApiException {
+    return createMemory(xAppID, request, null);
   }
 
   /**
    * Create memory (SDK)
    * Create a new memory with quota and rate limit enforcement
+   * @param xAppID App ID (required)
    * @param request Memory creation details (required)
    * @param headers Optional headers to include in the request
    * @return CreateMemoryResponse
    * @throws ApiException if fails to make API call
    */
-  public CreateMemoryResponse createMemory(@javax.annotation.Nonnull CreateMemoryRequest request, Map<String, String> headers) throws ApiException {
-    ApiResponse<CreateMemoryResponse> localVarResponse = createMemoryWithHttpInfo(request, headers);
+  public CreateMemoryResponse createMemory(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull CreateMemoryRequest request, Map<String, String> headers) throws ApiException {
+    ApiResponse<CreateMemoryResponse> localVarResponse = createMemoryWithHttpInfo(xAppID, request, headers);
     return localVarResponse.getData();
   }
 
   /**
    * Create memory (SDK)
    * Create a new memory with quota and rate limit enforcement
+   * @param xAppID App ID (required)
    * @param request Memory creation details (required)
    * @return ApiResponse&lt;CreateMemoryResponse&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<CreateMemoryResponse> createMemoryWithHttpInfo(@javax.annotation.Nonnull CreateMemoryRequest request) throws ApiException {
-    return createMemoryWithHttpInfo(request, null);
+  public ApiResponse<CreateMemoryResponse> createMemoryWithHttpInfo(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull CreateMemoryRequest request) throws ApiException {
+    return createMemoryWithHttpInfo(xAppID, request, null);
   }
 
   /**
    * Create memory (SDK)
    * Create a new memory with quota and rate limit enforcement
+   * @param xAppID App ID (required)
    * @param request Memory creation details (required)
    * @param headers Optional headers to include in the request
    * @return ApiResponse&lt;CreateMemoryResponse&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<CreateMemoryResponse> createMemoryWithHttpInfo(@javax.annotation.Nonnull CreateMemoryRequest request, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = createMemoryRequestBuilder(request, headers);
+  public ApiResponse<CreateMemoryResponse> createMemoryWithHttpInfo(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull CreateMemoryRequest request, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = createMemoryRequestBuilder(xAppID, request, headers);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
           localVarRequestBuilder.build(),
@@ -258,7 +262,11 @@ public class SdkMemoryApi {
     }
   }
 
-  private HttpRequest.Builder createMemoryRequestBuilder(@javax.annotation.Nonnull CreateMemoryRequest request, Map<String, String> headers) throws ApiException {
+  private HttpRequest.Builder createMemoryRequestBuilder(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull CreateMemoryRequest request, Map<String, String> headers) throws ApiException {
+    // verify the required parameter 'xAppID' is set
+    if (xAppID == null) {
+      throw new ApiException(400, "Missing the required parameter 'xAppID' when calling createMemory");
+    }
     // verify the required parameter 'request' is set
     if (request == null) {
       throw new ApiException(400, "Missing the required parameter 'request' when calling createMemory");
@@ -270,6 +278,9 @@ public class SdkMemoryApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
+    if (xAppID != null) {
+      localVarRequestBuilder.header("X-App-ID", xAppID.toString());
+    }
     localVarRequestBuilder.header("Content-Type", "application/json");
     localVarRequestBuilder.header("Accept", "application/json");
 
@@ -293,45 +304,49 @@ public class SdkMemoryApi {
   /**
    * Delete memory (SDK)
    * Delete a memory by ID with rate limit enforcement
+   * @param xAppID App ID (required)
    * @param memoryId Memory ID (required)
    * @throws ApiException if fails to make API call
    */
-  public void deleteMemory(@javax.annotation.Nonnull String memoryId) throws ApiException {
-    deleteMemory(memoryId, null);
+  public void deleteMemory(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull String memoryId) throws ApiException {
+    deleteMemory(xAppID, memoryId, null);
   }
 
   /**
    * Delete memory (SDK)
    * Delete a memory by ID with rate limit enforcement
+   * @param xAppID App ID (required)
    * @param memoryId Memory ID (required)
    * @param headers Optional headers to include in the request
    * @throws ApiException if fails to make API call
    */
-  public void deleteMemory(@javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
-    deleteMemoryWithHttpInfo(memoryId, headers);
+  public void deleteMemory(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+    deleteMemoryWithHttpInfo(xAppID, memoryId, headers);
   }
 
   /**
    * Delete memory (SDK)
    * Delete a memory by ID with rate limit enforcement
+   * @param xAppID App ID (required)
    * @param memoryId Memory ID (required)
    * @return ApiResponse&lt;Void&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> deleteMemoryWithHttpInfo(@javax.annotation.Nonnull String memoryId) throws ApiException {
-    return deleteMemoryWithHttpInfo(memoryId, null);
+  public ApiResponse<Void> deleteMemoryWithHttpInfo(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull String memoryId) throws ApiException {
+    return deleteMemoryWithHttpInfo(xAppID, memoryId, null);
   }
 
   /**
    * Delete memory (SDK)
    * Delete a memory by ID with rate limit enforcement
+   * @param xAppID App ID (required)
    * @param memoryId Memory ID (required)
    * @param headers Optional headers to include in the request
    * @return ApiResponse&lt;Void&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> deleteMemoryWithHttpInfo(@javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = deleteMemoryRequestBuilder(memoryId, headers);
+  public ApiResponse<Void> deleteMemoryWithHttpInfo(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = deleteMemoryRequestBuilder(xAppID, memoryId, headers);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
           localVarRequestBuilder.build(),
@@ -367,7 +382,11 @@ public class SdkMemoryApi {
     }
   }
 
-  private HttpRequest.Builder deleteMemoryRequestBuilder(@javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+  private HttpRequest.Builder deleteMemoryRequestBuilder(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+    // verify the required parameter 'xAppID' is set
+    if (xAppID == null) {
+      throw new ApiException(400, "Missing the required parameter 'xAppID' when calling deleteMemory");
+    }
     // verify the required parameter 'memoryId' is set
     if (memoryId == null) {
       throw new ApiException(400, "Missing the required parameter 'memoryId' when calling deleteMemory");
@@ -380,6 +399,9 @@ public class SdkMemoryApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
+    if (xAppID != null) {
+      localVarRequestBuilder.header("X-App-ID", xAppID.toString());
+    }
     localVarRequestBuilder.header("Accept", "application/json");
 
     localVarRequestBuilder.method("DELETE", HttpRequest.BodyPublishers.noBody());
@@ -397,48 +419,52 @@ public class SdkMemoryApi {
   /**
    * Get memory by ID (SDK)
    * Get a single memory by ID with rate limit enforcement
+   * @param xAppID App ID (required)
    * @param memoryId Memory ID (required)
    * @return MemoryResponse
    * @throws ApiException if fails to make API call
    */
-  public MemoryResponse getMemory(@javax.annotation.Nonnull String memoryId) throws ApiException {
-    return getMemory(memoryId, null);
+  public MemoryResponse getMemory(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull String memoryId) throws ApiException {
+    return getMemory(xAppID, memoryId, null);
   }
 
   /**
    * Get memory by ID (SDK)
    * Get a single memory by ID with rate limit enforcement
+   * @param xAppID App ID (required)
    * @param memoryId Memory ID (required)
    * @param headers Optional headers to include in the request
    * @return MemoryResponse
    * @throws ApiException if fails to make API call
    */
-  public MemoryResponse getMemory(@javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
-    ApiResponse<MemoryResponse> localVarResponse = getMemoryWithHttpInfo(memoryId, headers);
+  public MemoryResponse getMemory(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+    ApiResponse<MemoryResponse> localVarResponse = getMemoryWithHttpInfo(xAppID, memoryId, headers);
     return localVarResponse.getData();
   }
 
   /**
    * Get memory by ID (SDK)
    * Get a single memory by ID with rate limit enforcement
+   * @param xAppID App ID (required)
    * @param memoryId Memory ID (required)
    * @return ApiResponse&lt;MemoryResponse&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<MemoryResponse> getMemoryWithHttpInfo(@javax.annotation.Nonnull String memoryId) throws ApiException {
-    return getMemoryWithHttpInfo(memoryId, null);
+  public ApiResponse<MemoryResponse> getMemoryWithHttpInfo(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull String memoryId) throws ApiException {
+    return getMemoryWithHttpInfo(xAppID, memoryId, null);
   }
 
   /**
    * Get memory by ID (SDK)
    * Get a single memory by ID with rate limit enforcement
+   * @param xAppID App ID (required)
    * @param memoryId Memory ID (required)
    * @param headers Optional headers to include in the request
    * @return ApiResponse&lt;MemoryResponse&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<MemoryResponse> getMemoryWithHttpInfo(@javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = getMemoryRequestBuilder(memoryId, headers);
+  public ApiResponse<MemoryResponse> getMemoryWithHttpInfo(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = getMemoryRequestBuilder(xAppID, memoryId, headers);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
           localVarRequestBuilder.build(),
@@ -485,7 +511,11 @@ public class SdkMemoryApi {
     }
   }
 
-  private HttpRequest.Builder getMemoryRequestBuilder(@javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+  private HttpRequest.Builder getMemoryRequestBuilder(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull String memoryId, Map<String, String> headers) throws ApiException {
+    // verify the required parameter 'xAppID' is set
+    if (xAppID == null) {
+      throw new ApiException(400, "Missing the required parameter 'xAppID' when calling getMemory");
+    }
     // verify the required parameter 'memoryId' is set
     if (memoryId == null) {
       throw new ApiException(400, "Missing the required parameter 'memoryId' when calling getMemory");
@@ -498,6 +528,9 @@ public class SdkMemoryApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
+    if (xAppID != null) {
+      localVarRequestBuilder.header("X-App-ID", xAppID.toString());
+    }
     localVarRequestBuilder.header("Accept", "application/json");
 
     localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
@@ -515,48 +548,52 @@ public class SdkMemoryApi {
   /**
    * Search memories (SDK)
    * Search memories with quota and rate limit enforcement
+   * @param xAppID App ID (required)
    * @param request Search request details (required)
    * @return SearchMemoriesResponse
    * @throws ApiException if fails to make API call
    */
-  public SearchMemoriesResponse searchMemories(@javax.annotation.Nonnull SearchMemoryRequest request) throws ApiException {
-    return searchMemories(request, null);
+  public SearchMemoriesResponse searchMemories(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull SearchMemoryRequest request) throws ApiException {
+    return searchMemories(xAppID, request, null);
   }
 
   /**
    * Search memories (SDK)
    * Search memories with quota and rate limit enforcement
+   * @param xAppID App ID (required)
    * @param request Search request details (required)
    * @param headers Optional headers to include in the request
    * @return SearchMemoriesResponse
    * @throws ApiException if fails to make API call
    */
-  public SearchMemoriesResponse searchMemories(@javax.annotation.Nonnull SearchMemoryRequest request, Map<String, String> headers) throws ApiException {
-    ApiResponse<SearchMemoriesResponse> localVarResponse = searchMemoriesWithHttpInfo(request, headers);
+  public SearchMemoriesResponse searchMemories(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull SearchMemoryRequest request, Map<String, String> headers) throws ApiException {
+    ApiResponse<SearchMemoriesResponse> localVarResponse = searchMemoriesWithHttpInfo(xAppID, request, headers);
     return localVarResponse.getData();
   }
 
   /**
    * Search memories (SDK)
    * Search memories with quota and rate limit enforcement
+   * @param xAppID App ID (required)
    * @param request Search request details (required)
    * @return ApiResponse&lt;SearchMemoriesResponse&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<SearchMemoriesResponse> searchMemoriesWithHttpInfo(@javax.annotation.Nonnull SearchMemoryRequest request) throws ApiException {
-    return searchMemoriesWithHttpInfo(request, null);
+  public ApiResponse<SearchMemoriesResponse> searchMemoriesWithHttpInfo(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull SearchMemoryRequest request) throws ApiException {
+    return searchMemoriesWithHttpInfo(xAppID, request, null);
   }
 
   /**
    * Search memories (SDK)
    * Search memories with quota and rate limit enforcement
+   * @param xAppID App ID (required)
    * @param request Search request details (required)
    * @param headers Optional headers to include in the request
    * @return ApiResponse&lt;SearchMemoriesResponse&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<SearchMemoriesResponse> searchMemoriesWithHttpInfo(@javax.annotation.Nonnull SearchMemoryRequest request, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = searchMemoriesRequestBuilder(request, headers);
+  public ApiResponse<SearchMemoriesResponse> searchMemoriesWithHttpInfo(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull SearchMemoryRequest request, Map<String, String> headers) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = searchMemoriesRequestBuilder(xAppID, request, headers);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
           localVarRequestBuilder.build(),
@@ -603,7 +640,11 @@ public class SdkMemoryApi {
     }
   }
 
-  private HttpRequest.Builder searchMemoriesRequestBuilder(@javax.annotation.Nonnull SearchMemoryRequest request, Map<String, String> headers) throws ApiException {
+  private HttpRequest.Builder searchMemoriesRequestBuilder(@javax.annotation.Nonnull String xAppID, @javax.annotation.Nonnull SearchMemoryRequest request, Map<String, String> headers) throws ApiException {
+    // verify the required parameter 'xAppID' is set
+    if (xAppID == null) {
+      throw new ApiException(400, "Missing the required parameter 'xAppID' when calling searchMemories");
+    }
     // verify the required parameter 'request' is set
     if (request == null) {
       throw new ApiException(400, "Missing the required parameter 'request' when calling searchMemories");
@@ -615,6 +656,9 @@ public class SdkMemoryApi {
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
 
+    if (xAppID != null) {
+      localVarRequestBuilder.header("X-App-ID", xAppID.toString());
+    }
     localVarRequestBuilder.header("Content-Type", "application/json");
     localVarRequestBuilder.header("Accept", "application/json");
 

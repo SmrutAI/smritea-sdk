@@ -40,8 +40,8 @@ export class SmriteaClient {
 
     return this.withRetry(() =>
       this.api.createMemory({
+        xAppID: this.appId,
         request: {
-          appId: this.appId,
           content,
           scope: options?.scope
             ? {
@@ -70,8 +70,8 @@ export class SmriteaClient {
   async search(query: string, options?: SearchOptions): Promise<SearchResult[]> {
     const response = await this.withRetry(() =>
       this.api.searchMemories({
+        xAppID: this.appId,
         request: {
-          appId: this.appId,
           query,
           speakerActorId: options?.speakerActorId,
           scope: options?.scope
@@ -97,11 +97,11 @@ export class SmriteaClient {
   }
 
   async get(memoryId: string): Promise<Memory> {
-    return this.withRetry(() => this.api.getMemory({ memoryId }));
+    return this.withRetry(() => this.api.getMemory({ xAppID: this.appId, memoryId }));
   }
 
   async delete(memoryId: string): Promise<void> {
-    await this.withRetry(() => this.api.deleteMemory({ memoryId }));
+    await this.withRetry(() => this.api.deleteMemory({ xAppID: this.appId, memoryId }));
   }
 
   async getAll(options?: { limit?: number; offset?: number }): Promise<Memory[]> {

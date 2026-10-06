@@ -22,8 +22,6 @@ var _ MappedNullable = &CreateMemoryRequest{}
 
 // CreateMemoryRequest struct for CreateMemoryRequest
 type CreateMemoryRequest struct {
-	// AppID is the application identifier (required)
-	AppId string `json:"app_id"`
 	// Content is the memory content (required, min 1 char)
 	Content string `json:"content"`
 	// EntityExtractionOverrides is the per-request entity extraction override (nil = none). Only model is read today (it has no effect); reflection passes are set only in app config.
@@ -48,9 +46,8 @@ type _CreateMemoryRequest CreateMemoryRequest
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateMemoryRequest(appId string, content string, scope MemoryScope) *CreateMemoryRequest {
+func NewCreateMemoryRequest(content string, scope MemoryScope) *CreateMemoryRequest {
 	this := CreateMemoryRequest{}
-	this.AppId = appId
 	this.Content = content
 	this.Scope = scope
 	return &this
@@ -62,30 +59,6 @@ func NewCreateMemoryRequest(appId string, content string, scope MemoryScope) *Cr
 func NewCreateMemoryRequestWithDefaults() *CreateMemoryRequest {
 	this := CreateMemoryRequest{}
 	return &this
-}
-
-// GetAppId returns the AppId field value
-func (o *CreateMemoryRequest) GetAppId() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.AppId
-}
-
-// GetAppIdOk returns a tuple with the AppId field value
-// and a boolean to check if the value has been set.
-func (o *CreateMemoryRequest) GetAppIdOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.AppId, true
-}
-
-// SetAppId sets field value
-func (o *CreateMemoryRequest) SetAppId(v string) {
-	o.AppId = v
 }
 
 // GetContent returns the Content field value
@@ -338,7 +311,6 @@ func (o CreateMemoryRequest) MarshalJSON() ([]byte, error) {
 
 func (o CreateMemoryRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["app_id"] = o.AppId
 	toSerialize["content"] = o.Content
 	if !IsNil(o.EntityExtractionOverrides) {
 		toSerialize["entity_extraction_overrides"] = o.EntityExtractionOverrides
@@ -367,7 +339,6 @@ func (o *CreateMemoryRequest) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"app_id",
 		"content",
 		"scope",
 	}

@@ -6,7 +6,6 @@
 
 Name | Type
 ------------ | -------------
-`appId` | string
 `fromTime` | string
 `graphDepth` | number
 `limit` | number
@@ -26,7 +25,6 @@ import type { SearchMemoryRequest } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "appId": null,
   "fromTime": null,
   "graphDepth": null,
   "limit": null,

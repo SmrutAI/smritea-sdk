@@ -128,14 +128,15 @@ class SmriteaClient:
             )
 
         request = CreateMemoryRequest(
-            app_id=self._app_id,
             content=content,
             scope=autogen_scope,
             metadata=metadata,
             event_occurred_at=event_occurred_at,
             relative_standing=autogen_relative_standing,
         )
-        return self._execute_with_retry(lambda: self._memory_api.create_memory(request))
+        return self._execute_with_retry(
+            lambda: self._memory_api.create_memory(x_app_id=self._app_id, request=request)
+        )
 
     def search(
         self,
@@ -205,7 +206,6 @@ class SmriteaClient:
             )
 
         request = SearchMemoryRequest(
-            app_id=self._app_id,
             query=query,
             speaker_actor_id=speaker_actor_id,
             scope=autogen_scope,
@@ -218,7 +218,9 @@ class SmriteaClient:
             reranker_type=reranker_type,
             metadata_filter=metadata_filter,
         )
-        response = self._execute_with_retry(lambda: self._memory_api.search_memories(request))
+        response = self._execute_with_retry(
+            lambda: self._memory_api.search_memories(x_app_id=self._app_id, request=request)
+        )
         return list(response.memories or [])
 
     def get(self, memory_id: str) -> Memory:
@@ -233,7 +235,9 @@ class SmriteaClient:
         Raises:
             SmriteaNotFoundError: If no memory with this ID exists.
         """
-        return self._execute_with_retry(lambda: self._memory_api.get_memory(memory_id))
+        return self._execute_with_retry(
+            lambda: self._memory_api.get_memory(x_app_id=self._app_id, memory_id=memory_id)
+        )
 
     def delete(self, memory_id: str) -> None:
         """Delete a memory by ID.
@@ -244,7 +248,9 @@ class SmriteaClient:
         Raises:
             SmriteaNotFoundError: If no memory with this ID exists.
         """
-        self._execute_with_retry(lambda: self._memory_api.delete_memory(memory_id))
+        self._execute_with_retry(
+            lambda: self._memory_api.delete_memory(x_app_id=self._app_id, memory_id=memory_id)
+        )
 
     def get_all(
         self,

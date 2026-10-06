@@ -38,18 +38,22 @@ import {
 } from '../models/index';
 
 export interface CreateMemoryOperationRequest {
+    xAppID: string;
     request: CreateMemoryRequest;
 }
 
 export interface DeleteMemoryRequest {
+    xAppID: string;
     memoryId: string;
 }
 
 export interface GetMemoryRequest {
+    xAppID: string;
     memoryId: string;
 }
 
 export interface SearchMemoriesRequest {
+    xAppID: string;
     request: SearchMemoryRequest;
 }
 
@@ -62,6 +66,13 @@ export class SDKMemoryApi extends runtime.BaseAPI {
      * Creates request options for createMemory without sending the request
      */
     async createMemoryRequestOpts(requestParameters: CreateMemoryOperationRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['xAppID'] == null) {
+            throw new runtime.RequiredError(
+                'xAppID',
+                'Required parameter "xAppID" was null or undefined when calling createMemory().'
+            );
+        }
+
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
@@ -74,6 +85,10 @@ export class SDKMemoryApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xAppID'] != null) {
+            headerParameters['X-App-ID'] = String(requestParameters['xAppID']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // ApiKeyAuth authentication
@@ -115,6 +130,13 @@ export class SDKMemoryApi extends runtime.BaseAPI {
      * Creates request options for deleteMemory without sending the request
      */
     async deleteMemoryRequestOpts(requestParameters: DeleteMemoryRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['xAppID'] == null) {
+            throw new runtime.RequiredError(
+                'xAppID',
+                'Required parameter "xAppID" was null or undefined when calling deleteMemory().'
+            );
+        }
+
         if (requestParameters['memoryId'] == null) {
             throw new runtime.RequiredError(
                 'memoryId',
@@ -125,6 +147,10 @@ export class SDKMemoryApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xAppID'] != null) {
+            headerParameters['X-App-ID'] = String(requestParameters['xAppID']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // ApiKeyAuth authentication
@@ -165,6 +191,13 @@ export class SDKMemoryApi extends runtime.BaseAPI {
      * Creates request options for getMemory without sending the request
      */
     async getMemoryRequestOpts(requestParameters: GetMemoryRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['xAppID'] == null) {
+            throw new runtime.RequiredError(
+                'xAppID',
+                'Required parameter "xAppID" was null or undefined when calling getMemory().'
+            );
+        }
+
         if (requestParameters['memoryId'] == null) {
             throw new runtime.RequiredError(
                 'memoryId',
@@ -175,6 +208,10 @@ export class SDKMemoryApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xAppID'] != null) {
+            headerParameters['X-App-ID'] = String(requestParameters['xAppID']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // ApiKeyAuth authentication
@@ -216,6 +253,13 @@ export class SDKMemoryApi extends runtime.BaseAPI {
      * Creates request options for searchMemories without sending the request
      */
     async searchMemoriesRequestOpts(requestParameters: SearchMemoriesRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['xAppID'] == null) {
+            throw new runtime.RequiredError(
+                'xAppID',
+                'Required parameter "xAppID" was null or undefined when calling searchMemories().'
+            );
+        }
+
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
@@ -228,6 +272,10 @@ export class SDKMemoryApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xAppID'] != null) {
+            headerParameters['X-App-ID'] = String(requestParameters['xAppID']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // ApiKeyAuth authentication

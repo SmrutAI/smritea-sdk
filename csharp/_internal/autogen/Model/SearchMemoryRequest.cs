@@ -54,7 +54,6 @@ namespace Smritea.Internal.Autogen.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchMemoryRequest" /> class.
         /// </summary>
-        /// <param name="appId">appId (required).</param>
         /// <param name="fromTime">FromTime is the start of a time-range filter, RFC 3339. Returns memories whose validity period overlaps [from_time, ∞): memories still valid at from_time or valid after it. Can be used alone (open-ended). With to_time the range is [from_time, to_time]. Cannot be combined with valid_at..</param>
         /// <param name="graphDepth">0 &#x3D; system graph_max_hops; 1..services.search.graph_max_hops_max.</param>
         /// <param name="limit">0 &#x3D; app top_n; must be &lt;&#x3D; services.search.top_n_max (checked in the service layer)..</param>
@@ -66,14 +65,8 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="speakerActorId">SpeakerActorID identifies which actor is making this search request. It is NEVER used for filtering — it does not narrow, exclude, or bias which memories are returned. It exists purely for identification: audit logging, telemetry, and any future personalization/access-control hook that needs to know \&quot;who is asking\&quot; independent of \&quot;which memories to include.\&quot; That second concern (result filtering) is entirely owned by Scope below. Deliberately top-level, not nested inside Scope, so it can never be confused with — or accidentally coupled to — the filter fields. Optional: omit if the caller has no meaningful requester identity (e.g. an anonymous or system-initiated search)..</param>
         /// <param name="toTime">ToTime is the end of a time-range filter, RFC 3339 (inclusive). Returns memories whose validity period overlaps (−∞, to_time]: memories that started on or before to_time. Can be used alone (open-ended). With from_time the range is [from_time, to_time] and from_time must be on or before to_time. Cannot be combined with valid_at..</param>
         /// <param name="validAt">ValidAt returns memories valid at exactly this moment (active_from &lt;&#x3D; valid_at and active_to empty or &gt;&#x3D; valid_at), RFC 3339. Mutually exclusive with from_time and to_time..</param>
-        public SearchMemoryRequest(string appId = default, string fromTime = default, int graphDepth = default, int limit = default, Object metadataFilter = default, SearchMethod? method = default, string query = default, RerankerType? rerankerType = default, MemoryScope scope = default, string speakerActorId = default, string toTime = default, string validAt = default)
+        public SearchMemoryRequest(string fromTime = default, int graphDepth = default, int limit = default, Object metadataFilter = default, SearchMethod? method = default, string query = default, RerankerType? rerankerType = default, MemoryScope scope = default, string speakerActorId = default, string toTime = default, string validAt = default)
         {
-            // to ensure "appId" is required (not null)
-            if (appId == null)
-            {
-                throw new ArgumentNullException("appId is a required property for SearchMemoryRequest and cannot be null");
-            }
-            this.AppId = appId;
             // to ensure "query" is required (not null)
             if (query == null)
             {
@@ -91,12 +84,6 @@ namespace Smritea.Internal.Autogen.Model
             this.ToTime = toTime;
             this.ValidAt = validAt;
         }
-
-        /// <summary>
-        /// Gets or Sets AppId
-        /// </summary>
-        [DataMember(Name = "app_id", IsRequired = true, EmitDefaultValue = true)]
-        public string AppId { get; set; }
 
         /// <summary>
         /// FromTime is the start of a time-range filter, RFC 3339. Returns memories whose validity period overlaps [from_time, ∞): memories still valid at from_time or valid after it. Can be used alone (open-ended). With to_time the range is [from_time, to_time]. Cannot be combined with valid_at.
@@ -168,7 +155,6 @@ namespace Smritea.Internal.Autogen.Model
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("class SearchMemoryRequest {\n");
-            sb.Append("  AppId: ").Append(AppId).Append("\n");
             sb.Append("  FromTime: ").Append(FromTime).Append("\n");
             sb.Append("  GraphDepth: ").Append(GraphDepth).Append("\n");
             sb.Append("  Limit: ").Append(Limit).Append("\n");

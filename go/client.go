@@ -62,7 +62,6 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 // the extracted facts, plus metadata (FactsExtracted, SkippedCount, UpdatedCount).
 func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOptions) (*MemoryCreationResult, error) {
 	req := autogen.CreateMemoryRequest{
-		AppId:   c.appID,
 		Content: content,
 		Scope:   autogen.MemoryScope{},
 	}
@@ -92,7 +91,7 @@ func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOption
 	}
 
 	return withRetry[*MemoryCreationResult](ctx, c.maxRetries, func() (*MemoryCreationResult, error) {
-		result, httpResp, err := c.api.CreateMemory(ctx).Request(req).Execute()
+		result, httpResp, err := c.api.CreateMemory(ctx).XAppID(c.appID).Request(req).Execute()
 		if wErr := wrapHTTPError(httpResp, err); wErr != nil {
 			return nil, wErr
 		}
@@ -105,10 +104,8 @@ func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOption
 // graph traversal depth, and conversation scope.
 // Returns an empty (non-nil) slice when no memories match.
 func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOptions) ([]*SearchResult, error) {
-	// AppId and Query are non-pointer required fields in SearchMemoryRequest
-	// (unlike CreateMemoryRequest where they are *string).
+	// Query is a non-pointer required field in SearchMemoryRequest.
 	req := autogen.SearchMemoryRequest{
-		AppId: c.appID,
 		Query: query,
 	}
 
@@ -143,7 +140,7 @@ func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOp
 
 	return withRetry[[]*SearchResult](ctx, c.maxRetries, func() ([]*SearchResult, error) {
 		// Method is SearchMemories (plural), not SearchMemory.
-		respBody, httpResp, err := c.api.SearchMemories(ctx).Request(req).Execute()
+		respBody, httpResp, err := c.api.SearchMemories(ctx).XAppID(c.appID).Request(req).Execute()
 		if wErr := wrapHTTPError(httpResp, err); wErr != nil {
 			return nil, wErr
 		}
@@ -163,7 +160,7 @@ func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOp
 // the memory does not exist.
 func (c *SmriteaClient) Get(ctx context.Context, memoryID string) (*Memory, error) {
 	return withRetry[*Memory](ctx, c.maxRetries, func() (*Memory, error) {
-		result, httpResp, err := c.api.GetMemory(ctx, memoryID).Execute()
+		result, httpResp, err := c.api.GetMemory(ctx, memoryID).XAppID(c.appID).Execute()
 		if wErr := wrapHTTPError(httpResp, err); wErr != nil {
 			return nil, wErr
 		}
@@ -175,7 +172,7 @@ func (c *SmriteaClient) Get(ctx context.Context, memoryID string) (*Memory, erro
 // when the memory does not exist.
 func (c *SmriteaClient) Delete(ctx context.Context, memoryID string) error {
 	_, err := withRetry[struct{}](ctx, c.maxRetries, func() (struct{}, error) {
-		httpResp, err := c.api.DeleteMemory(ctx, memoryID).Execute()
+		httpResp, err := c.api.DeleteMemory(ctx, memoryID).XAppID(c.appID).Execute()
 		if wErr := wrapHTTPError(httpResp, err); wErr != nil {
 			return struct{}{}, wErr
 		}

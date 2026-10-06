@@ -31,7 +31,6 @@ class SearchMemoryRequest(BaseModel):
     """
     SearchMemoryRequest
     """ # noqa: E501
-    app_id: StrictStr
     from_time: Optional[StrictStr] = Field(default=None, description="FromTime is the start of a time-range filter, RFC 3339. Returns memories whose validity period overlaps [from_time, ∞): memories still valid at from_time or valid after it. Can be used alone (open-ended). With to_time the range is [from_time, to_time]. Cannot be combined with valid_at.")
     graph_depth: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="0 = system graph_max_hops; 1..services.search.graph_max_hops_max")
     limit: Optional[StrictInt] = Field(default=None, description="0 = app top_n; must be <= services.search.top_n_max (checked in the service layer).")
@@ -43,7 +42,7 @@ class SearchMemoryRequest(BaseModel):
     speaker_actor_id: Optional[Annotated[str, Field(strict=True, max_length=64)]] = Field(default=None, description="SpeakerActorID identifies which actor is making this search request. It is NEVER used for filtering — it does not narrow, exclude, or bias which memories are returned. It exists purely for identification: audit logging, telemetry, and any future personalization/access-control hook that needs to know \"who is asking\" independent of \"which memories to include.\" That second concern (result filtering) is entirely owned by Scope below. Deliberately top-level, not nested inside Scope, so it can never be confused with — or accidentally coupled to — the filter fields. Optional: omit if the caller has no meaningful requester identity (e.g. an anonymous or system-initiated search).")
     to_time: Optional[StrictStr] = Field(default=None, description="ToTime is the end of a time-range filter, RFC 3339 (inclusive). Returns memories whose validity period overlaps (−∞, to_time]: memories that started on or before to_time. Can be used alone (open-ended). With from_time the range is [from_time, to_time] and from_time must be on or before to_time. Cannot be combined with valid_at.")
     valid_at: Optional[StrictStr] = Field(default=None, description="ValidAt returns memories valid at exactly this moment (active_from <= valid_at and active_to empty or >= valid_at), RFC 3339. Mutually exclusive with from_time and to_time.")
-    __properties: ClassVar[List[str]] = ["app_id", "from_time", "graph_depth", "limit", "metadata_filter", "method", "query", "reranker_type", "scope", "speaker_actor_id", "to_time", "valid_at"]
+    __properties: ClassVar[List[str]] = ["from_time", "graph_depth", "limit", "metadata_filter", "method", "query", "reranker_type", "scope", "speaker_actor_id", "to_time", "valid_at"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -99,7 +98,6 @@ class SearchMemoryRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "app_id": obj.get("app_id"),
             "from_time": obj.get("from_time"),
             "graph_depth": obj.get("graph_depth"),
             "limit": obj.get("limit"),

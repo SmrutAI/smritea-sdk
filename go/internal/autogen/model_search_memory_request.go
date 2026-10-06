@@ -22,7 +22,6 @@ var _ MappedNullable = &SearchMemoryRequest{}
 
 // SearchMemoryRequest struct for SearchMemoryRequest
 type SearchMemoryRequest struct {
-	AppId string `json:"app_id"`
 	// FromTime is the start of a time-range filter, RFC 3339. Returns memories whose validity period overlaps [from_time, ∞): memories still valid at from_time or valid after it. Can be used alone (open-ended). With to_time the range is [from_time, to_time]. Cannot be combined with valid_at.
 	FromTime *string `json:"from_time,omitempty"`
 	// 0 = system graph_max_hops; 1..services.search.graph_max_hops_max
@@ -51,9 +50,8 @@ type _SearchMemoryRequest SearchMemoryRequest
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSearchMemoryRequest(appId string, query string) *SearchMemoryRequest {
+func NewSearchMemoryRequest(query string) *SearchMemoryRequest {
 	this := SearchMemoryRequest{}
-	this.AppId = appId
 	this.Query = query
 	return &this
 }
@@ -64,30 +62,6 @@ func NewSearchMemoryRequest(appId string, query string) *SearchMemoryRequest {
 func NewSearchMemoryRequestWithDefaults() *SearchMemoryRequest {
 	this := SearchMemoryRequest{}
 	return &this
-}
-
-// GetAppId returns the AppId field value
-func (o *SearchMemoryRequest) GetAppId() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.AppId
-}
-
-// GetAppIdOk returns a tuple with the AppId field value
-// and a boolean to check if the value has been set.
-func (o *SearchMemoryRequest) GetAppIdOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.AppId, true
-}
-
-// SetAppId sets field value
-func (o *SearchMemoryRequest) SetAppId(v string) {
-	o.AppId = v
 }
 
 // GetFromTime returns the FromTime field value if set, zero value otherwise.
@@ -444,7 +418,6 @@ func (o SearchMemoryRequest) MarshalJSON() ([]byte, error) {
 
 func (o SearchMemoryRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["app_id"] = o.AppId
 	if !IsNil(o.FromTime) {
 		toSerialize["from_time"] = o.FromTime
 	}
@@ -484,7 +457,6 @@ func (o *SearchMemoryRequest) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"app_id",
 		"query",
 	}
 

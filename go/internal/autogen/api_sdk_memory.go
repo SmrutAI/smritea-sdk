@@ -27,7 +27,14 @@ type SDKMemoryAPIService service
 type ApiCreateMemoryRequest struct {
 	ctx context.Context
 	ApiService *SDKMemoryAPIService
+	xAppID *string
 	request *CreateMemoryRequest
+}
+
+// App ID
+func (r ApiCreateMemoryRequest) XAppID(xAppID string) ApiCreateMemoryRequest {
+	r.xAppID = &xAppID
+	return r
 }
 
 // Memory creation details
@@ -75,6 +82,9 @@ func (a *SDKMemoryAPIService) CreateMemoryExecute(r ApiCreateMemoryRequest) (*Cr
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xAppID == nil {
+		return localVarReturnValue, nil, reportError("xAppID is required and must be specified")
+	}
 	if r.request == nil {
 		return localVarReturnValue, nil, reportError("request is required and must be specified")
 	}
@@ -96,6 +106,7 @@ func (a *SDKMemoryAPIService) CreateMemoryExecute(r ApiCreateMemoryRequest) (*Cr
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "X-App-ID", r.xAppID, "", "")
 	// body params
 	localVarPostBody = r.request
 	if r.ctx != nil {
@@ -206,7 +217,14 @@ func (a *SDKMemoryAPIService) CreateMemoryExecute(r ApiCreateMemoryRequest) (*Cr
 type ApiDeleteMemoryRequest struct {
 	ctx context.Context
 	ApiService *SDKMemoryAPIService
+	xAppID *string
 	memoryId string
+}
+
+// App ID
+func (r ApiDeleteMemoryRequest) XAppID(xAppID string) ApiDeleteMemoryRequest {
+	r.xAppID = &xAppID
+	return r
 }
 
 func (r ApiDeleteMemoryRequest) Execute() (*http.Response, error) {
@@ -249,6 +267,9 @@ func (a *SDKMemoryAPIService) DeleteMemoryExecute(r ApiDeleteMemoryRequest) (*ht
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xAppID == nil {
+		return nil, reportError("xAppID is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -267,6 +288,7 @@ func (a *SDKMemoryAPIService) DeleteMemoryExecute(r ApiDeleteMemoryRequest) (*ht
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "X-App-ID", r.xAppID, "", "")
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
@@ -366,7 +388,14 @@ func (a *SDKMemoryAPIService) DeleteMemoryExecute(r ApiDeleteMemoryRequest) (*ht
 type ApiGetMemoryRequest struct {
 	ctx context.Context
 	ApiService *SDKMemoryAPIService
+	xAppID *string
 	memoryId string
+}
+
+// App ID
+func (r ApiGetMemoryRequest) XAppID(xAppID string) ApiGetMemoryRequest {
+	r.xAppID = &xAppID
+	return r
 }
 
 func (r ApiGetMemoryRequest) Execute() (*MemoryResponse, *http.Response, error) {
@@ -411,6 +440,9 @@ func (a *SDKMemoryAPIService) GetMemoryExecute(r ApiGetMemoryRequest) (*MemoryRe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xAppID == nil {
+		return localVarReturnValue, nil, reportError("xAppID is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -429,6 +461,7 @@ func (a *SDKMemoryAPIService) GetMemoryExecute(r ApiGetMemoryRequest) (*MemoryRe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "X-App-ID", r.xAppID, "", "")
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
@@ -537,7 +570,14 @@ func (a *SDKMemoryAPIService) GetMemoryExecute(r ApiGetMemoryRequest) (*MemoryRe
 type ApiSearchMemoriesRequest struct {
 	ctx context.Context
 	ApiService *SDKMemoryAPIService
+	xAppID *string
 	request *SearchMemoryRequest
+}
+
+// App ID
+func (r ApiSearchMemoriesRequest) XAppID(xAppID string) ApiSearchMemoriesRequest {
+	r.xAppID = &xAppID
+	return r
 }
 
 // Search request details
@@ -585,6 +625,9 @@ func (a *SDKMemoryAPIService) SearchMemoriesExecute(r ApiSearchMemoriesRequest) 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xAppID == nil {
+		return localVarReturnValue, nil, reportError("xAppID is required and must be specified")
+	}
 	if r.request == nil {
 		return localVarReturnValue, nil, reportError("request is required and must be specified")
 	}
@@ -606,6 +649,7 @@ func (a *SDKMemoryAPIService) SearchMemoriesExecute(r ApiSearchMemoriesRequest) 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "X-App-ID", r.xAppID, "", "")
 	// body params
 	localVarPostBody = r.request
 	if r.ctx != nil {

@@ -45,6 +45,7 @@ class SDKMemoryApi:
     @validate_call
     def create_memory(
         self,
+        x_app_id: Annotated[StrictStr, Field(description="App ID")],
         request: Annotated[CreateMemoryRequest, Field(description="Memory creation details")],
         _request_timeout: Union[
             None,
@@ -63,6 +64,8 @@ class SDKMemoryApi:
 
         Create a new memory with quota and rate limit enforcement
 
+        :param x_app_id: App ID (required)
+        :type x_app_id: str
         :param request: Memory creation details (required)
         :type request: CreateMemoryRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -88,6 +91,7 @@ class SDKMemoryApi:
         """ # noqa: E501
 
         _param = self._create_memory_serialize(
+            x_app_id=x_app_id,
             request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -117,6 +121,7 @@ class SDKMemoryApi:
     @validate_call
     def create_memory_with_http_info(
         self,
+        x_app_id: Annotated[StrictStr, Field(description="App ID")],
         request: Annotated[CreateMemoryRequest, Field(description="Memory creation details")],
         _request_timeout: Union[
             None,
@@ -135,6 +140,8 @@ class SDKMemoryApi:
 
         Create a new memory with quota and rate limit enforcement
 
+        :param x_app_id: App ID (required)
+        :type x_app_id: str
         :param request: Memory creation details (required)
         :type request: CreateMemoryRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -160,6 +167,7 @@ class SDKMemoryApi:
         """ # noqa: E501
 
         _param = self._create_memory_serialize(
+            x_app_id=x_app_id,
             request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -189,6 +197,7 @@ class SDKMemoryApi:
     @validate_call
     def create_memory_without_preload_content(
         self,
+        x_app_id: Annotated[StrictStr, Field(description="App ID")],
         request: Annotated[CreateMemoryRequest, Field(description="Memory creation details")],
         _request_timeout: Union[
             None,
@@ -207,6 +216,8 @@ class SDKMemoryApi:
 
         Create a new memory with quota and rate limit enforcement
 
+        :param x_app_id: App ID (required)
+        :type x_app_id: str
         :param request: Memory creation details (required)
         :type request: CreateMemoryRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -232,6 +243,7 @@ class SDKMemoryApi:
         """ # noqa: E501
 
         _param = self._create_memory_serialize(
+            x_app_id=x_app_id,
             request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -256,6 +268,7 @@ class SDKMemoryApi:
 
     def _create_memory_serialize(
         self,
+        x_app_id,
         request,
         _request_auth,
         _content_type,
@@ -280,6 +293,8 @@ class SDKMemoryApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_app_id is not None:
+            _header_params['X-App-ID'] = x_app_id
         # process the form parameters
         # process the body parameter
         if request is not None:
@@ -334,6 +349,7 @@ class SDKMemoryApi:
     @validate_call
     def delete_memory(
         self,
+        x_app_id: Annotated[StrictStr, Field(description="App ID")],
         memory_id: Annotated[StrictStr, Field(description="Memory ID")],
         _request_timeout: Union[
             None,
@@ -352,6 +368,8 @@ class SDKMemoryApi:
 
         Delete a memory by ID with rate limit enforcement
 
+        :param x_app_id: App ID (required)
+        :type x_app_id: str
         :param memory_id: Memory ID (required)
         :type memory_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -377,6 +395,7 @@ class SDKMemoryApi:
         """ # noqa: E501
 
         _param = self._delete_memory_serialize(
+            x_app_id=x_app_id,
             memory_id=memory_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -406,6 +425,7 @@ class SDKMemoryApi:
     @validate_call
     def delete_memory_with_http_info(
         self,
+        x_app_id: Annotated[StrictStr, Field(description="App ID")],
         memory_id: Annotated[StrictStr, Field(description="Memory ID")],
         _request_timeout: Union[
             None,
@@ -424,6 +444,8 @@ class SDKMemoryApi:
 
         Delete a memory by ID with rate limit enforcement
 
+        :param x_app_id: App ID (required)
+        :type x_app_id: str
         :param memory_id: Memory ID (required)
         :type memory_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -449,6 +471,7 @@ class SDKMemoryApi:
         """ # noqa: E501
 
         _param = self._delete_memory_serialize(
+            x_app_id=x_app_id,
             memory_id=memory_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -478,6 +501,7 @@ class SDKMemoryApi:
     @validate_call
     def delete_memory_without_preload_content(
         self,
+        x_app_id: Annotated[StrictStr, Field(description="App ID")],
         memory_id: Annotated[StrictStr, Field(description="Memory ID")],
         _request_timeout: Union[
             None,
@@ -496,6 +520,8 @@ class SDKMemoryApi:
 
         Delete a memory by ID with rate limit enforcement
 
+        :param x_app_id: App ID (required)
+        :type x_app_id: str
         :param memory_id: Memory ID (required)
         :type memory_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -521,6 +547,7 @@ class SDKMemoryApi:
         """ # noqa: E501
 
         _param = self._delete_memory_serialize(
+            x_app_id=x_app_id,
             memory_id=memory_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -545,6 +572,7 @@ class SDKMemoryApi:
 
     def _delete_memory_serialize(
         self,
+        x_app_id,
         memory_id,
         _request_auth,
         _content_type,
@@ -571,6 +599,8 @@ class SDKMemoryApi:
             _path_params['memory_id'] = memory_id
         # process the query parameters
         # process the header parameters
+        if x_app_id is not None:
+            _header_params['X-App-ID'] = x_app_id
         # process the form parameters
         # process the body parameter
 
@@ -610,6 +640,7 @@ class SDKMemoryApi:
     @validate_call
     def get_memory(
         self,
+        x_app_id: Annotated[StrictStr, Field(description="App ID")],
         memory_id: Annotated[StrictStr, Field(description="Memory ID")],
         _request_timeout: Union[
             None,
@@ -628,6 +659,8 @@ class SDKMemoryApi:
 
         Get a single memory by ID with rate limit enforcement
 
+        :param x_app_id: App ID (required)
+        :type x_app_id: str
         :param memory_id: Memory ID (required)
         :type memory_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -653,6 +686,7 @@ class SDKMemoryApi:
         """ # noqa: E501
 
         _param = self._get_memory_serialize(
+            x_app_id=x_app_id,
             memory_id=memory_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -682,6 +716,7 @@ class SDKMemoryApi:
     @validate_call
     def get_memory_with_http_info(
         self,
+        x_app_id: Annotated[StrictStr, Field(description="App ID")],
         memory_id: Annotated[StrictStr, Field(description="Memory ID")],
         _request_timeout: Union[
             None,
@@ -700,6 +735,8 @@ class SDKMemoryApi:
 
         Get a single memory by ID with rate limit enforcement
 
+        :param x_app_id: App ID (required)
+        :type x_app_id: str
         :param memory_id: Memory ID (required)
         :type memory_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -725,6 +762,7 @@ class SDKMemoryApi:
         """ # noqa: E501
 
         _param = self._get_memory_serialize(
+            x_app_id=x_app_id,
             memory_id=memory_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -754,6 +792,7 @@ class SDKMemoryApi:
     @validate_call
     def get_memory_without_preload_content(
         self,
+        x_app_id: Annotated[StrictStr, Field(description="App ID")],
         memory_id: Annotated[StrictStr, Field(description="Memory ID")],
         _request_timeout: Union[
             None,
@@ -772,6 +811,8 @@ class SDKMemoryApi:
 
         Get a single memory by ID with rate limit enforcement
 
+        :param x_app_id: App ID (required)
+        :type x_app_id: str
         :param memory_id: Memory ID (required)
         :type memory_id: str
         :param _request_timeout: timeout setting for this request. If one
@@ -797,6 +838,7 @@ class SDKMemoryApi:
         """ # noqa: E501
 
         _param = self._get_memory_serialize(
+            x_app_id=x_app_id,
             memory_id=memory_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -821,6 +863,7 @@ class SDKMemoryApi:
 
     def _get_memory_serialize(
         self,
+        x_app_id,
         memory_id,
         _request_auth,
         _content_type,
@@ -847,6 +890,8 @@ class SDKMemoryApi:
             _path_params['memory_id'] = memory_id
         # process the query parameters
         # process the header parameters
+        if x_app_id is not None:
+            _header_params['X-App-ID'] = x_app_id
         # process the form parameters
         # process the body parameter
 
@@ -886,6 +931,7 @@ class SDKMemoryApi:
     @validate_call
     def search_memories(
         self,
+        x_app_id: Annotated[StrictStr, Field(description="App ID")],
         request: Annotated[SearchMemoryRequest, Field(description="Search request details")],
         _request_timeout: Union[
             None,
@@ -904,6 +950,8 @@ class SDKMemoryApi:
 
         Search memories with quota and rate limit enforcement
 
+        :param x_app_id: App ID (required)
+        :type x_app_id: str
         :param request: Search request details (required)
         :type request: SearchMemoryRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -929,6 +977,7 @@ class SDKMemoryApi:
         """ # noqa: E501
 
         _param = self._search_memories_serialize(
+            x_app_id=x_app_id,
             request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -958,6 +1007,7 @@ class SDKMemoryApi:
     @validate_call
     def search_memories_with_http_info(
         self,
+        x_app_id: Annotated[StrictStr, Field(description="App ID")],
         request: Annotated[SearchMemoryRequest, Field(description="Search request details")],
         _request_timeout: Union[
             None,
@@ -976,6 +1026,8 @@ class SDKMemoryApi:
 
         Search memories with quota and rate limit enforcement
 
+        :param x_app_id: App ID (required)
+        :type x_app_id: str
         :param request: Search request details (required)
         :type request: SearchMemoryRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -1001,6 +1053,7 @@ class SDKMemoryApi:
         """ # noqa: E501
 
         _param = self._search_memories_serialize(
+            x_app_id=x_app_id,
             request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1030,6 +1083,7 @@ class SDKMemoryApi:
     @validate_call
     def search_memories_without_preload_content(
         self,
+        x_app_id: Annotated[StrictStr, Field(description="App ID")],
         request: Annotated[SearchMemoryRequest, Field(description="Search request details")],
         _request_timeout: Union[
             None,
@@ -1048,6 +1102,8 @@ class SDKMemoryApi:
 
         Search memories with quota and rate limit enforcement
 
+        :param x_app_id: App ID (required)
+        :type x_app_id: str
         :param request: Search request details (required)
         :type request: SearchMemoryRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -1073,6 +1129,7 @@ class SDKMemoryApi:
         """ # noqa: E501
 
         _param = self._search_memories_serialize(
+            x_app_id=x_app_id,
             request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1097,6 +1154,7 @@ class SDKMemoryApi:
 
     def _search_memories_serialize(
         self,
+        x_app_id,
         request,
         _request_auth,
         _content_type,
@@ -1121,6 +1179,8 @@ class SDKMemoryApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_app_id is not None:
+            _header_params['X-App-ID'] = x_app_id
         # process the form parameters
         # process the body parameter
         if request is not None:

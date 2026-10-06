@@ -76,7 +76,7 @@ public class SmriteaClient : IDisposable
     /// updatedCount).</returns>
     public async Task<MemoryCreationResult> AddAsync(string content, AddOptions? opts = null, CancellationToken ct = default)
     {
-        var request = new CreateMemoryRequest(appId: this.appId, content: content, scope: new Smritea.Internal.Autogen.Model.MemoryScope());
+        var request = new CreateMemoryRequest(content: content, scope: new Smritea.Internal.Autogen.Model.MemoryScope());
 
         if (opts is not null)
         {
@@ -156,7 +156,7 @@ public class SmriteaClient : IDisposable
             {
                 try
                 {
-                    var resp = await this.api.CreateMemoryAsync(request, token);
+                    var resp = await this.api.CreateMemoryAsync(this.appId, request, token);
                     if (resp is null)
                     {
                         throw new SmriteaDeserializationException(
@@ -184,10 +184,10 @@ public class SmriteaClient : IDisposable
     public async Task<IReadOnlyList<SearchResult>> SearchAsync(string query, SearchOptions? opts = null, CancellationToken ct = default)
     {
         // Must use the named-argument constructor form.
-        // The autogen constructor validates appId/query and throws ArgumentNullException
+        // The autogen constructor validates query and throws ArgumentNullException
         // if they are null. Object initializer syntax calls the constructor first with all
         // defaults (null), which triggers the guard before the setters run.
-        var request = new SearchMemoryRequest(appId: this.appId, query: query);
+        var request = new SearchMemoryRequest(query: query);
 
         if (opts is not null)
         {
@@ -269,7 +269,7 @@ public class SmriteaClient : IDisposable
             {
                 try
                 {
-                    var resp = await this.api.SearchMemoriesAsync(request, token);
+                    var resp = await this.api.SearchMemoriesAsync(this.appId, request, token);
                     var memories = resp.Memories;
                     if (memories is null || memories.Count == 0)
                     {
@@ -300,7 +300,7 @@ public class SmriteaClient : IDisposable
             {
                 try
                 {
-                    var resp = await this.api.GetMemoryAsync(memoryId, token);
+                    var resp = await this.api.GetMemoryAsync(this.appId, memoryId, token);
                     if (resp is null)
                     {
                         throw new SmriteaDeserializationException(
@@ -331,7 +331,7 @@ public class SmriteaClient : IDisposable
             {
                 try
                 {
-                    await this.api.DeleteMemoryAsync(memoryId, token);
+                    await this.api.DeleteMemoryAsync(this.appId, memoryId, token);
                     return 0; // dummy return for generic retry helper
                 }
                 catch (ApiException e)

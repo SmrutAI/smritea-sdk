@@ -41,7 +41,6 @@ namespace Smritea.Internal.Autogen.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateMemoryRequest" /> class.
         /// </summary>
-        /// <param name="appId">AppID is the application identifier (required) (required).</param>
         /// <param name="content">Content is the memory content (required, min 1 char) (required).</param>
         /// <param name="entityExtractionOverrides">EntityExtractionOverrides is the per-request entity extraction override (nil &#x3D; none). Only model is read today (it has no effect); reflection passes are set only in app config..</param>
         /// <param name="eventOccurredAt">EventOccurredAt is the timestamp when this content was created or occurred (optional). Used by the extraction LLM to resolve relative temporal expressions like \&quot;last year\&quot; or \&quot;yesterday\&quot;. If nil, defaults to time.Now() inside the pipeline..</param>
@@ -50,14 +49,8 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="personaExtractionOverrides">PersonaExtractionOverrides overrides App-level persona extraction config (nil &#x3D; use App defaults). Only non-zero fields in overrides replace app-level values. This is a stub for v1 - the actual LLM-based persona extraction is deferred to a future task..</param>
         /// <param name="relativeStanding">RelativeStanding groups importance and temporal decay parameters. If nil on input, defaults are applied (importance&#x3D;1.0, decay_factor&#x3D;0.2, decay_function&#x3D;exponential)..</param>
         /// <param name="scope">Scope groups actor, conversation, and source context fields. ActorID and ActorType are required for memory creation (scoped storage). (required).</param>
-        public CreateMemoryRequest(string appId = default, string content = default, EntityExtractionOverrides entityExtractionOverrides = default, string eventOccurredAt = default, FactExtractionOverrides factExtractionOverrides = default, Object metadata = default, PersonaExtractionConfig personaExtractionOverrides = default, RelativeStandingConfig relativeStanding = default, MemoryScope scope = default)
+        public CreateMemoryRequest(string content = default, EntityExtractionOverrides entityExtractionOverrides = default, string eventOccurredAt = default, FactExtractionOverrides factExtractionOverrides = default, Object metadata = default, PersonaExtractionConfig personaExtractionOverrides = default, RelativeStandingConfig relativeStanding = default, MemoryScope scope = default)
         {
-            // to ensure "appId" is required (not null)
-            if (appId == null)
-            {
-                throw new ArgumentNullException("appId is a required property for CreateMemoryRequest and cannot be null");
-            }
-            this.AppId = appId;
             // to ensure "content" is required (not null)
             if (content == null)
             {
@@ -77,13 +70,6 @@ namespace Smritea.Internal.Autogen.Model
             this.PersonaExtractionOverrides = personaExtractionOverrides;
             this.RelativeStanding = relativeStanding;
         }
-
-        /// <summary>
-        /// AppID is the application identifier (required)
-        /// </summary>
-        /// <value>AppID is the application identifier (required)</value>
-        [DataMember(Name = "app_id", IsRequired = true, EmitDefaultValue = true)]
-        public string AppId { get; set; }
 
         /// <summary>
         /// Content is the memory content (required, min 1 char)
@@ -149,7 +135,6 @@ namespace Smritea.Internal.Autogen.Model
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("class CreateMemoryRequest {\n");
-            sb.Append("  AppId: ").Append(AppId).Append("\n");
             sb.Append("  Content: ").Append(Content).Append("\n");
             sb.Append("  EntityExtractionOverrides: ").Append(EntityExtractionOverrides).Append("\n");
             sb.Append("  EventOccurredAt: ").Append(EventOccurredAt).Append("\n");
@@ -178,18 +163,6 @@ namespace Smritea.Internal.Autogen.Model
         /// <returns>Validation Result</returns>
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            // AppId (string) maxLength
-            if (this.AppId != null && this.AppId.Length > 24)
-            {
-                yield return new ValidationResult("Invalid value for AppId, length must be less than 24.", new [] { "AppId" });
-            }
-
-            // AppId (string) minLength
-            if (this.AppId != null && this.AppId.Length < 1)
-            {
-                yield return new ValidationResult("Invalid value for AppId, length must be greater than 1.", new [] { "AppId" });
-            }
-
             // Content (string) minLength
             if (this.Content != null && this.Content.Length < 1)
             {

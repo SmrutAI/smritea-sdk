@@ -38,7 +38,6 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
  * CreateMemoryRequest
  */
 @JsonPropertyOrder({
-  CreateMemoryRequest.JSON_PROPERTY_APP_ID,
   CreateMemoryRequest.JSON_PROPERTY_CONTENT,
   CreateMemoryRequest.JSON_PROPERTY_ENTITY_EXTRACTION_OVERRIDES,
   CreateMemoryRequest.JSON_PROPERTY_EVENT_OCCURRED_AT,
@@ -50,10 +49,6 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class CreateMemoryRequest {
-  public static final String JSON_PROPERTY_APP_ID = "app_id";
-  @javax.annotation.Nonnull
-  private String appId;
-
   public static final String JSON_PROPERTY_CONTENT = "content";
   @javax.annotation.Nonnull
   private String content;
@@ -88,30 +83,6 @@ public class CreateMemoryRequest {
 
   public CreateMemoryRequest() { 
   }
-
-  public CreateMemoryRequest appId(@javax.annotation.Nonnull String appId) {
-    this.appId = appId;
-    return this;
-  }
-
-  /**
-   * AppID is the application identifier (required)
-   * @return appId
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_APP_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getAppId() {
-    return appId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_APP_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setAppId(@javax.annotation.Nonnull String appId) {
-    this.appId = appId;
-  }
-
 
   public CreateMemoryRequest content(@javax.annotation.Nonnull String content) {
     this.content = content;
@@ -317,8 +288,7 @@ public class CreateMemoryRequest {
       return false;
     }
     CreateMemoryRequest createMemoryRequest = (CreateMemoryRequest) o;
-    return Objects.equals(this.appId, createMemoryRequest.appId) &&
-        Objects.equals(this.content, createMemoryRequest.content) &&
+    return Objects.equals(this.content, createMemoryRequest.content) &&
         Objects.equals(this.entityExtractionOverrides, createMemoryRequest.entityExtractionOverrides) &&
         Objects.equals(this.eventOccurredAt, createMemoryRequest.eventOccurredAt) &&
         Objects.equals(this.factExtractionOverrides, createMemoryRequest.factExtractionOverrides) &&
@@ -330,14 +300,13 @@ public class CreateMemoryRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(appId, content, entityExtractionOverrides, eventOccurredAt, factExtractionOverrides, metadata, personaExtractionOverrides, relativeStanding, scope);
+    return Objects.hash(content, entityExtractionOverrides, eventOccurredAt, factExtractionOverrides, metadata, personaExtractionOverrides, relativeStanding, scope);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateMemoryRequest {\n");
-    sb.append("    appId: ").append(toIndentedString(appId)).append("\n");
     sb.append("    content: ").append(toIndentedString(content)).append("\n");
     sb.append("    entityExtractionOverrides: ").append(toIndentedString(entityExtractionOverrides)).append("\n");
     sb.append("    eventOccurredAt: ").append(toIndentedString(eventOccurredAt)).append("\n");
@@ -392,11 +361,6 @@ public class CreateMemoryRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
-
-    // add `app_id` to the URL query string
-    if (getAppId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sapp_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getAppId()))));
-    }
 
     // add `content` to the URL query string
     if (getContent() != null) {

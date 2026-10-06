@@ -35,9 +35,10 @@ namespace Smritea.Internal.Autogen.Api
         /// Create a new memory with quota and rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Memory creation details</param>
         /// <returns>CreateMemoryResponse</returns>
-        CreateMemoryResponse CreateMemory(CreateMemoryRequest request);
+        CreateMemoryResponse CreateMemory(string xAppID, CreateMemoryRequest request);
 
         /// <summary>
         /// Create memory (SDK)
@@ -46,9 +47,10 @@ namespace Smritea.Internal.Autogen.Api
         /// Create a new memory with quota and rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Memory creation details</param>
         /// <returns>ApiResponse of CreateMemoryResponse</returns>
-        ApiResponse<CreateMemoryResponse> CreateMemoryWithHttpInfo(CreateMemoryRequest request);
+        ApiResponse<CreateMemoryResponse> CreateMemoryWithHttpInfo(string xAppID, CreateMemoryRequest request);
         /// <summary>
         /// Delete memory (SDK)
         /// </summary>
@@ -56,9 +58,10 @@ namespace Smritea.Internal.Autogen.Api
         /// Delete a memory by ID with rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <returns></returns>
-        void DeleteMemory(string memoryId);
+        void DeleteMemory(string xAppID, string memoryId);
 
         /// <summary>
         /// Delete memory (SDK)
@@ -67,9 +70,10 @@ namespace Smritea.Internal.Autogen.Api
         /// Delete a memory by ID with rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> DeleteMemoryWithHttpInfo(string memoryId);
+        ApiResponse<Object> DeleteMemoryWithHttpInfo(string xAppID, string memoryId);
         /// <summary>
         /// Get memory by ID (SDK)
         /// </summary>
@@ -77,9 +81,10 @@ namespace Smritea.Internal.Autogen.Api
         /// Get a single memory by ID with rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <returns>MemoryResponse</returns>
-        MemoryResponse GetMemory(string memoryId);
+        MemoryResponse GetMemory(string xAppID, string memoryId);
 
         /// <summary>
         /// Get memory by ID (SDK)
@@ -88,9 +93,10 @@ namespace Smritea.Internal.Autogen.Api
         /// Get a single memory by ID with rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <returns>ApiResponse of MemoryResponse</returns>
-        ApiResponse<MemoryResponse> GetMemoryWithHttpInfo(string memoryId);
+        ApiResponse<MemoryResponse> GetMemoryWithHttpInfo(string xAppID, string memoryId);
         /// <summary>
         /// Search memories (SDK)
         /// </summary>
@@ -98,9 +104,10 @@ namespace Smritea.Internal.Autogen.Api
         /// Search memories with quota and rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Search request details</param>
         /// <returns>SearchMemoriesResponse</returns>
-        SearchMemoriesResponse SearchMemories(SearchMemoryRequest request);
+        SearchMemoriesResponse SearchMemories(string xAppID, SearchMemoryRequest request);
 
         /// <summary>
         /// Search memories (SDK)
@@ -109,9 +116,10 @@ namespace Smritea.Internal.Autogen.Api
         /// Search memories with quota and rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Search request details</param>
         /// <returns>ApiResponse of SearchMemoriesResponse</returns>
-        ApiResponse<SearchMemoriesResponse> SearchMemoriesWithHttpInfo(SearchMemoryRequest request);
+        ApiResponse<SearchMemoriesResponse> SearchMemoriesWithHttpInfo(string xAppID, SearchMemoryRequest request);
         #endregion Synchronous Operations
     }
 
@@ -128,10 +136,11 @@ namespace Smritea.Internal.Autogen.Api
         /// Create a new memory with quota and rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Memory creation details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of CreateMemoryResponse</returns>
-        System.Threading.Tasks.Task<CreateMemoryResponse> CreateMemoryAsync(CreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<CreateMemoryResponse> CreateMemoryAsync(string xAppID, CreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create memory (SDK)
@@ -140,10 +149,11 @@ namespace Smritea.Internal.Autogen.Api
         /// Create a new memory with quota and rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Memory creation details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (CreateMemoryResponse)</returns>
-        System.Threading.Tasks.Task<ApiResponse<CreateMemoryResponse>> CreateMemoryWithHttpInfoAsync(CreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<ApiResponse<CreateMemoryResponse>> CreateMemoryWithHttpInfoAsync(string xAppID, CreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
         /// <summary>
         /// Delete memory (SDK)
         /// </summary>
@@ -151,10 +161,11 @@ namespace Smritea.Internal.Autogen.Api
         /// Delete a memory by ID with rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task DeleteMemoryAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task DeleteMemoryAsync(string xAppID, string memoryId, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Delete memory (SDK)
@@ -163,10 +174,11 @@ namespace Smritea.Internal.Autogen.Api
         /// Delete a memory by ID with rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> DeleteMemoryWithHttpInfoAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<ApiResponse<Object>> DeleteMemoryWithHttpInfoAsync(string xAppID, string memoryId, System.Threading.CancellationToken cancellationToken = default);
         /// <summary>
         /// Get memory by ID (SDK)
         /// </summary>
@@ -174,10 +186,11 @@ namespace Smritea.Internal.Autogen.Api
         /// Get a single memory by ID with rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of MemoryResponse</returns>
-        System.Threading.Tasks.Task<MemoryResponse> GetMemoryAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<MemoryResponse> GetMemoryAsync(string xAppID, string memoryId, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get memory by ID (SDK)
@@ -186,10 +199,11 @@ namespace Smritea.Internal.Autogen.Api
         /// Get a single memory by ID with rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (MemoryResponse)</returns>
-        System.Threading.Tasks.Task<ApiResponse<MemoryResponse>> GetMemoryWithHttpInfoAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<ApiResponse<MemoryResponse>> GetMemoryWithHttpInfoAsync(string xAppID, string memoryId, System.Threading.CancellationToken cancellationToken = default);
         /// <summary>
         /// Search memories (SDK)
         /// </summary>
@@ -197,10 +211,11 @@ namespace Smritea.Internal.Autogen.Api
         /// Search memories with quota and rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Search request details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of SearchMemoriesResponse</returns>
-        System.Threading.Tasks.Task<SearchMemoriesResponse> SearchMemoriesAsync(SearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SearchMemoriesResponse> SearchMemoriesAsync(string xAppID, SearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Search memories (SDK)
@@ -209,10 +224,11 @@ namespace Smritea.Internal.Autogen.Api
         /// Search memories with quota and rate limit enforcement
         /// </remarks>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Search request details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (SearchMemoriesResponse)</returns>
-        System.Threading.Tasks.Task<ApiResponse<SearchMemoriesResponse>> SearchMemoriesWithHttpInfoAsync(SearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<ApiResponse<SearchMemoriesResponse>> SearchMemoriesWithHttpInfoAsync(string xAppID, SearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default);
         #endregion Asynchronous Operations
     }
 
@@ -430,11 +446,12 @@ namespace Smritea.Internal.Autogen.Api
         /// Create memory (SDK) Create a new memory with quota and rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Memory creation details</param>
         /// <returns>CreateMemoryResponse</returns>
-        public CreateMemoryResponse CreateMemory(CreateMemoryRequest request)
+        public CreateMemoryResponse CreateMemory(string xAppID, CreateMemoryRequest request)
         {
-            Smritea.Internal.Autogen.Client.ApiResponse<CreateMemoryResponse> localVarResponse = CreateMemoryWithHttpInfo(request);
+            Smritea.Internal.Autogen.Client.ApiResponse<CreateMemoryResponse> localVarResponse = CreateMemoryWithHttpInfo(xAppID, request);
             return localVarResponse.Data;
         }
 
@@ -442,10 +459,15 @@ namespace Smritea.Internal.Autogen.Api
         /// Create memory (SDK) Create a new memory with quota and rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Memory creation details</param>
         /// <returns>ApiResponse of CreateMemoryResponse</returns>
-        public Smritea.Internal.Autogen.Client.ApiResponse<CreateMemoryResponse> CreateMemoryWithHttpInfo(CreateMemoryRequest request)
+        public Smritea.Internal.Autogen.Client.ApiResponse<CreateMemoryResponse> CreateMemoryWithHttpInfo(string xAppID, CreateMemoryRequest request)
         {
+            // verify the required parameter 'xAppID' is set
+            if (xAppID == null)
+                throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'xAppID' when calling SDKMemoryApi->CreateMemory");
+
             // verify the required parameter 'request' is set
             if (request == null)
                 throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'request' when calling SDKMemoryApi->CreateMemory");
@@ -467,6 +489,7 @@ namespace Smritea.Internal.Autogen.Api
             var localVarAccept = Smritea.Internal.Autogen.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
+            localVarRequestOptions.HeaderParameters.Add("X-App-ID", Smritea.Internal.Autogen.Client.ClientUtils.ParameterToString(xAppID)); // header parameter
             localVarRequestOptions.Data = request;
 
             // authentication (ApiKeyAuth) required
@@ -491,12 +514,13 @@ namespace Smritea.Internal.Autogen.Api
         /// Create memory (SDK) Create a new memory with quota and rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Memory creation details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of CreateMemoryResponse</returns>
-        public async System.Threading.Tasks.Task<CreateMemoryResponse> CreateMemoryAsync(CreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<CreateMemoryResponse> CreateMemoryAsync(string xAppID, CreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
         {
-            Smritea.Internal.Autogen.Client.ApiResponse<CreateMemoryResponse> localVarResponse = await CreateMemoryWithHttpInfoAsync(request, cancellationToken).ConfigureAwait(false);
+            Smritea.Internal.Autogen.Client.ApiResponse<CreateMemoryResponse> localVarResponse = await CreateMemoryWithHttpInfoAsync(xAppID, request, cancellationToken).ConfigureAwait(false);
             return localVarResponse.Data;
         }
 
@@ -504,11 +528,16 @@ namespace Smritea.Internal.Autogen.Api
         /// Create memory (SDK) Create a new memory with quota and rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Memory creation details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (CreateMemoryResponse)</returns>
-        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<CreateMemoryResponse>> CreateMemoryWithHttpInfoAsync(CreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<CreateMemoryResponse>> CreateMemoryWithHttpInfoAsync(string xAppID, CreateMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
         {
+            // verify the required parameter 'xAppID' is set
+            if (xAppID == null)
+                throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'xAppID' when calling SDKMemoryApi->CreateMemory");
+
             // verify the required parameter 'request' is set
             if (request == null)
                 throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'request' when calling SDKMemoryApi->CreateMemory");
@@ -532,6 +561,7 @@ namespace Smritea.Internal.Autogen.Api
             var localVarAccept = Smritea.Internal.Autogen.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
+            localVarRequestOptions.HeaderParameters.Add("X-App-ID", Smritea.Internal.Autogen.Client.ClientUtils.ParameterToString(xAppID)); // header parameter
             localVarRequestOptions.Data = request;
 
             // authentication (ApiKeyAuth) required
@@ -557,21 +587,27 @@ namespace Smritea.Internal.Autogen.Api
         /// Delete memory (SDK) Delete a memory by ID with rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <returns></returns>
-        public void DeleteMemory(string memoryId)
+        public void DeleteMemory(string xAppID, string memoryId)
         {
-            DeleteMemoryWithHttpInfo(memoryId);
+            DeleteMemoryWithHttpInfo(xAppID, memoryId);
         }
 
         /// <summary>
         /// Delete memory (SDK) Delete a memory by ID with rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public Smritea.Internal.Autogen.Client.ApiResponse<Object> DeleteMemoryWithHttpInfo(string memoryId)
+        public Smritea.Internal.Autogen.Client.ApiResponse<Object> DeleteMemoryWithHttpInfo(string xAppID, string memoryId)
         {
+            // verify the required parameter 'xAppID' is set
+            if (xAppID == null)
+                throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'xAppID' when calling SDKMemoryApi->DeleteMemory");
+
             // verify the required parameter 'memoryId' is set
             if (memoryId == null)
                 throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'memoryId' when calling SDKMemoryApi->DeleteMemory");
@@ -593,6 +629,7 @@ namespace Smritea.Internal.Autogen.Api
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
             localVarRequestOptions.PathParameters.Add("memory_id", Smritea.Internal.Autogen.Client.ClientUtils.ParameterToString(memoryId)); // path parameter
+            localVarRequestOptions.HeaderParameters.Add("X-App-ID", Smritea.Internal.Autogen.Client.ClientUtils.ParameterToString(xAppID)); // header parameter
 
             // authentication (ApiKeyAuth) required
             if (!string.IsNullOrEmpty(this.Configuration.GetApiKeyWithPrefix("X-API-Key")))
@@ -616,23 +653,29 @@ namespace Smritea.Internal.Autogen.Api
         /// Delete memory (SDK) Delete a memory by ID with rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task DeleteMemoryAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task DeleteMemoryAsync(string xAppID, string memoryId, System.Threading.CancellationToken cancellationToken = default)
         {
-            await DeleteMemoryWithHttpInfoAsync(memoryId, cancellationToken).ConfigureAwait(false);
+            await DeleteMemoryWithHttpInfoAsync(xAppID, memoryId, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Delete memory (SDK) Delete a memory by ID with rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<Object>> DeleteMemoryWithHttpInfoAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<Object>> DeleteMemoryWithHttpInfoAsync(string xAppID, string memoryId, System.Threading.CancellationToken cancellationToken = default)
         {
+            // verify the required parameter 'xAppID' is set
+            if (xAppID == null)
+                throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'xAppID' when calling SDKMemoryApi->DeleteMemory");
+
             // verify the required parameter 'memoryId' is set
             if (memoryId == null)
                 throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'memoryId' when calling SDKMemoryApi->DeleteMemory");
@@ -656,6 +699,7 @@ namespace Smritea.Internal.Autogen.Api
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
             localVarRequestOptions.PathParameters.Add("memory_id", Smritea.Internal.Autogen.Client.ClientUtils.ParameterToString(memoryId)); // path parameter
+            localVarRequestOptions.HeaderParameters.Add("X-App-ID", Smritea.Internal.Autogen.Client.ClientUtils.ParameterToString(xAppID)); // header parameter
 
             // authentication (ApiKeyAuth) required
             if (!string.IsNullOrEmpty(this.Configuration.GetApiKeyWithPrefix("X-API-Key")))
@@ -680,11 +724,12 @@ namespace Smritea.Internal.Autogen.Api
         /// Get memory by ID (SDK) Get a single memory by ID with rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <returns>MemoryResponse</returns>
-        public MemoryResponse GetMemory(string memoryId)
+        public MemoryResponse GetMemory(string xAppID, string memoryId)
         {
-            Smritea.Internal.Autogen.Client.ApiResponse<MemoryResponse> localVarResponse = GetMemoryWithHttpInfo(memoryId);
+            Smritea.Internal.Autogen.Client.ApiResponse<MemoryResponse> localVarResponse = GetMemoryWithHttpInfo(xAppID, memoryId);
             return localVarResponse.Data;
         }
 
@@ -692,10 +737,15 @@ namespace Smritea.Internal.Autogen.Api
         /// Get memory by ID (SDK) Get a single memory by ID with rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <returns>ApiResponse of MemoryResponse</returns>
-        public Smritea.Internal.Autogen.Client.ApiResponse<MemoryResponse> GetMemoryWithHttpInfo(string memoryId)
+        public Smritea.Internal.Autogen.Client.ApiResponse<MemoryResponse> GetMemoryWithHttpInfo(string xAppID, string memoryId)
         {
+            // verify the required parameter 'xAppID' is set
+            if (xAppID == null)
+                throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'xAppID' when calling SDKMemoryApi->GetMemory");
+
             // verify the required parameter 'memoryId' is set
             if (memoryId == null)
                 throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'memoryId' when calling SDKMemoryApi->GetMemory");
@@ -717,6 +767,7 @@ namespace Smritea.Internal.Autogen.Api
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
             localVarRequestOptions.PathParameters.Add("memory_id", Smritea.Internal.Autogen.Client.ClientUtils.ParameterToString(memoryId)); // path parameter
+            localVarRequestOptions.HeaderParameters.Add("X-App-ID", Smritea.Internal.Autogen.Client.ClientUtils.ParameterToString(xAppID)); // header parameter
 
             // authentication (ApiKeyAuth) required
             if (!string.IsNullOrEmpty(this.Configuration.GetApiKeyWithPrefix("X-API-Key")))
@@ -740,12 +791,13 @@ namespace Smritea.Internal.Autogen.Api
         /// Get memory by ID (SDK) Get a single memory by ID with rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of MemoryResponse</returns>
-        public async System.Threading.Tasks.Task<MemoryResponse> GetMemoryAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<MemoryResponse> GetMemoryAsync(string xAppID, string memoryId, System.Threading.CancellationToken cancellationToken = default)
         {
-            Smritea.Internal.Autogen.Client.ApiResponse<MemoryResponse> localVarResponse = await GetMemoryWithHttpInfoAsync(memoryId, cancellationToken).ConfigureAwait(false);
+            Smritea.Internal.Autogen.Client.ApiResponse<MemoryResponse> localVarResponse = await GetMemoryWithHttpInfoAsync(xAppID, memoryId, cancellationToken).ConfigureAwait(false);
             return localVarResponse.Data;
         }
 
@@ -753,11 +805,16 @@ namespace Smritea.Internal.Autogen.Api
         /// Get memory by ID (SDK) Get a single memory by ID with rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="memoryId">Memory ID</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (MemoryResponse)</returns>
-        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<MemoryResponse>> GetMemoryWithHttpInfoAsync(string memoryId, System.Threading.CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<MemoryResponse>> GetMemoryWithHttpInfoAsync(string xAppID, string memoryId, System.Threading.CancellationToken cancellationToken = default)
         {
+            // verify the required parameter 'xAppID' is set
+            if (xAppID == null)
+                throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'xAppID' when calling SDKMemoryApi->GetMemory");
+
             // verify the required parameter 'memoryId' is set
             if (memoryId == null)
                 throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'memoryId' when calling SDKMemoryApi->GetMemory");
@@ -781,6 +838,7 @@ namespace Smritea.Internal.Autogen.Api
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
             localVarRequestOptions.PathParameters.Add("memory_id", Smritea.Internal.Autogen.Client.ClientUtils.ParameterToString(memoryId)); // path parameter
+            localVarRequestOptions.HeaderParameters.Add("X-App-ID", Smritea.Internal.Autogen.Client.ClientUtils.ParameterToString(xAppID)); // header parameter
 
             // authentication (ApiKeyAuth) required
             if (!string.IsNullOrEmpty(this.Configuration.GetApiKeyWithPrefix("X-API-Key")))
@@ -805,11 +863,12 @@ namespace Smritea.Internal.Autogen.Api
         /// Search memories (SDK) Search memories with quota and rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Search request details</param>
         /// <returns>SearchMemoriesResponse</returns>
-        public SearchMemoriesResponse SearchMemories(SearchMemoryRequest request)
+        public SearchMemoriesResponse SearchMemories(string xAppID, SearchMemoryRequest request)
         {
-            Smritea.Internal.Autogen.Client.ApiResponse<SearchMemoriesResponse> localVarResponse = SearchMemoriesWithHttpInfo(request);
+            Smritea.Internal.Autogen.Client.ApiResponse<SearchMemoriesResponse> localVarResponse = SearchMemoriesWithHttpInfo(xAppID, request);
             return localVarResponse.Data;
         }
 
@@ -817,10 +876,15 @@ namespace Smritea.Internal.Autogen.Api
         /// Search memories (SDK) Search memories with quota and rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Search request details</param>
         /// <returns>ApiResponse of SearchMemoriesResponse</returns>
-        public Smritea.Internal.Autogen.Client.ApiResponse<SearchMemoriesResponse> SearchMemoriesWithHttpInfo(SearchMemoryRequest request)
+        public Smritea.Internal.Autogen.Client.ApiResponse<SearchMemoriesResponse> SearchMemoriesWithHttpInfo(string xAppID, SearchMemoryRequest request)
         {
+            // verify the required parameter 'xAppID' is set
+            if (xAppID == null)
+                throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'xAppID' when calling SDKMemoryApi->SearchMemories");
+
             // verify the required parameter 'request' is set
             if (request == null)
                 throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'request' when calling SDKMemoryApi->SearchMemories");
@@ -842,6 +906,7 @@ namespace Smritea.Internal.Autogen.Api
             var localVarAccept = Smritea.Internal.Autogen.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
+            localVarRequestOptions.HeaderParameters.Add("X-App-ID", Smritea.Internal.Autogen.Client.ClientUtils.ParameterToString(xAppID)); // header parameter
             localVarRequestOptions.Data = request;
 
             // authentication (ApiKeyAuth) required
@@ -866,12 +931,13 @@ namespace Smritea.Internal.Autogen.Api
         /// Search memories (SDK) Search memories with quota and rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Search request details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of SearchMemoriesResponse</returns>
-        public async System.Threading.Tasks.Task<SearchMemoriesResponse> SearchMemoriesAsync(SearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<SearchMemoriesResponse> SearchMemoriesAsync(string xAppID, SearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
         {
-            Smritea.Internal.Autogen.Client.ApiResponse<SearchMemoriesResponse> localVarResponse = await SearchMemoriesWithHttpInfoAsync(request, cancellationToken).ConfigureAwait(false);
+            Smritea.Internal.Autogen.Client.ApiResponse<SearchMemoriesResponse> localVarResponse = await SearchMemoriesWithHttpInfoAsync(xAppID, request, cancellationToken).ConfigureAwait(false);
             return localVarResponse.Data;
         }
 
@@ -879,11 +945,16 @@ namespace Smritea.Internal.Autogen.Api
         /// Search memories (SDK) Search memories with quota and rate limit enforcement
         /// </summary>
         /// <exception cref="Smritea.Internal.Autogen.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="xAppID">App ID</param>
         /// <param name="request">Search request details</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns>Task of ApiResponse (SearchMemoriesResponse)</returns>
-        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<SearchMemoriesResponse>> SearchMemoriesWithHttpInfoAsync(SearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task<Smritea.Internal.Autogen.Client.ApiResponse<SearchMemoriesResponse>> SearchMemoriesWithHttpInfoAsync(string xAppID, SearchMemoryRequest request, System.Threading.CancellationToken cancellationToken = default)
         {
+            // verify the required parameter 'xAppID' is set
+            if (xAppID == null)
+                throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'xAppID' when calling SDKMemoryApi->SearchMemories");
+
             // verify the required parameter 'request' is set
             if (request == null)
                 throw new Smritea.Internal.Autogen.Client.ApiException(400, "Missing required parameter 'request' when calling SDKMemoryApi->SearchMemories");
@@ -907,6 +978,7 @@ namespace Smritea.Internal.Autogen.Api
             var localVarAccept = Smritea.Internal.Autogen.Client.ClientUtils.SelectHeaderAccept(_accepts);
             if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
 
+            localVarRequestOptions.HeaderParameters.Add("X-App-ID", Smritea.Internal.Autogen.Client.ClientUtils.ParameterToString(xAppID)); // header parameter
             localVarRequestOptions.Data = request;
 
             // authentication (ApiKeyAuth) required

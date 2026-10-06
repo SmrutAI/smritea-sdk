@@ -6,7 +6,6 @@
 
 Name | Type
 ------------ | -------------
-`appId` | string
 `content` | string
 `entityExtractionOverrides` | [EntityExtractionOverrides](EntityExtractionOverrides.md)
 `eventOccurredAt` | string
@@ -23,7 +22,6 @@ import type { CreateMemoryRequest } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "appId": null,
   "content": null,
   "entityExtractionOverrides": null,
   "eventOccurredAt": null,

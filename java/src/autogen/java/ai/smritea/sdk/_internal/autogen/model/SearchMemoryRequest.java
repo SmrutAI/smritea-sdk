@@ -36,7 +36,6 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
  * SearchMemoryRequest
  */
 @JsonPropertyOrder({
-  SearchMemoryRequest.JSON_PROPERTY_APP_ID,
   SearchMemoryRequest.JSON_PROPERTY_FROM_TIME,
   SearchMemoryRequest.JSON_PROPERTY_GRAPH_DEPTH,
   SearchMemoryRequest.JSON_PROPERTY_LIMIT,
@@ -51,10 +50,6 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
 public class SearchMemoryRequest {
-  public static final String JSON_PROPERTY_APP_ID = "app_id";
-  @javax.annotation.Nonnull
-  private String appId;
-
   public static final String JSON_PROPERTY_FROM_TIME = "from_time";
   @javax.annotation.Nullable
   private String fromTime;
@@ -101,30 +96,6 @@ public class SearchMemoryRequest {
 
   public SearchMemoryRequest() { 
   }
-
-  public SearchMemoryRequest appId(@javax.annotation.Nonnull String appId) {
-    this.appId = appId;
-    return this;
-  }
-
-  /**
-   * Get appId
-   * @return appId
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_APP_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getAppId() {
-    return appId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_APP_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setAppId(@javax.annotation.Nonnull String appId) {
-    this.appId = appId;
-  }
-
 
   public SearchMemoryRequest fromTime(@javax.annotation.Nullable String fromTime) {
     this.fromTime = fromTime;
@@ -403,8 +374,7 @@ public class SearchMemoryRequest {
       return false;
     }
     SearchMemoryRequest searchMemoryRequest = (SearchMemoryRequest) o;
-    return Objects.equals(this.appId, searchMemoryRequest.appId) &&
-        Objects.equals(this.fromTime, searchMemoryRequest.fromTime) &&
+    return Objects.equals(this.fromTime, searchMemoryRequest.fromTime) &&
         Objects.equals(this.graphDepth, searchMemoryRequest.graphDepth) &&
         Objects.equals(this.limit, searchMemoryRequest.limit) &&
         Objects.equals(this.metadataFilter, searchMemoryRequest.metadataFilter) &&
@@ -419,14 +389,13 @@ public class SearchMemoryRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(appId, fromTime, graphDepth, limit, metadataFilter, method, query, rerankerType, scope, speakerActorId, toTime, validAt);
+    return Objects.hash(fromTime, graphDepth, limit, metadataFilter, method, query, rerankerType, scope, speakerActorId, toTime, validAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class SearchMemoryRequest {\n");
-    sb.append("    appId: ").append(toIndentedString(appId)).append("\n");
     sb.append("    fromTime: ").append(toIndentedString(fromTime)).append("\n");
     sb.append("    graphDepth: ").append(toIndentedString(graphDepth)).append("\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
@@ -484,11 +453,6 @@ public class SearchMemoryRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
-
-    // add `app_id` to the URL query string
-    if (getAppId() != null) {
-      joiner.add(String.format(java.util.Locale.ROOT, "%sapp_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getAppId()))));
-    }
 
     // add `from_time` to the URL query string
     if (getFromTime() != null) {

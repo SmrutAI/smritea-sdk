@@ -54,8 +54,9 @@ Every SDK implementation MUST expose exactly this surface:
 | `get`    | `(memory_id) → Memory`                                                                                                                                   |
 | `delete` | `(memory_id) → void`                                                                                                                                     |
 
-**`app_id` on constructor**: Set once, injected automatically into every request.
-Callers must never pass it per-call.
+**`app_id` on constructor**: Set once, then sent as the `X-App-ID` request header on every call —
+`add`, `search`, `get`, and `delete`. It is never placed in the request body and is never accepted as
+a per-call argument. Callers must never pass it per-call.
 
 **`scope` object**: Groups actor and conversation context fields (`actor_id`, `actor_type`,
 `actor_name`, `conversation_id`, `source_type`, `participant_ids`). All fields are

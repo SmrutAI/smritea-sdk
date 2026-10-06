@@ -56,12 +56,6 @@ import {
  */
 export interface CreateMemoryRequest {
     /**
-     * AppID is the application identifier (required)
-     * @type {string}
-     * @memberof CreateMemoryRequest
-     */
-    appId: string;
-    /**
      * Content is the memory content (required, min 1 char)
      * @type {string}
      * @memberof CreateMemoryRequest
@@ -123,7 +117,6 @@ export interface CreateMemoryRequest {
  * Check if a given object implements the CreateMemoryRequest interface.
  */
 export function instanceOfCreateMemoryRequest(value: object): value is CreateMemoryRequest {
-    if (!('appId' in value) || value['appId'] === undefined) return false;
     if (!('content' in value) || value['content'] === undefined) return false;
     if (!('scope' in value) || value['scope'] === undefined) return false;
     return true;
@@ -139,7 +132,6 @@ export function CreateMemoryRequestFromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'appId': json['app_id'],
         'content': json['content'],
         'entityExtractionOverrides': json['entity_extraction_overrides'] == null ? undefined : EntityExtractionOverridesFromJSON(json['entity_extraction_overrides']),
         'eventOccurredAt': json['event_occurred_at'] == null ? undefined : json['event_occurred_at'],
@@ -162,7 +154,6 @@ export function CreateMemoryRequestToJSONTyped(value?: CreateMemoryRequest | nul
 
     return {
         
-        'app_id': value['appId'],
         'content': value['content'],
         'entity_extraction_overrides': EntityExtractionOverridesToJSON(value['entityExtractionOverrides']),
         'event_occurred_at': value['eventOccurredAt'],

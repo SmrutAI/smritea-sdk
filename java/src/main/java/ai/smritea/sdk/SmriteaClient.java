@@ -113,7 +113,6 @@ public class SmriteaClient {
    */
   public MemoryCreationResult add(String content, AddOptions opts) {
     CreateMemoryRequest request = new CreateMemoryRequest();
-    request.setAppId(appId);
     request.setContent(content);
     request.setScope(new ai.smritea.sdk._internal.autogen.model.MemoryScope());
 
@@ -172,7 +171,7 @@ public class SmriteaClient {
     return executeWithRetry(
         () -> {
           try {
-            CreateMemoryResponse resp = api.createMemory(request);
+            CreateMemoryResponse resp = api.createMemory(appId, request);
             if (resp == null) {
               throw new SmriteaDeserializationError(
                   "server returned null body for add() — expected a CreateMemoryResponse"
@@ -196,7 +195,6 @@ public class SmriteaClient {
    */
   public List<SearchResult> search(String query, SearchOptions opts) {
     SearchMemoryRequest request = new SearchMemoryRequest();
-    request.setAppId(appId);
     request.setQuery(query);
 
     if (opts != null) {
@@ -252,7 +250,7 @@ public class SmriteaClient {
     return executeWithRetry(
         () -> {
           try {
-            SearchMemoriesResponse resp = api.searchMemories(request);
+            SearchMemoriesResponse resp = api.searchMemories(appId, request);
             List<SearchMemoryResponse> memories = resp.getMemories();
             if (memories == null || memories.isEmpty()) {
               return Collections.emptyList();
@@ -280,7 +278,7 @@ public class SmriteaClient {
     return executeWithRetry(
         () -> {
           try {
-            MemoryResponse resp = api.getMemory(memoryId);
+            MemoryResponse resp = api.getMemory(appId, memoryId);
             if (resp == null) {
               throw new SmriteaDeserializationError(
                   "server returned null body for get() — expected a MemoryResponse object");
@@ -303,7 +301,7 @@ public class SmriteaClient {
     executeWithRetry(
         () -> {
           try {
-            api.deleteMemory(memoryId);
+            api.deleteMemory(appId, memoryId);
             return null;
           } catch (ApiException e) {
             throw mapError(e);

@@ -13,7 +13,7 @@ All URIs are relative to *http://api.smritea.ai/api/v1*
 
 ## createMemory
 
-> CreateMemoryResponse createMemory(request)
+> CreateMemoryResponse createMemory(xAppID, request)
 
 Create memory (SDK)
 
@@ -37,6 +37,8 @@ async function example() {
   const api = new SDKMemoryApi(config);
 
   const body = {
+    // string | App ID
+    xAppID: xAppID_example,
     // CreateMemoryRequest | Memory creation details
     request: ...,
   } satisfies CreateMemoryOperationRequest;
@@ -58,6 +60,7 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **xAppID** | `string` | App ID | [Defaults to `undefined`] |
 | **request** | [CreateMemoryRequest](CreateMemoryRequest.md) | Memory creation details | |
 
 ### Return type
@@ -89,7 +92,7 @@ example().catch(console.error);
 
 ## deleteMemory
 
-> deleteMemory(memoryId)
+> deleteMemory(xAppID, memoryId)
 
 Delete memory (SDK)
 
@@ -113,6 +116,8 @@ async function example() {
   const api = new SDKMemoryApi(config);
 
   const body = {
+    // string | App ID
+    xAppID: xAppID_example,
     // string | Memory ID
     memoryId: memoryId_example,
   } satisfies DeleteMemoryRequest;
@@ -134,6 +139,7 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **xAppID** | `string` | App ID | [Defaults to `undefined`] |
 | **memoryId** | `string` | Memory ID | [Defaults to `undefined`] |
 
 ### Return type
@@ -165,7 +171,7 @@ example().catch(console.error);
 
 ## getMemory
 
-> MemoryResponse getMemory(memoryId)
+> MemoryResponse getMemory(xAppID, memoryId)
 
 Get memory by ID (SDK)
 
@@ -189,6 +195,8 @@ async function example() {
   const api = new SDKMemoryApi(config);
 
   const body = {
+    // string | App ID
+    xAppID: xAppID_example,
     // string | Memory ID
     memoryId: memoryId_example,
   } satisfies GetMemoryRequest;
@@ -210,6 +218,7 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **xAppID** | `string` | App ID | [Defaults to `undefined`] |
 | **memoryId** | `string` | Memory ID | [Defaults to `undefined`] |
 
 ### Return type
@@ -241,7 +250,7 @@ example().catch(console.error);
 
 ## searchMemories
 
-> SearchMemoriesResponse searchMemories(request)
+> SearchMemoriesResponse searchMemories(xAppID, request)
 
 Search memories (SDK)
 
@@ -265,6 +274,8 @@ async function example() {
   const api = new SDKMemoryApi(config);
 
   const body = {
+    // string | App ID
+    xAppID: xAppID_example,
     // SearchMemoryRequest | Search request details
     request: ...,
   } satisfies SearchMemoriesRequest;
@@ -286,6 +297,7 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **xAppID** | `string` | App ID | [Defaults to `undefined`] |
 | **request** | [SearchMemoryRequest](SearchMemoryRequest.md) | Search request details | |
 
 ### Return type

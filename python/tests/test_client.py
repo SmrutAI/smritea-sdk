@@ -54,11 +54,11 @@ class TestAddActorScope:
 
         assert result is mock_memory
         mock_api.create_memory.assert_called_once()
-        call_args = mock_api.create_memory.call_args[0][0]
+        call_args = mock_api.create_memory.call_args.kwargs['request']
         assert call_args.scope.actor_id == 'alice'
         assert call_args.scope.actor_type == 'user'
         assert call_args.content == 'test content'
-        assert call_args.app_id == 'app-123'
+        assert mock_api.create_memory.call_args.kwargs['x_app_id'] == 'app-123'
 
     def test_add_with_explicit_actor_id_and_type(self, client, mock_api):
         """When actor_id and actor_type are passed, they pass through unchanged."""
@@ -71,7 +71,7 @@ class TestAddActorScope:
         )
 
         assert result is mock_memory
-        call_args = mock_api.create_memory.call_args[0][0]
+        call_args = mock_api.create_memory.call_args.kwargs['request']
         assert call_args.scope.actor_id == 'bot-1'
         assert call_args.scope.actor_type == 'agent'
 
@@ -92,7 +92,7 @@ class TestAddActorScope:
         )
 
         assert result is mock_memory
-        call_args = mock_api.create_memory.call_args[0][0]
+        call_args = mock_api.create_memory.call_args.kwargs['request']
         assert call_args.scope.actor_id == 'alice'
         assert call_args.scope.actor_type == 'user'
         assert call_args.scope.actor_name == 'Alice Smith'
@@ -118,7 +118,7 @@ class TestSearchActorScope:
 
         assert result == []
         mock_api.search_memories.assert_called_once()
-        call_args = mock_api.search_memories.call_args[0][0]
+        call_args = mock_api.search_memories.call_args.kwargs['request']
         assert call_args.scope.actor_id == 'alice'
         assert call_args.scope.actor_type == 'user'
         assert call_args.query == 'query'
@@ -134,7 +134,7 @@ class TestSearchActorScope:
             scope=MemoryScope(actor_id='bot-1', actor_type='agent'),
         )
 
-        call_args = mock_api.search_memories.call_args[0][0]
+        call_args = mock_api.search_memories.call_args.kwargs['request']
         assert call_args.scope.actor_id == 'bot-1'
         assert call_args.scope.actor_type == 'agent'
 
@@ -155,7 +155,7 @@ class TestSearchActorScope:
             graph_depth=2,
         )
 
-        call_args = mock_api.search_memories.call_args[0][0]
+        call_args = mock_api.search_memories.call_args.kwargs['request']
         assert call_args.scope.actor_id == 'alice'
         assert call_args.scope.actor_type == 'user'
         assert call_args.limit == 10
@@ -176,7 +176,7 @@ class TestSearchActorScope:
             valid_at='2024-06-15T12:00:00Z',
         )
 
-        call_args = mock_api.search_memories.call_args[0][0]
+        call_args = mock_api.search_memories.call_args.kwargs['request']
         assert call_args.scope.actor_id == 'alice'
         assert call_args.scope.actor_type == 'user'
         assert call_args.from_time == '2024-01-01T00:00:00Z'
@@ -193,7 +193,7 @@ class TestSearchActorScope:
 
         assert result == []
         mock_api.search_memories.assert_called_once()
-        call_args = mock_api.search_memories.call_args[0][0]
+        call_args = mock_api.search_memories.call_args.kwargs['request']
         assert call_args.speaker_actor_id == 'agent-ravi'
         # scope untouched by speaker identity
         assert call_args.scope is None or getattr(call_args.scope, 'actor_id', None) != 'agent-ravi'
@@ -207,7 +207,7 @@ class TestSearchActorScope:
         client.search('query')
 
         mock_api.search_memories.assert_called_once()
-        call_args = mock_api.search_memories.call_args[0][0]
+        call_args = mock_api.search_memories.call_args.kwargs['request']
         assert call_args.speaker_actor_id is None
 
 
@@ -591,7 +591,7 @@ class TestGetAndDelete:
         result = client.get('mem-123')
 
         assert result is mock_memory
-        mock_api.get_memory.assert_called_once_with('mem-123')
+        mock_api.get_memory.assert_called_once_with(x_app_id='app-123', memory_id='mem-123')
 
     def test_delete_memory(self, client, mock_api):
         """delete() calls delete_memory with the ID."""
@@ -600,7 +600,7 @@ class TestGetAndDelete:
         result = client.delete('mem-123')
 
         assert result is None
-        mock_api.delete_memory.assert_called_once_with('mem-123')
+        mock_api.delete_memory.assert_called_once_with(x_app_id='app-123', memory_id='mem-123')
 
     def test_get_memory_not_found(self, client, mock_api):
         """get() with nonexistent ID raises SmriteaNotFoundError."""
