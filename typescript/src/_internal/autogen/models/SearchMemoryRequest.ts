@@ -48,8 +48,9 @@ export interface SearchMemoryRequest {
      */
     appId: string;
     /**
-     * FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format).
-     * Must be used together with ToTime.
+     * FromTime is the start of a time-range filter, RFC 3339. Returns memories whose validity period overlaps
+     * [from_time, ∞): memories still valid at from_time or valid after it. Can be used alone (open-ended).
+     * With to_time the range is [from_time, to_time]. Cannot be combined with valid_at.
      * @type {string}
      * @memberof SearchMemoryRequest
      */
@@ -115,16 +116,17 @@ export interface SearchMemoryRequest {
      */
     speakerActorId?: string;
     /**
-     * ToTime is the end of the time range filter (ISO 8601 format).
-     * Must be used together with FromTime.
+     * ToTime is the end of a time-range filter, RFC 3339 (inclusive). Returns memories whose validity period
+     * overlaps (−∞, to_time]: memories that started on or before to_time. Can be used alone (open-ended).
+     * With from_time the range is [from_time, to_time] and from_time must be on or before to_time.
+     * Cannot be combined with valid_at.
      * @type {string}
      * @memberof SearchMemoryRequest
      */
     toTime?: string;
     /**
-     * ValidAt filters memories valid at a specific point in time (ISO 8601 format).
-     * A memory is valid if: active_from <= ValidAt AND (active_to is null OR active_to >= ValidAt)
-     * Mutually exclusive with FromTime/ToTime.
+     * ValidAt returns memories valid at exactly this moment (active_from <= valid_at and active_to empty or >= valid_at), RFC 3339.
+     * Mutually exclusive with from_time and to_time.
      * @type {string}
      * @memberof SearchMemoryRequest
      */

@@ -129,11 +129,16 @@ class SearchOptions(BaseModel):
     limit: int | None = None
     graph_depth: int | None = None
     from_time: str | None = None
-    """ISO-8601 datetime string — only return memories created at or after this time."""
+    """ISO-8601 datetime string — start of a time range. Returns memories whose validity period
+    overlaps [from_time, infinity). Can be used alone (open-ended). With to_time the range is
+    [from_time, to_time]. Cannot be combined with valid_at."""
     to_time: str | None = None
-    """ISO-8601 datetime string — only return memories created at or before this time."""
+    """ISO-8601 datetime string — end of a time range (inclusive). Returns memories whose validity
+    period overlaps (-infinity, to_time]. Can be used alone (open-ended). With from_time the range
+    is [from_time, to_time]. Cannot be combined with valid_at."""
     valid_at: str | None = None
-    """ISO-8601 datetime string — return memories valid at exactly this point in time."""
+    """ISO-8601 datetime string — return memories valid at exactly this moment. Cannot be combined
+    with from_time or to_time."""
     method: str | None = None
     """Search method override. Accepted values: ``"quick_search"``, ``"deep_search"``,
     ``"context_aware_search"``. Defaults to app config if omitted."""

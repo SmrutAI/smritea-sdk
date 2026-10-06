@@ -55,7 +55,7 @@ namespace Smritea.Internal.Autogen.Model
         /// Initializes a new instance of the <see cref="SearchMemoryRequest" /> class.
         /// </summary>
         /// <param name="appId">appId (required).</param>
-        /// <param name="fromTime">FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime..</param>
+        /// <param name="fromTime">FromTime is the start of a time-range filter, RFC 3339. Returns memories whose validity period overlaps [from_time, ∞): memories still valid at from_time or valid after it. Can be used alone (open-ended). With to_time the range is [from_time, to_time]. Cannot be combined with valid_at..</param>
         /// <param name="graphDepth">0 &#x3D; system graph_max_hops; 1..services.search.graph_max_hops_max.</param>
         /// <param name="limit">0 &#x3D; app top_n; must be &lt;&#x3D; services.search.top_n_max (checked in the service layer)..</param>
         /// <param name="metadataFilter">MetadataFilter filters memories by user-provided key-value metadata. Only memories whose metadata contains ALL specified key-value pairs are returned..</param>
@@ -64,8 +64,8 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="rerankerType">RerankerType overrides the reranker for this request (optional). If nil, uses app config reranker. Only applies to deep_search method..</param>
         /// <param name="scope">Scope groups actor, conversation, and source filtering fields. Zero-value fields mean \&quot;no filter\&quot; (searches across all)..</param>
         /// <param name="speakerActorId">SpeakerActorID identifies which actor is making this search request. It is NEVER used for filtering — it does not narrow, exclude, or bias which memories are returned. It exists purely for identification: audit logging, telemetry, and any future personalization/access-control hook that needs to know \&quot;who is asking\&quot; independent of \&quot;which memories to include.\&quot; That second concern (result filtering) is entirely owned by Scope below. Deliberately top-level, not nested inside Scope, so it can never be confused with — or accidentally coupled to — the filter fields. Optional: omit if the caller has no meaningful requester identity (e.g. an anonymous or system-initiated search)..</param>
-        /// <param name="toTime">ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime..</param>
-        /// <param name="validAt">ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from &lt;&#x3D; ValidAt AND (active_to is null OR active_to &gt;&#x3D; ValidAt) Mutually exclusive with FromTime/ToTime..</param>
+        /// <param name="toTime">ToTime is the end of a time-range filter, RFC 3339 (inclusive). Returns memories whose validity period overlaps (−∞, to_time]: memories that started on or before to_time. Can be used alone (open-ended). With from_time the range is [from_time, to_time] and from_time must be on or before to_time. Cannot be combined with valid_at..</param>
+        /// <param name="validAt">ValidAt returns memories valid at exactly this moment (active_from &lt;&#x3D; valid_at and active_to empty or &gt;&#x3D; valid_at), RFC 3339. Mutually exclusive with from_time and to_time..</param>
         public SearchMemoryRequest(string appId = default, string fromTime = default, int graphDepth = default, int limit = default, Object metadataFilter = default, SearchMethod? method = default, string query = default, RerankerType? rerankerType = default, MemoryScope scope = default, string speakerActorId = default, string toTime = default, string validAt = default)
         {
             // to ensure "appId" is required (not null)
@@ -99,9 +99,9 @@ namespace Smritea.Internal.Autogen.Model
         public string AppId { get; set; }
 
         /// <summary>
-        /// FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime.
+        /// FromTime is the start of a time-range filter, RFC 3339. Returns memories whose validity period overlaps [from_time, ∞): memories still valid at from_time or valid after it. Can be used alone (open-ended). With to_time the range is [from_time, to_time]. Cannot be combined with valid_at.
         /// </summary>
-        /// <value>FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime.</value>
+        /// <value>FromTime is the start of a time-range filter, RFC 3339. Returns memories whose validity period overlaps [from_time, ∞): memories still valid at from_time or valid after it. Can be used alone (open-ended). With to_time the range is [from_time, to_time]. Cannot be combined with valid_at.</value>
         [DataMember(Name = "from_time", EmitDefaultValue = false)]
         public string FromTime { get; set; }
 
@@ -147,16 +147,16 @@ namespace Smritea.Internal.Autogen.Model
         public string SpeakerActorId { get; set; }
 
         /// <summary>
-        /// ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.
+        /// ToTime is the end of a time-range filter, RFC 3339 (inclusive). Returns memories whose validity period overlaps (−∞, to_time]: memories that started on or before to_time. Can be used alone (open-ended). With from_time the range is [from_time, to_time] and from_time must be on or before to_time. Cannot be combined with valid_at.
         /// </summary>
-        /// <value>ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.</value>
+        /// <value>ToTime is the end of a time-range filter, RFC 3339 (inclusive). Returns memories whose validity period overlaps (−∞, to_time]: memories that started on or before to_time. Can be used alone (open-ended). With from_time the range is [from_time, to_time] and from_time must be on or before to_time. Cannot be combined with valid_at.</value>
         [DataMember(Name = "to_time", EmitDefaultValue = false)]
         public string ToTime { get; set; }
 
         /// <summary>
-        /// ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from &lt;&#x3D; ValidAt AND (active_to is null OR active_to &gt;&#x3D; ValidAt) Mutually exclusive with FromTime/ToTime.
+        /// ValidAt returns memories valid at exactly this moment (active_from &lt;&#x3D; valid_at and active_to empty or &gt;&#x3D; valid_at), RFC 3339. Mutually exclusive with from_time and to_time.
         /// </summary>
-        /// <value>ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from &lt;&#x3D; ValidAt AND (active_to is null OR active_to &gt;&#x3D; ValidAt) Mutually exclusive with FromTime/ToTime.</value>
+        /// <value>ValidAt returns memories valid at exactly this moment (active_from &lt;&#x3D; valid_at and active_to empty or &gt;&#x3D; valid_at), RFC 3339. Mutually exclusive with from_time and to_time.</value>
         [DataMember(Name = "valid_at", EmitDefaultValue = false)]
         public string ValidAt { get; set; }
 

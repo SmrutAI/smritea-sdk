@@ -150,11 +150,16 @@ type SearchOptions struct {
 	Scope          *MemoryScope
 	Limit          *int32
 	GraphDepth     *int32
-	// FromTime is an ISO-8601 datetime string — only return memories created at or after this time.
+	// FromTime is an ISO-8601 datetime string — the start of a time range. Returns memories whose
+	// validity period overlaps [FromTime, infinity). Can be used alone (open-ended). With ToTime the
+	// range is [FromTime, ToTime]. Cannot be combined with ValidAt.
 	FromTime *string
-	// ToTime is an ISO-8601 datetime string — only return memories created at or before this time.
+	// ToTime is an ISO-8601 datetime string — the end of a time range (inclusive). Returns memories
+	// whose validity period overlaps (-infinity, ToTime]. Can be used alone (open-ended). With FromTime
+	// the range is [FromTime, ToTime]. Cannot be combined with ValidAt.
 	ToTime *string
-	// ValidAt is an ISO-8601 datetime string — return memories valid at exactly this point in time.
+	// ValidAt is an ISO-8601 datetime string — return memories valid at exactly this moment. Cannot be
+	// combined with FromTime or ToTime.
 	ValidAt *string
 	// Method overrides the search method. Accepted values: "quick_search", "deep_search",
 	// "context_aware_search". Defaults to app config if nil.
@@ -193,19 +198,19 @@ func (o *SearchOptions) WithLimit(n int32) *SearchOptions { o.Limit = &n; return
 // WithGraphDepth sets the graph traversal depth, 1-5; omit it to use the system default.
 func (o *SearchOptions) WithGraphDepth(d int32) *SearchOptions { o.GraphDepth = &d; return o }
 
-// WithFromTime sets the lower bound for memory creation time filter.
+// WithFromTime sets the start of a time range filter. It can be used alone (open-ended).
 func (o *SearchOptions) WithFromTime(t string) *SearchOptions {
 	o.FromTime = &t
 	return o
 }
 
-// WithToTime sets the upper bound for memory creation time filter.
+// WithToTime sets the end of a time range filter. It can be used alone (open-ended).
 func (o *SearchOptions) WithToTime(t string) *SearchOptions {
 	o.ToTime = &t
 	return o
 }
 
-// WithValidAt sets the point-in-time filter for memory validity.
+// WithValidAt sets the point-in-time filter: memories valid at exactly this moment.
 func (o *SearchOptions) WithValidAt(t string) *SearchOptions {
 	o.ValidAt = &t
 	return o

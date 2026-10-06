@@ -132,7 +132,7 @@ public class SearchMemoryRequest {
   }
 
   /**
-   * FromTime filters memories that overlap with time range [FromTime, ToTime] (ISO 8601 format). Must be used together with ToTime.
+   * FromTime is the start of a time-range filter, RFC 3339. Returns memories whose validity period overlaps [from_time, ∞): memories still valid at from_time or valid after it. Can be used alone (open-ended). With to_time the range is [from_time, to_time]. Cannot be combined with valid_at.
    * @return fromTime
    */
   @javax.annotation.Nullable
@@ -349,7 +349,7 @@ public class SearchMemoryRequest {
   }
 
   /**
-   * ToTime is the end of the time range filter (ISO 8601 format). Must be used together with FromTime.
+   * ToTime is the end of a time-range filter, RFC 3339 (inclusive). Returns memories whose validity period overlaps (−∞, to_time]: memories that started on or before to_time. Can be used alone (open-ended). With from_time the range is [from_time, to_time] and from_time must be on or before to_time. Cannot be combined with valid_at.
    * @return toTime
    */
   @javax.annotation.Nullable
@@ -373,7 +373,7 @@ public class SearchMemoryRequest {
   }
 
   /**
-   * ValidAt filters memories valid at a specific point in time (ISO 8601 format). A memory is valid if: active_from &lt;&#x3D; ValidAt AND (active_to is null OR active_to &gt;&#x3D; ValidAt) Mutually exclusive with FromTime/ToTime.
+   * ValidAt returns memories valid at exactly this moment (active_from &lt;&#x3D; valid_at and active_to empty or &gt;&#x3D; valid_at), RFC 3339. Mutually exclusive with from_time and to_time.
    * @return validAt
    */
   @javax.annotation.Nullable

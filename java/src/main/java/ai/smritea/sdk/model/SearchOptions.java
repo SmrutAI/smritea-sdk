@@ -76,7 +76,9 @@ public final class SearchOptions {
   }
 
   /**
-   * Sets the start of the time range filter (ISO 8601 format). Must be used together with toTime.
+   * Sets the start of a time range filter (ISO 8601 format). Returns memories whose validity period
+   * overlaps [fromTime, infinity). Can be used alone (open-ended). With toTime the range is
+   * [fromTime, toTime]. Cannot be combined with validAt.
    *
    * @param fromTime the start of the time range (ISO 8601)
    * @return this instance for chaining
@@ -87,7 +89,9 @@ public final class SearchOptions {
   }
 
   /**
-   * Sets the end of the time range filter (ISO 8601 format). Must be used together with fromTime.
+   * Sets the end of a time range filter (ISO 8601 format, inclusive). Returns memories whose
+   * validity period overlaps (-infinity, toTime]. Can be used alone (open-ended). With fromTime the
+   * range is [fromTime, toTime]. Cannot be combined with validAt.
    *
    * @param toTime the end of the time range (ISO 8601)
    * @return this instance for chaining
@@ -98,7 +102,8 @@ public final class SearchOptions {
   }
 
   /**
-   * Sets a point-in-time filter (ISO 8601 format). Mutually exclusive with fromTime/toTime.
+   * Sets a point-in-time filter (ISO 8601 format): memories valid at exactly this moment. Cannot be
+   * combined with fromTime or toTime.
    *
    * @param validAt the point-in-time to filter by (ISO 8601)
    * @return this instance for chaining

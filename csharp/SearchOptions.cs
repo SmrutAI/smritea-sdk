@@ -29,13 +29,13 @@ public sealed class SearchOptions
     /// <summary>Gets the graph traversal depth (1-5); null uses the system default.</summary>
     public int? GraphDepth { get; private set; }
 
-    /// <summary>Gets iSO-8601 datetime string — only return memories created at or after this time.</summary>
+    /// <summary>Gets the start of a time range (ISO-8601 datetime string). Returns memories whose validity period overlaps [FromTime, infinity). Can be used alone (open-ended). With ToTime the range is [FromTime, ToTime]. Cannot be combined with ValidAt.</summary>
     public string? FromTime { get; private set; }
 
-    /// <summary>Gets iSO-8601 datetime string — only return memories created at or before this time.</summary>
+    /// <summary>Gets the end of a time range (ISO-8601 datetime string, inclusive). Returns memories whose validity period overlaps (-infinity, ToTime]. Can be used alone (open-ended). With FromTime the range is [FromTime, ToTime]. Cannot be combined with ValidAt.</summary>
     public string? ToTime { get; private set; }
 
-    /// <summary>Gets iSO-8601 datetime string — return memories valid at exactly this point in time.</summary>
+    /// <summary>Gets the ISO-8601 datetime string for the point-in-time filter: memories valid at exactly this moment. Cannot be combined with FromTime or ToTime.</summary>
     public string? ValidAt { get; private set; }
 
     /// <summary>Gets the search method override. Accepted values: "quick_search", "deep_search", "context_aware_search".</summary>
@@ -91,8 +91,8 @@ public sealed class SearchOptions
         return this;
     }
 
-    /// <summary>Sets the lower bound of the time range filter (ISO-8601).</summary>
-    /// <param name="fromTime">ISO-8601 datetime string; only memories at or after this time are returned.</param>
+    /// <summary>Sets the start of a time range filter (ISO-8601). It can be used alone (open-ended).</summary>
+    /// <param name="fromTime">ISO-8601 datetime string; memories whose validity period overlaps [fromTime, infinity) are returned.</param>
     /// <returns>The current instance for method chaining.</returns>
     public SearchOptions WithFromTime(string fromTime)
     {
@@ -100,8 +100,8 @@ public sealed class SearchOptions
         return this;
     }
 
-    /// <summary>Sets the upper bound of the time range filter (ISO-8601).</summary>
-    /// <param name="toTime">ISO-8601 datetime string; only memories at or before this time are returned.</param>
+    /// <summary>Sets the end of a time range filter (ISO-8601). It can be used alone (open-ended).</summary>
+    /// <param name="toTime">ISO-8601 datetime string; memories whose validity period overlaps (-infinity, toTime] are returned.</param>
     /// <returns>The current instance for method chaining.</returns>
     public SearchOptions WithToTime(string toTime)
     {

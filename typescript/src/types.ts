@@ -92,11 +92,19 @@ export interface SearchOptions {
   limit?: number;
   /** Graph traversal depth, 1-5; omit to use the system default. */
   graphDepth?: number;
-  /** ISO-8601 datetime string — only return memories created at or after this time. */
+  /**
+   * ISO-8601 datetime string — start of a time range. Returns memories whose validity period overlaps
+   * [fromTime, infinity). Can be used alone (open-ended). With toTime the range is [fromTime, toTime].
+   * Cannot be combined with validAt.
+   */
   fromTime?: string;
-  /** ISO-8601 datetime string — only return memories created at or before this time. */
+  /**
+   * ISO-8601 datetime string — end of a time range (inclusive). Returns memories whose validity period
+   * overlaps (-infinity, toTime]. Can be used alone (open-ended). With fromTime the range is
+   * [fromTime, toTime]. Cannot be combined with validAt.
+   */
   toTime?: string;
-  /** ISO-8601 datetime string — return memories valid at exactly this point in time. */
+  /** ISO-8601 datetime string — return memories valid at exactly this moment. Cannot be combined with fromTime or toTime. */
   validAt?: string;
   /** Search method override. Accepted values: `"quick_search"`, `"deep_search"`,
    * `"context_aware_search"`. Defaults to app config if omitted. */
