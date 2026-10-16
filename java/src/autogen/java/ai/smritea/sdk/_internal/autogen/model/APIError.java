@@ -35,6 +35,7 @@ import ai.smritea.sdk._internal.autogen.ApiClient;
 @JsonPropertyOrder({
   APIError.JSON_PROPERTY_CODE,
   APIError.JSON_PROPERTY_MESSAGE,
+  APIError.JSON_PROPERTY_REQUEST_ID,
   APIError.JSON_PROPERTY_RETRYABLE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.20.0")
@@ -46,6 +47,10 @@ public class APIError {
   public static final String JSON_PROPERTY_MESSAGE = "message";
   @javax.annotation.Nullable
   private String message;
+
+  public static final String JSON_PROPERTY_REQUEST_ID = "request_id";
+  @javax.annotation.Nullable
+  private String requestId;
 
   public static final String JSON_PROPERTY_RETRYABLE = "retryable";
   @javax.annotation.Nullable
@@ -102,6 +107,30 @@ public class APIError {
   }
 
 
+  public APIError requestId(@javax.annotation.Nullable String requestId) {
+    this.requestId = requestId;
+    return this;
+  }
+
+  /**
+   * RequestID is the correlation ID of the failed request; it equals the X-Request-ID response header. It is omitted when the server did not set one.
+   * @return requestId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_REQUEST_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getRequestId() {
+    return requestId;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_REQUEST_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setRequestId(@javax.annotation.Nullable String requestId) {
+    this.requestId = requestId;
+  }
+
+
   public APIError retryable(@javax.annotation.Nullable Boolean retryable) {
     this.retryable = retryable;
     return this;
@@ -140,12 +169,13 @@ public class APIError {
     APIError apIError = (APIError) o;
     return Objects.equals(this.code, apIError.code) &&
         Objects.equals(this.message, apIError.message) &&
+        Objects.equals(this.requestId, apIError.requestId) &&
         Objects.equals(this.retryable, apIError.retryable);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message, retryable);
+    return Objects.hash(code, message, requestId, retryable);
   }
 
   @Override
@@ -154,6 +184,7 @@ public class APIError {
     sb.append("class APIError {\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    requestId: ").append(toIndentedString(requestId)).append("\n");
     sb.append("    retryable: ").append(toIndentedString(retryable)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -210,6 +241,11 @@ public class APIError {
     // add `message` to the URL query string
     if (getMessage() != null) {
       joiner.add(String.format(java.util.Locale.ROOT, "%smessage%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMessage()))));
+    }
+
+    // add `request_id` to the URL query string
+    if (getRequestId() != null) {
+      joiner.add(String.format(java.util.Locale.ROOT, "%srequest_id%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getRequestId()))));
     }
 
     // add `retryable` to the URL query string

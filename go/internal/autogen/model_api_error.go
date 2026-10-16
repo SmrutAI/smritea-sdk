@@ -24,6 +24,8 @@ type APIError struct {
 	Code *string `json:"code,omitempty"`
 	// Message is a human-readable description of what went wrong.
 	Message *string `json:"message,omitempty"`
+	// RequestID is the correlation ID of the failed request; it equals the X-Request-ID response header. It is omitted when the server did not set one.
+	RequestId *string `json:"request_id,omitempty"`
 	// Retryable reports whether the client should retry (additive, spec doc-175); set by the error middleware, always true for 429.
 	Retryable *bool `json:"retryable,omitempty"`
 }
@@ -109,6 +111,38 @@ func (o *APIError) SetMessage(v string) {
 	o.Message = &v
 }
 
+// GetRequestId returns the RequestId field value if set, zero value otherwise.
+func (o *APIError) GetRequestId() string {
+	if o == nil || IsNil(o.RequestId) {
+		var ret string
+		return ret
+	}
+	return *o.RequestId
+}
+
+// GetRequestIdOk returns a tuple with the RequestId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *APIError) GetRequestIdOk() (*string, bool) {
+	if o == nil || IsNil(o.RequestId) {
+		return nil, false
+	}
+	return o.RequestId, true
+}
+
+// HasRequestId returns a boolean if a field has been set.
+func (o *APIError) HasRequestId() bool {
+	if o != nil && !IsNil(o.RequestId) {
+		return true
+	}
+
+	return false
+}
+
+// SetRequestId gets a reference to the given string and assigns it to the RequestId field.
+func (o *APIError) SetRequestId(v string) {
+	o.RequestId = &v
+}
+
 // GetRetryable returns the Retryable field value if set, zero value otherwise.
 func (o *APIError) GetRetryable() bool {
 	if o == nil || IsNil(o.Retryable) {
@@ -156,6 +190,9 @@ func (o APIError) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Message) {
 		toSerialize["message"] = o.Message
+	}
+	if !IsNil(o.RequestId) {
+		toSerialize["request_id"] = o.RequestId
 	}
 	if !IsNil(o.Retryable) {
 		toSerialize["retryable"] = o.Retryable

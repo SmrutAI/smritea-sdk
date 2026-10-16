@@ -38,11 +38,13 @@ namespace Smritea.Internal.Autogen.Model
         /// </summary>
         /// <param name="code">Code is a machine-readable error code (e.g., \&quot;validation_error\&quot;, \&quot;not_found\&quot;)..</param>
         /// <param name="message">Message is a human-readable description of what went wrong..</param>
+        /// <param name="requestId">RequestID is the correlation ID of the failed request; it equals the X-Request-ID response header. It is omitted when the server did not set one..</param>
         /// <param name="retryable">Retryable reports whether the client should retry (additive, spec doc-175); set by the error middleware, always true for 429..</param>
-        public APIError(string code = default, string message = default, bool retryable = default)
+        public APIError(string code = default, string message = default, string requestId = default, bool retryable = default)
         {
             this.Code = code;
             this.Message = message;
+            this.RequestId = requestId;
             this.Retryable = retryable;
         }
 
@@ -61,6 +63,13 @@ namespace Smritea.Internal.Autogen.Model
         public string Message { get; set; }
 
         /// <summary>
+        /// RequestID is the correlation ID of the failed request; it equals the X-Request-ID response header. It is omitted when the server did not set one.
+        /// </summary>
+        /// <value>RequestID is the correlation ID of the failed request; it equals the X-Request-ID response header. It is omitted when the server did not set one.</value>
+        [DataMember(Name = "request_id", EmitDefaultValue = false)]
+        public string RequestId { get; set; }
+
+        /// <summary>
         /// Retryable reports whether the client should retry (additive, spec doc-175); set by the error middleware, always true for 429.
         /// </summary>
         /// <value>Retryable reports whether the client should retry (additive, spec doc-175); set by the error middleware, always true for 429.</value>
@@ -77,6 +86,7 @@ namespace Smritea.Internal.Autogen.Model
             sb.Append("class APIError {\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  Message: ").Append(Message).Append("\n");
+            sb.Append("  RequestId: ").Append(RequestId).Append("\n");
             sb.Append("  Retryable: ").Append(Retryable).Append("\n");
             sb.Append("}\n");
             return sb.ToString();

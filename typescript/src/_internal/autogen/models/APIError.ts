@@ -32,6 +32,13 @@ export interface APIError {
      */
     message?: string;
     /**
+     * RequestID is the correlation ID of the failed request; it equals the X-Request-ID
+     * response header. It is omitted when the server did not set one.
+     * @type {string}
+     * @memberof APIError
+     */
+    requestId?: string;
+    /**
      * Retryable reports whether the client should retry (additive, spec doc-175);
      * set by the error middleware, always true for 429.
      * @type {boolean}
@@ -59,6 +66,7 @@ export function APIErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         
         'code': json['code'] == null ? undefined : json['code'],
         'message': json['message'] == null ? undefined : json['message'],
+        'requestId': json['request_id'] == null ? undefined : json['request_id'],
         'retryable': json['retryable'] == null ? undefined : json['retryable'],
     };
 }
@@ -76,6 +84,7 @@ export function APIErrorToJSONTyped(value?: APIError | null, ignoreDiscriminator
         
         'code': value['code'],
         'message': value['message'],
+        'request_id': value['requestId'],
         'retryable': value['retryable'],
     };
 }
