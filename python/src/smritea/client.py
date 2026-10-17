@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import random
+import re
 import time
 from typing import Any, Callable, NoReturn, TypeVar
 
@@ -28,11 +29,16 @@ from smritea.exceptions import (
     SmriteaTooManyRequestsError,
     SmriteaUnauthorizedError,
     SmriteaUnprocessableError,
+    extract_request_id,
 )
 from smritea.types import Memory, MemoryCreationResult, MemoryScope, RelativeStanding, SearchResult
 
 _T = TypeVar("_T")
 _RETRY_CAP_SECONDS = 30.0
+_TRACE_ID_PATTERN = re.compile(r"[A-Za-z0-9._:-]{8,100}")
+_TRACE_ID_ERROR = (
+    "trace_id must be 8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen"
+)
 
 
 class SmriteaClient:
@@ -52,6 +58,7 @@ class SmriteaClient:
         app_id: str,
         base_url: str = "https://api-us.smritea.ai",
         max_retries: int = 2,
+        trace_id: str | None = None,
     ) -> None:
         """Initialise the smritea client.
 
@@ -62,12 +69,22 @@ class SmriteaClient:
             max_retries: Automatic retries on HTTP 429. Uses Retry-After header
                 when provided, otherwise exponential backoff with jitter (capped
                 at 30 s). Set to 0 to disable auto-retry. Default: 2.
+            trace_id: Optional Trace ID sent as the X-Trace-ID header on every
+                request. Must be 8-100 characters of A-Z, a-z, 0-9, dot, underscore,
+                colon or hyphen. Default: None (the server assigns one).
+
+        Raises:
+            ValueError: If trace_id is set and does not match the allowed format.
         """
+        if trace_id is not None and not _TRACE_ID_PATTERN.fullmatch(trace_id):
+            raise ValueError(_TRACE_ID_ERROR)
         self._app_id = app_id
         self._max_retries = max_retries
         configuration = Configuration(host=base_url)
         configuration.api_key["ApiKeyAuth"] = api_key
         self._api_client = ApiClient(configuration)
+        if trace_id is not None:
+            self._api_client.set_default_header("X-Trace-ID", trace_id)
         self._memory_api = SDKMemoryApi(self._api_client)
 
     # ------------------------------------------------------------------
@@ -337,33 +354,34 @@ class SmriteaClient:
                 retryable = bool(body_dict.get("retryable", False))
             except (json.JSONDecodeError, TypeError, KeyError):
                 pass  # defaults ("Unknown error" / "INTERNAL_ERROR" / False) are preserved
+            request_id = extract_request_id(body_dict, exc.headers)
             if status == 400:
                 raise SmriteaBadRequestError(
-                    message, status, error_code, body_dict, retryable
+                    message, status, error_code, body_dict, retryable, request_id=request_id
                 ) from exc
             if status == 401:
                 raise SmriteaUnauthorizedError(
-                    message, status, error_code, body_dict, retryable
+                    message, status, error_code, body_dict, retryable, request_id=request_id
                 ) from exc
             if status == 402:
                 raise SmriteaPaymentRequiredError(
-                    message, status, error_code, body_dict, retryable
+                    message, status, error_code, body_dict, retryable, request_id=request_id
                 ) from exc
             if status == 403:
                 raise SmriteaForbiddenError(
-                    message, status, error_code, body_dict, retryable
+                    message, status, error_code, body_dict, retryable, request_id=request_id
                 ) from exc
             if status == 404:
                 raise SmriteaNotFoundError(
-                    message, status, error_code, body_dict, retryable
+                    message, status, error_code, body_dict, retryable, request_id=request_id
                 ) from exc
             if status == 409:
                 raise SmriteaConflictError(
-                    message, status, error_code, body_dict, retryable
+                    message, status, error_code, body_dict, retryable, request_id=request_id
                 ) from exc
             if status == 422:
                 raise SmriteaUnprocessableError(
-                    message, status, error_code, body_dict, retryable
+                    message, status, error_code, body_dict, retryable, request_id=request_id
                 ) from exc
             if status == 429:
                 retry_after = self._parse_retry_after(exc)
@@ -374,6 +392,9 @@ class SmriteaClient:
                     code=error_code,
                     body=body_dict,
                     retryable=True,
+                    request_id=request_id,
                 ) from exc
-            raise SmriteaError(message, status, error_code, body_dict, retryable) from exc
+            raise SmriteaError(
+                message, status, error_code, body_dict, retryable, request_id=request_id
+            ) from exc
         raise SmriteaError(str(exc)) from exc

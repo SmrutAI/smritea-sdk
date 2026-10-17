@@ -7,6 +7,10 @@ import (
 	"strconv"
 )
 
+// ErrCodeInvalidTraceID is the SmriteaError.Code returned when ClientConfig.TraceID
+// fails validation. It is set locally and no request is sent.
+const ErrCodeInvalidTraceID = "INVALID_TRACE_ID"
+
 // SmriteaError is the base error type returned by all SDK operations.
 // All other SDK error types embed SmriteaError.
 type SmriteaError struct {
@@ -18,6 +22,9 @@ type SmriteaError struct {
 	// Retryable reports whether the server marked this error safe to retry; parsed
 	// from the response body's optional "retryable" field, and always true for 429.
 	Retryable bool
+	// RequestID is the server request ID for the failed call: the response body's
+	// "request_id" field when present, else the X-Request-ID response header. Empty when neither is set.
+	RequestID string
 	// Body holds the full parsed JSON response body from the API.
 	Body map[string]any
 }
@@ -94,6 +101,7 @@ func mapError(resp *http.Response, body []byte) error {
 		Code:       code,
 		HTTPStatus: resp.StatusCode,
 		Retryable:  retryable || resp.StatusCode == http.StatusTooManyRequests,
+		RequestID:  extractRequestID(parsedBody, resp.Header),
 		Body:       parsedBody,
 	}
 
@@ -150,6 +158,16 @@ func extractErrorFields(body []byte) (message, errorCode string, retryable bool,
 	}
 
 	return message, errorCode, retryable, data
+}
+
+// extractRequestID returns the request ID for an error response: the body's non-empty
+// "request_id" string when present, else the X-Request-ID response header. http.Header.Get
+// canonicalizes the key, so the header lookup is case-insensitive.
+func extractRequestID(parsedBody map[string]any, header http.Header) string {
+	if id, ok := parsedBody["request_id"].(string); ok && id != "" {
+		return id
+	}
+	return header.Get("X-Request-ID")
 }
 
 // parseRetryAfter reads the Retry-After header from the response and parses it as

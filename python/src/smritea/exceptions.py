@@ -3,12 +3,34 @@
 from __future__ import annotations
 
 import contextlib
+from collections.abc import Mapping
+
+
+def extract_request_id(body: dict | None, headers: Mapping[str, str] | None) -> str | None:
+    """Return the server request ID for an error response, or None.
+
+    The body ``request_id`` field wins. Otherwise the ``X-Request-ID`` header is used; header
+    names are matched case-insensitively because Go servers send ``X-Request-Id``.
+    """
+    if isinstance(body, dict):
+        body_request_id = body.get("request_id")
+        if isinstance(body_request_id, str) and body_request_id:
+            return body_request_id
+    if headers:
+        for name, value in headers.items():
+            if name.lower() == "x-request-id" and isinstance(value, str) and value:
+                return value
+    return None
 
 
 class SmriteaError(Exception):
     """Base exception for all smritea SDK errors.
 
     Also raised directly for HTTP 5xx responses and any other unmapped status code.
+
+    Attributes:
+        request_id: Server request ID (``request_id`` body field, else the ``X-Request-ID``
+            response header), or None when the server sent neither.
     """
 
     def __init__(
@@ -18,12 +40,14 @@ class SmriteaError(Exception):
         code: str | None = None,
         body: dict | None = None,
         retryable: bool = False,
+        request_id: str | None = None,
     ) -> None:
         self.message = message
         self.http_status = http_status
         self.code = code or "INTERNAL_ERROR"
         self.body = body
         self.retryable = retryable
+        self.request_id = request_id
         super().__init__(message)
 
     def __repr__(self) -> str:
@@ -86,8 +110,9 @@ class SmriteaTooManyRequestsError(SmriteaError):
         code: str | None = None,
         body: dict | None = None,
         retryable: bool = True,
+        request_id: str | None = None,
     ) -> None:
-        super().__init__(message, http_status, code, body, retryable)
+        super().__init__(message, http_status, code, body, retryable, request_id)
         self.retry_after = retry_after
 
 
@@ -98,16 +123,20 @@ def raise_for_status(
     error_code: str | None = None,
     body: dict | None = None,
     retryable: bool = False,
+    request_id: str | None = None,
 ) -> None:
     """Raise the appropriate SmriteaError subclass for an HTTP error status code.
 
     Args:
         status_code: HTTP response status code.
         message: Error message from the response body.
-        headers: Optional response headers (used to extract Retry-After for 429).
+        headers: Optional response headers (used to extract Retry-After for 429 and the
+            X-Request-ID fallback for request_id).
         error_code: Error code from the response body.
         body: Optional full response body as a dictionary.
         retryable: Whether the server marked this error as retryable.
+        request_id: Explicit server request ID. When None, it is taken from the body
+            ``request_id`` field, else the ``X-Request-ID`` header.
 
     Raises:
         SmriteaBadRequestError: On HTTP 400.
@@ -120,20 +149,35 @@ def raise_for_status(
         SmriteaTooManyRequestsError: On HTTP 429.
         SmriteaError: On HTTP 5xx or any other error status.
     """
+    rid = request_id or extract_request_id(body, headers)
     if status_code == 400:
-        raise SmriteaBadRequestError(message, status_code, error_code, body, retryable)
+        raise SmriteaBadRequestError(
+            message, status_code, error_code, body, retryable, request_id=rid
+        )
     if status_code == 401:
-        raise SmriteaUnauthorizedError(message, status_code, error_code, body, retryable)
+        raise SmriteaUnauthorizedError(
+            message, status_code, error_code, body, retryable, request_id=rid
+        )
     if status_code == 402:
-        raise SmriteaPaymentRequiredError(message, status_code, error_code, body, retryable)
+        raise SmriteaPaymentRequiredError(
+            message, status_code, error_code, body, retryable, request_id=rid
+        )
     if status_code == 403:
-        raise SmriteaForbiddenError(message, status_code, error_code, body, retryable)
+        raise SmriteaForbiddenError(
+            message, status_code, error_code, body, retryable, request_id=rid
+        )
     if status_code == 404:
-        raise SmriteaNotFoundError(message, status_code, error_code, body, retryable)
+        raise SmriteaNotFoundError(
+            message, status_code, error_code, body, retryable, request_id=rid
+        )
     if status_code == 409:
-        raise SmriteaConflictError(message, status_code, error_code, body, retryable)
+        raise SmriteaConflictError(
+            message, status_code, error_code, body, retryable, request_id=rid
+        )
     if status_code == 422:
-        raise SmriteaUnprocessableError(message, status_code, error_code, body, retryable)
+        raise SmriteaUnprocessableError(
+            message, status_code, error_code, body, retryable, request_id=rid
+        )
     if status_code == 429:
         retry_after: int | None = None
         if headers:
@@ -146,5 +190,6 @@ def raise_for_status(
             code=error_code,
             body=body,
             retryable=True,
+            request_id=rid,
         )
-    raise SmriteaError(message, status_code, error_code, body, retryable)
+    raise SmriteaError(message, status_code, error_code, body, retryable, request_id=rid)

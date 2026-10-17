@@ -14,6 +14,9 @@ import {
 } from './errors.js';
 
 const RETRY_CAP_MS = 30_000;
+const TRACE_ID_PATTERN = /^[A-Za-z0-9._:-]{8,100}$/;
+const TRACE_ID_ERROR_MESSAGE =
+  'trace_id must be 8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen';
 
 export class SmriteaClient {
   private readonly appId: string;
@@ -23,9 +26,13 @@ export class SmriteaClient {
   constructor(config: SmriteaClientConfig) {
     this.appId = config.appId;
     this.maxRetries = config.maxRetries ?? 2;
+    if (config.traceId !== undefined && !TRACE_ID_PATTERN.test(config.traceId)) {
+      throw new TypeError(TRACE_ID_ERROR_MESSAGE);
+    }
     const configuration = new Configuration({
       basePath: config.baseUrl?.replace(/\/$/, '') ?? 'https://api-us.smritea.ai',
       apiKey: config.apiKey,
+      headers: config.traceId !== undefined ? { 'X-Trace-ID': config.traceId } : undefined,
     });
     this.api = new SDKMemoryApi(configuration);
   }
@@ -174,19 +181,34 @@ export class SmriteaClient {
       const code = errorData.code;
       const body = errorData.body;
       const retryable = errorData.retryable;
+      const requestId = this.extractRequestId(err.response, body);
       switch (status) {
-        case 400: throw new SmriteaBadRequestError(message, status, code, body, retryable);
-        case 401: throw new SmriteaUnauthorizedError(message, status, code, body, retryable);
-        case 402: throw new SmriteaPaymentRequiredError(message, status, code, body, retryable);
-        case 403: throw new SmriteaForbiddenError(message, status, code, body, retryable);
-        case 404: throw new SmriteaNotFoundError(message, status, code, body, retryable);
-        case 409: throw new SmriteaConflictError(message, status, code, body, retryable);
-        case 422: throw new SmriteaUnprocessableError(message, status, code, body, retryable);
-        case 429: throw new SmriteaTooManyRequestsError(message, status, this.parseRetryAfter(err.response), code, body, true);
-        default: throw new SmriteaError(message, status, code, body, retryable);
+        case 400: throw new SmriteaBadRequestError(message, status, code, body, retryable, requestId);
+        case 401: throw new SmriteaUnauthorizedError(message, status, code, body, retryable, requestId);
+        case 402: throw new SmriteaPaymentRequiredError(message, status, code, body, retryable, requestId);
+        case 403: throw new SmriteaForbiddenError(message, status, code, body, retryable, requestId);
+        case 404: throw new SmriteaNotFoundError(message, status, code, body, retryable, requestId);
+        case 409: throw new SmriteaConflictError(message, status, code, body, retryable, requestId);
+        case 422: throw new SmriteaUnprocessableError(message, status, code, body, retryable, requestId);
+        case 429: throw new SmriteaTooManyRequestsError(message, status, this.parseRetryAfter(err.response), code, body, true, requestId);
+        default: throw new SmriteaError(message, status, code, body, retryable, requestId);
       }
     }
     throw new SmriteaError(String(err));
+  }
+
+  /**
+   * Resolve the server request ID: the non-empty body `request_id` string, else the
+   * `X-Request-ID` response header. `Headers.get` is case-insensitive by the Fetch spec.
+   */
+  private extractRequestId(response: Response, body: unknown): string | undefined {
+    if (body && typeof body === 'object') {
+      const bodyRequestId = (body as Record<string, unknown>).request_id;
+      if (typeof bodyRequestId === 'string' && bodyRequestId) {
+        return bodyRequestId;
+      }
+    }
+    return response.headers.get('X-Request-ID') || undefined;
   }
 
   /** Attempt to extract error data ("message", "code", and "retryable" fields) from the response body JSON. */

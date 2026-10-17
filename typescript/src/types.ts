@@ -141,4 +141,10 @@ export interface SmriteaClientConfig {
    * Set to 0 to disable. Default: 2.
    */
   maxRetries?: number;
+  /**
+   * Optional trace ID sent as the `X-Trace-ID` header on every request.
+   * Must be 8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen.
+   * An invalid value throws a `TypeError` from the constructor, before any network call.
+   */
+  traceId?: string;
 }

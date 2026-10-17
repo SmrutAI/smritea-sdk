@@ -18,13 +18,15 @@ public class SmriteaException : Exception
     /// <param name="code">The machine-readable wire code from the server response (e.g. <c>MEMORY_NOT_FOUND</c>).</param>
     /// <param name="retryable">Whether the server marked this error as retryable.</param>
     /// <param name="body">The full parsed JSON response body, if available.</param>
-    public SmriteaException(string message, int? statusCode = null, string? code = null, bool retryable = false, object? body = null)
+    /// <param name="requestId">The server-assigned request ID for the failed call, if available.</param>
+    public SmriteaException(string message, int? statusCode = null, string? code = null, bool retryable = false, object? body = null, string? requestId = null)
         : base(message)
     {
         this.HTTPStatus = statusCode;
         this.Code = code ?? "INTERNAL_ERROR";
         this.Retryable = retryable;
         this.Body = body;
+        this.RequestId = requestId;
     }
 
     /// <summary>
@@ -83,4 +85,11 @@ public class SmriteaException : Exception
 
     /// <summary>Gets the full parsed JSON response body associated with this error, or null if not available.</summary>
     public object? Body { get; }
+
+    /// <summary>
+    /// Gets the server-assigned request ID for the failed call, or null if the server did not send one.
+    /// Read from the response body <c>request_id</c> field, else from the <c>X-Request-ID</c> response header.
+    /// Set by the SDK when the error is mapped from the HTTP response.
+    /// </summary>
+    public string? RequestId { get; internal set; }
 }

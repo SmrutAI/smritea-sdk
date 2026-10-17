@@ -19,6 +19,8 @@ public class SmriteaClient : IDisposable
     private const string DefaultBaseUrl = "https://api-us.smritea.ai";
     private const int DefaultMaxRetries = 2;
     private const double RetryCap = 30.0;
+    private const int TraceIdMinLength = 8;
+    private const int TraceIdMaxLength = 100;
 
     private readonly string appId;
     private readonly int maxRetries;
@@ -32,10 +34,20 @@ public class SmriteaClient : IDisposable
     /// <param name="appId">Application ID injected into every request.</param>
     /// <param name="baseUrl">Base URL of the smritea API. Defaults to <c>https://api-us.smritea.ai</c>.</param>
     /// <param name="maxRetries">Maximum number of retries on HTTP 429. Defaults to 2.</param>
-    public SmriteaClient(string apiKey, string appId, string? baseUrl = null, int maxRetries = DefaultMaxRetries)
+    /// <param name="traceId">Optional Trace ID sent as the <c>X-Trace-ID</c> header on every call. When set, it must be
+    /// 8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen.</param>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="traceId"/> is not a valid Trace ID.</exception>
+    public SmriteaClient(string apiKey, string appId, string? baseUrl = null, int maxRetries = DefaultMaxRetries, string? traceId = null)
     {
         ArgumentNullException.ThrowIfNull(apiKey);
         ArgumentNullException.ThrowIfNull(appId);
+        if (traceId is not null && !IsValidTraceId(traceId))
+        {
+            throw new ArgumentException(
+                "trace_id must be 8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen",
+                nameof(traceId));
+        }
+
         this.appId = appId;
         this.maxRetries = Math.Max(0, maxRetries);
 
@@ -46,6 +58,11 @@ public class SmriteaClient : IDisposable
             BasePath = resolvedBaseUrl,
         };
         config.ApiKey["X-API-Key"] = apiKey;
+        if (traceId is not null)
+        {
+            config.DefaultHeaders["X-Trace-ID"] = traceId;
+        }
+
         this.api = new SDKMemoryApi(config);
     }
 
@@ -365,6 +382,30 @@ public class SmriteaClient : IDisposable
     // ---------------------------------------------------------------------------
 
     /// <summary>
+    /// Checks that a Trace ID is 8-100 characters long and made only of ASCII letters, digits,
+    /// dot, underscore, colon or hyphen. Any non-ASCII character fails the check.
+    /// </summary>
+    /// <param name="traceId">The candidate Trace ID.</param>
+    /// <returns><c>true</c> when the Trace ID is valid; otherwise <c>false</c>.</returns>
+    private static bool IsValidTraceId(string traceId)
+    {
+        if (traceId.Length < TraceIdMinLength || traceId.Length > TraceIdMaxLength)
+        {
+            return false;
+        }
+
+        foreach (var c in traceId)
+        {
+            if (!char.IsAsciiLetterOrDigit(c) && c != '.' && c != '_' && c != ':' && c != '-')
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
     /// Computes how long to sleep before the next retry attempt.
     /// When <paramref name="retryAfter"/> is provided by the server, 90% of that value is used
     /// (to account for clock skew) capped at <see cref="RetryCap"/>. Otherwise exponential backoff
@@ -430,7 +471,7 @@ public class SmriteaClient : IDisposable
         var httpStatus = e.ErrorCode;
         var (message, code, bodyRetryable, body) = ExtractErrorFieldsWithBody(e.ErrorContent as string);
         var retryable = bodyRetryable || httpStatus == 429;
-        return httpStatus switch
+        SmriteaException error = httpStatus switch
         {
             400 => new SmriteaBadRequestException(message, httpStatus, code, retryable, body),
             401 => new SmriteaUnauthorizedException(message, httpStatus, code, retryable, body),
@@ -442,6 +483,83 @@ public class SmriteaClient : IDisposable
             429 => new SmriteaTooManyRequestsException(message, httpStatus, ParseRetryAfter(GetRetryAfterHeader(e)), code, retryable, body),
             _ => new SmriteaException(message, httpStatus, code, retryable, body),
         };
+        error.RequestId = ExtractRequestId(e);
+        return error;
+    }
+
+    /// <summary>
+    /// Resolves the server request ID for a failed call. The body <c>request_id</c> field wins;
+    /// otherwise the <c>X-Request-ID</c> response header is used.
+    /// </summary>
+    /// <param name="e">The API exception whose body and headers to inspect.</param>
+    /// <returns>The request ID, or null if neither source carries a non-empty value.</returns>
+    private static string? ExtractRequestId(ApiException e)
+    {
+        return ExtractRequestIdFromBody(e.ErrorContent as string) ?? GetRequestIdHeader(e);
+    }
+
+    /// <summary>
+    /// Reads the <c>request_id</c> string field from a JSON error body.
+    /// </summary>
+    /// <param name="body">The raw JSON response body string, possibly null.</param>
+    /// <returns>The non-empty <c>request_id</c> value, or null if absent, empty, or the body is not a JSON object.</returns>
+    private static string? ExtractRequestIdFromBody(string? body)
+    {
+        if (string.IsNullOrEmpty(body))
+        {
+            return null;
+        }
+
+        try
+        {
+            using var json = System.Text.Json.JsonDocument.Parse(body);
+            var root = json.RootElement;
+            if (root.ValueKind == System.Text.Json.JsonValueKind.Object
+                && root.TryGetProperty("request_id", out var requestIdProp)
+                && requestIdProp.ValueKind == System.Text.Json.JsonValueKind.String)
+            {
+                var extracted = requestIdProp.GetString();
+                if (!string.IsNullOrEmpty(extracted))
+                {
+                    return extracted;
+                }
+            }
+
+            return null;
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            // Body is not valid JSON — no request_id can be read from it.
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Reads the <c>X-Request-ID</c> response header. The header name is matched case-insensitively
+    /// because the Go server sends the canonical <c>X-Request-Id</c> casing.
+    /// </summary>
+    /// <param name="e">The API exception whose response headers to inspect.</param>
+    /// <returns>The first non-empty header value, or null if absent.</returns>
+    private static string? GetRequestIdHeader(ApiException e)
+    {
+        if (e.Headers is null)
+        {
+            return null;
+        }
+
+        foreach (var (name, values) in e.Headers)
+        {
+            if (string.Equals(name, "X-Request-ID", StringComparison.OrdinalIgnoreCase))
+            {
+                var value = values.FirstOrDefault();
+                if (!string.IsNullOrEmpty(value))
+                {
+                    return value;
+                }
+            }
+        }
+
+        return null;
     }
 
     /// <summary>

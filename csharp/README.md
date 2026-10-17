@@ -84,9 +84,22 @@ var client = new SmriteaClient(
     apiKey: "sk-...",                           // required
     appId: "app_...",                           // required
     baseUrl: "https://api-us.smritea.ai",         // optional, default shown
-    maxRetries: 2                               // optional, default 2; 0 disables retry
+    maxRetries: 2,                              // optional, default 2; 0 disables retry
+    traceId: "checkout-flow-7f3a9c"             // optional, default null
 );
 ```
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `apiKey` | `string` | required | Your API key (`sk-...`) |
+| `appId` | `string` | required | Your App ID (`app_...`), sent with every request |
+| `baseUrl` | `string?` | `https://api-us.smritea.ai` | Base URL of the smritea API |
+| `maxRetries` | `int` | `2` | Retries on HTTP 429. `0` disables retry |
+| `traceId` | `string?` | `null` | Trace ID sent as the `X-Trace-ID` header on every call |
+
+When set, `traceId` must be 8-100 characters long and contain only ASCII letters, digits, dots (`.`),
+underscores (`_`), colons (`:`) or hyphens (`-`). An invalid value throws `ArgumentException` when the client
+is constructed. Leave it unset to send no `X-Trace-ID` header.
 
 ---
 
@@ -218,6 +231,23 @@ catch (SmriteaException ex)
 
 Every exception carries `Code` (the server's machine-readable wire code), `HTTPStatus`, `Retryable`,
 and `Body` (the full parsed response body).
+
+### Request IDs
+
+Every exception also carries `RequestId`, the server-assigned ID for the failed call. It is read from the
+`request_id` field of the error body when present and non-empty, otherwise from the `X-Request-ID` response
+header. It is `null` when neither is available.
+
+```csharp
+try
+{
+    await client.DeleteAsync("mem_abc123");
+}
+catch (SmriteaException e)
+{
+    Console.WriteLine(e.RequestId);
+}
+```
 
 ---
 

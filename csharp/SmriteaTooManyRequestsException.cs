@@ -16,8 +16,9 @@ public class SmriteaTooManyRequestsException : SmriteaException
     /// <param name="code">The machine-readable wire code from the server response.</param>
     /// <param name="retryable">Whether the server marked this error as retryable.</param>
     /// <param name="body">The full parsed JSON response body, if available.</param>
-    public SmriteaTooManyRequestsException(string message, int statusCode, int? retryAfter = null, string? code = null, bool retryable = false, object? body = null)
-        : base(message, statusCode, code, retryable, body)
+    /// <param name="requestId">The server-assigned request ID for the failed call, if available.</param>
+    public SmriteaTooManyRequestsException(string message, int statusCode, int? retryAfter = null, string? code = null, bool retryable = false, object? body = null, string? requestId = null)
+        : base(message, statusCode, code, retryable, body, requestId)
     {
         this.RetryAfter = retryAfter;
     }
@@ -30,8 +31,9 @@ public class SmriteaTooManyRequestsException : SmriteaException
     /// <param name="code">The machine-readable wire code from the server response.</param>
     /// <param name="retryable">Whether the server marked this error as retryable.</param>
     /// <param name="body">The full parsed JSON response body, if available.</param>
-    public SmriteaTooManyRequestsException(string message, int? statusCode = null, string? code = null, bool retryable = false, object? body = null)
-        : base(message, statusCode, code, retryable, body)
+    /// <param name="requestId">The server-assigned request ID for the failed call, if available.</param>
+    public SmriteaTooManyRequestsException(string message, int? statusCode = null, string? code = null, bool retryable = false, object? body = null, string? requestId = null)
+        : base(message, statusCode, code, retryable, body, requestId)
     {
     }
 

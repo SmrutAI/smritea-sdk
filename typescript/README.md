@@ -84,8 +84,11 @@ const client = new SmriteaClient({
   appId: 'app_...',                       // required
   baseUrl: 'https://api-us.smritea.ai',      // optional, default shown
   maxRetries: 2,                          // optional, default 2; 0 disables retry
+  traceId: 'checkout-flow-2026',          // optional, see below
 });
 ```
+
+`traceId` is sent as the `X-Trace-ID` header on every request, so your own logs and the smritea request logs can be correlated. It must be 8-100 characters, limited to A-Z, a-z, 0-9, `.`, `_`, `:` and `-`. An invalid value throws a `TypeError` from the constructor, before any network call is made.
 
 ---
 
@@ -200,6 +203,16 @@ try {
   if (e instanceof SmriteaTooManyRequestsError) console.log(`Retry after ${e.retryAfter}s`);
   if (e instanceof SmriteaUnauthorizedError) console.log('Invalid API key');
   if (e instanceof SmriteaPaymentRequiredError) console.log('Plan quota exceeded');
+}
+```
+
+Every `SmriteaError` and its subclasses expose `requestId`, the server's request ID for the failed call. It is taken from the response body's `request_id` field when that is a non-empty string, otherwise from the `X-Request-ID` response header. It is `undefined` when neither is present:
+
+```typescript
+try {
+  await client.add('Alice prefers morning meetings', { actorId: 'alice', actorType: 'user' });
+} catch (e) {
+  if (e instanceof SmriteaError) console.log(e.requestId);
 }
 ```
 

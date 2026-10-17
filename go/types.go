@@ -22,6 +22,7 @@ type ClientConfig struct {
 	AppID      string
 	BaseURL    string // default: https://api-us.smritea.ai
 	MaxRetries int    // default: 2; 0 disables retry
+	TraceID    string // optional; 8-100 bytes of A-Z, a-z, 0-9, '.', '_', ':', '-'; sent as X-Trace-ID on every call
 }
 
 // MemoryScope groups actor and conversation context fields for memory operations.

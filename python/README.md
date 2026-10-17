@@ -20,6 +20,7 @@ generated:
 | [Quickstart](#quickstart) | Quickstart |
 | [Constructor](#constructor) | Constructor |
 | [Methods](#methods) | Methods |
+| [MemoryScope](#memoryscope) | Actor and conversation context passed as `scope=` |
 | [Error handling](#error-handling) | Error handling |
 | [`Memory` type reference](#memory-type-reference) | Memory type reference |
 
@@ -56,18 +57,20 @@ export SMRITEA_APP_ID="app_..."
 
 ```python
 import os
-from smritea import SmriteaClient
+from smritea import MemoryScope, SmriteaClient
 
 client = SmriteaClient(
     api_key=os.environ["SMRITEA_API_KEY"],
     app_id=os.environ["SMRITEA_APP_ID"],
 )
 
+alice = MemoryScope(actor_id="alice", actor_type="user")
+
 # Store something about a user
-client.add("Alice is a vegetarian and loves hiking", actor_id="alice", actor_type="user")
+client.add("Alice is a vegetarian and loves hiking", scope=alice)
 
 # Retrieve it later in a different session
-results = client.search("What are Alice's food preferences?", actor_id="alice", actor_type="user")
+results = client.search("What are Alice's food preferences?", scope=alice)
 for r in results:
     print(f"{r.score:.2f}  {r.content}")
 ```
@@ -84,6 +87,29 @@ client = SmriteaClient(
     app_id="app_...",                    # required
     base_url="https://api-us.smritea.ai",  # optional, default shown
     max_retries=2,                       # optional, default 2; 0 disables retry
+    trace_id="checkout-flow-7f3a9c",     # optional, default None
+)
+```
+
+| Parameter | Default | Description |
+|---|---|---|
+| `api_key` | required | Your API key (starts with `sk-`) |
+| `app_id` | required | The app ID used for all memory operations |
+| `base_url` | `https://api-us.smritea.ai` | Override the API base URL |
+| `max_retries` | `2` | Automatic retries on HTTP 429. Uses the `Retry-After` header when present, otherwise exponential backoff with jitter (capped at 30 s). `0` disables retry. |
+| `trace_id` | `None` | Trace ID sent as the `X-Trace-ID` header on every request. Must be 8-100 characters of `A-Z`, `a-z`, `0-9`, `.`, `_`, `:` or `-`. An invalid value raises `ValueError` at construction. When omitted, the server assigns one. |
+
+Pass `trace_id` to tie the SDK's requests to a trace in your own system, for example one per user
+session or workflow run:
+
+```python
+import os
+from smritea import SmriteaClient
+
+client = SmriteaClient(
+    api_key=os.environ["SMRITEA_API_KEY"],
+    app_id=os.environ["SMRITEA_APP_ID"],
+    trace_id="checkout-flow-7f3a9c",
 )
 ```
 
@@ -94,24 +120,28 @@ client = SmriteaClient(
 ### `add` — Store a memory
 
 ```python
-memory = client.add(
+from smritea import MemoryScope
+
+result = client.add(
     "User prefers concise replies",
-    actor_id="alice",              # explicit actor ID
-    actor_type="user",             # "user" | "agent" | "system"
-    metadata={"source": "chat"},   # optional
-    conversation_id="conv_123",    # optional
+    scope=MemoryScope(
+        actor_id="alice",           # explicit actor ID
+        actor_type="user",          # "user" | "agent" | "system"
+        conversation_id="conv_123", # optional
+    ),
+    metadata={"source": "chat"},    # optional
 )
-print(memory.id)  # mem_...
+for memory in result.memories:
+    print(memory.id)  # mem_...
 ```
 
 | Parameter | Default | Description |
 |---|---|---|
 | `content` | required | Memory text |
-| `actor_id` | `None` | Actor ID |
-| `actor_type` | `None` | `"user"` \| `"agent"` \| `"system"` |
-| `actor_name` | `None` | Display name |
-| `metadata` | `None` | Arbitrary key-value dict |
-| `conversation_id` | `None` | Conversation context |
+| `scope` | `None` | `MemoryScope` object carrying the actor and conversation context. Its fields are listed in [MemoryScope](#memoryscope). `add()` sends all of them. |
+| `metadata` | `None` | Arbitrary string-to-string key-value dict |
+| `event_occurred_at` | `None` | ISO-8601 datetime of when the content occurred. Used to resolve relative expressions such as "yesterday". Defaults to now. |
+| `relative_standing` | `None` | `RelativeStanding` object with `importance`, `decay_factor` and `decay_function` |
 
 ---
 
@@ -120,8 +150,7 @@ print(memory.id)  # mem_...
 ```python
 results = client.search(
     "dietary restrictions",
-    actor_id="alice",
-    actor_type="user",
+    scope=MemoryScope(actor_id="alice", actor_type="user"),
     limit=5,
 )
 for r in results:
@@ -133,11 +162,10 @@ Results are ordered by relevance (descending). Each result exposes `score` (0.0�
 | Parameter | Default | Description |
 |---|---|---|
 | `query` | required | Search text |
-| `actor_id` | `None` | Filter by actor ID |
-| `actor_type` | `None` | Filter by actor type |
-| `limit` | app default | Max results to return |
-| `graph_depth` | `None` | Graph traversal depth override |
-| `conversation_id` | `None` | Conversation context |
+| `scope` | `None` | `MemoryScope` object. `search()` uses `actor_id`, `actor_type`, `conversation_id` and `participant_ids` as filters; `actor_name` and `source_type` are not sent. See [MemoryScope](#memoryscope). |
+| `speaker_actor_id` | `None` | Identifies who is asking. It never filters results; it is used for query augmentation and audit. Max 64 characters. |
+| `limit` | app default | Number of results. Must not exceed the server's `top_n_max` (default 20). Omit to use the app's `top_n`. |
+| `graph_depth` | `None` | Graph traversal depth override, 1–5 |
 
 ---
 
@@ -166,10 +194,26 @@ client.delete("mem_abc123")
 > Use `search()` with a broad query as a workaround:
 
 ```python
-results = client.search("", actor_id="alice", actor_type="user", limit=20)
+results = client.search("", scope=MemoryScope(actor_id="alice", actor_type="user"), limit=20)
 ```
 
 `limit` must not exceed the server's `top_n_max` (default 20); a larger value returns a 400 error. Omit it to use the app's `top_n`.
+
+---
+
+## MemoryScope
+
+`MemoryScope` groups the actor and conversation context passed as `scope=` to `add()` and `search()`.
+Every field is optional. Import it with `from smritea import MemoryScope`.
+
+| Field | Type | Description |
+|---|---|---|
+| `actor_id` | str \| None | Actor identifier, max 64 characters. Set together with `actor_type`. |
+| `actor_type` | str \| None | `"user"` \| `"agent"` \| `"system"`. Set together with `actor_id`. |
+| `actor_name` | str \| None | Display name, max 255 characters. `add()` sends it; `search()` does not. |
+| `conversation_id` | str \| None | Conversation thread, max 64 characters. Takes precedence over `participant_ids` if both are set. |
+| `source_type` | str \| None | `"conversation"` \| `"document"` \| `"api"`. `add()` sends it; `search()` does not. Defaults to `"api"` when omitted. |
+| `participant_ids` | list[str] \| None | Finds memories from conversations in which **all** listed actors took part. Requires at least 2 IDs, each 1–64 characters. Used by `search()`; `add()` also sends it. |
 
 ---
 
@@ -177,6 +221,7 @@ results = client.search("", actor_id="alice", actor_type="user", limit=20)
 
 ```python
 from smritea import (
+    MemoryScope,
     SmriteaClient,
     SmriteaUnauthorizedError,
     SmriteaNotFoundError,
@@ -187,7 +232,7 @@ from smritea import (
 )
 
 try:
-    results = client.search("preferences", actor_id="alice", actor_type="user")
+    results = client.search("preferences", scope=MemoryScope(actor_id="alice", actor_type="user"))
 except SmriteaUnauthorizedError:
     print("Check your API key")
 except SmriteaTooManyRequestsError as e:
@@ -211,8 +256,21 @@ except SmriteaError as e:
 | `SmriteaError` | other | Unexpected server error |
 
 Every exception carries `message`, `http_status`, `code` (the server's stable machine-readable wire
-code), `retryable` (`True` when the server marked the error safe to retry), and the full parsed response
-`body`.
+code), `retryable` (`True` when the server marked the error safe to retry), the full parsed response
+`body`, and `request_id`.
+
+`request_id` is the server's request ID for the failed call, taken from the response body's
+`request_id` field or, if that is absent, the `X-Request-ID` response header. It is `None` when the
+server sent neither. Include it when you contact support about a failed request:
+
+```python
+from smritea import SmriteaError
+
+try:
+    client.get("mem_abc123")
+except SmriteaError as e:
+    print(e.request_id)
+```
 
 ---
 

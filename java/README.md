@@ -108,7 +108,21 @@ SmriteaClient client = new SmriteaClient(
     "https://api-us.smritea.ai",           // baseUrl — optional, default shown
     2                                   // maxRetries — optional, default 2; 0 disables retry
 );
+
+// With a Trace ID — the 5th argument
+SmriteaClient client = new SmriteaClient(
+    "sk-...",
+    "app_...",
+    "https://api-us.smritea.ai",
+    2,
+    "checkout-req-7f3a9c"               // traceId — optional; pass null to send no header
+);
 ```
+
+`traceId` is sent as the `X-Trace-ID` header on every request the client makes. It must be 8–100
+characters long and use only letters A–Z, a–z, digits 0–9, dot (`.`), underscore (`_`), colon (`:`)
+and hyphen (`-`). An invalid value throws `IllegalArgumentException` from the constructor. The
+four-argument constructors send no trace header.
 
 All methods are **synchronous** and return values directly. For async use, wrap calls in a
 `CompletableFuture` or virtual thread (`Thread.ofVirtual()`).
@@ -221,6 +235,7 @@ try {
 } catch (SmriteaError e) {
     System.out.printf("Unexpected error: %s (code=%s, retryable=%b)%n",
         e.getMessage(), e.getCode(), e.isRetryable());
+    System.out.println("Request ID: " + e.getRequestId());
 }
 ```
 
@@ -240,6 +255,10 @@ try {
 Every exception carries `getCode()` (the server's machine-readable wire code, e.g.
 `MEMORY_NOT_FOUND`), `getHttpStatus()`, and `isRetryable()`, in addition to `getBody()` for the
 full parsed response body.
+
+`getRequestId()` returns the server's request ID for the failed call. It is taken from the response
+body's `request_id` field, or from the `X-Request-ID` response header if the body has none. It
+returns `null` when neither is present.
 
 ---
 

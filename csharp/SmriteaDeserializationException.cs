@@ -99,8 +99,15 @@ public class SmriteaDeserializationException : SmriteaException
     /// <param name="code">The machine-readable wire code from the server response.</param>
     /// <param name="retryable">Whether the server marked this error as retryable.</param>
     /// <param name="body">The full parsed JSON response body, if available.</param>
-    public SmriteaDeserializationException(string message, int? statusCode = null, string? code = null, bool retryable = false, object? body = null)
-        : base(message, statusCode, code, retryable, body)
+    /// <param name="requestId">The server request ID for the failed call, if available.</param>
+    public SmriteaDeserializationException(
+        string message,
+        int? statusCode = null,
+        string? code = null,
+        bool retryable = false,
+        object? body = null,
+        string? requestId = null)
+        : base(message, statusCode, code, retryable, body, requestId)
     {
     }
 

@@ -63,6 +63,23 @@ a per-call argument. Callers must never pass it per-call.
 optional. In `add()`, all 5 scope fields are mapped. In `search()`, `actor_id`,
 `actor_type`, `conversation_id`, and `participant_ids` are sent as filters.
 
+**Trace ID on constructor**: Optional. When set, it is sent as the `X-Trace-ID` request header on every
+call — `add`, `search`, `get`, and `delete`. It is validated in the constructor, before any network call,
+against: 8-100 characters of `A-Z`, `a-z`, `0-9`, `.`, `_`, `:`, `-`. Each language uses the name and
+failure behaviour below (verified against the source; `None`/`undefined`/`null`/`nil` means unset):
+
+| Language   | Option name                                                                 | Invalid value                                                                                                                                  | Source                                                                                                 |
+|------------|-----------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| Python     | `trace_id` keyword on `SmriteaClient(...)`                                  | `ValueError` raised from the constructor                                                                                                       | `python/src/smritea/client.py:61,79-80,86-87`                                                          |
+| TypeScript | `traceId` field on `SmriteaClientConfig`                                    | `TypeError` thrown from the constructor                                                                                                        | `typescript/src/client.ts:29-31,35`; `typescript/src/types.ts:145-149`                                 |
+| Go         | `ClientConfig.TraceID`                                                      | `NewClient` still returns a client; `Add`, `Search`, `Get`, `Delete`, and `GetAll` each return a `*SmriteaError` with `Code` `INVALID_TRACE_ID` (`ErrCodeInvalidTraceID`) and send no request | `go/client.go:58-64,98,145,204,220,237`; `go/errors.go:12`; `go/types.go:25`                           |
+| Java       | `traceId`, 5th argument of the 5-argument constructor `(apiKey, appId, baseUrl, maxRetries, traceId)` | `IllegalArgumentException` thrown from the constructor                                                                    | `java/.../SmriteaClient.java:93-98,114-116`                                                            |
+| C#         | `traceId`, last parameter of the constructor                                | `ArgumentException` thrown from the constructor (parameter name `traceId`)                                                                     | `csharp/SmriteaClient.cs:40,44-49,61-64`                                                               |
+
+Language notes: Go treats an empty `TraceID` as unset (no error); every other language rejects `""` because
+it fails the pattern. Go's validation counts bytes, not characters. Java's 4-argument constructors pass
+`null` for the trace ID, which sends no header.
+
 ---
 
 ## Error Hierarchy
@@ -94,7 +111,18 @@ All exception classes inherit from `SmriteaError` and carry at minimum:
   language-idiomatic casing per SDK (e.g. `code` in Python, `Code` in Go/C#)
 - `HTTPStatus` — the HTTP status code the error was raised for; same per-language casing rule as `Code`
 - `Retryable` — boolean, `true` when the server marked the error retryable; same per-language casing rule
-- the full parsed response body, for callers that need fields beyond the four above
+- `request_id` — the server request ID of the failed call; same per-language casing rule as `Code`, but
+  the names are fixed per language: Python `request_id`, TypeScript `requestId`, Go `RequestID`, Java
+  `getRequestId()`, C# `RequestId`. Source: the body's `request_id` field when it is a non-empty string;
+  otherwise the `X-Request-ID` response header (name matched case-insensitively). When neither source has a
+  non-empty value it is absent: `None` in Python, `undefined` in TypeScript, the empty string in Go, and
+  `null` in Java and C#. Verified at
+  `python/src/smritea/exceptions.py:9-23,32-34,50` (`extract_request_id`),
+  `typescript/src/client.ts:204-212`, `typescript/src/errors.ts:11-12,21`,
+  `go/errors.go:16-27,104,163-171`,
+  `java/.../errors/SmriteaError.java:15,137` and `java/.../SmriteaClient.java:432-437,560-569`,
+  `csharp/SmriteaException.cs:89-94` and `csharp/SmriteaClient.cs:486-563`.
+- the full parsed response body, for callers that need fields beyond the five above
 
 `SmriteaTooManyRequestsError` MUST also carry a `retry_after` field (nullable/optional integer, seconds).
 This is populated from the server's `Retry-After` response header when present.

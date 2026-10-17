@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Pattern;
 
 /**
  * Entry point for all Smritea memory operations. Create one instance per application and reuse it
@@ -47,6 +48,9 @@ public class SmriteaClient {
   private static final double RETRY_CAP_SECONDS = 30.0;
   private static final com.fasterxml.jackson.databind.ObjectMapper OBJECT_MAPPER =
       new com.fasterxml.jackson.databind.ObjectMapper();
+  private static final Pattern TRACE_ID_PATTERN = Pattern.compile("[A-Za-z0-9._:-]{8,100}");
+  private static final String INVALID_TRACE_ID_MESSAGE =
+      "trace_id must be 8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen";
 
   private final String appId;
   private final int maxRetries;
@@ -71,8 +75,28 @@ public class SmriteaClient {
    * @param maxRetries maximum number of retries on 429 responses (minimum 0)
    */
   public SmriteaClient(String apiKey, String appId, String baseUrl, int maxRetries) {
+    this(apiKey, appId, baseUrl, maxRetries, null);
+  }
+
+  /**
+   * Creates a new SmriteaClient with full configuration and an optional Trace ID. When {@code
+   * traceId} is set, it is sent as the {@code X-Trace-ID} header on every request.
+   *
+   * @param apiKey the API key for authentication
+   * @param appId the application ID injected into every request
+   * @param baseUrl the API base URL (defaults to https://api-us.smritea.ai if null)
+   * @param maxRetries maximum number of retries on 429 responses (minimum 0)
+   * @param traceId optional Trace ID (8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or
+   *     hyphen), or null to send no header
+   * @throws IllegalArgumentException if {@code traceId} is non-null and invalid
+   */
+  public SmriteaClient(
+      String apiKey, String appId, String baseUrl, int maxRetries, String traceId) {
     Objects.requireNonNull(apiKey, "apiKey must not be null");
     Objects.requireNonNull(appId, "appId must not be null");
+    if (traceId != null && !TRACE_ID_PATTERN.matcher(traceId).matches()) {
+      throw new IllegalArgumentException(INVALID_TRACE_ID_MESSAGE);
+    }
     this.appId = appId;
     this.maxRetries = Math.max(0, maxRetries);
 
@@ -84,7 +108,13 @@ public class SmriteaClient {
     String resolvedBaseUrl = baseUrl != null ? baseUrl : DEFAULT_BASE_URL;
     ApiClient apiClient = new ApiClient();
     apiClient.updateBaseUri(resolvedBaseUrl);
-    apiClient.setRequestInterceptor(builder -> builder.header("X-API-Key", apiKey));
+    apiClient.setRequestInterceptor(
+        builder -> {
+          builder.header("X-API-Key", apiKey);
+          if (traceId != null) {
+            builder.header("X-Trace-ID", traceId);
+          }
+        });
     this.api = new SdkMemoryApi(apiClient);
   }
 
@@ -394,6 +424,19 @@ public class SmriteaClient {
   }
 
   /**
+   * Extracts the X-Request-ID response header value from an {@link ApiException}. Header names are
+   * matched case-insensitively by {@code HttpHeaders}.
+   *
+   * @return the non-empty header value, or null if not present
+   */
+  private String getRequestIdHeader(ApiException e) {
+    if (e.getResponseHeaders() == null) {
+      return null;
+    }
+    return e.getResponseHeaders().firstValue("X-Request-ID").filter(v -> !v.isEmpty()).orElse(null);
+  }
+
+  /**
    * Parses a Retry-After header string into an Integer (seconds).
    *
    * @return the parsed value, or null if unparseable
@@ -419,28 +462,30 @@ public class SmriteaClient {
     String message = fields.message;
     String code = fields.errorCode;
     Object body = fields.body;
+    String requestId = fields.requestId != null ? fields.requestId : getRequestIdHeader(e);
     boolean retryable = fields.retryable || httpStatus == 429;
     switch (httpStatus) {
       case 400:
-        return new SmriteaBadRequestError(message, httpStatus, code, retryable, body);
+        return new SmriteaBadRequestError(message, httpStatus, code, retryable, body, requestId);
       case 401:
-        return new SmriteaUnauthorizedError(message, httpStatus, code, retryable, body);
+        return new SmriteaUnauthorizedError(message, httpStatus, code, retryable, body, requestId);
       case 402:
-        return new SmriteaPaymentRequiredError(message, httpStatus, code, retryable, body);
+        return new SmriteaPaymentRequiredError(
+            message, httpStatus, code, retryable, body, requestId);
       case 403:
-        return new SmriteaForbiddenError(message, httpStatus, code, retryable, body);
+        return new SmriteaForbiddenError(message, httpStatus, code, retryable, body, requestId);
       case 404:
-        return new SmriteaNotFoundError(message, httpStatus, code, retryable, body);
+        return new SmriteaNotFoundError(message, httpStatus, code, retryable, body, requestId);
       case 409:
-        return new SmriteaConflictError(message, httpStatus, code, retryable, body);
+        return new SmriteaConflictError(message, httpStatus, code, retryable, body, requestId);
       case 422:
-        return new SmriteaUnprocessableError(message, httpStatus, code, retryable, body);
+        return new SmriteaUnprocessableError(message, httpStatus, code, retryable, body, requestId);
       case 429:
         Integer retryAfter = parseRetryAfter(getRetryAfterHeader(e));
         return new SmriteaTooManyRequestsError(
-            message, httpStatus, retryAfter, code, retryable, body);
+            message, httpStatus, retryAfter, code, retryable, body, requestId);
       default:
-        return new SmriteaError(message, httpStatus, code, retryable, body);
+        return new SmriteaError(message, httpStatus, code, retryable, body, requestId);
     }
   }
 
@@ -450,12 +495,15 @@ public class SmriteaClient {
     final String errorCode;
     final boolean retryable;
     final Object body;
+    final String requestId;
 
-    ExtractedErrorFields(String message, String errorCode, boolean retryable, Object body) {
+    ExtractedErrorFields(
+        String message, String errorCode, boolean retryable, Object body, String requestId) {
       this.message = message;
       this.errorCode = errorCode;
       this.retryable = retryable;
       this.body = body;
+      this.requestId = requestId;
     }
   }
 
@@ -472,7 +520,7 @@ public class SmriteaClient {
    */
   private ExtractedErrorFields extractErrorFieldsWithBody(String body) {
     if (body == null || body.isEmpty()) {
-      return new ExtractedErrorFields("Unknown error", "INTERNAL_ERROR", false, null);
+      return new ExtractedErrorFields("Unknown error", "INTERNAL_ERROR", false, null, null);
     }
 
     try {
@@ -509,10 +557,21 @@ public class SmriteaClient {
         }
       }
 
-      return new ExtractedErrorFields(message, errorCode, retryable, parsedBody);
+      String requestId = null;
+      if (json != null && json.has("request_id")) {
+        com.fasterxml.jackson.databind.JsonNode requestIdNode = json.get("request_id");
+        if (requestIdNode != null && requestIdNode.isTextual()) {
+          String extracted = requestIdNode.asText();
+          if (!extracted.isEmpty()) {
+            requestId = extracted;
+          }
+        }
+      }
+
+      return new ExtractedErrorFields(message, errorCode, retryable, parsedBody, requestId);
     } catch (Exception e) {
       // JSON parsing failed — body is not valid JSON
-      return new ExtractedErrorFields("Unknown error", "INTERNAL_ERROR", false, null);
+      return new ExtractedErrorFields("Unknown error", "INTERNAL_ERROR", false, null, null);
     }
   }
 

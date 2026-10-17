@@ -4,10 +4,10 @@ title: smritea SDK
 status: stable
 tags:
 - readme
-stale_after: 2026-12-31
+stale_after: 2027-04-15
 generated:
-  by: Tushar Dwivedi
-  at: 2026-08-25T00:00:00Z
+  by: Claude (flow:docsmith-doc-author)
+  at: 2026-10-17T11:17:22Z
 ---
 
 # smritea SDK
@@ -385,6 +385,11 @@ All exceptions carry `code` / `Code` (server wire code), `httpStatus` / `HTTPSta
 `retryable` / `Retryable` (retryability flag), and access to the full parsed response body.
 `SmriteaTooManyRequestsError` also carries `retryAfter` / `RetryAfter` (seconds) from the `Retry-After` header.
 
+Every exception also exposes the server request ID, which you can quote to support: `request_id` (Python),
+`requestId` (TypeScript), `RequestID` (Go), `getRequestId()` (Java), `RequestId` (C#). The value is the response
+body's `request_id` when it is a non-empty string, otherwise the `X-Request-ID` response header. When the server
+sends neither, the field is unset.
+
 ---
 
 ## `Memory` type reference
@@ -435,6 +440,20 @@ const client = new SmriteaClient({
   baseUrl: 'https://api-us.smritea.ai',      // optional, default shown
 });
 ```
+
+**Trace ID (optional, all languages)**
+
+The Trace ID is optional. When set, its value is sent as the `X-Trace-ID` header on every request from that client.
+It must be 8 to 100 characters from A-Z, a-z, 0-9, dot, underscore, colon, or hyphen. When omitted, no
+`X-Trace-ID` header is sent.
+
+| Language   | Option                                                           | Invalid value                                                    |
+|------------|------------------------------------------------------------------|------------------------------------------------------------------|
+| Python     | `trace_id` keyword argument (last parameter, default `None`)     | `ValueError` raised at construction                              |
+| TypeScript | `traceId` field on `SmriteaClientConfig`                         | `TypeError` thrown at construction                               |
+| Go         | `TraceID` field on `ClientConfig`                                | Every client method returns `SmriteaError` with `Code` `INVALID_TRACE_ID`; no request is sent |
+| Java       | `traceId` fifth argument of `SmriteaClient(apiKey, appId, baseUrl, maxRetries, traceId)`; `null` omits it | `IllegalArgumentException` thrown at construction |
+| C#         | `traceId` last parameter of `SmriteaClient(apiKey, appId, baseUrl, maxRetries, traceId)`; `null` omits it | `ArgumentException` thrown at construction |
 
 ---
 

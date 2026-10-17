@@ -15,6 +15,8 @@ import (
 
 const retryCap = 30 * time.Second
 
+const msgInvalidTraceID = "trace_id must be 8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen"
+
 // SmriteaClient is the entry point for all smritea memory operations.
 // Create one instance per application and reuse it across calls.
 // All methods are safe for concurrent use.
@@ -23,11 +25,17 @@ type SmriteaClient struct {
 	maxRetries int
 	api        *autogen.SDKMemoryAPIService
 	cfg        *autogen.Configuration
+	// initErr is set by NewClient when ClientConfig.TraceID is invalid. Every method
+	// returns it before making any network call.
+	initErr error
 }
 
 // NewClient constructs a SmriteaClient from the provided ClientConfig.
 // If cfg.BaseURL is empty, it defaults to "https://api-us.smritea.ai".
 // If cfg.MaxRetries is 0, it defaults to 2.
+// If cfg.TraceID is set and valid, it is sent as the X-Trace-ID header on every call.
+// If cfg.TraceID is set but invalid, NewClient still returns a client, and every method
+// returns a *SmriteaError with Code ErrCodeInvalidTraceID without sending a request.
 func NewClient(cfg ClientConfig) *SmriteaClient {
 	baseURL := cfg.BaseURL
 	if baseURL == "" {
@@ -46,6 +54,15 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 	configuration.Servers = autogen.ServerConfigurations{{URL: baseURL}}
 	configuration.AddDefaultHeader("X-API-Key", cfg.APIKey)
 
+	var initErr error
+	if cfg.TraceID != "" {
+		if isValidTraceID(cfg.TraceID) {
+			configuration.AddDefaultHeader("X-Trace-ID", cfg.TraceID)
+		} else {
+			initErr = &SmriteaError{Message: msgInvalidTraceID, Code: ErrCodeInvalidTraceID}
+		}
+	}
+
 	apiClient := autogen.NewAPIClient(configuration)
 
 	return &SmriteaClient{
@@ -53,7 +70,24 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 		maxRetries: maxRetries,
 		api:        apiClient.SDKMemoryAPI,
 		cfg:        configuration,
+		initErr:    initErr,
 	}
+}
+
+// isValidTraceID reports whether id is 8-100 bytes long and every byte is one of
+// A-Z, a-z, 0-9, '.', '_', ':' or '-'.
+func isValidTraceID(id string) bool {
+	if len(id) < 8 || len(id) > 100 {
+		return false
+	}
+	for i := range len(id) {
+		b := id[i]
+		isAlnum := (b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z') || (b >= '0' && b <= '9')
+		if !isAlnum && b != '.' && b != '_' && b != ':' && b != '-' {
+			return false
+		}
+	}
+	return true
 }
 
 // Add stores a new memory with the given content. The optional AddOptions
@@ -61,6 +95,10 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 // scoping. Returns a MemoryCreationResult containing all memories created from
 // the extracted facts, plus metadata (FactsExtracted, SkippedCount, UpdatedCount).
 func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOptions) (*MemoryCreationResult, error) {
+	if c.initErr != nil {
+		return nil, c.initErr
+	}
+
 	req := autogen.CreateMemoryRequest{
 		Content: content,
 		Scope:   autogen.MemoryScope{},
@@ -104,6 +142,10 @@ func (c *SmriteaClient) Add(ctx context.Context, content string, opts *AddOption
 // graph traversal depth, and conversation scope.
 // Returns an empty (non-nil) slice when no memories match.
 func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOptions) ([]*SearchResult, error) {
+	if c.initErr != nil {
+		return nil, c.initErr
+	}
+
 	// Query is a non-pointer required field in SearchMemoryRequest.
 	req := autogen.SearchMemoryRequest{
 		Query: query,
@@ -159,6 +201,10 @@ func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOp
 // Get fetches a single memory by its ID. Returns SmriteaNotFoundError when
 // the memory does not exist.
 func (c *SmriteaClient) Get(ctx context.Context, memoryID string) (*Memory, error) {
+	if c.initErr != nil {
+		return nil, c.initErr
+	}
+
 	return withRetry[*Memory](ctx, c.maxRetries, func() (*Memory, error) {
 		result, httpResp, err := c.api.GetMemory(ctx, memoryID).XAppID(c.appID).Execute()
 		if wErr := wrapHTTPError(httpResp, err); wErr != nil {
@@ -171,6 +217,10 @@ func (c *SmriteaClient) Get(ctx context.Context, memoryID string) (*Memory, erro
 // Delete permanently removes a memory by its ID. Returns SmriteaNotFoundError
 // when the memory does not exist.
 func (c *SmriteaClient) Delete(ctx context.Context, memoryID string) error {
+	if c.initErr != nil {
+		return c.initErr
+	}
+
 	_, err := withRetry[struct{}](ctx, c.maxRetries, func() (struct{}, error) {
 		httpResp, err := c.api.DeleteMemory(ctx, memoryID).XAppID(c.appID).Execute()
 		if wErr := wrapHTTPError(httpResp, err); wErr != nil {
@@ -184,6 +234,10 @@ func (c *SmriteaClient) Delete(ctx context.Context, memoryID string) error {
 // GetAll is not yet implemented. The list memories endpoint is pending server-side
 // implementation. This method is provided for forward compatibility.
 func (c *SmriteaClient) GetAll(_ context.Context) ([]*Memory, error) {
+	if c.initErr != nil {
+		return nil, c.initErr
+	}
+
 	return nil, errors.New("smritea: GetAll() is not yet available. " +
 		"The list memories endpoint is pending server-side implementation")
 }

@@ -99,9 +99,16 @@ client := smritea.NewClient(smritea.ClientConfig{
     APIKey:     "sk-...",                   // required
     AppID:      "app_...",                  // required
     BaseURL:    "https://api-us.smritea.ai",   // optional, default shown
+    TraceID:    "checkout-flow-7f3a",       // optional; 8-100 chars of A-Z, a-z, 0-9, '.', '_', ':', '-'
     MaxRetries: 2,                          // optional, default 2
 })
 ```
+
+`TraceID` (optional) is sent as the `X-Trace-ID` header on every request, including retries. It must be
+8-100 bytes long and contain only `A-Z`, `a-z`, `0-9`, `.`, `_`, `:`, or `-`.
+
+An invalid `TraceID` does not stop the constructor: `NewClient` still returns a client, but every method
+returns a `*SmriteaError` with `Code` `"INVALID_TRACE_ID"` and sends no request.
 
 ---
 
@@ -204,18 +211,40 @@ results, err := client.Search(ctx, "preferences",
     smritea.NewSearchOptions().WithScope(
         smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")))
 if err != nil {
+    var badRequestErr *smritea.SmriteaBadRequestError
     var authErr *smritea.SmriteaUnauthorizedError
-    var tooManyErr *smritea.SmriteaTooManyRequestsError
     var paymentErr *smritea.SmriteaPaymentRequiredError
+    var forbiddenErr *smritea.SmriteaForbiddenError
+    var notFoundErr *smritea.SmriteaNotFoundError
+    var conflictErr *smritea.SmriteaConflictError
+    var unprocessableErr *smritea.SmriteaUnprocessableError
+    var tooManyErr *smritea.SmriteaTooManyRequestsError
     var smriteaErr *smritea.SmriteaError
 
+    // Typed errors embed SmriteaError by value and do not unwrap to it, so each
+    // typed error must be matched first. *smritea.SmriteaError only matches the
+    // base error returned for statuses without a dedicated type (e.g. 5xx).
     switch {
+    case errors.As(err, &badRequestErr):
+        fmt.Printf("Invalid request: %s\n", badRequestErr.Message)
     case errors.As(err, &authErr):
         fmt.Println("Check your API key")
-    case errors.As(err, &tooManyErr):
-        fmt.Printf("Rate limited — retry after %ds\n", *tooManyErr.RetryAfter)
     case errors.As(err, &paymentErr):
         fmt.Println("Plan quota exceeded")
+    case errors.As(err, &forbiddenErr):
+        fmt.Println("Access denied")
+    case errors.As(err, &notFoundErr):
+        fmt.Printf("Not found: %s\n", notFoundErr.Message)
+    case errors.As(err, &conflictErr):
+        fmt.Println("Conflicting resource state")
+    case errors.As(err, &unprocessableErr):
+        fmt.Printf("Cannot process request: %s\n", unprocessableErr.Message)
+    case errors.As(err, &tooManyErr):
+        if tooManyErr.RetryAfter != nil {
+            fmt.Printf("Rate limited — retry after %ds\n", *tooManyErr.RetryAfter)
+        } else {
+            fmt.Println("Rate limited — no Retry-After header")
+        }
     case errors.As(err, &smriteaErr):
         fmt.Printf("Unexpected error: %s\n", smriteaErr.Message)
     default:
@@ -238,6 +267,26 @@ if err != nil {
 
 Every error type also carries `.Code` (machine-readable wire code), `.HTTPStatus`, and `.Retryable`
 (parsed from the response body's optional `retryable` field, always `true` for 429).
+
+`RequestID` holds the server's request ID for the failed call: the response body's `request_id` when present,
+otherwise the `X-Request-ID` response header. It is empty when neither is returned.
+
+Typed errors such as `*SmriteaNotFoundError` embed the base `SmriteaError`, so `RequestID` is available on them
+as a promoted field. `errors.As` into `*smritea.SmriteaError` matches only the base error (for example, a status
+without a dedicated type), so check the typed errors first:
+
+```go
+_, err := client.Get(ctx, "mem_missing")
+
+var notFound *smritea.SmriteaNotFoundError
+var se *smritea.SmriteaError
+switch {
+case errors.As(err, &notFound):
+    fmt.Println("request id:", notFound.RequestID)
+case errors.As(err, &se):
+    fmt.Println("request id:", se.RequestID)
+}
+```
 
 ---
 
