@@ -85,8 +85,7 @@ it fails the pattern. Go's validation counts bytes, not characters. Java's 4-arg
 ## Error Hierarchy
 
 Every implementation must define this exact hierarchy, mapping HTTP status codes 1:1 onto the
-server's errkit HTTP categories (see `docs/plans/175-errkit-unified-error-handling.md` in the
-`smritea-cloud` repo for the server-side category contract this mirrors):
+server's nine HTTP error categories:
 
 | HTTP        | Exception class            |
 |-------------|-----------------------------|

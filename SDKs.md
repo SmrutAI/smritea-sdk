@@ -53,7 +53,7 @@ Naming conventions across all five SDK implementations.
 
 ## Table 3: Exception / Error Class Names
 
-> **Status (errkit alignment, docs/plans/175-errkit-unified-error-handling.md in smritea-cloud)**: all
+> **Status (errkit alignment)**: all
 > five languages (Python, TypeScript, Go, Java, C#) are converted to the full 9-category errkit
 > hierarchy — `Code`/`HTTPStatus`/`Retryable` base fields with category-exact subclass names, as shown
 > in the table below.
