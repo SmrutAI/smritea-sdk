@@ -43,6 +43,17 @@ public class SmriteaTraceRequestIdTests : IDisposable
         "abcdefg",
         new string('a', 101),
         "abc def ghi",
+        string.Empty,
+        "abcdefgh\n",
+        "abcdefgh\0",
+        "abcdefgé",
+    };
+
+    public static TheoryData<string> RetryAfterHeaderNames => new()
+    {
+        "Retry-After",
+        "retry-after",
+        "RETRY-AFTER",
     };
 
     public static TheoryData<int> ErrorStatuses => new()
@@ -86,11 +97,28 @@ public class SmriteaTraceRequestIdTests : IDisposable
             .RespondWith(response);
     }
 
-    private IEnumerable<string> ReceivedRequestHeaderValues(string headerName) =>
-        _server.LogEntries
-            .SelectMany(entry => entry.RequestMessage.Headers)
-            .Where(header => string.Equals(header.Key, headerName, StringComparison.OrdinalIgnoreCase))
-            .SelectMany(header => header.Value);
+    private List<string> ReceivedRequestHeaderValues(string headerName)
+    {
+        var values = new List<string>();
+        foreach (var entry in _server.LogEntries)
+        {
+            var headers = entry.RequestMessage?.Headers;
+            if (headers is null)
+            {
+                continue;
+            }
+
+            foreach (var header in headers)
+            {
+                if (string.Equals(header.Key, headerName, StringComparison.OrdinalIgnoreCase))
+                {
+                    values.AddRange(header.Value);
+                }
+            }
+        }
+
+        return values;
+    }
 
     // -----------------------------------------------------------------------
     // 1. traceId header
@@ -135,7 +163,23 @@ public class SmriteaTraceRequestIdTests : IDisposable
     }
 
     // -----------------------------------------------------------------------
-    // 3. RequestId on mapped errors
+    // 3. Retry-After header name casing
+    // -----------------------------------------------------------------------
+
+    [Theory]
+    [MemberData(nameof(RetryAfterHeaderNames))]
+    public async Task MappedError_429_RetryAfterHeaderNameIsCaseInsensitive(string headerName)
+    {
+        StubAddMemory(429, "{\"message\":\"slow down\",\"code\":\"RATE_LIMITED\"}", headerName, "7");
+
+        using var client = CreateClient();
+        var ex = await Assert.ThrowsAsync<SmriteaTooManyRequestsException>(() => client.AddAsync("x"));
+
+        Assert.Equal(7, ex.RetryAfter);
+    }
+
+    // -----------------------------------------------------------------------
+    // 4. RequestId on mapped errors
     // -----------------------------------------------------------------------
 
     [Theory]

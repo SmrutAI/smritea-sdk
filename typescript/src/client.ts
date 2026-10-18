@@ -25,7 +25,7 @@ export class SmriteaClient {
 
   constructor(config: SmriteaClientConfig) {
     this.appId = config.appId;
-    this.maxRetries = config.maxRetries ?? 2;
+    this.maxRetries = Math.max(0, config.maxRetries ?? 2);
     if (config.traceId !== undefined && !TRACE_ID_PATTERN.test(config.traceId)) {
       throw new TypeError(TRACE_ID_ERROR_MESSAGE);
     }

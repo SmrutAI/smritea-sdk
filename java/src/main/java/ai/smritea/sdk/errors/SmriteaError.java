@@ -3,9 +3,7 @@ package ai.smritea.sdk.errors;
 /**
  * Base error type for all Smritea SDK errors.
  *
- * <p>Mirrors errkit's HTTP-category vocabulary (see {@code
- * docs/plans/175-errkit-unified-error-handling.md} in the {@code smritea-cloud} repo for the
- * server-side contract this shape aligns with).
+ * <p>Mirrors the server's HTTP error categories.
  */
 public class SmriteaError extends RuntimeException {
   private final Integer httpStatus;

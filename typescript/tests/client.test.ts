@@ -389,6 +389,32 @@ describe('retry logic', () => {
     await expect(client.add('content')).rejects.toBeInstanceOf(SmriteaNotFoundError);
     expect(mockApi.createMemory).toHaveBeenCalledTimes(1);
   });
+
+  it.each([{ maxRetries: -1 }, { maxRetries: -5 }])(
+    'negative maxRetries=$maxRetries sends one request and maps the 429 without "unreachable"',
+    async ({ maxRetries }) => {
+      const { client, mockApi } = createClientWithMock({ maxRetries });
+      mockApi.createMemory.mockRejectedValue(makeResponseError(429, '1'));
+
+      const error: unknown = await client.add('content').then(
+        () => undefined,
+        (err: unknown) => err,
+      );
+
+      expect(mockApi.createMemory, `maxRetries=${maxRetries}`).toHaveBeenCalledTimes(1);
+      expect(error, `maxRetries=${maxRetries}`).toBeInstanceOf(SmriteaTooManyRequestsError);
+      expect((error as Error).message, `maxRetries=${maxRetries}`).not.toBe('unreachable');
+    },
+  );
+
+  it.each([{ maxRetries: -1 }, { maxRetries: -5 }])(
+    'constructor clamps negative maxRetries=$maxRetries to 0',
+    ({ maxRetries }) => {
+      const { client } = createClientWithMock({ maxRetries });
+
+      expect((client as any).maxRetries, `maxRetries=${maxRetries}`).toBe(0);
+    },
+  );
 });
 
 // ---------------------------------------------------------------------------
@@ -425,6 +451,28 @@ describe('retryDelayMs calculation', () => {
     // Same jitter range as undefined case
     expect(delay).toBeGreaterThanOrEqual(750);
     expect(delay).toBeLessThanOrEqual(30_000);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 4b. parseRetryAfter header-name case-insensitivity (real Headers, not a Map)
+// ---------------------------------------------------------------------------
+
+describe('parseRetryAfter header name', () => {
+  const cases: Array<{ name: string; headerName: string; headerValue: string; expected: number | undefined }> = [
+    { name: 'canonical case', headerName: 'Retry-After', headerValue: '15', expected: 15 },
+    { name: 'lowercase', headerName: 'retry-after', headerValue: '15', expected: 15 },
+    { name: 'uppercase', headerName: 'RETRY-AFTER', headerValue: '15', expected: 15 },
+    { name: 'lowercase with non-integer value', headerName: 'retry-after', headerValue: 'soon', expected: undefined },
+  ];
+
+  it.each(cases)('$name', ({ name, headerName, headerValue, expected }) => {
+    const { client } = createClientWithMock();
+    const response = new Response(null, { status: 429, headers: { [headerName]: headerValue } });
+
+    const result = (client as any).parseRetryAfter(response);
+
+    expect(result, `${name}: header ${headerName}=${headerValue}`).toBe(expected);
   });
 });
 

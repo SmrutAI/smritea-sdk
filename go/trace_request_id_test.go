@@ -27,7 +27,7 @@ func newTraceTestClient(t *testing.T, handler http.Handler, traceID string) *Smr
 		APIKey:     "test-key",
 		AppID:      "app-test",
 		BaseURL:    srv.URL,
-		MaxRetries: 1,
+		MaxRetries: Int(1),
 		TraceID:    traceID,
 	})
 }
@@ -89,6 +89,9 @@ func TestIsValidTraceID(t *testing.T) {
 		{name: "space is not allowed", id: "abcd efgh", want: false},
 		{name: "slash is not allowed", id: "abcd/efgh", want: false},
 		{name: "empty string", id: "", want: false},
+		{name: "trailing newline is not allowed", id: "abcdefgh\n", want: false},
+		{name: "NUL byte is not allowed", id: "abcdefgh\x00", want: false},
+		{name: "non-ASCII character is not allowed", id: "abcdefgé", want: false},
 	}
 
 	for _, tc := range tests {
@@ -146,8 +149,17 @@ func TestNewClient_TraceIDHeader(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestInvalidTraceID_EveryMethodRejectsWithoutRequest(t *testing.T) {
-	const invalidTraceID = "bad trace/id"
 	ctx := context.Background()
+
+	invalidTraceIDs := []struct {
+		name string
+		id   string
+	}{
+		{name: "space and slash", id: "bad trace/id"},
+		{name: "trailing newline", id: "abcdefgh\n"},
+		{name: "NUL byte", id: "abcdefgh\x00"},
+		{name: "non-ASCII character", id: "abcdefgé"},
+	}
 
 	tests := []struct {
 		name string
@@ -174,27 +186,39 @@ func TestInvalidTraceID_EveryMethodRejectsWithoutRequest(t *testing.T) {
 		}},
 	}
 
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			var requests atomic.Int32
-			handler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-				requests.Add(1)
-				writeJSON(w, http.StatusOK, memSingleJSON("mem-1", "content"))
-			})
-			client := newTraceTestClient(t, handler, invalidTraceID)
+	for _, id := range invalidTraceIDs {
+		for _, tc := range tests {
+			t.Run(tc.name+"/"+id.name, func(t *testing.T) {
+				var requests atomic.Int32
+				handler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+					requests.Add(1)
+					writeJSON(w, http.StatusOK, memSingleJSON("mem-1", "content"))
+				})
+				client := newTraceTestClient(t, handler, id.id)
 
-			err := tc.call(client)
-			var sdkErr *SmriteaError
-			if !errors.As(err, &sdkErr) {
-				t.Fatalf("expected *SmriteaError, got %T: %v", err, err)
-			}
-			if sdkErr.Code != ErrCodeInvalidTraceID {
-				t.Errorf("Code = %q, want %q", sdkErr.Code, ErrCodeInvalidTraceID)
-			}
-			if n := requests.Load(); n != 0 {
-				t.Errorf("server received %d requests, want 0", n)
-			}
-		})
+				err := tc.call(client)
+				var badRequest *SmriteaBadRequestError
+				if !errors.As(err, &badRequest) {
+					t.Fatalf("trace id %q: expected *SmriteaBadRequestError, got %T: %v", id.id, err, err)
+				}
+				sdkErr, ok := baseSmriteaErrorOf(err)
+				if !ok {
+					t.Fatalf("trace id %q: no base *SmriteaError in error chain, got %T: %v", id.id, err, err)
+				}
+				if sdkErr.HTTPStatus != http.StatusBadRequest {
+					t.Errorf("trace id %q: HTTPStatus = %d, want %d", id.id, sdkErr.HTTPStatus, http.StatusBadRequest)
+				}
+				if !strings.HasSuffix(err.Error(), "(HTTP 400)") {
+					t.Errorf("trace id %q: Error() = %q, want suffix %q", id.id, err.Error(), "(HTTP 400)")
+				}
+				if sdkErr.Code != ErrCodeInvalidTraceID {
+					t.Errorf("trace id %q: Code = %q, want %q", id.id, sdkErr.Code, ErrCodeInvalidTraceID)
+				}
+				if n := requests.Load(); n != 0 {
+					t.Errorf("trace id %q: server received %d requests, want 0", id.id, n)
+				}
+			})
+		}
 	}
 }
 

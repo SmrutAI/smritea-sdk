@@ -7,6 +7,7 @@ import time
 from unittest.mock import MagicMock, patch
 
 import pytest
+from urllib3 import HTTPHeaderDict
 
 from smritea import SmriteaClient
 from smritea.exceptions import (
@@ -443,6 +444,37 @@ class TestRetryLogic:
         assert mock_api.get_memory.call_count == 1
         assert sleep_mock.call_count == 0
 
+    @pytest.mark.parametrize(
+        ('name', 'max_retries'),
+        [
+            ('minus one', -1),
+            ('large negative', -5),
+        ],
+    )
+    def test_negative_max_retries_makes_one_attempt(
+        self, mock_api, mocker, name, max_retries
+    ):
+        """A negative max_retries is treated as 0: one request, mapped 429 error, no sleep."""
+        sleep_mock = mocker.patch('smritea.client.time.sleep')
+        exc = ApiException(status=429)
+        exc.body = 'rate limited'
+        exc.headers = {}
+        mock_api.create_memory.side_effect = exc
+        client = SmriteaClient(api_key='test-key', app_id='app-123', max_retries=max_retries)
+
+        with pytest.raises(SmriteaTooManyRequestsError) as exc_info:
+            client.add('content')
+
+        assert mock_api.create_memory.call_count == 1, (
+            f'{name}: expected exactly 1 request, got {mock_api.create_memory.call_count}'
+        )
+        assert sleep_mock.call_count == 0, (
+            f'{name}: expected no sleep, got {sleep_mock.call_count} calls'
+        )
+        assert not isinstance(exc_info.value, AssertionError), (
+            f'{name}: raised an AssertionError instead of the mapped 429 error'
+        )
+
 
 # ==============================================================================
 # Test 5: _retry_delay calculation
@@ -693,6 +725,27 @@ class TestClientInitialization:
 
         assert client._max_retries == 0
 
+    @pytest.mark.parametrize(
+        ('name', 'max_retries', 'expected'),
+        [
+            ('negative one clamps to zero', -1, 0),
+            ('large negative clamps to zero', -100, 0),
+            ('zero stays zero', 0, 0),
+            ('positive is kept', 3, 3),
+        ],
+    )
+    def test_max_retries_clamped_at_zero(self, mock_api, name, max_retries, expected):
+        """Constructor clamps a negative max_retries to 0 and keeps other values."""
+        client = SmriteaClient(
+            api_key='test-key',
+            app_id='app-123',
+            max_retries=max_retries,
+        )
+
+        assert client._max_retries == expected, (
+            f'{name}: max_retries={max_retries} gave {client._max_retries}, want {expected}'
+        )
+
 
 class TestParseRetryAfter:
     """Test _parse_retry_after() header parsing."""
@@ -736,3 +789,26 @@ class TestParseRetryAfter:
         result = client._parse_retry_after(exc)
 
         assert result is None
+
+    @pytest.mark.parametrize(
+        ('name', 'header_name', 'header_value', 'expected'),
+        [
+            ('canonical case', 'Retry-After', '15', 15),
+            ('lowercase', 'retry-after', '15', 15),
+            ('uppercase', 'RETRY-AFTER', '15', 15),
+            ('lowercase with non-integer value', 'retry-after', 'soon', None),
+        ],
+    )
+    def test_parse_retry_after_header_name_is_case_insensitive(
+        self, name, header_name, header_value, expected
+    ):
+        """_parse_retry_after() matches the header name case-insensitively on HTTPHeaderDict."""
+        client = SmriteaClient(api_key='test', app_id='app')
+        exc = ApiException(status=429)
+        headers = HTTPHeaderDict()
+        headers.add(header_name, header_value)
+        exc.headers = headers
+
+        result = client._parse_retry_after(exc)
+
+        assert result == expected, f'{name}: header {header_name}={header_value!r}'

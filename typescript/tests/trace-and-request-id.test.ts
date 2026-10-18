@@ -88,6 +88,8 @@ describe('traceId option', () => {
     ['a slash', 'trace/id12345'],
     ['non-ASCII', 'tracé12345'],
     ['empty string', ''],
+    ['a trailing newline', 'abcdefgh\n'],
+    ['a trailing NUL', 'abcdefgh\u0000'],
   ])('throws TypeError in the constructor for an invalid traceId (%s) and makes no request', (_label, traceId) => {
     const fetchMock = stubFetch(() => new Response('{}', { status: 200 }));
 

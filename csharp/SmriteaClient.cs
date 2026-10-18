@@ -427,10 +427,11 @@ public class SmriteaClient : IDisposable
     }
 
     /// <summary>
-    /// Extracts the Retry-After header value from an <see cref="ApiException"/>.
+    /// Extracts the Retry-After header value from an <see cref="ApiException"/>. The header name is
+    /// matched case-insensitively, because HTTP header names are case-insensitive.
     /// </summary>
     /// <param name="e">The API exception whose headers to inspect.</param>
-    /// <returns>The header value string, or null if not present.</returns>
+    /// <returns>The first header value string, or null if not present.</returns>
     private static string? GetRetryAfterHeader(ApiException e)
     {
         if (e.Headers is null)
@@ -438,9 +439,15 @@ public class SmriteaClient : IDisposable
             return null;
         }
 
-        return e.Headers.TryGetValue("Retry-After", out var values)
-            ? values.FirstOrDefault()
-            : null;
+        foreach (var (name, values) in e.Headers)
+        {
+            if (string.Equals(name, "Retry-After", StringComparison.OrdinalIgnoreCase))
+            {
+                return values.FirstOrDefault();
+            }
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -461,8 +468,7 @@ public class SmriteaClient : IDisposable
 
     /// <summary>
     /// Converts an <see cref="ApiException"/> into the appropriate typed SDK exception.
-    /// Matches the Java/Go/Python mapError function exactly. Maps 1:1 onto the server's errkit
-    /// HTTP categories (see docs/plans/175-errkit-unified-error-handling.md in smritea-cloud).
+    /// Matches the Java/Go/Python mapError function exactly. Mirrors the server's HTTP error categories.
     /// </summary>
     /// <param name="e">The autogen API exception to convert.</param>
     /// <returns>A typed <see cref="SmriteaException"/> matching the HTTP status code.</returns>

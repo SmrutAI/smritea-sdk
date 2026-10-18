@@ -25,26 +25,32 @@ type SmriteaClient struct {
 	maxRetries int
 	api        *autogen.SDKMemoryAPIService
 	cfg        *autogen.Configuration
-	// initErr is set by NewClient when ClientConfig.TraceID is invalid. Every method
-	// returns it before making any network call.
+	// initErr is set by NewClient when ClientConfig.TraceID is invalid. It is a
+	// *SmriteaBadRequestError with HTTP status 400. Every method returns it before
+	// making any network call.
 	initErr error
 }
 
 // NewClient constructs a SmriteaClient from the provided ClientConfig.
 // If cfg.BaseURL is empty, it defaults to "https://api-us.smritea.ai".
-// If cfg.MaxRetries is 0, it defaults to 2.
+// If cfg.MaxRetries is nil, it defaults to 2. Otherwise *cfg.MaxRetries is used, and a
+// negative value is treated as 0 (no retry).
 // If cfg.TraceID is set and valid, it is sent as the X-Trace-ID header on every call.
 // If cfg.TraceID is set but invalid, NewClient still returns a client, and every method
-// returns a *SmriteaError with Code ErrCodeInvalidTraceID without sending a request.
+// returns a *SmriteaBadRequestError (HTTP 400) with Code ErrCodeInvalidTraceID without
+// sending a request.
 func NewClient(cfg ClientConfig) *SmriteaClient {
 	baseURL := cfg.BaseURL
 	if baseURL == "" {
 		baseURL = "https://api-us.smritea.ai"
 	}
 
-	maxRetries := cfg.MaxRetries
-	if maxRetries == 0 {
-		maxRetries = 2
+	maxRetries := 2
+	if cfg.MaxRetries != nil {
+		maxRetries = *cfg.MaxRetries
+	}
+	if maxRetries < 0 {
+		maxRetries = 0
 	}
 
 	configuration := autogen.NewConfiguration()
@@ -59,7 +65,11 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 		if isValidTraceID(cfg.TraceID) {
 			configuration.AddDefaultHeader("X-Trace-ID", cfg.TraceID)
 		} else {
-			initErr = &SmriteaError{Message: msgInvalidTraceID, Code: ErrCodeInvalidTraceID}
+			initErr = &SmriteaBadRequestError{SmriteaError: SmriteaError{
+				Message:    msgInvalidTraceID,
+				Code:       ErrCodeInvalidTraceID,
+				HTTPStatus: http.StatusBadRequest,
+			}}
 		}
 	}
 

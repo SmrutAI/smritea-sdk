@@ -33,7 +33,7 @@ func newTestClient(t *testing.T, handler http.Handler, maxRetries int) *SmriteaC
 		APIKey:     "test-key",
 		AppID:      "app-test",
 		BaseURL:    srv.URL,
-		MaxRetries: maxRetries,
+		MaxRetries: Int(maxRetries),
 	})
 }
 

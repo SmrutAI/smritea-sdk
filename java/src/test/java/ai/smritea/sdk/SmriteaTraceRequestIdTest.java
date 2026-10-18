@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import ai.smritea.sdk._internal.autogen.model.CreateMemoryResponse;
 import ai.smritea.sdk._internal.autogen.model.MemoryResponse;
 import ai.smritea.sdk.errors.SmriteaError;
+import ai.smritea.sdk.errors.SmriteaTooManyRequestsError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
@@ -32,7 +33,8 @@ class SmriteaTraceRequestIdTest {
   }
 
   static Stream<String> invalidTraceIds() {
-    return Stream.of("abcdefg", "a".repeat(101), "abc defgh", "");
+    return Stream.of(
+        "abcdefg", "a".repeat(101), "abc defgh", "", "abcdefgh\n", "abcdefgh\0", "abcdefgé");
   }
 
   private static String memCreateJson(String id, String content) {
@@ -88,6 +90,28 @@ class SmriteaTraceRequestIdTest {
 
     assertEquals(INVALID_TRACE_ID_MESSAGE, err.getMessage());
     verify(0, anyRequestedFor(anyUrl()));
+  }
+
+  // -----------------------------------------------------------------------
+  // Retry-After header name casing
+  // -----------------------------------------------------------------------
+
+  @ParameterizedTest(name = "Retry-After header sent as \"{0}\" is read")
+  @ValueSource(strings = {"Retry-After", "retry-after", "RETRY-AFTER"})
+  void testRetryAfter_HeaderNameIsCaseInsensitive(String headerName, WireMockRuntimeInfo wm) {
+    stubFor(
+        post(ADD_PATH)
+            .willReturn(
+                aResponse()
+                    .withStatus(429)
+                    .withHeader("Content-Type", "application/json")
+                    .withHeader(headerName, "7")
+                    .withBody("{\"message\":\"slow down\",\"code\":\"RATE_LIMITED\"}")));
+
+    SmriteaTooManyRequestsError err =
+        assertThrows(SmriteaTooManyRequestsError.class, () -> noRetryClientFor(wm).add("x", null));
+
+    assertEquals(7, err.getRetryAfter(), "retryAfter must be read for header name " + headerName);
   }
 
   // -----------------------------------------------------------------------

@@ -68,7 +68,8 @@ class SmriteaClient:
             base_url: Override the default API base URL.
             max_retries: Automatic retries on HTTP 429. Uses Retry-After header
                 when provided, otherwise exponential backoff with jitter (capped
-                at 30 s). Set to 0 to disable auto-retry. Default: 2.
+                at 30 s). Set to 0 to disable auto-retry. A negative value is
+                treated as 0. Default: 2.
             trace_id: Optional Trace ID sent as the X-Trace-ID header on every
                 request. Must be 8-100 characters of A-Z, a-z, 0-9, dot, underscore,
                 colon or hyphen. Default: None (the server assigns one).
@@ -79,7 +80,7 @@ class SmriteaClient:
         if trace_id is not None and not _TRACE_ID_PATTERN.fullmatch(trace_id):
             raise ValueError(_TRACE_ID_ERROR)
         self._app_id = app_id
-        self._max_retries = max_retries
+        self._max_retries = max(0, max_retries)
         configuration = Configuration(host=base_url)
         configuration.api_key["ApiKeyAuth"] = api_key
         self._api_client = ApiClient(configuration)
@@ -335,7 +336,7 @@ class SmriteaClient:
         if not exc.headers:
             return None
         try:
-            return int(dict(exc.headers)["Retry-After"])
+            return int(exc.headers["Retry-After"])
         except (KeyError, ValueError, TypeError):
             return None
 

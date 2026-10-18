@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * smritea SDK API
- * Public SDK API for smritea AI memory system — programmatic memory operations via API key Every response carries X-Request-ID and X-Trace-ID headers; send X-Trace-ID (8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen) to set the Trace ID of the request.
+ * Public SDK API for smritea AI memory system — programmatic memory operations via API key. Every response carries X-Request-ID and X-Trace-ID headers; send X-Trace-ID (8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen) to set the Trace ID of the request.
  *
  * The version of the OpenAPI document: 1.0.0
  * Contact: support@smritea.ai
@@ -39,8 +39,7 @@ export interface APIError {
      */
     requestId?: string;
     /**
-     * Retryable reports whether the client should retry (additive, spec doc-175);
-     * set by the error middleware, always true for 429.
+     * Retryable reports whether the client should retry; set by the error middleware, always true for 429.
      * @type {boolean}
      * @memberof APIError
      */

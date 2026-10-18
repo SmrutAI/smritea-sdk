@@ -1,9 +1,11 @@
 package smritea
 
 import (
+	"context"
 	"errors"
 	"io"
 	"net/http"
+	"net/http/httptest"
 	"strings"
 	"testing"
 )
@@ -297,6 +299,50 @@ func TestParseRetryAfter_ValidHeader(t *testing.T) {
 	}
 	if *got != 10 {
 		t.Errorf("expected 10, got %d", *got)
+	}
+}
+
+// TestParseRetryAfter_HeaderNameCase sends the Retry-After header over a real HTTP
+// connection with different name casings. The server writes the header map keys
+// verbatim, and the client transport canonicalizes them, so the lookup must not
+// depend on the casing used on the wire.
+func TestParseRetryAfter_HeaderNameCase(t *testing.T) {
+	tests := []struct {
+		name       string
+		headerName string
+		want       int
+	}{
+		{name: "canonical casing", headerName: "Retry-After", want: 7},
+		{name: "lowercase", headerName: "retry-after", want: 7},
+		{name: "uppercase", headerName: "RETRY-AFTER", want: 7},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+				// Assign the map entry directly: Header.Set would canonicalize the name.
+				w.Header()[tt.headerName] = []string{"7"}
+				w.WriteHeader(http.StatusTooManyRequests)
+			}))
+			t.Cleanup(srv.Close)
+
+			req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, srv.URL, http.NoBody)
+			if err != nil {
+				t.Fatalf("NewRequestWithContext: %v", err)
+			}
+			resp, err := srv.Client().Do(req)
+			if err != nil {
+				t.Fatalf("Do: %v", err)
+			}
+			defer func() { _ = resp.Body.Close() }()
+
+			got := parseRetryAfter(resp)
+			if got == nil {
+				t.Fatalf("header %q: expected non-nil RetryAfter, got nil", tt.headerName)
+			}
+			if *got != tt.want {
+				t.Errorf("header %q: RetryAfter = %d, want %d", tt.headerName, *got, tt.want)
+			}
+		})
 	}
 }
 

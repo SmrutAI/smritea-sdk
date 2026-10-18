@@ -181,8 +181,11 @@ def raise_for_status(
     if status_code == 429:
         retry_after: int | None = None
         if headers:
-            with contextlib.suppress(KeyError, ValueError, TypeError):
-                retry_after = int(headers["Retry-After"])
+            for name, value in headers.items():
+                if name.lower() == "retry-after":
+                    with contextlib.suppress(ValueError, TypeError):
+                        retry_after = int(value)
+                    break
         raise SmriteaTooManyRequestsError(
             message,
             status_code,

@@ -3,7 +3,7 @@
 """
     smritea SDK API
 
-    Public SDK API for smritea AI memory system — programmatic memory operations via API key Every response carries X-Request-ID and X-Trace-ID headers; send X-Trace-ID (8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen) to set the Trace ID of the request.
+    Public SDK API for smritea AI memory system — programmatic memory operations via API key. Every response carries X-Request-ID and X-Trace-ID headers; send X-Trace-ID (8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen) to set the Trace ID of the request.
 
     The version of the OpenAPI document: 1.0.0
     Contact: support@smritea.ai
@@ -30,7 +30,7 @@ class APIError(BaseModel):
     code: Optional[StrictStr] = Field(default=None, description="Code is a machine-readable error code (e.g., \"validation_error\", \"not_found\").")
     message: Optional[StrictStr] = Field(default=None, description="Message is a human-readable description of what went wrong.")
     request_id: Optional[StrictStr] = Field(default=None, description="RequestID is the correlation ID of the failed request; it equals the X-Request-ID response header. It is omitted when the server did not set one.")
-    retryable: Optional[StrictBool] = Field(default=None, description="Retryable reports whether the client should retry (additive, spec doc-175); set by the error middleware, always true for 429.")
+    retryable: Optional[StrictBool] = Field(default=None, description="Retryable reports whether the client should retry; set by the error middleware, always true for 429.")
     __properties: ClassVar[List[str]] = ["code", "message", "request_id", "retryable"]
 
     model_config = ConfigDict(

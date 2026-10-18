@@ -81,6 +81,9 @@ INVALID_TRACE_IDS = [
     pytest.param('abcd efgh', id='contains_space'),
     pytest.param('abcd/efgh', id='contains_slash'),
     pytest.param('', id='empty_string'),
+    pytest.param('abcdefgh\n', id='trailing_newline'),
+    pytest.param('abcdefgh\x00', id='trailing_nul'),
+    pytest.param('abcdefgé', id='non_ascii_letter'),
 ]
 
 

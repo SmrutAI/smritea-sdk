@@ -21,9 +21,13 @@ type ClientConfig struct {
 	APIKey     string
 	AppID      string
 	BaseURL    string // default: https://api-us.smritea.ai
-	MaxRetries int    // default: 2; 0 disables retry
+	MaxRetries *int   // nil: default 2; pointer to 0: no retry; pointer to N: N retries
 	TraceID    string // optional; 8-100 bytes of A-Z, a-z, 0-9, '.', '_', ':', '-'; sent as X-Trace-ID on every call
 }
+
+// Int returns a pointer to v. It is a convenience for setting ClientConfig.MaxRetries,
+// for example ClientConfig{MaxRetries: Int(0)} to disable retries.
+func Int(v int) *int { return &v }
 
 // MemoryScope groups actor and conversation context fields for memory operations.
 // This is the public OSS-aligned name; wire values map to commondto.MemoryScope in API requests.

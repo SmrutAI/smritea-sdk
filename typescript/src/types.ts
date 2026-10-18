@@ -138,7 +138,7 @@ export interface SmriteaClientConfig {
   /**
    * Automatic retries on HTTP 429. Uses Retry-After header when the server
    * provides one, otherwise exponential backoff with jitter (capped at 30 s).
-   * Set to 0 to disable. Default: 2.
+   * Default: 2. Set to 0 to disable retries. A negative value is treated as 0.
    */
   maxRetries?: number;
   /**

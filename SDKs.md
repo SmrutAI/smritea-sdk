@@ -2,7 +2,14 @@
 type: Overview
 title: SDK Cross-Language Reference
 status: draft
-tags: []
+tags:
+  - sdk
+  - naming
+  - errors
+stale_after: 2027-06-16
+generated:
+  by: flow:docsmith-doc-author
+  at: 2026-10-19
 ---
 
 # SDK Cross-Language Reference
@@ -76,5 +83,23 @@ Naming conventions across all five SDK implementations.
 > All other languages use `*Error`.
 >
 > **C# base fields (errkit alignment)**: every C# exception carries `Code` (server wire code),
-> `HTTPStatus`, `Retryable`, and `Body` (full parsed response body). `SmriteaTooManyRequestsException`
-> additionally carries `RetryAfter`.
+> `HTTPStatus`, `Retryable`, `Body` (full parsed response body), and `RequestId` (`null` when absent;
+> read from the body `request_id` field, else the `X-Request-ID` response header —
+> `csharp/SmriteaException.cs#RequestId`). `SmriteaTooManyRequestsException` additionally carries
+> `RetryAfter`.
+
+---
+
+## Retry-After Header Lookup
+
+All five SDKs read `Retry-After` from the 429 response with the header name matched
+case-insensitively: `Retry-After`, `retry-after`, and `RETRY-AFTER` are equivalent. The parsed value
+populates the 429 error's `retry_after` / `retryAfter` / `RetryAfter` field and drives the retry sleep.
+
+| Language   | Case-insensitive lookup                                                                                              |
+|------------|----------------------------------------------------------------------------------------------------------------------|
+| Python     | `python/src/smritea/exceptions.py#raise_for_status` compares `name.lower()`; `python/src/smritea/client.py#_parse_retry_after` indexes *urllib3* response headers |
+| TypeScript | `typescript/src/client.ts#parseRetryAfter` uses `Headers.get` (Fetch spec)                                           |
+| Go         | `go/errors.go#parseRetryAfter` uses `http.Header.Get` (canonicalizes the key)                                        |
+| Java       | `java/src/main/java/ai/smritea/sdk/SmriteaClient.java#getRetryAfterHeader` uses `HttpHeaders.firstValue`             |
+| C#         | `csharp/SmriteaClient.cs#GetRetryAfterHeader` compares with `StringComparison.OrdinalIgnoreCase`                     |
