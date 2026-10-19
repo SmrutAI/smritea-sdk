@@ -441,6 +441,19 @@ const client = new SmriteaClient({
 });
 ```
 
+**Max retries (optional, all languages)**
+
+The client retries automatically when the server answers HTTP 429. The default is 2 retries. A value of 0 disables
+retries, and a negative value is treated as 0.
+
+| Language   | Option                                                                                          |
+|------------|-------------------------------------------------------------------------------------------------|
+| Python     | `max_retries` keyword argument (default `2`)                                                    |
+| TypeScript | `maxRetries` field on `SmriteaClientConfig` (default `2`)                                       |
+| Go         | `MaxRetries` field on `ClientConfig`, type `*int`: `nil` uses the default of 2; `smritea.Int(0)` disables retries |
+| Java       | `maxRetries` fourth argument of `SmriteaClient(apiKey, appId, baseUrl, maxRetries)`             |
+| C#         | `maxRetries` parameter of `SmriteaClient(apiKey, appId, baseUrl, maxRetries, traceId)`          |
+
 **Trace ID (optional, all languages)**
 
 The Trace ID is optional. When set, its value is sent as the `X-Trace-ID` header on every request from that client.
@@ -451,7 +464,7 @@ It must be 8 to 100 characters from A-Z, a-z, 0-9, dot, underscore, colon, or hy
 |------------|------------------------------------------------------------------|------------------------------------------------------------------|
 | Python     | `trace_id` keyword argument (last parameter, default `None`)     | `ValueError` raised at construction                              |
 | TypeScript | `traceId` field on `SmriteaClientConfig`                         | `TypeError` thrown at construction                               |
-| Go         | `TraceID` field on `ClientConfig`                                | Every client method returns `SmriteaError` with `Code` `INVALID_TRACE_ID`; no request is sent |
+| Go         | `TraceID` field on `ClientConfig`                                | Every client method returns `*SmriteaBadRequestError` (HTTP 400, `Code` `INVALID_TRACE_ID`); no request is sent |
 | Java       | `traceId` fifth argument of `SmriteaClient(apiKey, appId, baseUrl, maxRetries, traceId)`; `null` omits it | `IllegalArgumentException` thrown at construction |
 | C#         | `traceId` last parameter of `SmriteaClient(apiKey, appId, baseUrl, maxRetries, traceId)`; `null` omits it | `ArgumentException` thrown at construction |
 

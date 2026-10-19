@@ -100,7 +100,7 @@ client := smritea.NewClient(smritea.ClientConfig{
     AppID:      "app_...",                  // required
     BaseURL:    "https://api-us.smritea.ai",   // optional, default shown
     TraceID:    "checkout-flow-7f3a",       // optional; 8-100 chars of A-Z, a-z, 0-9, '.', '_', ':', '-'
-    MaxRetries: 2,                          // optional, default 2
+    MaxRetries: smritea.Int(2),             // optional; nil = default 2; smritea.Int(0) disables retry; a negative value counts as 0
 })
 ```
 
@@ -108,7 +108,9 @@ client := smritea.NewClient(smritea.ClientConfig{
 8-100 bytes long and contain only `A-Z`, `a-z`, `0-9`, `.`, `_`, `:`, or `-`.
 
 An invalid `TraceID` does not stop the constructor: `NewClient` still returns a client, but every method
-returns a `*SmriteaError` with `Code` `"INVALID_TRACE_ID"` and sends no request.
+returns a `*SmriteaBadRequestError` (HTTP 400) with `Code` `"INVALID_TRACE_ID"` (constant
+`smritea.ErrCodeInvalidTraceID`) and sends no request. `errors.As` to `*SmriteaError` does not match it; use
+`*SmriteaBadRequestError` instead.
 
 ---
 

@@ -403,7 +403,6 @@ describe('retry logic', () => {
 
       expect(mockApi.createMemory, `maxRetries=${maxRetries}`).toHaveBeenCalledTimes(1);
       expect(error, `maxRetries=${maxRetries}`).toBeInstanceOf(SmriteaTooManyRequestsError);
-      expect((error as Error).message, `maxRetries=${maxRetries}`).not.toBe('unreachable');
     },
   );
 

@@ -7,8 +7,8 @@ import (
 	"strconv"
 )
 
-// ErrCodeInvalidTraceID is the SmriteaError.Code returned when ClientConfig.TraceID
-// fails validation. It is set locally and no request is sent.
+// ErrCodeInvalidTraceID is the Code of the SmriteaBadRequestError returned when
+// ClientConfig.TraceID fails validation. It is set locally and no request is sent.
 const ErrCodeInvalidTraceID = "INVALID_TRACE_ID"
 
 // SmriteaError is the base error type returned by all SDK operations.

@@ -20,6 +20,7 @@ from smritea.exceptions import (
     SmriteaTooManyRequestsError,
     SmriteaUnauthorizedError,
     SmriteaUnprocessableError,
+    raise_for_status,
 )
 from smritea.types import MemoryScope
 from smritea._internal.autogen.smritea_cloud_sdk.exceptions import ApiException
@@ -462,7 +463,7 @@ class TestRetryLogic:
         mock_api.create_memory.side_effect = exc
         client = SmriteaClient(api_key='test-key', app_id='app-123', max_retries=max_retries)
 
-        with pytest.raises(SmriteaTooManyRequestsError) as exc_info:
+        with pytest.raises(SmriteaTooManyRequestsError):
             client.add('content')
 
         assert mock_api.create_memory.call_count == 1, (
@@ -470,9 +471,6 @@ class TestRetryLogic:
         )
         assert sleep_mock.call_count == 0, (
             f'{name}: expected no sleep, got {sleep_mock.call_count} calls'
-        )
-        assert not isinstance(exc_info.value, AssertionError), (
-            f'{name}: raised an AssertionError instead of the mapped 429 error'
         )
 
 
@@ -527,6 +525,34 @@ class TestRetryDelay:
         # attempt=10: base = 1.0 * 2^10 = 1024, capped at 30
         # jitter of 30 = [22.5, 30.0]
         assert 22.5 <= delay <= 30.0
+
+
+# ==============================================================================
+# Test 5b: raise_for_status Retry-After header parsing
+# ==============================================================================
+
+
+class TestRaiseForStatusRetryAfter:
+    """Test Retry-After parsing in raise_for_status() for HTTP 429."""
+
+    @pytest.mark.parametrize(
+        ('name', 'headers', 'want_retry_after'),
+        [
+            ('canonical header name', {'Retry-After': '7'}, 7),
+            ('lowercase header name', {'retry-after': '7'}, 7),
+            ('uppercase header name', {'RETRY-AFTER': '7'}, 7),
+            ('non-numeric value', {'Retry-After': 'soon'}, None),
+            ('header absent', {'X-Request-ID': 'req_1'}, None),
+        ],
+    )
+    def test_retry_after_parsing(self, name, headers, want_retry_after):
+        """Retry-After is matched case-insensitively; a non-integer value yields None."""
+        with pytest.raises(SmriteaTooManyRequestsError) as exc_info:
+            raise_for_status(429, 'rate limited', headers=headers)
+
+        assert exc_info.value.retry_after == want_retry_after, (
+            f'{name}: retry_after = {exc_info.value.retry_after!r}, want {want_retry_after!r}'
+        )
 
 
 # ==============================================================================
