@@ -21,11 +21,17 @@ import ai.smritea.sdk.model.MemoryCreationResult;
 import ai.smritea.sdk.model.MemoryScope;
 import ai.smritea.sdk.model.SearchOptions;
 import ai.smritea.sdk.model.SearchResult;
+import ai.smritea.sdk.model.StageTrace;
+import ai.smritea.sdk.model.StepTrace;
+import ai.smritea.sdk.model.Trace;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 @WireMockTest
 class SmriteaClientTest {
@@ -105,6 +111,94 @@ class SmriteaClientTest {
 
     assertNotNull(result);
     assertEquals("mem-3", result.getMemories().get(0).getId());
+  }
+
+  @ParameterizedTest
+  @NullSource
+  @ValueSource(booleans = {true, false})
+  void testAdd_ExplicitSkip(Boolean explicitSkip, WireMockRuntimeInfo wm) throws Exception {
+    CreateMemoryResponse resp = new CreateMemoryResponse().explicitSkip(explicitSkip);
+    stubFor(post("/api/v1/sdk/memories").willReturn(okJson(MAPPER.writeValueAsString(resp))));
+
+    MemoryCreationResult result = clientFor(wm).add("hello", null);
+
+    assertEquals(explicitSkip, result.getExplicitSkip());
+  }
+
+  @Test
+  void testAdd_ExplainTraceAbsent(WireMockRuntimeInfo wm) throws Exception {
+    stubFor(
+        post("/api/v1/sdk/memories")
+            .willReturn(okJson(MAPPER.writeValueAsString(new CreateMemoryResponse()))));
+
+    assertNull(clientFor(wm).add("hello", null).getExplainTrace());
+  }
+
+  @Test
+  void testAdd_ExplainTraceMapsStagesAndSteps(WireMockRuntimeInfo wm) throws Exception {
+    ai.smritea.sdk._internal.autogen.model.StepTrace rawStep =
+        new ai.smritea.sdk._internal.autogen.model.StepTrace()
+            .stepName("embed")
+            .durationMs(10)
+            .error("step-error")
+            .input("step-in")
+            .output("step-out")
+            .resultCount(1);
+    ai.smritea.sdk._internal.autogen.model.StageTrace rawStage =
+        new ai.smritea.sdk._internal.autogen.model.StageTrace()
+            .stageName("extract")
+            .durationMs(30)
+            .error("stage-error")
+            .input("stage-in")
+            .output("stage-out")
+            .resultCount(3)
+            .addStepsItem(rawStep);
+    ai.smritea.sdk._internal.autogen.model.Trace rawTrace =
+        new ai.smritea.sdk._internal.autogen.model.Trace().totalMs(42).addStagesItem(rawStage);
+    stubFor(
+        post("/api/v1/sdk/memories")
+            .willReturn(
+                okJson(
+                    MAPPER.writeValueAsString(new CreateMemoryResponse().explainTrace(rawTrace)))));
+
+    Trace trace = clientFor(wm).add("hello", null).getExplainTrace();
+
+    assertNotNull(trace);
+    assertEquals(Integer.valueOf(42), trace.getTotalMs());
+    assertEquals(1, trace.getStages().size());
+    StageTrace stage = trace.getStages().get(0);
+    assertEquals("extract", stage.getStageName());
+    assertEquals(Integer.valueOf(30), stage.getDurationMs());
+    assertEquals("stage-error", stage.getError());
+    assertEquals("stage-in", stage.getInput());
+    assertEquals("stage-out", stage.getOutput());
+    assertEquals(Integer.valueOf(3), stage.getResultCount());
+    assertEquals(1, stage.getSteps().size());
+    StepTrace step = stage.getSteps().get(0);
+    assertEquals("embed", step.getStepName());
+    assertEquals(Integer.valueOf(10), step.getDurationMs());
+    assertEquals("step-error", step.getError());
+    assertEquals("step-in", step.getInput());
+    assertEquals("step-out", step.getOutput());
+    assertEquals(Integer.valueOf(1), step.getResultCount());
+  }
+
+  @Test
+  void testAdd_ExplainTraceWithoutStagesOrSteps(WireMockRuntimeInfo wm) throws Exception {
+    ai.smritea.sdk._internal.autogen.model.Trace rawTrace =
+        new ai.smritea.sdk._internal.autogen.model.Trace()
+            .addStagesItem(new ai.smritea.sdk._internal.autogen.model.StageTrace());
+    stubFor(
+        post("/api/v1/sdk/memories")
+            .willReturn(
+                okJson(
+                    MAPPER.writeValueAsString(new CreateMemoryResponse().explainTrace(rawTrace)))));
+
+    Trace trace = clientFor(wm).add("hello", null).getExplainTrace();
+
+    assertNotNull(trace);
+    assertEquals(1, trace.getStages().size());
+    assertTrue(trace.getStages().get(0).getSteps().isEmpty());
   }
 
   // -----------------------------------------------------------------------

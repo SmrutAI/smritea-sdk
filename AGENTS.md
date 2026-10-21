@@ -32,11 +32,12 @@ Each language lives in its own subdirectory and is an independently publishable 
   **Note**: Go uses `internal/autogen` (compiler-enforced `internal/` package, no leading underscore),
   unlike Python/TypeScript which use `_internal/autogen` (convention-based).
 - `java/` — Maven package `ai.smritea:smritea-sdk`, import as `import ai.smritea.sdk.SmriteaClient`
-  **Note**: Java uses `_internal/autogen` (naming convention) + JPMS `module-info.java` to prevent
-  external use (unexported package).
+  **Note**: Java uses `_internal/autogen` (naming convention only). There is no `module-info.java`:
+  the generated classes are `public` and can be imported by any code on the classpath.
 - `csharp/` — NuGet package `Smritea.Sdk`, import as `using Smritea.Sdk`
-  **Note**: C# uses `internal class` (compiler-enforced, assembly-scoped) for autogen types.
-  `<InternalsVisibleTo Include="Smritea.Sdk.Tests" />` in the `.csproj` exposes internals to tests.
+  **Note**: C# uses `_internal/autogen` (naming convention only). The generator emits `public` classes
+  for the models and the client, which the public result types alias.
+  `<InternalsVisibleTo Include="Smritea.Sdk.Tests" />` in the `.csproj` exposes internal members to tests.
 
 When adding a new language, follow the same structure: one `client` file, one `types` file, one `errors`
 file, with `_internal/autogen` (or `internal/autogen` for Go) excluded from lint and type-checking.

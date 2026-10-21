@@ -75,4 +75,21 @@ public final class MemoryCreationResult {
   public Integer getUpdatedCount() {
     return inner.getUpdatedCount();
   }
+
+  /**
+   * Returns true when the LLM intentionally extracted no facts from the content, so nothing was
+   * stored (for example a pure greeting). Returns null if the server did not return this field.
+   */
+  public Boolean getExplicitSkip() {
+    return inner.getExplicitSkip();
+  }
+
+  /**
+   * Returns the explain trace of the request (pipeline stages with timings), or null if the server
+   * did not return one.
+   */
+  public Trace getExplainTrace() {
+    ai.smritea.sdk._internal.autogen.model.Trace raw = inner.getExplainTrace();
+    return raw == null ? null : new Trace(raw);
+  }
 }
