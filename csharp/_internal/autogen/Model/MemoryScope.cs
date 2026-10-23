@@ -102,7 +102,7 @@ namespace Smritea.Internal.Autogen.Model
         /// <param name="actorName">actorName.</param>
         /// <param name="actorType">actorType.</param>
         /// <param name="conversationId">conversationId.</param>
-        /// <param name="participantIds">ParticipantIDs lists actor IDs whose shared conversations to search. The search service expands this to all conversations where ALL listed actors participated (AND semantics — conversations missing even one actor are excluded). Mutually exclusive with ConversationID; if both are set, ConversationID takes precedence. Minimum 2 IDs required..</param>
+        /// <param name="participantIds">ParticipantIDs selects conversations by the actors that took part in them. One ID selects every conversation that actor took part in. Several IDs select conversations where ALL of them took part (AND semantics). Duplicate IDs are ignored. null and [] mean the same as not sent. Cannot be combined with a non-empty ConversationID (search is rejected with 400 VALIDATION_FAILED). Ignored by add (not stored)..</param>
         /// <param name="sourceType">sourceType.</param>
         public MemoryScope(string actorId = default, string actorName = default, ActorTypeEnum? actorType = default, string conversationId = default, List<string> participantIds = default, SourceTypeEnum? sourceType = default)
         {
@@ -133,9 +133,9 @@ namespace Smritea.Internal.Autogen.Model
         public string ConversationId { get; set; }
 
         /// <summary>
-        /// ParticipantIDs lists actor IDs whose shared conversations to search. The search service expands this to all conversations where ALL listed actors participated (AND semantics — conversations missing even one actor are excluded). Mutually exclusive with ConversationID; if both are set, ConversationID takes precedence. Minimum 2 IDs required.
+        /// ParticipantIDs selects conversations by the actors that took part in them. One ID selects every conversation that actor took part in. Several IDs select conversations where ALL of them took part (AND semantics). Duplicate IDs are ignored. null and [] mean the same as not sent. Cannot be combined with a non-empty ConversationID (search is rejected with 400 VALIDATION_FAILED). Ignored by add (not stored).
         /// </summary>
-        /// <value>ParticipantIDs lists actor IDs whose shared conversations to search. The search service expands this to all conversations where ALL listed actors participated (AND semantics — conversations missing even one actor are excluded). Mutually exclusive with ConversationID; if both are set, ConversationID takes precedence. Minimum 2 IDs required.</value>
+        /// <value>ParticipantIDs selects conversations by the actors that took part in them. One ID selects every conversation that actor took part in. Several IDs select conversations where ALL of them took part (AND semantics). Duplicate IDs are ignored. null and [] mean the same as not sent. Cannot be combined with a non-empty ConversationID (search is rejected with 400 VALIDATION_FAILED). Ignored by add (not stored).</value>
         [DataMember(Name = "participant_ids", EmitDefaultValue = false)]
         public List<string> ParticipantIds { get; set; }
 

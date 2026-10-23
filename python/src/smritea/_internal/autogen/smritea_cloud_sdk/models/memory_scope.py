@@ -32,7 +32,7 @@ class MemoryScope(BaseModel):
     actor_name: Optional[Annotated[str, Field(strict=True, max_length=255)]] = None
     actor_type: Optional[StrictStr] = None
     conversation_id: Optional[Annotated[str, Field(strict=True, max_length=64)]] = None
-    participant_ids: Optional[Annotated[List[StrictStr], Field(min_length=2)]] = Field(default=None, description="ParticipantIDs lists actor IDs whose shared conversations to search. The search service expands this to all conversations where ALL listed actors participated (AND semantics — conversations missing even one actor are excluded). Mutually exclusive with ConversationID; if both are set, ConversationID takes precedence. Minimum 2 IDs required.")
+    participant_ids: Optional[List[StrictStr]] = Field(default=None, description="ParticipantIDs selects conversations by the actors that took part in them. One ID selects every conversation that actor took part in. Several IDs select conversations where ALL of them took part (AND semantics). Duplicate IDs are ignored. null and [] mean the same as not sent. Cannot be combined with a non-empty ConversationID (search is rejected with 400 VALIDATION_FAILED). Ignored by add (not stored).")
     source_type: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["actor_id", "actor_name", "actor_type", "conversation_id", "participant_ids", "source_type"]
 
