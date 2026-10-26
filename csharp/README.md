@@ -96,6 +96,7 @@ var client = new SmriteaClient(
 | `baseUrl` | `string?` | `https://api-us.smritea.ai` | Base URL of the smritea API |
 | `maxRetries` | `int` | `2` | Retries on HTTP 429. `0` disables retry |
 | `traceId` | `string?` | `null` | Trace ID sent as the `X-Trace-ID` header on every call |
+| `httpClient` | `HttpClient?` | `null` | Sends every request (your own handler, proxy, TLS or timeout). `null`: the SDK creates its own. `Dispose` does not dispose this client. Sixth constructor parameter |
 
 When set, `traceId` must be 8-100 characters long and contain only ASCII letters, digits, dots (`.`),
 underscores (`_`), colons (`:`) or hyphens (`-`). An invalid value throws `ArgumentException` when the client

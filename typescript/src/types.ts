@@ -147,4 +147,9 @@ export interface SmriteaClientConfig {
    * An invalid value throws a `TypeError` from the constructor, before any network call.
    */
   traceId?: string;
+  /**
+   * Optional `fetch` function that sends every request. Use it to set your own HTTP agent,
+   * proxy, timeout or instrumentation. Default: the global `fetch`.
+   */
+  fetch?: typeof fetch;
 }

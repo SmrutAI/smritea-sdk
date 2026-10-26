@@ -124,6 +124,10 @@ characters long and use only letters A–Z, a–z, digits 0–9, dot (`.`), unde
 and hyphen (`-`). An invalid value throws `IllegalArgumentException` from the constructor. The
 four-argument constructors send no trace header.
 
+The sixth argument `httpClient` (a `java.net.http.HttpClient`, optional) sends every request: configure
+your own proxy, TLS, timeouts or executor on it before you pass it. `null` builds a default client. The
+`SmriteaClient` does not close it.
+
 All methods are **synchronous** and return values directly. For async use, wrap calls in a
 `CompletableFuture` or virtual thread (`Thread.ofVirtual()`).
 

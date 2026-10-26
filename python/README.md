@@ -98,6 +98,7 @@ client = SmriteaClient(
 | `base_url` | `https://api-us.smritea.ai` | Override the API base URL |
 | `max_retries` | `2` | Automatic retries on HTTP 429. Uses the `Retry-After` header when present, otherwise exponential backoff with jitter (capped at 30 s). `0` disables retry. |
 | `trace_id` | `None` | Trace ID sent as the `X-Trace-ID` header on every request. Must be 8-100 characters of `A-Z`, `a-z`, `0-9`, `.`, `_`, `:` or `-`. An invalid value raises `ValueError` at construction. When omitted, the server assigns one. |
+| `http_client` | `None` | A `urllib3.PoolManager` (or a subclass such as `ProxyManager`) that sends every request. Use it to set your own proxy, TLS, timeout or pool settings. The client does not close it. When omitted, the SDK builds its own. |
 
 Pass `trace_id` to tie the SDK's requests to a trace in your own system, for example one per user
 session or workflow run:

@@ -38,6 +38,24 @@ public class SmriteaClient : IDisposable
     /// 8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen.</param>
     /// <exception cref="ArgumentException">Thrown when <paramref name="traceId"/> is not a valid Trace ID.</exception>
     public SmriteaClient(string apiKey, string appId, string? baseUrl = null, int maxRetries = DefaultMaxRetries, string? traceId = null)
+        : this(apiKey, appId, baseUrl, maxRetries, traceId, null)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SmriteaClient"/> class.
+    /// Creates a new <see cref="SmriteaClient"/> with the default base URL and retry count.
+    /// Sends every request through <paramref name="httpClient"/> when it is set.
+    /// </summary>
+    /// <param name="apiKey">API key for authentication.</param>
+    /// <param name="appId">Application ID injected into every request.</param>
+    /// <param name="baseUrl">Base URL of the smritea API. Defaults to <c>https://api-us.smritea.ai</c>.</param>
+    /// <param name="maxRetries">Maximum number of retries on HTTP 429. Defaults to 2.</param>
+    /// <param name="traceId">Optional Trace ID sent as the <c>X-Trace-ID</c> header on every call. When set, it must be
+    /// 8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen.</param>
+    /// <param name="httpClient">Optional HttpClient that sends every request (your own handler, proxy, TLS or timeout). Null: the SDK creates its own. Dispose does not dispose this client.</param>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="traceId"/> is not a valid Trace ID.</exception>
+    public SmriteaClient(string apiKey, string appId, string? baseUrl, int maxRetries, string? traceId, HttpClient? httpClient)
     {
         ArgumentNullException.ThrowIfNull(apiKey);
         ArgumentNullException.ThrowIfNull(appId);
@@ -63,7 +81,7 @@ public class SmriteaClient : IDisposable
             config.DefaultHeaders["X-Trace-ID"] = traceId;
         }
 
-        this.api = new SDKMemoryApi(config);
+        this.api = httpClient is null ? new SDKMemoryApi(config) : new SDKMemoryApi(httpClient, config);
     }
 
     /// <summary>

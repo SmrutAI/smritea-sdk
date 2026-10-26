@@ -112,6 +112,9 @@ returns a `*SmriteaBadRequestError` (HTTP 400) with `Code` `"INVALID_TRACE_ID"` 
 `smritea.ErrCodeInvalidTraceID`) and sends no request. `errors.As` to `*SmriteaError` does not match it; use
 `*SmriteaBadRequestError` instead.
 
+`HTTPClient` (optional, `*http.Client`) sends every request: set your own transport, proxy, TLS or timeout.
+`nil` uses `http.DefaultClient`.
+
 ---
 
 ## Methods

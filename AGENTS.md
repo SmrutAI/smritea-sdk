@@ -81,6 +81,16 @@ Language notes: Go treats an empty `TraceID` as unset (no error); every other la
 it fails the pattern. Go's validation counts bytes, not characters. Java's 4-argument constructors pass
 `null` for the trace ID, which sends no header.
 
+**HTTP client on constructor**: Optional. The given client sends every request; the SDK never closes it.
+
+| Language   | Option name                                         | Null or absent                         | Source                                                                 |
+|------------|-----------------------------------------------------|----------------------------------------|------------------------------------------------------------------------|
+| Python     | `http_client` keyword (`urllib3.PoolManager`)       | the generated client's own PoolManager | `python/src/smritea/client.py#SmriteaClient.__init__`                  |
+| TypeScript | `fetch` field (`typeof fetch`)                      | the global `fetch`                     | `typescript/src/types.ts#SmriteaClientConfig`                          |
+| Go         | `ClientConfig.HTTPClient` (`*http.Client`)          | `http.DefaultClient`                   | `go/types.go#ClientConfig`                                             |
+| Java       | `httpClient`, 6th constructor argument (`HttpClient`) | a new default client                 | `java/src/main/java/ai/smritea/sdk/SmriteaClient.java#SmriteaClient`   |
+| C#         | `httpClient`, 6th constructor parameter (`HttpClient?`) | the SDK creates its own; `Dispose` never disposes a given one | `csharp/SmriteaClient.cs#SmriteaClient` |
+
 ---
 
 ## Error Hierarchy

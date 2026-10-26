@@ -468,6 +468,18 @@ It must be 8 to 100 characters from A-Z, a-z, 0-9, dot, underscore, colon, or hy
 | Java       | `traceId` fifth argument of `SmriteaClient(apiKey, appId, baseUrl, maxRetries, traceId)`; `null` omits it | `IllegalArgumentException` thrown at construction |
 | C#         | `traceId` last parameter of `SmriteaClient(apiKey, appId, baseUrl, maxRetries, traceId)`; `null` omits it | `ArgumentException` thrown at construction |
 
+**HTTP client (optional, all languages)**
+
+Pass your own HTTP client to set a proxy, TLS, timeouts or instrumentation; the SDK never closes it.
+
+| Language   | Option                                                                                                   |
+|------------|----------------------------------------------------------------------------------------------------------|
+| Python     | `http_client` keyword argument, a `urllib3.PoolManager` (default `None`: the SDK builds its own)         |
+| TypeScript | `fetch` field on `SmriteaClientConfig` (default: the global `fetch`)                                     |
+| Go         | `HTTPClient` field on `ClientConfig`, type `*http.Client` (`nil`: `http.DefaultClient`)                  |
+| Java       | `httpClient` sixth argument of `SmriteaClient(apiKey, appId, baseUrl, maxRetries, traceId, httpClient)`; `null` builds a default client |
+| C#         | `httpClient` sixth parameter of `SmriteaClient(apiKey, appId, baseUrl, maxRetries, traceId, httpClient)`; `null` creates one; `Dispose` does not dispose it |
+
 ---
 
 ## Development

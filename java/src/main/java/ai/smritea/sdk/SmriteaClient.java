@@ -30,6 +30,7 @@ import ai.smritea.sdk.model.RelativeStanding;
 import ai.smritea.sdk.model.SearchOptions;
 import ai.smritea.sdk.model.SearchResult;
 import java.math.BigDecimal;
+import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -92,6 +93,30 @@ public class SmriteaClient {
    */
   public SmriteaClient(
       String apiKey, String appId, String baseUrl, int maxRetries, String traceId) {
+    this(apiKey, appId, baseUrl, maxRetries, traceId, null);
+  }
+
+  /**
+   * Creates a new SmriteaClient that sends every request through the given HTTP client.
+   *
+   * @param apiKey the API key for authentication
+   * @param appId the application ID injected into every request
+   * @param baseUrl the API base URL (defaults to https://api-us.smritea.ai if null)
+   * @param maxRetries maximum number of retries on 429 responses (minimum 0)
+   * @param traceId optional Trace ID (8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or
+   *     hyphen), or null to send no header
+   * @param httpClient the HTTP client that sends every request (your own proxy, TLS, timeouts,
+   *     executor or a wrapping client), or null for a new default client; the SmriteaClient does
+   *     not close it
+   * @throws IllegalArgumentException if {@code traceId} is non-null and invalid
+   */
+  public SmriteaClient(
+      String apiKey,
+      String appId,
+      String baseUrl,
+      int maxRetries,
+      String traceId,
+      HttpClient httpClient) {
     Objects.requireNonNull(apiKey, "apiKey must not be null");
     Objects.requireNonNull(appId, "appId must not be null");
     if (traceId != null && !TRACE_ID_PATTERN.matcher(traceId).matches()) {
@@ -106,7 +131,13 @@ public class SmriteaClient {
     // suffix
     // and getBaseUri() would produce a malformed URL with the full URL string as the path.
     String resolvedBaseUrl = baseUrl != null ? baseUrl : DEFAULT_BASE_URL;
-    ApiClient apiClient = new ApiClient();
+    ApiClient apiClient =
+        httpClient == null
+            ? new ApiClient()
+            : new ApiClient(
+                new ProvidedHttpClientBuilder(httpClient),
+                ApiClient.createDefaultObjectMapper(),
+                null);
     apiClient.updateBaseUri(resolvedBaseUrl);
     apiClient.setRequestInterceptor(
         builder -> {
@@ -116,20 +147,6 @@ public class SmriteaClient {
           }
         });
     this.api = new SdkMemoryApi(apiClient);
-  }
-
-  /**
-   * Package-private constructor for testing. Allows injecting a custom {@link SdkMemoryApi} backed
-   * by a test {@link ApiClient} (e.g. pointed at WireMock).
-   *
-   * @param appId the application ID injected into every request
-   * @param maxRetries maximum number of retries on 429 responses (minimum 0)
-   * @param api the pre-configured SdkMemoryApi instance
-   */
-  SmriteaClient(String appId, int maxRetries, SdkMemoryApi api) {
-    this.appId = appId;
-    this.maxRetries = Math.max(0, maxRetries);
-    this.api = api;
   }
 
   /**

@@ -1,6 +1,10 @@
 package smritea
 
-import "github.com/SmrutAI/smritea-sdk/go/internal/autogen"
+import (
+	"net/http"
+
+	"github.com/SmrutAI/smritea-sdk/go/internal/autogen"
+)
 
 // Memory is the canonical return type for a stored memory.
 type Memory = autogen.MemoryResponse
@@ -20,9 +24,10 @@ type SearchMemoriesResponse = autogen.SearchMemoriesResponse
 type ClientConfig struct {
 	APIKey     string
 	AppID      string
-	BaseURL    string // default: https://api-us.smritea.ai
-	MaxRetries *int   // nil: default 2; pointer to 0: no retry; pointer to N: N retries
-	TraceID    string // optional; 8-100 bytes of A-Z, a-z, 0-9, '.', '_', ':', '-'; sent as X-Trace-ID on every call
+	BaseURL    string       // default: https://api-us.smritea.ai
+	MaxRetries *int         // nil: default 2; pointer to 0: no retry; pointer to N: N retries
+	TraceID    string       // optional; 8-100 bytes of A-Z, a-z, 0-9, '.', '_', ':', '-'; sent as X-Trace-ID on every call
+	HTTPClient *http.Client // optional; sends every request (your own transport, proxy, TLS, timeout); nil: http.DefaultClient
 }
 
 // Int returns a pointer to v. It is a convenience for setting ClientConfig.MaxRetries,

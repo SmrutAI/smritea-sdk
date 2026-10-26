@@ -32,6 +32,7 @@ export class SmriteaClient {
     const configuration = new Configuration({
       basePath: config.baseUrl?.replace(/\/$/, '') ?? 'https://api-us.smritea.ai',
       apiKey: config.apiKey,
+      fetchApi: config.fetch,
       headers: config.traceId !== undefined ? { 'X-Trace-ID': config.traceId } : undefined,
     });
     this.api = new SDKMemoryApi(configuration);

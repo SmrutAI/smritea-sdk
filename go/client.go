@@ -39,6 +39,7 @@ type SmriteaClient struct {
 // If cfg.TraceID is set but invalid, NewClient still returns a client, and every method
 // returns a *SmriteaBadRequestError (HTTP 400) with Code ErrCodeInvalidTraceID without
 // sending a request.
+// If cfg.HTTPClient is set, it sends every request; nil keeps http.DefaultClient.
 func NewClient(cfg ClientConfig) *SmriteaClient {
 	baseURL := cfg.BaseURL
 	if baseURL == "" {
@@ -59,6 +60,7 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 	// "/api/v1/sdk/memories") to this value at request time.
 	configuration.Servers = autogen.ServerConfigurations{{URL: baseURL}}
 	configuration.AddDefaultHeader("X-API-Key", cfg.APIKey)
+	configuration.HTTPClient = cfg.HTTPClient
 
 	var initErr error
 	if cfg.TraceID != "" {

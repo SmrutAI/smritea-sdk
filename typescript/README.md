@@ -90,6 +90,8 @@ const client = new SmriteaClient({
 
 `traceId` is sent as the `X-Trace-ID` header on every request, so your own logs and the smritea request logs can be correlated. It must be 8-100 characters, limited to A-Z, a-z, 0-9, `.`, `_`, `:` and `-`. An invalid value throws a `TypeError` from the constructor, before any network call is made.
 
+`fetch` (optional) is the `fetch` function that sends every request: pass your own for an HTTP agent, proxy, timeout or instrumentation. The default is the global `fetch`.
+
 ---
 
 ## Methods

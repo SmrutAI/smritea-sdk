@@ -8,6 +8,8 @@ import re
 import time
 from typing import Any, Callable, NoReturn, TypeVar
 
+import urllib3
+
 from smritea._internal.autogen.smritea_cloud_sdk import ApiClient, Configuration
 from smritea._internal.autogen.smritea_cloud_sdk.api.sdk_memory_api import SDKMemoryApi
 from smritea._internal.autogen.smritea_cloud_sdk.exceptions import ApiException
@@ -59,6 +61,7 @@ class SmriteaClient:
         base_url: str = "https://api-us.smritea.ai",
         max_retries: int = 2,
         trace_id: str | None = None,
+        http_client: urllib3.PoolManager | None = None,
     ) -> None:
         """Initialise the smritea client.
 
@@ -73,6 +76,10 @@ class SmriteaClient:
             trace_id: Optional Trace ID sent as the X-Trace-ID header on every
                 request. Must be 8-100 characters of A-Z, a-z, 0-9, dot, underscore,
                 colon or hyphen. Default: None (the server assigns one).
+            http_client: Optional urllib3 PoolManager (or a subclass such as
+                ProxyManager) that sends every request. Use it to set your own proxy,
+                TLS, timeout or pool settings. The client does not close it.
+                Default: None (the SDK builds its own).
 
         Raises:
             ValueError: If trace_id is set and does not match the allowed format.
@@ -84,6 +91,8 @@ class SmriteaClient:
         configuration = Configuration(host=base_url)
         configuration.api_key["ApiKeyAuth"] = api_key
         self._api_client = ApiClient(configuration)
+        if http_client is not None:
+            self._api_client.rest_client.pool_manager = http_client
         if trace_id is not None:
             self._api_client.set_default_header("X-Trace-ID", trace_id)
         self._memory_api = SDKMemoryApi(self._api_client)
