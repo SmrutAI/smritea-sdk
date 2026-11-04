@@ -61,8 +61,8 @@ a per-call argument. Callers must never pass it per-call.
 
 **`scope` object**: Groups actor and conversation context fields (`actor_id`, `actor_type`,
 `actor_name`, `conversation_id`, `source_type`, `participant_ids`). All fields are
-optional. In `add()`, all 5 scope fields are mapped. In `search()`, `actor_id`,
-`actor_type`, `conversation_id`, and `participant_ids` are sent as filters.
+optional. In `add()`, all 6 scope fields are mapped. In `search()`, `actor_id`,
+`actor_type`, `conversation_id`, `source_type`, and `participant_ids` are sent as filters.
 
 **Trace ID on constructor**: Optional. When set, it is sent as the `X-Trace-ID` request header on every
 call — `add`, `search`, `get`, and `delete`. It is validated in the constructor, before any network call,

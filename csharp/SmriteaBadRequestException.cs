@@ -1,5 +1,5 @@
-// <copyright file="SmriteaBadRequestException.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// <copyright file="SmriteaBadRequestException.cs" company="Bytonomics LLP">
+// Copyright (c) Bytonomics LLP. All rights reserved.
 // </copyright>
 
 namespace Smritea.Sdk;

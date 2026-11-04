@@ -7,7 +7,7 @@
     <Version>0.1.13</Version>
     <Authors>SmrutAI</Authors>
     <Description>C# SDK for the smritea AI memory system</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://smritea.ai</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SmrutAI/smritea-sdk</RepositoryUrl>
     <RootNamespace>Smritea.Sdk</RootNamespace>
@@ -25,6 +25,11 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Smritea.Sdk.Tests" />
+  </ItemGroup>
+
+  <!-- StyleCop settings: the file-header copyright text (SA1636) must match this value. -->
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,5 @@
-// <copyright file="SmriteaClient.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// <copyright file="SmriteaClient.cs" company="Bytonomics LLP">
+// Copyright (c) Bytonomics LLP. All rights reserved.
 // </copyright>
 
 namespace Smritea.Sdk;
@@ -248,6 +248,12 @@ public class SmriteaClient : IDisposable
                 if (opts.Scope.ConversationId is not null)
                 {
                     scope.ConversationId = opts.Scope.ConversationId;
+                }
+
+                if (opts.Scope.SourceType is not null)
+                {
+                    scope.SourceType = Enum.Parse<Smritea.Internal.Autogen.Model.MemoryScope.SourceTypeEnum>(
+                        opts.Scope.SourceType, ignoreCase: true);
                 }
 
                 if (opts.Scope.ParticipantIds is not null && opts.Scope.ParticipantIds.Count > 0)

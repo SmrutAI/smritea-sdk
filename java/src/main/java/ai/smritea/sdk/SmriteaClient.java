@@ -263,6 +263,11 @@ public class SmriteaClient {
         if (scope.getConversationId() != null) {
           autogenScope.setConversationId(scope.getConversationId());
         }
+        if (scope.getSourceType() != null) {
+          autogenScope.setSourceType(
+              ai.smritea.sdk._internal.autogen.model.MemoryScope.SourceTypeEnum.fromValue(
+                  scope.getSourceType()));
+        }
         if (scope.getParticipantIds() != null && !scope.getParticipantIds().isEmpty()) {
           autogenScope.setParticipantIds(scope.getParticipantIds());
         }

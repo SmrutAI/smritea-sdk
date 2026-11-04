@@ -25,6 +25,8 @@ generated:
 
 Java SDK for the [smritea](https://smritea.ai) AI memory system.
 
+[![Maven Central](https://img.shields.io/maven-central/v/ai.smritea/smritea-sdk)](https://central.sonatype.com/artifact/ai.smritea/smritea-sdk)
+
 **[Get a free API key →](https://smritea.ai)**
 
 ---
@@ -37,14 +39,14 @@ Java SDK for the [smritea](https://smritea.ai) AI memory system.
 <dependency>
     <groupId>ai.smritea</groupId>
     <artifactId>smritea-sdk</artifactId>
-    <version>0.1.0</version>
+    <version>LATEST</version> <!-- latest release: see the Maven Central badge above -->
 </dependency>
 ```
 
 **Gradle**
 
 ```groovy
-implementation 'ai.smritea:smritea-sdk:0.1.0'
+implementation 'ai.smritea:smritea-sdk:LATEST' // latest release: see the Maven Central badge above
 ```
 
 Requires Java 11+.
@@ -54,11 +56,11 @@ Requires Java 11+.
 ## Get your API key
 
 1. Sign up at **[smritea.ai](https://smritea.ai)** — free account, no credit card required
-2. Create an app in the dashboard and copy your API key (`sk-...`) and App ID (`app_...`)
+2. Create an app in the dashboard and copy your API key (`smrt_<prefix>_<secret>`) and App ID (`app_...`)
 3. Export them as environment variables:
 
 ```bash
-export SMRITEA_API_KEY="sk-..."
+export SMRITEA_API_KEY="smrt_<prefix>_<secret>"
 export SMRITEA_APP_ID="app_..."
 ```
 
@@ -99,11 +101,11 @@ for (SearchResult r : results) {
 import ai.smritea.sdk.SmriteaClient;
 
 // Minimal (uses default base URL and 2 retries)
-SmriteaClient client = new SmriteaClient("sk-...", "app_...");
+SmriteaClient client = new SmriteaClient("smrt_<prefix>_<secret>", "app_...");
 
 // Full
 SmriteaClient client = new SmriteaClient(
-    "sk-...",                           // apiKey — required
+    "smrt_<prefix>_<secret>",           // apiKey — required
     "app_...",                          // appId — required
     "https://api-us.smritea.ai",           // baseUrl — optional, default shown
     2                                   // maxRetries — optional, default 2; 0 disables retry
@@ -111,7 +113,7 @@ SmriteaClient client = new SmriteaClient(
 
 // With a Trace ID — the 5th argument
 SmriteaClient client = new SmriteaClient(
-    "sk-...",
+    "smrt_<prefix>_<secret>",
     "app_...",
     "https://api-us.smritea.ai",
     2,

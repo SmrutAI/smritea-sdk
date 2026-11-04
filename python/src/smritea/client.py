@@ -115,7 +115,8 @@ class SmriteaClient:
         Args:
             content: The memory content to store.
             scope: Optional MemoryScope object for actor and conversation context.
-            metadata: Optional string-to-string key-value metadata attached to the memory.
+            metadata: Optional key-value metadata attached to the memory. Values must be
+                strings, integers or floats; booleans, null, objects and arrays are rejected.
             event_occurred_at: ISO-8601 datetime string — when this content was created
                 or occurred. Used by the extraction LLM to resolve relative temporal
                 expressions like "last year" or "yesterday". Defaults to current time
@@ -229,6 +230,7 @@ class SmriteaClient:
                 actor_id=scope.actor_id,
                 actor_type=scope.actor_type,
                 conversation_id=scope.conversation_id,
+                source_type=scope.source_type,
                 participant_ids=scope.participant_ids,
             )
 

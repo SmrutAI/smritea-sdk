@@ -34,11 +34,11 @@ experiences — without managing vector databases yourself.
 ## Get your API key
 
 1. Sign up at **[smritea.ai](https://smritea.ai)** — free tier available
-2. Create an app in the dashboard and copy your API key (`sk-...`) and App ID (`app_...`)
+2. Create an app in the dashboard and copy your API key (`smrt_<prefix>_<secret>`) and App ID (`app_...`)
 3. Export them as environment variables:
 
 ```bash
-export SMRITEA_API_KEY="sk-..."
+export SMRITEA_API_KEY="smrt_<prefix>_<secret>"
 export SMRITEA_APP_ID="app_..."
 ```
 
@@ -50,7 +50,7 @@ export SMRITEA_APP_ID="app_..."
 
 ```python
 import os
-from smritea import SmriteaClient
+from smritea import MemoryScope, SmriteaClient
 
 client = SmriteaClient(
     api_key=os.environ["SMRITEA_API_KEY"],
@@ -58,12 +58,18 @@ client = SmriteaClient(
 )
 
 # Store something about a user
-client.add("Alice is a vegetarian and loves hiking", actor_id="alice", actor_type="user")
+client.add(
+    "Alice is a vegetarian and loves hiking",
+    scope=MemoryScope(actor_id="alice", actor_type="user"),
+)
 
 # Retrieve it later in a different session
-results = client.search("What are Alice's food preferences?", actor_id="alice", actor_type="user")
+results = client.search(
+    "What are Alice's food preferences?",
+    scope=MemoryScope(actor_id="alice", actor_type="user"),
+)
 for r in results:
-    print(f"{r.score:.2f}  {r.content}")
+    print(f"{r.score:.2f}  {r.memory.content}")
 ```
 
 **TypeScript**
@@ -77,12 +83,16 @@ const client = new SmriteaClient({
 });
 
 // Store something about a user
-await client.add('Alice is a vegetarian and loves hiking', { actorId: 'alice', actorType: 'user' });
+await client.add('Alice is a vegetarian and loves hiking', {
+  scope: { actorId: 'alice', actorType: 'user' },
+});
 
 // Retrieve it later
-const results = await client.search("What are Alice's food preferences?", { actorId: 'alice', actorType: 'user' });
+const results = await client.search("What are Alice's food preferences?", {
+  scope: { actorId: 'alice', actorType: 'user' },
+});
 for (const r of results) {
-  console.log(r.score?.toFixed(2), r.content);
+  console.log(r.score?.toFixed(2), r.memory.content);
 }
 ```
 
@@ -109,13 +119,15 @@ func main() {
 
     // Store something about a user
     client.Add(ctx, "Alice is a vegetarian and loves hiking",
-        smritea.NewAddOptions().WithActorID("alice").WithActorType("user"))
+        smritea.NewAddOptions().WithScope(
+            smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")))
 
     // Retrieve it later
     results, _ := client.Search(ctx, "What are Alice's food preferences?",
-        smritea.NewSearchOptions().WithActorID("alice").WithActorType("user"))
+        smritea.NewSearchOptions().WithScope(
+            smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")))
     for _, r := range results {
-        fmt.Printf("%v  %v\n", r.Score, r.Memory.Content)
+        fmt.Printf("%v  %v\n", *r.Score, *r.Memory.Content)
     }
 }
 
@@ -134,12 +146,14 @@ SmriteaClient client = new SmriteaClient(
 );
 
 // Store something about a user
-Memory mem = client.add("Alice is a vegetarian and loves hiking",
-    new AddOptions().withActorId("alice").withActorType("user"));
+MemoryCreationResult result = client.add("Alice is a vegetarian and loves hiking",
+    new AddOptions().withScope(
+        MemoryScope.builder().actorId("alice").actorType("user").build()));
 
 // Retrieve it later
 List<SearchResult> results = client.search("What are Alice's food preferences?",
-    new SearchOptions().withActorId("alice").withActorType("user"));
+    new SearchOptions().withScope(
+        MemoryScope.builder().actorId("alice").actorType("user").build()));
 for (SearchResult r : results) {
     System.out.printf("%.2f  %s%n", r.getScore(), r.getContent());
 }
@@ -156,14 +170,16 @@ var client = new SmriteaClient(
 );
 
 // Store something about a user
-var mem = await client.AddAsync("Alice is a vegetarian and loves hiking",
-    new AddOptions().WithActorId("alice").WithActorType("user"));
+var result = await client.AddAsync("Alice is a vegetarian and loves hiking",
+    new AddOptions().WithScope(
+        new MemoryScope().WithActorId("alice").WithActorType("user")));
 
 // Retrieve it later
 var results = await client.SearchAsync("What are Alice's food preferences?",
-    new SearchOptions().WithActorId("alice").WithActorType("user"));
+    new SearchOptions().WithScope(
+        new MemoryScope().WithActorId("alice").WithActorType("user")));
 foreach (var r in results)
-    Console.WriteLine($"{r.Score:F2}  {r.Content}");
+    Console.WriteLine($"{r.Score:F2}  {r.Memory.Content}");
 ```
 
 ---
@@ -174,25 +190,31 @@ foreach (var r in results)
 
 ```python
 # Python
-memory = client.add(
+from smritea import MemoryScope
+
+result = client.add(
     "User prefers concise replies",
-    actor_id="alice",              # explicit actor ID
-    actor_type="user",             # "user" | "agent" | "system"
-    metadata={"source": "chat"},   # optional arbitrary key-value pairs
-    conversation_id="conv_123",    # optional — links memory to a conversation
+    scope=MemoryScope(
+        actor_id="alice",              # explicit actor ID
+        actor_type="user",             # "user" | "agent" | "system"
+        conversation_id="conv_123",    # optional — links memory to a conversation
+    ),
+    metadata={"source": "chat"},       # optional arbitrary key-value pairs
 )
-print(memory.id)  # mem_...
+print(result.memories[0].id)  # mem_...
 ```
 
 ```typescript
 // TypeScript
-const memory = await client.add('User prefers concise replies', {
-  actorId: 'alice',
-  actorType: 'user',
+const result = await client.add('User prefers concise replies', {
+  scope: {
+    actorId: 'alice',
+    actorType: 'user',
+    conversationId: 'conv_123',
+  },
   metadata: { source: 'chat' },
-  conversationId: 'conv_123',
 });
-console.log(memory.id); // mem_...
+console.log(result.memories[0].id); // mem_...
 ```
 
 **Full signature**
@@ -200,11 +222,11 @@ console.log(memory.id); // mem_...
 | Parameter (Python) | Parameter (TypeScript) | Parameter (Go) | Parameter (Java) | Parameter (C#) | Default  | Description                             |
 |--------------------|------------------------|----------------|------------------|----------------|----------|-----------------------------------------|
 | `content`          | `content`              | `content`      | `content`        | `content`      | required | Memory text                             |
-| `actor_id`         | `actorId`              | `ActorID`      | `actorId`        | `ActorId`      | `None`   | Actor ID                                |
-| `actor_type`       | `actorType`            | `ActorType`    | `actorType`      | `ActorType`    | `None`   | `"user"` \| `"agent"` \| `"system"`     |
-| `actor_name`       | `actorName`            | `ActorName`    | `actorName`      | `ActorName`    | `None`   | Display name                            |
+| `scope.actor_id`   | `scope.actorId`        | `Scope.ActorID` | `scope.actorId` | `Scope.ActorId` | `None`  | Actor ID                                |
+| `scope.actor_type` | `scope.actorType`      | `Scope.ActorType` | `scope.actorType` | `Scope.ActorType` | `None` | `"user"` \| `"agent"` \| `"system"`     |
+| `scope.actor_name` | `scope.actorName`      | `Scope.ActorName` | `scope.actorName` | `Scope.ActorName` | `None` | Display name                            |
 | `metadata`         | `metadata`             | `Metadata`     | `metadata`       | `Metadata`     | `None`   | Arbitrary key-value dict / object       |
-| `conversation_id`  | `conversationId`       | `ConversationID` | `conversationId` | `ConversationId` | `None` | Conversation context                    |
+| `scope.conversation_id` | `scope.conversationId` | `Scope.ConversationID` | `scope.conversationId` | `Scope.ConversationId` | `None` | Conversation context                    |
 
 Responses return `conversation_id` in the service's normalized form (`cnv_` + 16 hex chars); filters accept either form.
 
@@ -216,27 +238,25 @@ Responses return `conversation_id` in the service's normalized form (`cnv_` + 16
 # Python
 results = client.search(
     "dietary restrictions",
-    actor_id="alice",
-    actor_type="user",
+    scope=MemoryScope(actor_id="alice", actor_type="user"),
     limit=5,
     method="deep_search",   # optional: "quick_search" | "deep_search" | "context_aware_search"
 )
 for r in results:
-    print(r.score, r.content)
+    print(r.score, r.memory.content)
 ```
 
 ```typescript
 // TypeScript
 const results = await client.search('dietary restrictions', {
-  actorId: 'alice',
-  actorType: 'user',
+  scope: { actorId: 'alice', actorType: 'user' },
   limit: 5,
   method: 'deep_search',
 });
-results.forEach(r => console.log(r.score, r.content));
+results.forEach(r => console.log(r.score, r.memory.content));
 ```
 
-Results are ordered by relevance (descending). Each result exposes `score` (float 0–1) and all `Memory` fields directly.
+Results are ordered by relevance (descending). Each result exposes `score` (float 0–1) and a nested `memory` object containing the memory fields.
 
 **Search methods**
 
@@ -251,12 +271,12 @@ Results are ordered by relevance (descending). Each result exposes `score` (floa
 | Parameter (Python) | Parameter (TypeScript) | Parameter (Go) | Parameter (Java) | Parameter (C#) | Default     | Description                    |
 |--------------------|------------------------|----------------|------------------|----------------|-------------|--------------------------------|
 | `query`            | `query`                | `query`        | `query`          | `query`        | required    | Search text                    |
-| `actor_id`         | `actorId`              | `ActorID`      | `actorId`        | `ActorId`      | `None`      | Filter by actor ID             |
-| `actor_type`       | `actorType`            | `ActorType`    | `actorType`      | `ActorType`    | `None`      | Filter by actor type           |
+| `scope.actor_id`   | `scope.actorId`        | `Scope.ActorID` | `scope.actorId` | `Scope.ActorId` | `None`     | Filter by actor ID             |
+| `scope.actor_type` | `scope.actorType`      | `Scope.ActorType` | `scope.actorType` | `Scope.ActorType` | `None`   | Filter by actor type           |
 | `limit`            | `limit`                | `Limit`        | `limit`          | `Limit`        | app default | Max results to return          |
 | `method`           | `method`               | `Method`       | `method`         | `Method`       | app default | Search strategy                |
 | `graph_depth`      | `graphDepth`           | `GraphDepth`   | `graphDepth`     | `GraphDepth`   | `None`      | Graph traversal depth override |
-| `conversation_id`  | `conversationId`       | `ConversationID` | `conversationId` | `ConversationId` | `None`   | Conversation context           |
+| `scope.conversation_id` | `scope.conversationId` | `Scope.ConversationID` | `scope.conversationId` | `Scope.ConversationId` | `None` | Conversation context           |
 
 Responses return `conversation_id` in the service's normalized form (`cnv_` + 16 hex chars); filters accept either form.
 
@@ -310,7 +330,7 @@ Raises / throws `SmriteaNotFoundError` if the ID does not exist.
 
 ```python
 # Workaround until get_all is available
-results = client.search("", actor_id="alice", actor_type="user", limit=20)
+results = client.search("", scope=MemoryScope(actor_id="alice", actor_type="user"), limit=20)
 ```
 
 `limit` must not exceed the server's `top_n_max` (default 20); a larger value returns a 400 error. Omit it to use the app's `top_n`.
@@ -324,6 +344,7 @@ All methods raise typed exceptions that map directly to HTTP status codes.
 ```python
 # Python
 from smritea import (
+    MemoryScope,
     SmriteaClient,
     SmriteaUnauthorizedError,
     SmriteaNotFoundError,
@@ -334,7 +355,7 @@ from smritea import (
 )
 
 try:
-    results = client.search("preferences", actor_id="alice", actor_type="user")
+    results = client.search("preferences", scope=MemoryScope(actor_id="alice", actor_type="user"))
 except SmriteaUnauthorizedError:
     print("Check your API key")
 except SmriteaTooManyRequestsError as e:
@@ -423,7 +444,7 @@ Responses return `conversation_id` in the service's normalized form (`cnv_` + 16
 from smritea import SmriteaClient
 
 client = SmriteaClient(
-    api_key="sk-...",  # required
+    api_key="smrt_<prefix>_<secret>",  # required
     app_id="app_...",  # required
     base_url="https://api-us.smritea.ai",  # optional, default shown
 )
@@ -435,7 +456,7 @@ client = SmriteaClient(
 import { SmriteaClient } from 'smritea-sdk';
 
 const client = new SmriteaClient({
-  apiKey: 'sk-...',                       // required
+  apiKey: 'smrt_<prefix>_<secret>',       // required
   appId: 'app_...',                       // required
   baseUrl: 'https://api-us.smritea.ai',      // optional, default shown
 });

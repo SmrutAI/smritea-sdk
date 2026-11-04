@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.metadata
 import random
 import time
 from unittest.mock import MagicMock, patch
@@ -9,6 +10,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from urllib3 import HTTPHeaderDict
 
+import smritea
 from smritea import SmriteaClient
 from smritea.exceptions import (
     SmriteaBadRequestError,
@@ -101,6 +103,37 @@ class TestAddActorScope:
         assert call_args.metadata == {'key': 'value'}
         assert call_args.scope.conversation_id == 'conv-123'
 
+    @pytest.mark.parametrize(
+        ('name', 'scope_kwargs', 'want_source_type'),
+        [
+            ('source_type only', {'source_type': 'conversation'}, 'conversation'),
+            (
+                'source_type with actor',
+                {'actor_id': 'alice', 'actor_type': 'user', 'source_type': 'document'},
+                'document',
+            ),
+            ('source_type explicit api', {'source_type': 'api'}, 'api'),
+            (
+                'source_type omitted stays None',
+                {'actor_id': 'alice', 'actor_type': 'user'},
+                None,
+            ),
+        ],
+    )
+    def test_add_forwards_source_type(
+        self, client, mock_api, name, scope_kwargs, want_source_type
+    ):
+        """add() forwards scope.source_type onto the autogen scope (mirrors search())."""
+        mock_memory = MagicMock()
+        mock_api.create_memory.return_value = mock_memory
+
+        client.add('test content', scope=MemoryScope(**scope_kwargs))
+
+        call_args = mock_api.create_memory.call_args.kwargs['request']
+        assert call_args.scope.source_type == want_source_type, (
+            f'{name}: source_type = {call_args.scope.source_type!r}, want {want_source_type!r}'
+        )
+
 
 # ==============================================================================
 # Test 2: actor scope for search()
@@ -163,6 +196,57 @@ class TestSearchActorScope:
         assert call_args.limit == 10
         assert call_args.graph_depth == 2
         assert call_args.scope.conversation_id == 'conv-123'
+
+    @pytest.mark.parametrize(
+        ('name', 'scope_kwargs', 'want_source_type'),
+        [
+            ('source_type only', {'source_type': 'conversation'}, 'conversation'),
+            (
+                'source_type with actor',
+                {'actor_id': 'alice', 'actor_type': 'user', 'source_type': 'document'},
+                'document',
+            ),
+            (
+                'source_type with conversation',
+                {'conversation_id': 'conv-123', 'source_type': 'api'},
+                'api',
+            ),
+            (
+                'source_type with participants',
+                {'participant_ids': ['a-1', 'b-2'], 'source_type': 'conversation'},
+                'conversation',
+            ),
+            (
+                'source_type with actor_name',
+                {
+                    'actor_id': 'alice',
+                    'actor_type': 'user',
+                    'actor_name': 'Alice Smith',
+                    'source_type': 'document',
+                },
+                'document',
+            ),
+            (
+                'source_type omitted stays None',
+                {'actor_id': 'alice', 'actor_type': 'user'},
+                None,
+            ),
+        ],
+    )
+    def test_search_forwards_scope_source_type(
+        self, client, mock_api, name, scope_kwargs, want_source_type
+    ):
+        """search() forwards scope.source_type onto the autogen request scope."""
+        mock_response = MagicMock()
+        mock_response.memories = []
+        mock_api.search_memories.return_value = mock_response
+
+        client.search('query', scope=MemoryScope(**scope_kwargs))
+
+        call_args = mock_api.search_memories.call_args.kwargs['request']
+        assert call_args.scope.source_type == want_source_type, (
+            f'{name}: source_type = {call_args.scope.source_type!r}, want {want_source_type!r}'
+        )
 
     def test_search_with_temporal_filters(self, client, mock_api):
         """Test search() with temporal filter parameters."""
@@ -838,3 +922,27 @@ class TestParseRetryAfter:
         result = client._parse_retry_after(exc)
 
         assert result == expected, f'{name}: header {header_name}={header_value!r}'
+
+
+# ==============================================================================
+# Test 7: __version__ matches installed distribution metadata
+# ==============================================================================
+
+
+class TestVersion:
+    """Test that smritea.__version__ matches the installed distribution metadata."""
+
+    @pytest.mark.parametrize(
+        ('name', 'dist_name'),
+        [
+            ('canonical distribution name', 'smritea-sdk'),
+            ('normalized distribution name', 'smritea_sdk'),
+            ('case-insensitive distribution name', 'Smritea-SDK'),
+        ],
+    )
+    def test_version_matches_installed_distribution(self, name, dist_name):
+        """smritea.__version__ equals importlib.metadata.version(dist_name)."""
+        want = importlib.metadata.version(dist_name)
+        assert smritea.__version__ == want, (
+            f'{name}: smritea.__version__ = {smritea.__version__!r}, want {want!r}'
+        )

@@ -42,11 +42,11 @@ Requires Go 1.22+.
 ## Get your API key
 
 1. Sign up at **[smritea.ai](https://smritea.ai)** — free account, no credit card required
-2. Create an app in the dashboard and copy your API key (`sk-...`) and App ID (`app_...`)
+2. Create an app in the dashboard and copy your API key (`smrt_<prefix>_<secret>`) and App ID (`app_...`)
 3. Export them as environment variables:
 
 ```bash
-export SMRITEA_API_KEY="sk-..."
+export SMRITEA_API_KEY="smrt_<prefix>_<secret>"
 export SMRITEA_APP_ID="app_..."
 ```
 
@@ -96,7 +96,7 @@ func main() {
 import smritea "github.com/SmrutAI/smritea-sdk/go"
 
 client := smritea.NewClient(smritea.ClientConfig{
-    APIKey:     "sk-...",                   // required
+    APIKey:     "smrt_<prefix>_<secret>",   // required
     AppID:      "app_...",                  // required
     BaseURL:    "https://api-us.smritea.ai",   // optional, default shown
     TraceID:    "checkout-flow-7f3a",       // optional; 8-100 chars of A-Z, a-z, 0-9, '.', '_', ':', '-'
@@ -122,14 +122,14 @@ returns a `*SmriteaBadRequestError` (HTTP 400) with `Code` `"INVALID_TRACE_ID"` 
 ### `Add` — Store a memory
 
 ```go
-memory, err := client.Add(ctx, "User prefers concise replies",
+result, err := client.Add(ctx, "User prefers concise replies",
     smritea.NewAddOptions().
         WithScope(smritea.NewMemoryScope().
             WithActorID("alice").              // explicit actor ID
             WithActorType("user").             // "user" | "agent" | "system"
             WithConversationID("conv_123")).   // optional
         WithMetadata(map[string]any{"source": "chat"}))   // optional
-fmt.Println(memory.Id) // mem_...
+fmt.Println(result.Memories[0].Id) // mem_...
 ```
 
 | Parameter | Type | Default | Description |

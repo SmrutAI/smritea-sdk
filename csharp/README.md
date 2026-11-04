@@ -42,11 +42,11 @@ Requires .NET 8+.
 ## Get your API key
 
 1. Sign up at **[smritea.ai](https://smritea.ai)** — free account, no credit card required
-2. Create an app in the dashboard and copy your API key (`sk-...`) and App ID (`app_...`)
+2. Create an app in the dashboard and copy your API key (`smrt_<prefix>_<secret>`) and App ID (`app_...`)
 3. Export them as environment variables:
 
 ```bash
-export SMRITEA_API_KEY="sk-..."
+export SMRITEA_API_KEY="smrt_<prefix>_<secret>"
 export SMRITEA_APP_ID="app_..."
 ```
 
@@ -81,7 +81,7 @@ foreach (var r in results)
 using Smritea.Sdk;
 
 var client = new SmriteaClient(
-    apiKey: "sk-...",                           // required
+    apiKey: "smrt_<prefix>_<secret>",           // required
     appId: "app_...",                           // required
     baseUrl: "https://api-us.smritea.ai",         // optional, default shown
     maxRetries: 2,                              // optional, default 2; 0 disables retry
@@ -91,7 +91,7 @@ var client = new SmriteaClient(
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| `apiKey` | `string` | required | Your API key (`sk-...`) |
+| `apiKey` | `string` | required | Your API key (`smrt_<prefix>_<secret>`) |
 | `appId` | `string` | required | Your App ID (`app_...`), sent with every request |
 | `baseUrl` | `string?` | `https://api-us.smritea.ai` | Base URL of the smritea API |
 | `maxRetries` | `int` | `2` | Retries on HTTP 429. `0` disables retry |

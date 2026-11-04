@@ -43,11 +43,11 @@ Requires Python 3.9+.
 ## Get your API key
 
 1. Sign up at **[smritea.ai](https://smritea.ai)** — free account, no credit card required
-2. Create an app in the dashboard and copy your API key (`sk-...`) and App ID (`app_...`)
+2. Create an app in the dashboard and copy your API key (`smrt_<prefix>_<secret>`) and App ID (`app_...`)
 3. Export them as environment variables:
 
 ```bash
-export SMRITEA_API_KEY="sk-..."
+export SMRITEA_API_KEY="smrt_<prefix>_<secret>"
 export SMRITEA_APP_ID="app_..."
 ```
 
@@ -83,7 +83,7 @@ for r in results:
 from smritea import SmriteaClient
 
 client = SmriteaClient(
-    api_key="sk-...",                    # required
+    api_key="smrt_<prefix>_<secret>",    # required
     app_id="app_...",                    # required
     base_url="https://api-us.smritea.ai",  # optional, default shown
     max_retries=2,                       # optional, default 2; 0 disables retry
@@ -93,7 +93,7 @@ client = SmriteaClient(
 
 | Parameter | Default | Description |
 |---|---|---|
-| `api_key` | required | Your API key (starts with `sk-`) |
+| `api_key` | required | Your API key (format `smrt_<prefix>_<secret>`) |
 | `app_id` | required | The app ID used for all memory operations |
 | `base_url` | `https://api-us.smritea.ai` | Override the API base URL |
 | `max_retries` | `2` | Automatic retries on HTTP 429. Uses the `Retry-After` header when present, otherwise exponential backoff with jitter (capped at 30 s). `0` disables retry. |
@@ -140,7 +140,7 @@ for memory in result.memories:
 |---|---|---|
 | `content` | required | Memory text |
 | `scope` | `None` | `MemoryScope` object carrying the actor and conversation context. Its fields are listed in [MemoryScope](#memoryscope). `add()` sends all of them. |
-| `metadata` | `None` | Arbitrary string-to-string key-value dict |
+| `metadata` | `None` | Arbitrary key-value dict; values must be strings, integers or floats |
 | `event_occurred_at` | `None` | ISO-8601 datetime of when the content occurred. Used to resolve relative expressions such as "yesterday". Defaults to now. |
 | `relative_standing` | `None` | `RelativeStanding` object with `importance`, `decay_factor` and `decay_function` |
 
@@ -155,15 +155,15 @@ results = client.search(
     limit=5,
 )
 for r in results:
-    print(r.score, r.content)
+    print(r.score, r.memory.content)
 ```
 
-Results are ordered by relevance (descending). Each result exposes `score` (0.0–1.0) and all `Memory` fields directly.
+Results are ordered by relevance (descending). Each result exposes `score` (0.0–1.0) and a `memory` object holding the `Memory` fields.
 
 | Parameter | Default | Description |
 |---|---|---|
 | `query` | required | Search text |
-| `scope` | `None` | `MemoryScope` object. `search()` uses `actor_id`, `actor_type`, `conversation_id` and `participant_ids` as filters; `actor_name` and `source_type` are not sent. See [MemoryScope](#memoryscope). |
+| `scope` | `None` | `MemoryScope` object. `search()` uses `actor_id`, `actor_type`, `conversation_id`, `participant_ids` and `source_type` as filters; `actor_name` is not sent. See [MemoryScope](#memoryscope). |
 | `speaker_actor_id` | `None` | Identifies who is asking. It never filters results; it is used for query augmentation and audit. Max 64 characters. |
 | `limit` | app default | Number of results. Must not exceed the server's `top_n_max` (default 20). Omit to use the app's `top_n`. |
 | `graph_depth` | `None` | Graph traversal depth override, 1–5 |

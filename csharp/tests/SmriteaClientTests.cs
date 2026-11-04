@@ -180,6 +180,24 @@ public class SmriteaClientTests : IDisposable
         Assert.Empty(results);
     }
 
+    [Fact]
+    public async Task SearchAsync_ScopeSourceType_SentInRequest()
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories/search").UsingPost()
+                .WithBody(b => b != null && b.Contains("\"source_type\":\"document\"")))
+            .RespondWith(Response.Create().WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody("{\"memories\":[]}"));
+
+        using var client = CreateClient();
+        var opts = new SearchOptions()
+            .WithScope(new MemoryScope().WithSourceType("document"));
+        var results = await client.SearchAsync("find docs", opts);
+
+        Assert.NotNull(results);
+        Assert.Empty(results);
+    }
+
     // -----------------------------------------------------------------------
     // Get
     // -----------------------------------------------------------------------

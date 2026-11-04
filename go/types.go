@@ -22,7 +22,7 @@ type SearchMemoriesResponse = autogen.SearchMemoriesResponse
 
 // ClientConfig holds constructor options for SmriteaClient.
 type ClientConfig struct {
-	APIKey     string
+	APIKey     string //nolint:gosec // G117: APIKey is a public config field name, not a secret value.
 	AppID      string
 	BaseURL    string       // default: https://api-us.smritea.ai
 	MaxRetries *int         // nil: default 2; pointer to 0: no retry; pointer to N: N retries

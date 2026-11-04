@@ -42,11 +42,11 @@ Requires Node.js 18+. Ships as ESM + CJS with bundled type declarations.
 ## Get your API key
 
 1. Sign up at **[smritea.ai](https://smritea.ai)** — free account, no credit card required
-2. Create an app in the dashboard and copy your API key (`sk-...`) and App ID (`app_...`)
+2. Create an app in the dashboard and copy your API key (`smrt_<prefix>_<secret>`) and App ID (`app_...`)
 3. Export them as environment variables:
 
 ```bash
-export SMRITEA_API_KEY="sk-..."
+export SMRITEA_API_KEY="smrt_<prefix>_<secret>"
 export SMRITEA_APP_ID="app_..."
 ```
 
@@ -63,12 +63,17 @@ const client = new SmriteaClient({
 });
 
 // Store something about a user
-await client.add('Alice is a vegetarian and loves hiking', { actorId: 'alice', actorType: 'user' });
+const created = await client.add('Alice is a vegetarian and loves hiking', {
+  scope: { actorId: 'alice', actorType: 'user' },
+});
+console.log(created.memories[0].id); // mem_...
 
 // Retrieve it later in a different session
-const results = await client.search("What are Alice's food preferences?", { actorId: 'alice', actorType: 'user' });
+const results = await client.search("What are Alice's food preferences?", {
+  scope: { actorId: 'alice', actorType: 'user' },
+});
 for (const r of results) {
-  console.log(r.score?.toFixed(2), r.content);
+  console.log(r.score, r.memory.content);
 }
 ```
 
@@ -80,7 +85,7 @@ for (const r of results) {
 import { SmriteaClient } from 'smritea-sdk';
 
 const client = new SmriteaClient({
-  apiKey: 'sk-...',                       // required
+  apiKey: 'smrt_<prefix>_<secret>',       // required
   appId: 'app_...',                       // required
   baseUrl: 'https://api-us.smritea.ai',      // optional, default shown
   maxRetries: 2,                          // optional, default 2; 0 disables retry
@@ -101,22 +106,26 @@ All methods are async and return Promises.
 ### `add` — Store a memory
 
 ```typescript
-const memory = await client.add('User prefers concise replies', {
-  actorId: 'alice',
-  actorType: 'user',
+const result = await client.add('User prefers concise replies', {
+  scope: {
+    actorId: 'alice',
+    actorType: 'user',
+    conversationId: 'conv_123',
+  },
   metadata: { source: 'chat' },
-  conversationId: 'conv_123',
 });
-console.log(memory.id); // mem_...
+console.log(result.memories[0].id); // mem_...
 ```
 
 | Option | Default | Description |
 |---|---|---|
-| `actorId` | `undefined` | Actor ID |
-| `actorType` | `undefined` | `"user"` \| `"agent"` \| `"system"` |
-| `actorName` | `undefined` | Display name |
+| `scope.actorId` | `undefined` | Actor ID |
+| `scope.actorType` | `undefined` | `"user"` \| `"agent"` \| `"system"` |
+| `scope.actorName` | `undefined` | Display name |
+| `scope.conversationId` | `undefined` | Conversation context |
+| `scope.sourceType` | `undefined` | `"conversation"` \| `"document"` \| `"api"` |
+| `scope.participantIds` | `undefined` | Participants in the conversation |
 | `metadata` | `undefined` | Arbitrary key-value object |
-| `conversationId` | `undefined` | Conversation context |
 
 ---
 

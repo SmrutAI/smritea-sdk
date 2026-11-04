@@ -685,3 +685,248 @@ func TestGetAll_NotImplemented(t *testing.T) {
 		t.Errorf("unexpected error message: %v", err)
 	}
 }
+
+// ---------------------------------------------------------------------------
+// Search — SourceType mapping regressions
+//
+// The server filters memories by source_type on the search endpoint.
+// SearchOptions.Scope carries SourceType (*string), and Add() correctly
+// maps it into the request body.  Search() currently does NOT set
+// SourceType inside the autogen MemoryScope — these tests assert the fix.
+// ---------------------------------------------------------------------------
+
+func TestSearch_SourceType_PassedThrough(t *testing.T) {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		scopeMap, ok := body["scope"].(map[string]any)
+		if !ok {
+			http.Error(w, "missing scope", http.StatusBadRequest)
+			return
+		}
+		st, ok := scopeMap["source_type"].(string)
+		if !ok || st != "conversation" {
+			http.Error(w, fmt.Sprintf("wrong source_type in scope: %v", scopeMap["source_type"]), http.StatusBadRequest)
+			return
+		}
+		writeJSON(w, http.StatusOK, []byte(`{"memories":[]}`))
+	})
+	client := newTestClient(t, handler, 1)
+
+	opts := NewSearchOptions().WithScope(NewMemoryScope().WithSourceType("conversation"))
+	_, err := client.Search(context.Background(), "query", opts)
+	if err != nil {
+		t.Fatalf("Search source_type: unexpected error: %v", err)
+	}
+}
+
+func TestSearch_SourceType_WithActorID(t *testing.T) {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		scopeMap, ok := body["scope"].(map[string]any)
+		if !ok {
+			http.Error(w, "missing scope", http.StatusBadRequest)
+			return
+		}
+		if _, hasActor := scopeMap["actor_id"]; !hasActor {
+			http.Error(w, "actor_id missing from scope", http.StatusBadRequest)
+			return
+		}
+		st, ok := scopeMap["source_type"].(string)
+		if !ok || st != "document" {
+			http.Error(w, fmt.Sprintf("wrong source_type: %v", scopeMap["source_type"]), http.StatusBadRequest)
+			return
+		}
+		writeJSON(w, http.StatusOK, []byte(`{"memories":[]}`))
+	})
+	client := newTestClient(t, handler, 1)
+
+	opts := NewSearchOptions().WithScope(
+		NewMemoryScope().
+			WithActorID("user-1").
+			WithActorType("user").
+			WithSourceType("document"),
+	)
+	_, err := client.Search(context.Background(), "query", opts)
+	if err != nil {
+		t.Fatalf("Search source_type + actor_id: unexpected error: %v", err)
+	}
+}
+
+func TestSearch_SourceType_WithConversationID(t *testing.T) {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		scopeMap, ok := body["scope"].(map[string]any)
+		if !ok {
+			http.Error(w, "missing scope", http.StatusBadRequest)
+			return
+		}
+		if _, hasConv := scopeMap["conversation_id"]; !hasConv {
+			http.Error(w, "conversation_id missing from scope", http.StatusBadRequest)
+			return
+		}
+		st, ok := scopeMap["source_type"].(string)
+		if !ok || st != "api" {
+			http.Error(w, fmt.Sprintf("wrong source_type: %v", scopeMap["source_type"]), http.StatusBadRequest)
+			return
+		}
+		writeJSON(w, http.StatusOK, []byte(`{"memories":[]}`))
+	})
+	client := newTestClient(t, handler, 1)
+
+	opts := NewSearchOptions().WithScope(
+		NewMemoryScope().
+			WithConversationID("conv-abc").
+			WithSourceType("api"),
+	)
+	_, err := client.Search(context.Background(), "query", opts)
+	if err != nil {
+		t.Fatalf("Search source_type + conversation_id: unexpected error: %v", err)
+	}
+}
+
+func TestSearch_SourceType_WithParticipantIDs(t *testing.T) {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		scopeMap, ok := body["scope"].(map[string]any)
+		if !ok {
+			http.Error(w, "missing scope", http.StatusBadRequest)
+			return
+		}
+		pids, ok := scopeMap["participant_ids"].([]any)
+		if !ok || len(pids) != 2 {
+			http.Error(w, fmt.Sprintf("wrong participant_ids: %v", scopeMap["participant_ids"]), http.StatusBadRequest)
+			return
+		}
+		st, ok := scopeMap["source_type"].(string)
+		if !ok || st != "conversation" {
+			http.Error(w, fmt.Sprintf("wrong source_type: %v", scopeMap["source_type"]), http.StatusBadRequest)
+			return
+		}
+		writeJSON(w, http.StatusOK, []byte(`{"memories":[]}`))
+	})
+	client := newTestClient(t, handler, 1)
+
+	opts := NewSearchOptions().WithScope(
+		NewMemoryScope().
+			WithParticipantIDs([]string{"p-1", "p-2"}).
+			WithSourceType("conversation"),
+	)
+	_, err := client.Search(context.Background(), "query", opts)
+	if err != nil {
+		t.Fatalf("Search source_type + participant_ids: unexpected error: %v", err)
+	}
+}
+
+func TestSearch_SourceType_AllScopeFieldsTogether(t *testing.T) {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		scopeMap, ok := body["scope"].(map[string]any)
+		if !ok {
+			http.Error(w, "missing scope", http.StatusBadRequest)
+			return
+		}
+		checks := []struct {
+			key    string
+			value  any
+			expect bool
+		}{
+			{"actor_id", "agent-x", true},
+			{"actor_type", "agent", true},
+			{"actor_name", nil, false},
+			{"conversation_id", "conv-99", true},
+			{"source_type", "document", true},
+			{"participant_ids", nil, false},
+		}
+		for _, ch := range checks {
+			got, has := scopeMap[ch.key]
+			if ch.expect && !has {
+				http.Error(w, "missing scope key: "+ch.key, http.StatusBadRequest)
+				return
+			}
+			if !ch.expect && has {
+				http.Error(w, "unexpected scope key: "+ch.key, http.StatusBadRequest)
+				return
+			}
+			if ch.expect && ch.value != nil {
+				arr, okArr := got.([]any)
+				expArr, okExp := ch.value.([]any)
+				if okArr && okExp && len(arr) == len(expArr) {
+					set := make(map[any]struct{})
+					for _, v := range arr {
+						set[v] = struct{}{}
+					}
+					for _, v := range expArr {
+						if _, ok := set[v]; !ok {
+							http.Error(w, fmt.Sprintf("scope key %s mismatch", ch.key), http.StatusBadRequest)
+							return
+						}
+					}
+				} else if !okArr {
+					if got != ch.value {
+						http.Error(w, fmt.Sprintf("scope key %s mismatch: got %v, want %v", ch.key, got, ch.value), http.StatusBadRequest)
+						return
+					}
+				}
+			}
+		}
+		writeJSON(w, http.StatusOK, []byte(`{"memories":[]}`))
+	})
+	client := newTestClient(t, handler, 1)
+
+	opts := NewSearchOptions().WithScope(
+		NewMemoryScope().
+			WithActorID("agent-x").
+			WithActorType("agent").
+			WithActorName("X-Agent").
+			WithConversationID("conv-99").
+			WithSourceType("document"),
+	)
+	_, err := client.Search(context.Background(), "full-scope query", opts)
+	if err != nil {
+		t.Fatalf("Search all scope fields: unexpected error: %v", err)
+	}
+}
+
+func TestSearch_SourceType_NilScope_NoSourceTypedSent(t *testing.T) {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		// With nil scope the body should have no "scope" key or it should be nil.
+		if scope, ok := body["scope"]; ok {
+			if scope != nil {
+				http.Error(w, fmt.Sprintf("expected nil scope, got %v", scope), http.StatusBadRequest)
+				return
+			}
+		}
+		writeJSON(w, http.StatusOK, []byte(`{"memories":[]}`))
+	})
+	client := newTestClient(t, handler, 1)
+
+	_, err := client.Search(context.Background(), "query", NewSearchOptions())
+	if err != nil {
+		t.Fatalf("Search nil scope: unexpected error: %v", err)
+	}
+}

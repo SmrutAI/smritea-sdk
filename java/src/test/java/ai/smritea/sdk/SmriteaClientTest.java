@@ -287,6 +287,20 @@ class SmriteaClientTest {
             .withRequestBody(matchingJsonPath("$.speaker_actor_id", equalTo("agent-ravi"))));
   }
 
+  @Test
+  void testSearch_SendsScopeSourceType(WireMockRuntimeInfo wm) {
+    stubFor(post("/api/v1/sdk/memories/search").willReturn(okJson("{\"memories\":[]}")));
+
+    SmriteaClient client = clientFor(wm);
+    client.search(
+        "find docs",
+        new SearchOptions().withScope(MemoryScope.builder().sourceType("document").build()));
+
+    verify(
+        postRequestedFor(urlEqualTo("/api/v1/sdk/memories/search"))
+            .withRequestBody(matchingJsonPath("$.scope.source_type", equalTo("document"))));
+  }
+
   // -----------------------------------------------------------------------
   // Get
   // -----------------------------------------------------------------------

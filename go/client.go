@@ -169,6 +169,7 @@ func (c *SmriteaClient) Search(ctx context.Context, query string, opts *SearchOp
 				ActorId:        opts.Scope.ActorID,
 				ActorType:      opts.Scope.ActorType,
 				ConversationId: opts.Scope.ConversationID,
+				SourceType:     opts.Scope.SourceType,
 				ParticipantIds: opts.Scope.ParticipantIDs,
 			}
 		}

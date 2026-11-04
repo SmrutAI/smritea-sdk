@@ -1,5 +1,5 @@
-// <copyright file="GlobalUsings.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// <copyright file="GlobalUsings.cs" company="Bytonomics LLP">
+// Copyright (c) Bytonomics LLP. All rights reserved.
 // </copyright>
 
 // Public-facing type aliases — the C# equivalent of Python's `Memory = MemoryResponse`

@@ -1,0 +1,33 @@
+name: SDK language request
+description: Request an SDK client for a language that is not yet supported.
+title: "[language-request] "
+labels: ["sdk-language-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for asking for a new SDK language. Search existing requests
+        first and add a 👍 if yours is already there; that helps us prioritize.
+  - type: input
+    id: language
+    attributes:
+      label: Language
+      description: The language or runtime you want an SDK for.
+      placeholder: e.g. Rust, Ruby, Kotlin, PHP, Elixir
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: What are you building?
+      description: A short note on your use case and how you would use the SDK.
+    validations:
+      required: false
+  - type: input
+    id: package-manager
+    attributes:
+      label: Package manager / registry
+      description: Where the SDK would be installed from, if you have a preference.
+      placeholder: e.g. crates.io, RubyGems, Maven Central
+    validations:
+      required: false

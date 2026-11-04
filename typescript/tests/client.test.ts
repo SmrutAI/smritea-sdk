@@ -454,6 +454,63 @@ describe('retryDelayMs calculation', () => {
 });
 
 // ---------------------------------------------------------------------------
+// 1c. scope.sourceType pass-through on search() — FAILING TESTS
+// ---------------------------------------------------------------------------
+
+describe('search scope sourceType', () => {
+  const testCases: Array<{
+    name: string;
+    scope: { actorId?: string; actorType?: string; conversationId?: string; participantIds?: string[]; sourceType: 'conversation' | 'document' | 'api' };
+    expectedSourceType: 'conversation' | 'document' | 'api';
+  }> = [
+    {
+      name: 'sourceType "api" with actorId only',
+      scope: { actorId: 'alice', actorType: 'user', sourceType: 'api' },
+      expectedSourceType: 'api',
+    },
+    {
+      name: 'sourceType "conversation" with actorId and actorType',
+      scope: { actorId: 'bot-1', actorType: 'agent', sourceType: 'conversation' },
+      expectedSourceType: 'conversation',
+    },
+    {
+      name: 'sourceType "document" with actorId only',
+      scope: { actorId: 'system', sourceType: 'document' },
+      expectedSourceType: 'document',
+    },
+    {
+      name: 'sourceType with conversationId',
+      scope: { conversationId: 'conv-1', sourceType: 'conversation' },
+      expectedSourceType: 'conversation',
+    },
+    {
+      name: 'sourceType with participantIds',
+      scope: { participantIds: ['alice', 'bob'], sourceType: 'api' },
+      expectedSourceType: 'api',
+    },
+    {
+      name: 'all scope fields including sourceType',
+      scope: { actorId: 'alice', actorType: 'user', conversationId: 'conv-1', participantIds: ['bob'], sourceType: 'document' },
+      expectedSourceType: 'document',
+    },
+  ];
+
+  it.each(testCases)(
+    'search() forwards scope.sourceType=$expectedSourceType when $name',
+    async ({ scope, expectedSourceType }) => {
+      const { client, mockApi } = createClientWithMock();
+      mockApi.searchMemories.mockResolvedValue({ memories: [] });
+
+      await client.search('find stuff', { scope });
+
+      expect(mockApi.searchMemories).toHaveBeenCalledOnce();
+      const arg = mockApi.searchMemories.mock.calls[0][0];
+      expect(arg.request.scope?.sourceType).toBe(expectedSourceType);
+    },
+  );
+});
+
+// ---------------------------------------------------------------------------
 // 4b. parseRetryAfter header-name case-insensitivity (real Headers, not a Map)
 // ---------------------------------------------------------------------------
 
