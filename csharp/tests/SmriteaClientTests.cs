@@ -435,4 +435,79 @@ public class SmriteaClientTests : IDisposable
         await Assert.ThrowsAsync<NotImplementedException>(
             () => client.GetAllAsync());
     }
+
+    // -----------------------------------------------------------------------
+    // Search method and reranker -- wire values and member names both parse
+    // -----------------------------------------------------------------------
+
+    // Each row is (value passed to the option, wire value expected in the request body).
+    public static TheoryData<string, string> MethodRows => new()
+    {
+        { "quick_search", "quick_search" },
+        { "deep_search", "deep_search" },
+        { "context_aware_search", "context_aware_search" },
+        { "QUICK_SEARCH", "quick_search" },
+        { "SearchMethodQuickSearch", "quick_search" },
+        { "searchmethoddeepsearch", "deep_search" },
+    };
+
+    public static TheoryData<string, string> RerankerRows => new()
+    {
+        { "rrf", "rrf" },
+        { "mmr", "mmr" },
+        { "temporal", "temporal" },
+        { "cross_encoder", "cross_encoder" },
+        { "node_distance", "node_distance" },
+        { "rrf_temporal", "rrf_temporal" },
+        { "RRF_TEMPORAL", "rrf_temporal" },
+        { "RerankerRRF", "rrf" },
+        { "rerankercrossencoder", "cross_encoder" },
+    };
+
+    [Theory]
+    [MemberData(nameof(MethodRows))]
+    public async Task SearchAsync_Method_SentAsWireValue(string method, string wireValue)
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories/search").UsingPost()
+                .WithBody(b => b != null && b.Contains($"\"method\":\"{wireValue}\"")))
+            .RespondWith(Response.Create().WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody("{\"memories\":[]}"));
+
+        using var client = CreateClient();
+        var results = await client.SearchAsync("find stuff", new SearchOptions().WithMethod(method));
+
+        Assert.Empty(results);
+    }
+
+    [Theory]
+    [MemberData(nameof(RerankerRows))]
+    public async Task SearchAsync_RerankerType_SentAsWireValue(string rerankerType, string wireValue)
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories/search").UsingPost()
+                .WithBody(b => b != null && b.Contains($"\"reranker_type\":\"{wireValue}\"")))
+            .RespondWith(Response.Create().WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody("{\"memories\":[]}"));
+
+        using var client = CreateClient();
+        var results = await client.SearchAsync("find stuff", new SearchOptions().WithRerankerType(rerankerType));
+
+        Assert.Empty(results);
+    }
+
+    [Theory]
+    [InlineData("method", "not_a_method")]
+    [InlineData("reranker", "not_a_reranker")]
+    public async Task SearchAsync_UnknownMethodOrReranker_ThrowsBeforeAnyRequest(string option, string value)
+    {
+        using var client = CreateClient();
+        var opts = option == "method"
+            ? new SearchOptions().WithMethod(value)
+            : new SearchOptions().WithRerankerType(value);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => client.SearchAsync("find stuff", opts));
+
+        Assert.Empty(_server.LogEntries);
+    }
 }

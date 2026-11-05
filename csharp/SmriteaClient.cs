@@ -4,6 +4,8 @@
 
 namespace Smritea.Sdk;
 
+using System.Reflection;
+using System.Runtime.Serialization;
 using Smritea.Internal.Autogen.Api;
 using Smritea.Internal.Autogen.Client;
 using Smritea.Internal.Autogen.Model;
@@ -291,12 +293,12 @@ public class SmriteaClient : IDisposable
 
             if (opts.Method is not null)
             {
-                request.Method = Enum.Parse<SearchMethod>(opts.Method, ignoreCase: true);
+                request.Method = ParseWireEnum<SearchMethod>(opts.Method);
             }
 
             if (opts.RerankerType is not null)
             {
-                request.RerankerType = Enum.Parse<RerankerType>(opts.RerankerType, ignoreCase: true);
+                request.RerankerType = ParseWireEnum<RerankerType>(opts.RerankerType);
             }
 
             if (opts.MetadataFilter is not null)
@@ -427,6 +429,31 @@ public class SmriteaClient : IDisposable
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Parses a generated enum from its wire value, the <see cref="EnumMemberAttribute"/> value such as
+    /// <c>quick_search</c> or <c>rrf</c>. A value that matches no wire value is parsed as a member name,
+    /// such as <c>SearchMethodQuickSearch</c>, so callers that used member names keep working.
+    /// Matching is case-insensitive.
+    /// </summary>
+    /// <typeparam name="TEnum">The generated enum type to parse into.</typeparam>
+    /// <param name="value">The wire value or member name to parse.</param>
+    /// <returns>The matching enum member.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="value"/> matches no wire value and no member name.</exception>
+    private static TEnum ParseWireEnum<TEnum>(string value)
+        where TEnum : struct, Enum
+    {
+        foreach (var field in typeof(TEnum).GetFields(BindingFlags.Public | BindingFlags.Static))
+        {
+            var wireValue = field.GetCustomAttribute<EnumMemberAttribute>()?.Value;
+            if (wireValue is not null && string.Equals(wireValue, value, StringComparison.OrdinalIgnoreCase))
+            {
+                return (TEnum)field.GetValue(null)!;
+            }
+        }
+
+        return Enum.Parse<TEnum>(value, ignoreCase: true);
     }
 
     /// <summary>
