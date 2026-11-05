@@ -72,7 +72,8 @@ client.add("Alice is a vegetarian and loves hiking", scope=alice)
 # Retrieve it later in a different session
 results = client.search("What are Alice's food preferences?", scope=alice)
 for r in results:
-    print(f"{r.score:.2f}  {r.content}")
+    if r.memory:
+        print(f"{r.score:.2f}  {r.memory.content}")
 ```
 
 ---
@@ -132,7 +133,7 @@ result = client.add(
     ),
     metadata={"source": "chat"},    # optional
 )
-for memory in result.memories:
+for memory in result.memories or []:
     print(memory.id)  # mem_...
 ```
 
@@ -149,13 +150,16 @@ for memory in result.memories:
 ### `search` — Semantic search
 
 ```python
+from smritea import MemoryScope
+
 results = client.search(
     "dietary restrictions",
     scope=MemoryScope(actor_id="alice", actor_type="user"),
     limit=5,
 )
 for r in results:
-    print(r.score, r.memory.content)
+    if r.memory:
+        print(r.score, r.memory.content)
 ```
 
 Results are ordered by relevance (descending). Each result exposes `score` (0.0–1.0) and a `memory` object holding the `Memory` fields.
@@ -167,6 +171,12 @@ Results are ordered by relevance (descending). Each result exposes `score` (0.0�
 | `speaker_actor_id` | `None` | Identifies who is asking. It never filters results; it is used for query augmentation and audit. Max 64 characters. |
 | `limit` | app default | Number of results. Must not exceed the server's `top_n_max` (default 20). Omit to use the app's `top_n`. |
 | `graph_depth` | `None` | Graph traversal depth override, 1–5 |
+| `from_time` | `None` | RFC 3339 datetime, start of a time range. Returns memories whose validity period overlaps `[from_time, infinity)`. Can be used alone. With `to_time`, the range is `[from_time, to_time]`. Cannot be combined with `valid_at`. |
+| `to_time` | `None` | RFC 3339 datetime, end of a time range (inclusive). Returns memories whose validity period overlaps `(-infinity, to_time]`. Can be used alone. Cannot be combined with `valid_at`. |
+| `valid_at` | `None` | RFC 3339 datetime. Returns memories valid at exactly this moment. Cannot be combined with `from_time` or `to_time`. |
+| `method` | app default | Search method override: `"quick_search"`, `"deep_search"` or `"context_aware_search"`. |
+| `reranker_type` | app default | Reranker override: `"rrf_temporal"`, `"rrf"`, `"temporal"`, `"node_distance"`, `"mmr"` or `"cross_encoder"`. Applies only to `deep_search`. |
+| `metadata_filter` | `None` | MongoDB-style operator filter on memory metadata. Supports `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`, `$and`, `$or`, `$not` and the wildcard `"*"`. Values must be strings, integers or floats. `$contains` is not supported. Example: `{"level": {"$gte": 4}}`. |
 
 ---
 
@@ -195,6 +205,8 @@ client.delete("mem_abc123")
 > Use `search()` with a broad query as a workaround:
 
 ```python
+from smritea import MemoryScope
+
 results = client.search("", scope=MemoryScope(actor_id="alice", actor_type="user"), limit=20)
 ```
 
@@ -254,6 +266,7 @@ except SmriteaError as e:
 | `SmriteaConflictError` | 409 | Request conflicts with the current state of the resource |
 | `SmriteaUnprocessableError` | 422 | Request was well-formed but semantically invalid |
 | `SmriteaTooManyRequestsError` | 429 | Rate limit hit — check `.retry_after` |
+| `SmriteaDeserializationError` | none | The response body could not be deserialized, usually because of an unexpected response format or a malformed body from the server |
 | `SmriteaError` | other | Unexpected server error |
 
 Every exception carries `message`, `http_status`, `code` (the server's stable machine-readable wire
@@ -282,11 +295,9 @@ except SmriteaError as e:
 | `id` | str | Memory ID (`mem_...`) |
 | `app_id` | str | App this memory belongs to |
 | `content` | str | Memory text |
-| `actor_id` | str | Actor who owns this memory |
-| `actor_type` | str | `"user"` \| `"agent"` \| `"system"` |
-| `actor_name` | str \| None | Display name |
+| `scope` | object \| None | Actor and conversation context. Its parameters are listed in the [scope parameters table](#memoryscope). |
 | `metadata` | dict \| None | Arbitrary key-value pairs |
-| `conversation_id` | str \| None | Conversation context |
+| `relative_standing` | object \| None | Importance and temporal decay configuration. See `RelativeStanding`. |
 | `active_from` | str | ISO 8601 — when memory becomes valid |
 | `active_to` | str \| None | ISO 8601 — when memory expires |
 | `created_at` | str | ISO 8601 creation timestamp |

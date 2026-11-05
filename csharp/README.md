@@ -203,6 +203,8 @@ await client.DeleteAsync("mem_abc123");
 > Use `SearchAsync()` with a broad query as a workaround:
 
 ```csharp
+using Smritea.Sdk;
+
 var results = await client.SearchAsync("",
     new SearchOptions()
         .WithScope(new MemoryScope().WithActorId("alice").WithActorType("user"))
@@ -265,6 +267,8 @@ Every exception also carries `RequestId`, the server-assigned ID for the failed 
 header. It is `null` when neither is available.
 
 ```csharp
+using Smritea.Sdk;
+
 try
 {
     await client.DeleteAsync("mem_abc123");
@@ -277,6 +281,20 @@ catch (SmriteaException e)
 
 ---
 
+## MemoryScope
+
+`new MemoryScope()` builds the actor and conversation context passed to `WithScope(...)` on `AddOptions` and
+`SearchOptions`. Every field is optional. Each field is set through a chained method.
+
+| Method | Type | Description |
+|---|---|---|
+| `WithActorId(v)` | `string` | Actor identifier, max 64 characters. Pair it with `WithActorType`. |
+| `WithActorType(v)` | `string` | `"user"` \| `"agent"` \| `"system"` |
+| `WithActorName(v)` | `string` | Display name, max 255 characters. |
+| `WithConversationId(v)` | `string` | Conversation thread, max 64 characters. Cannot be combined with `WithParticipantIds`. |
+| `WithSourceType(v)` | `string` | `"conversation"` \| `"document"` \| `"api"` |
+| `WithParticipantIds(v)` | `IReadOnlyList<string>` | Finds memories from conversations in which all listed actors took part. Each ID is 1–64 characters. Cannot be combined with `WithConversationId`. Used by search. |
+
 ## `Memory` type reference
 
 | Property | Type | Description |
@@ -284,11 +302,9 @@ catch (SmriteaException e)
 | `Id` | `string?` | Memory ID (`mem_...`) |
 | `AppId` | `string?` | App this memory belongs to |
 | `Content` | `string?` | Memory text |
-| `ActorId` | `string?` | Actor who owns this memory |
-| `ActorType` | `string?` | `"user"` \| `"agent"` \| `"system"` |
-| `ActorName` | `string?` | Display name |
+| `Scope` | `MemoryScope?` | Actor and conversation context. Its methods are listed in the [scope parameters table](#memoryscope). |
 | `Metadata` | `Dictionary<string, object>?` | Arbitrary key-value pairs |
-| `ConversationId` | `string?` | Conversation context |
+| `RelativeStanding` | `RelativeStandingConfig?` | Importance and temporal decay configuration. |
 | `ActiveFrom` | `string?` | ISO 8601 — when memory becomes valid |
 | `ActiveTo` | `string?` | ISO 8601 — when memory expires |
 | `CreatedAt` | `string?` | ISO 8601 creation timestamp |

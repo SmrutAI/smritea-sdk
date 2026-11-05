@@ -69,7 +69,8 @@ results = client.search(
     scope=MemoryScope(actor_id="alice", actor_type="user"),
 )
 for r in results:
-    print(f"{r.score:.2f}  {r.memory.content}")
+    if r.memory:
+        print(f"{r.score:.2f}  {r.memory.content}")
 ```
 
 **TypeScript**
@@ -92,7 +93,7 @@ const results = await client.search("What are Alice's food preferences?", {
   scope: { actorId: 'alice', actorType: 'user' },
 });
 for (const r of results) {
-  console.log(r.score?.toFixed(2), r.memory.content);
+  console.log(r.score?.toFixed(2), r.memory?.content);
 }
 ```
 
@@ -139,23 +140,28 @@ func strPtr(s string) *string { return &s }
 ```java
 import ai.smritea.sdk.SmriteaClient;
 import ai.smritea.sdk.model.*;
+import java.util.List;
 
-SmriteaClient client = new SmriteaClient(
-    System.getenv("SMRITEA_API_KEY"),
-    System.getenv("SMRITEA_APP_ID")
-);
+public class Quickstart {
+    public static void main(String[] args) {
+        SmriteaClient client = new SmriteaClient(
+            System.getenv("SMRITEA_API_KEY"),
+            System.getenv("SMRITEA_APP_ID")
+        );
 
-// Store something about a user
-MemoryCreationResult result = client.add("Alice is a vegetarian and loves hiking",
-    new AddOptions().withScope(
-        MemoryScope.builder().actorId("alice").actorType("user").build()));
+        // Store something about a user
+        MemoryCreationResult result = client.add("Alice is a vegetarian and loves hiking",
+            new AddOptions().withScope(
+                MemoryScope.builder().actorId("alice").actorType("user").build()));
 
-// Retrieve it later
-List<SearchResult> results = client.search("What are Alice's food preferences?",
-    new SearchOptions().withScope(
-        MemoryScope.builder().actorId("alice").actorType("user").build()));
-for (SearchResult r : results) {
-    System.out.printf("%.2f  %s%n", r.getScore(), r.getContent());
+        // Retrieve it later
+        List<SearchResult> results = client.search("What are Alice's food preferences?",
+            new SearchOptions().withScope(
+                MemoryScope.builder().actorId("alice").actorType("user").build()));
+        for (SearchResult r : results) {
+            System.out.printf("%.2f  %s%n", r.getScore(), r.getContent());
+        }
+    }
 }
 ```
 
@@ -201,7 +207,8 @@ result = client.add(
     ),
     metadata={"source": "chat"},       # optional arbitrary key-value pairs
 )
-print(result.memories[0].id)  # mem_...
+for memory in result.memories or []:
+    print(memory.id)  # mem_...
 ```
 
 ```typescript
@@ -214,7 +221,7 @@ const result = await client.add('User prefers concise replies', {
   },
   metadata: { source: 'chat' },
 });
-console.log(result.memories[0].id); // mem_...
+console.log(result.memories?.[0]?.id); // mem_...
 ```
 
 **Full signature**
@@ -228,7 +235,7 @@ console.log(result.memories[0].id); // mem_...
 | `metadata`         | `metadata`             | `Metadata`     | `metadata`       | `Metadata`     | `None`   | Arbitrary key-value dict / object       |
 | `scope.conversation_id` | `scope.conversationId` | `Scope.ConversationID` | `scope.conversationId` | `Scope.ConversationId` | `None` | Conversation context                    |
 
-Responses return `conversation_id` in the service's normalized form (`cnv_` + 16 hex chars); filters accept either form.
+Responses return `scope.conversation_id` in the service's normalized form (`cnv_` + 16 hex chars); filters accept either form.
 
 ---
 
@@ -236,6 +243,8 @@ Responses return `conversation_id` in the service's normalized form (`cnv_` + 16
 
 ```python
 # Python
+from smritea import MemoryScope
+
 results = client.search(
     "dietary restrictions",
     scope=MemoryScope(actor_id="alice", actor_type="user"),
@@ -243,7 +252,8 @@ results = client.search(
     method="deep_search",   # optional: "quick_search" | "deep_search" | "context_aware_search"
 )
 for r in results:
-    print(r.score, r.memory.content)
+    if r.memory:
+        print(r.score, r.memory.content)
 ```
 
 ```typescript
@@ -253,7 +263,7 @@ const results = await client.search('dietary restrictions', {
   limit: 5,
   method: 'deep_search',
 });
-results.forEach(r => console.log(r.score, r.memory.content));
+results.forEach(r => console.log(r.score, r.memory?.content));
 ```
 
 Results are ordered by relevance (descending). Each result exposes `score` (float 0–1) and a nested `memory` object containing the memory fields.
@@ -278,7 +288,7 @@ Results are ordered by relevance (descending). Each result exposes `score` (floa
 | `graph_depth`      | `graphDepth`           | `GraphDepth`   | `graphDepth`     | `GraphDepth`   | `None`      | Graph traversal depth override |
 | `scope.conversation_id` | `scope.conversationId` | `Scope.ConversationID` | `scope.conversationId` | `Scope.ConversationId` | `None` | Conversation context           |
 
-Responses return `conversation_id` in the service's normalized form (`cnv_` + 16 hex chars); filters accept either form.
+Responses return `scope.conversation_id` in the service's normalized form (`cnv_` + 16 hex chars); filters accept either form.
 
 ---
 
@@ -330,6 +340,8 @@ Raises / throws `SmriteaNotFoundError` if the ID does not exist.
 
 ```python
 # Workaround until get_all is available
+from smritea import MemoryScope
+
 results = client.search("", scope=MemoryScope(actor_id="alice", actor_type="user"), limit=20)
 ```
 
@@ -413,6 +425,20 @@ sends neither, the field is unset.
 
 ---
 
+## MemoryScope
+
+`MemoryScope` groups the actor and conversation context passed as `scope` to `add` and `search`.
+Every field is optional.
+
+| Field (Python) | Field (TypeScript) | Field (Go) | Field (Java) | Field (C#) | Type | Description |
+|---|---|---|---|---|---|---|
+| `actor_id` | `actorId` | `ActorID` | `actorId` | `ActorId` | string | Actor identifier, max 64 characters. Set together with `actor_type`. |
+| `actor_type` | `actorType` | `ActorType` | `actorType` | `ActorType` | string | `"user"` \| `"agent"` \| `"system"`. Set together with `actor_id`. |
+| `actor_name` | `actorName` | `ActorName` | `actorName` | `ActorName` | string | Display name, max 255 characters. |
+| `conversation_id` | `conversationId` | `ConversationID` | `conversationId` | `ConversationId` | string | Conversation thread, max 64 characters. Cannot be combined with `participant_ids`. |
+| `source_type` | `sourceType` | `SourceType` | `sourceType` | `SourceType` | string | `"conversation"` \| `"document"` \| `"api"`. |
+| `participant_ids` | `participantIds` | `ParticipantIDs` | `participantIds` | `ParticipantIds` | list of strings | Finds memories from conversations in which all listed actors took part. Each ID is 1–64 characters. Cannot be combined with `conversation_id`. Used by `search`. |
+
 ## `Memory` type reference
 
 | Field (Python)    | Field (TypeScript) | Field (Go)     | Field (Java)         | Field (C#)     | Type    | Description                          |
@@ -420,17 +446,15 @@ sends neither, the field is unset.
 | `id`              | `id`               | `Id`           | `getId()`            | `Id`           | string  | Memory ID (`mem_...`)                |
 | `app_id`          | `appId`            | `AppId`        | `getAppId()`         | `AppId`        | string  | App this memory belongs to           |
 | `content`         | `content`          | `Content`      | `getContent()`       | `Content`      | string  | Memory text                          |
-| `actor_id`        | `actorId`          | `ActorId`      | `getActorId()`       | `ActorId`      | string  | Actor who owns this memory           |
-| `actor_type`      | `actorType`        | `ActorType`    | `getActorType()`     | `ActorType`    | string  | `"user"` \| `"agent"` \| `"system"`  |
-| `actor_name`      | `actorName`        | `ActorName`    | `getActorName()`     | `ActorName`    | string? | Display name                         |
+| `scope`           | `scope`            | `Scope`        | `getScope()`         | `Scope`        | object? | Actor and conversation context. Its parameters are listed in the [scope parameters table](#memoryscope). |
 | `metadata`        | `metadata`         | `Metadata`     | `getMetadata()`      | `Metadata`     | object? | Arbitrary key-value pairs            |
-| `conversation_id` | `conversationId`   | `ConversationId` | `getConversationId()` | `ConversationId` | string? | Conversation context                 |
+| `relative_standing` | `relativeStanding` | `RelativeStanding` | `getRelativeStanding()` | `RelativeStanding` | object? | Importance and temporal decay configuration |
 | `active_from`     | `activeFrom`       | `ActiveFrom`   | `getActiveFrom()`    | `ActiveFrom`   | string  | ISO 8601 — when memory becomes valid |
 | `active_to`       | `activeTo`         | `ActiveTo`     | `getActiveTo()`      | `ActiveTo`     | string? | ISO 8601 — when memory expires       |
 | `created_at`      | `createdAt`        | `CreatedAt`    | `getCreatedAt()`     | `CreatedAt`    | string  | ISO 8601 creation timestamp          |
 | `updated_at`      | `updatedAt`        | `UpdatedAt`    | `getUpdatedAt()`     | `UpdatedAt`    | string  | ISO 8601 last update timestamp       |
 
-Responses return `conversation_id` in the service's normalized form (`cnv_` + 16 hex chars); filters accept either form.
+Responses return `scope.conversation_id` in the service's normalized form (`cnv_` + 16 hex chars); filters accept either form.
 
 > Python fields use `snake_case`; TypeScript fields use `camelCase`; Go and C# fields use `PascalCase`; Java uses `getFieldName()` getter methods.
 
