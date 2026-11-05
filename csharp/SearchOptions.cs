@@ -46,12 +46,12 @@ public sealed class SearchOptions
 
     /// <summary>
     /// Gets the MongoDB-style operator DSL filter on memory metadata.
-    /// Supports $eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $contains, $and, $or, $not, and wildcard "*".
+    /// Supports $eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $and, $or, $not, and wildcard "*".
     /// Values must be string, int, long, or double — booleans and nested objects are rejected by the server.
     /// Simple equality: <c>new Dictionary&lt;string, object&gt; { ["department"] = "engineering" }</c>
     /// Range: <c>new Dictionary&lt;string, object&gt; { ["level"] = new Dictionary&lt;string, object&gt; { ["$gte"] = 4 } }</c>
-    /// Note: $contains is applied as a post-filter and may return fewer results than Limit.
-    /// $contains inside $or is rejected with HTTP 400.
+    /// Note: $contains is not supported. A search that uses it is rejected with HTTP 422
+    /// (code CONTAINS_NOT_SUPPORTED).
     /// </summary>
     public Dictionary<string, object>? MetadataFilter { get; private set; }
 

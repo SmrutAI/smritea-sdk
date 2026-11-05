@@ -212,9 +212,9 @@ Every field is optional. Import it with `from smritea import MemoryScope`.
 | `actor_id` | str \| None | Actor identifier, max 64 characters. Set together with `actor_type`. |
 | `actor_type` | str \| None | `"user"` \| `"agent"` \| `"system"`. Set together with `actor_id`. |
 | `actor_name` | str \| None | Display name, max 255 characters. `add()` sends it; `search()` does not. |
-| `conversation_id` | str \| None | Conversation thread, max 64 characters. Takes precedence over `participant_ids` if both are set. |
-| `source_type` | str \| None | `"conversation"` \| `"document"` \| `"api"`. `add()` sends it; `search()` does not. Defaults to `"api"` when omitted. |
-| `participant_ids` | list[str] \| None | Finds memories from conversations in which **all** listed actors took part. Requires at least 2 IDs, each 1–64 characters. Used by `search()`; `add()` also sends it. |
+| `conversation_id` | str \| None | Conversation thread, max 64 characters. Cannot be combined with `participant_ids`: a search that sets both is rejected with HTTP 400. |
+| `source_type` | str \| None | `"conversation"` \| `"document"` \| `"api"`. Both `add()` and `search()` send it. Defaults to `"api"` when omitted. |
+| `participant_ids` | list[str] \| None | Finds memories from conversations in which **all** listed actors took part. One ID selects every conversation that actor took part in. Each ID is 1–64 characters. Cannot be combined with `conversation_id`. Used by `search()`; `add()` also sends it. |
 
 ---
 

@@ -89,8 +89,8 @@ public final class MemoryScope {
   /**
    * Returns the conversation ID, or null if not set.
    *
-   * <p>Max 64 characters. Mutually exclusive with {@link #getParticipantIds()}; if both are set,
-   * {@code conversationId} takes precedence.
+   * <p>Max 64 characters. Cannot be combined with {@link #getParticipantIds()}: a search that sets
+   * both is rejected with HTTP 400.
    */
   public String getConversationId() {
     return inner.getConversationId();
@@ -111,10 +111,10 @@ public final class MemoryScope {
    * Returns the participant IDs for multi-actor search, or null if not set.
    *
    * <p>When set, the search service finds all conversations where <em>every</em> listed actor
-   * participated (AND semantics) and searches memories within those conversations. Requires at
-   * least 2 IDs; each ID must be 1–64 characters. Mutually exclusive with {@link
-   * #getConversationId()}; if both are set, {@code conversationId} wins. Only relevant for search —
-   * ignored on add.
+   * participated (AND semantics) and searches memories within those conversations. One ID selects
+   * every conversation that actor took part in. Each ID must be 1–64 characters. Cannot be combined
+   * with {@link #getConversationId()}: a search that sets both is rejected with HTTP 400. Only
+   * relevant for search — ignored on add.
    */
   public java.util.List<String> getParticipantIds() {
     return participantIds;
@@ -153,8 +153,8 @@ public final class MemoryScope {
     }
 
     /**
-     * Sets the conversation ID. Max 64 characters. Mutually exclusive with {@code participantIds};
-     * if both are set, {@code conversationId} takes precedence.
+     * Sets the conversation ID. Max 64 characters. Cannot be combined with {@code participantIds}:
+     * a search that sets both is rejected with HTTP 400.
      */
     public Builder conversationId(String conversationId) {
       delegate.setConversationId(conversationId);
@@ -175,9 +175,9 @@ public final class MemoryScope {
      * Sets participant IDs for multi-actor search.
      *
      * <p>The search service will find all conversations where <em>every</em> listed actor
-     * participated (AND semantics). Requires at least 2 IDs; each ID must be 1–64 characters.
-     * Mutually exclusive with {@code conversationId}; if both are set, {@code conversationId} wins.
-     * Only relevant for search — ignored on add.
+     * participated (AND semantics). One ID selects every conversation that actor took part in. Each
+     * ID must be 1–64 characters. Cannot be combined with {@code conversationId}: a search that
+     * sets both is rejected with HTTP 400. Only relevant for search — ignored on add.
      */
     public Builder participantIds(java.util.List<String> participantIds) {
       this.participantIds = participantIds;

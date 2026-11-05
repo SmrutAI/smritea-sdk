@@ -46,16 +46,16 @@ type MemoryScope struct {
 	// ActorName is the human-readable display name of the actor. Optional; max 255 characters.
 	ActorName *string
 	// ConversationID scopes this memory to a specific conversation thread; max 64 characters.
-	// Mutually exclusive with ParticipantIDs; if both are set, ConversationID takes precedence.
+	// Cannot be combined with ParticipantIDs: a search that sets both is rejected with HTTP 400.
 	ConversationID *string
 	// SourceType is the origin of the memory. Accepted values: "conversation", "document",
 	// "api". Defaults to "api" when omitted.
 	SourceType *string
 	// ParticipantIDs searches across conversations where all listed actors participated
 	// (AND semantics). The service expands this list into the matching conversation IDs
-	// before querying. Requires at least 2 IDs; each ID must be 1–64 characters.
-	// Mutually exclusive with ConversationID; if both are set, ConversationID wins.
-	// Only relevant for Search — ignored on Add.
+	// before querying. One ID selects every conversation that actor took part in. Each ID must
+	// be 1–64 characters. Cannot be combined with ConversationID: a search that sets both is
+	// rejected with HTTP 400. Only relevant for Search — ignored on Add.
 	ParticipantIDs []string
 }
 
@@ -78,7 +78,8 @@ func (s *MemoryScope) WithConversationID(id string) *MemoryScope { s.Conversatio
 func (s *MemoryScope) WithSourceType(t string) *MemoryScope { s.SourceType = &t; return s }
 
 // WithParticipantIDs sets ParticipantIDs to search across conversations where all listed
-// actors participated. Requires at least 2 IDs. Mutually exclusive with ConversationID.
+// actors participated. One ID selects every conversation that actor took part in. Cannot be
+// combined with ConversationID.
 func (s *MemoryScope) WithParticipantIDs(ids []string) *MemoryScope { s.ParticipantIDs = ids; return s }
 
 // RelativeStanding groups per-memory importance and temporal decay parameters.
@@ -178,12 +179,12 @@ type SearchOptions struct {
 	// "node_distance", "mmr", "cross_encoder". Only applies to deep_search. Defaults to app config if nil.
 	RerankerType *string
 	// MetadataFilter is a MongoDB-style operator DSL for filtering search results by their metadata.
-	// Supports $eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $contains, $and, $or, $not, and wildcard "*".
+	// Supports $eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $and, $or, $not, and wildcard "*".
 	// Values must be string, int64, or float64. Booleans and nested objects are rejected by the server.
 	// Example: map[string]any{"department": "engineering"} or
 	// map[string]any{"level": map[string]any{"$gte": 4}}.
-	// Note: $contains is applied as a post-filter and may return fewer results than Limit.
-	// $contains inside $or is rejected with HTTP 400.
+	// Note: $contains is not supported. A search that uses it is rejected with HTTP 422
+	// (code CONTAINS_NOT_SUPPORTED).
 	MetadataFilter map[string]any
 }
 
@@ -239,10 +240,10 @@ func (o *SearchOptions) WithRerankerType(r string) *SearchOptions {
 }
 
 // WithMetadataFilter sets a MongoDB-style operator DSL filter on memory metadata.
-// Supports $eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $contains, $and, $or, $not,
+// Supports $eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $and, $or, $not,
 // and wildcard "*". Values must be string, int64, or float64.
-// Note: $contains is applied as a post-filter and may return fewer results than Limit.
-// $contains inside $or is rejected by the server (HTTP 400).
+// Note: $contains is not supported. A search that uses it is rejected with HTTP 422
+// (code CONTAINS_NOT_SUPPORTED).
 func (o *SearchOptions) WithMetadataFilter(m map[string]any) *SearchOptions {
 	o.MetadataFilter = m
 	return o

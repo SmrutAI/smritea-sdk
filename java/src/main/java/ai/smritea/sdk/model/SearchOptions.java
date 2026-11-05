@@ -185,11 +185,11 @@ public final class SearchOptions {
 
   /**
    * Sets the metadata filter using a MongoDB-style operator DSL. Supported operators: $eq, $ne,
-   * $gt, $gte, $lt, $lte, $in, $nin, $contains, $and, $or, $not, and wildcard "*". Values must be
-   * String, Integer, Long, or Double — booleans and nested objects are rejected by the server.
-   * Simple equality: {@code Map.of("department", "engineering")}. Range: {@code Map.of("level",
-   * Map.of("$gte", 4))}. Note: $contains is applied as a post-filter and may return fewer results
-   * than limit. $contains inside $or is rejected (HTTP 400).
+   * $gt, $gte, $lt, $lte, $in, $nin, $and, $or, $not, and wildcard "*". Values must be String,
+   * Integer, Long, or Double — booleans and nested objects are rejected by the server. Simple
+   * equality: {@code Map.of("department", "engineering")}. Range: {@code Map.of("level",
+   * Map.of("$gte", 4))}. Note: $contains is not supported. A search that uses it is rejected with
+   * HTTP 422 (code CONTAINS_NOT_SUPPORTED).
    *
    * @param metadataFilter the metadata filter DSL map
    * @return this instance for chaining

@@ -29,8 +29,8 @@ public sealed class MemoryScope
     public string? ActorName { get; private set; }
 
     /// <summary>
-    /// Gets the conversation ID. Max 64 characters. Mutually exclusive with
-    /// <see cref="ParticipantIds"/>; if both are set, <c>ConversationId</c> takes precedence.
+    /// Gets the conversation ID. Max 64 characters. Cannot be combined with
+    /// <see cref="ParticipantIds"/>: a search that sets both is rejected with HTTP 400.
     /// </summary>
     public string? ConversationId { get; private set; }
 
@@ -46,9 +46,9 @@ public sealed class MemoryScope
     /// memories within those conversations.
     /// </summary>
     /// <remarks>
-    /// Requires at least 2 IDs; each ID must be 1–64 characters. Mutually exclusive with
-    /// <see cref="ConversationId"/>; if both are set, <c>ConversationId</c> wins.
-    /// Only relevant for search — ignored on add.
+    /// One ID selects every conversation that actor took part in. Each ID must be 1–64
+    /// characters. Cannot be combined with <see cref="ConversationId"/>: a search that sets
+    /// both is rejected with HTTP 400. Only relevant for search — ignored on add.
     /// </remarks>
     public IReadOnlyList<string>? ParticipantIds { get; private set; }
 
@@ -100,8 +100,9 @@ public sealed class MemoryScope
     /// <summary>Sets the participant IDs for multi-actor search.</summary>
     /// <param name="participantIds">
     /// Actor IDs whose shared conversations to search. The service finds all conversations
-    /// where every listed actor participated (AND semantics). Requires at least 2 IDs;
-    /// each ID must be 1–64 characters. Mutually exclusive with <see cref="ConversationId"/>.
+    /// where every listed actor participated (AND semantics). One ID selects every
+    /// conversation that actor took part in. Each ID must be 1–64 characters. Cannot be
+    /// combined with <see cref="ConversationId"/>.
     /// </param>
     /// <returns>This <see cref="MemoryScope"/> instance for fluent chaining.</returns>
     public MemoryScope WithParticipantIds(IReadOnlyList<string> participantIds)

@@ -37,8 +37,8 @@ export interface MemoryScope {
   actorName?: string;
   /**
    * Conversation thread this memory belongs to or should be searched within;
-   * max 64 characters. Mutually exclusive with `participantIds`; if both are
-   * set, `conversationId` takes precedence.
+   * max 64 characters. Cannot be combined with `participantIds`: a search that
+   * sets both is rejected with HTTP 400.
    */
   conversationId?: string;
   /**
@@ -49,8 +49,8 @@ export interface MemoryScope {
   /**
    * Search across conversations where **all** listed actors participated (AND semantics).
    * The service expands this list into the matching conversation IDs before querying.
-   * Requires at least 2 IDs; each ID must be 1–64 characters.
-   * Mutually exclusive with `conversationId`; if both are set, `conversationId` wins.
+   * One ID selects every conversation that actor took part in. Each ID must be 1–64 characters.
+   * Cannot be combined with `conversationId`: a search that sets both is rejected with HTTP 400.
    * Only relevant for `search` — ignored on `add`.
    */
   participantIds?: string[];
@@ -116,7 +116,7 @@ export interface SearchOptions {
   /**
    * MongoDB-style operator DSL for filtering search results by their metadata.
    * Supports `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`,
-   * `$contains`, `$and`, `$or`, `$not`, and wildcard `"*"`.
+   * `$and`, `$or`, `$not`, and wildcard `"*"`.
    * Values must be string, number (int or float). Booleans and nested objects
    * are rejected by the server.
    *
@@ -124,8 +124,8 @@ export interface SearchOptions {
    * Range: `{ level: { $gte: 4 } }`
    * Logical: `{ $and: [{ department: "eng" }, { level: { $gt: 3 } }] }`
    *
-   * Note: `$contains` is applied as a post-filter and may return fewer results
-   * than `limit`. `$contains` inside `$or` is rejected with HTTP 400.
+   * Note: `$contains` is not supported. A search that uses it is rejected with
+   * HTTP 422 (code `CONTAINS_NOT_SUPPORTED`).
    */
   metadataFilter?: Record<string, unknown>;
 }

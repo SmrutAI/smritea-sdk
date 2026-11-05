@@ -217,7 +217,8 @@ class SmriteaClient:
                 Simple equality: ``{"department": "engineering"}``
                 Range: ``{"level": {"$gte": 4}}``
                 Logical: ``{"$and": [{"department": "eng"}, {"level": {"$gt": 3}}]}``
-                Note: ``$contains`` is not supported and is rejected with HTTP 400.
+                Note: ``$contains`` is not supported and is rejected with HTTP 422
+                (code ``CONTAINS_NOT_SUPPORTED``).
                 None = no metadata filtering.
 
         Returns:
