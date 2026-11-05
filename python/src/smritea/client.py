@@ -48,7 +48,7 @@ class SmriteaClient:
 
     Example::
 
-        client = SmriteaClient(api_key='sk-...', app_id='app_xyz')
+        client = SmriteaClient(api_key='smrt_<prefix>_<secret>', app_id='app_xyz')
         client.add('I love hiking', scope=MemoryScope(actor_id='alice', actor_type='user'))
         scope = MemoryScope(actor_id='alice', actor_type='user')
         results = client.search('outdoor activities', scope=scope)
@@ -66,7 +66,7 @@ class SmriteaClient:
         """Initialise the smritea client.
 
         Args:
-            api_key: Your smritea API key (starts with sk-).
+            api_key: Your smritea API key (starts with smrt_).
             app_id: The app ID to use for all memory operations.
             base_url: Override the default API base URL.
             max_retries: Automatic retries on HTTP 429. Uses Retry-After header

@@ -63,14 +63,16 @@ var client = new SmriteaClient(
 );
 
 // Store something about a user
-var mem = await client.AddAsync("Alice is a vegetarian and loves hiking",
-    new AddOptions().WithActorId("alice").WithActorType("user"));
+var result = await client.AddAsync("Alice is a vegetarian and loves hiking",
+    new AddOptions().WithScope(
+        new MemoryScope().WithActorId("alice").WithActorType("user")));
 
 // Retrieve it later
 var results = await client.SearchAsync("What are Alice's food preferences?",
-    new SearchOptions().WithActorId("alice").WithActorType("user"));
+    new SearchOptions().WithScope(
+        new MemoryScope().WithActorId("alice").WithActorType("user")));
 foreach (var r in results)
-    Console.WriteLine($"{r.Score:F2}  {r.Content}");
+    Console.WriteLine($"{r.Score:F2}  {r.Memory.Content}");
 ```
 
 ---
@@ -109,23 +111,37 @@ is constructed. Leave it unset to send no `X-Trace-ID` header.
 ### `AddAsync` — Store a memory
 
 ```csharp
-var memory = await client.AddAsync("User prefers concise replies",
+using Smritea.Sdk;
+
+var result = await client.AddAsync("User prefers concise replies",
     new AddOptions()
-        .WithActorId("alice")                                          // explicit actor ID
-        .WithActorType("user")                                         // "user" | "agent" | "system"
-        .WithMetadata(new Dictionary<string, object> { ["source"] = "chat" })  // optional
-        .WithConversationId("conv_123"));                              // optional
-Console.WriteLine(memory.Id); // mem_...
+        .WithScope(new MemoryScope()
+            .WithActorId("alice")                                      // explicit actor ID
+            .WithActorType("user")                                     // "user" | "agent" | "system"
+            .WithConversationId("conv_123"))                           // optional
+        .WithMetadata(new Dictionary<string, object> { ["source"] = "chat" }));  // optional
+Console.WriteLine(result.Memories[0].Id); // mem_...
 ```
 
-| Parameter | Type | Default | Description |
+`AddAsync` returns a `MemoryCreationResult`. One call can store several facts, so read each one from `Memories`.
+
+| `AddOptions` method | Type | Default | Description |
 |---|---|---|---|
-| `content` | `string` | required | Memory text |
-| `ActorId` | `string?` | `null` | Actor ID |
-| `ActorType` | `string?` | `null` | `"user"` \| `"agent"` \| `"system"` |
-| `ActorName` | `string?` | `null` | Display name |
-| `Metadata` | `Dictionary<string, object>?` | `null` | Arbitrary key-value dictionary |
-| `ConversationId` | `string?` | `null` | Conversation context |
+| `WithScope(v)` | `MemoryScope` | `null` | Actor and conversation context (see the scope methods below) |
+| `WithMetadata(v)` | `Dictionary<string, object>` | `null` | Key-value dictionary; values must be string, integer or float |
+| `WithEventOccurredAt(v)` | `string` | `null` | RFC 3339 time the event in the text happened |
+| `WithRelativeStanding(v)` | `RelativeStanding` | `null` | Importance and decay configuration |
+
+`new MemoryScope()` sets the scope fields through chained methods. Every field is optional.
+
+| `MemoryScope` method | Type | Description |
+|---|---|---|
+| `WithActorId(v)` | `string` | Actor ID. Pair it with `WithActorType`. |
+| `WithActorType(v)` | `string` | `"user"` \| `"agent"` \| `"system"` |
+| `WithActorName(v)` | `string` | Display name |
+| `WithConversationId(v)` | `string` | Conversation ID. Cannot be combined with participant IDs. |
+| `WithSourceType(v)` | `string` | `"conversation"` \| `"document"` \| `"api"` |
+| `WithParticipantIds(v)` | `IReadOnlyList<string>` | Search only: every listed actor took part. Cannot be combined with a conversation ID. |
 
 All methods accept an optional `CancellationToken` as the last parameter.
 
@@ -134,25 +150,31 @@ All methods accept an optional `CancellationToken` as the last parameter.
 ### `SearchAsync` — Semantic search
 
 ```csharp
+using Smritea.Sdk;
+
 var results = await client.SearchAsync("dietary restrictions",
     new SearchOptions()
-        .WithActorId("alice")
-        .WithActorType("user")
+        .WithScope(new MemoryScope().WithActorId("alice").WithActorType("user"))
         .WithLimit(5));
 foreach (var r in results)
-    Console.WriteLine($"{r.Score}  {r.Content}");
+    Console.WriteLine($"{r.Score}  {r.Memory.Content}");
 ```
 
-Results are ordered by relevance (descending). Each result exposes `Score` (0.0–1.0) and all `Memory` properties directly.
+Results are ordered by relevance (descending). Each result exposes `Score` (0.0–1.0) and `Memory`, which holds the memory fields such as `Content` and `Id`.
 
-| Parameter | Type | Default | Description |
+| `SearchOptions` method | Type | Default | Description |
 |---|---|---|---|
 | `query` | `string` | required | Search text |
-| `ActorId` | `string?` | `null` | Filter by actor ID |
-| `ActorType` | `string?` | `null` | Filter by actor type |
-| `Limit` | `int?` | app default | Max results to return |
-| `GraphDepth` | `int?` | `null` | Graph traversal depth override |
-| `ConversationId` | `string?` | `null` | Conversation context |
+| `WithScope(v)` | `MemoryScope` | `null` | Filter by actor, conversation, source type or participants |
+| `WithLimit(v)` | `int` | app default | Max results to return; at most the server's `top_n_max` |
+| `WithGraphDepth(v)` | `int` | `null` | Graph traversal depth, 1 to 5 |
+| `WithFromTime(v)` | `string` | `null` | RFC 3339 start of a time range. Cannot be combined with `WithValidAt`. |
+| `WithToTime(v)` | `string` | `null` | RFC 3339 end of a time range. Cannot be combined with `WithValidAt`. |
+| `WithValidAt(v)` | `string` | `null` | RFC 3339 moment; returns memories valid at that moment |
+| `WithMethod(v)` | `string` | app default | `"quick_search"` \| `"deep_search"` \| `"context_aware_search"` |
+| `WithRerankerType(v)` | `string` | app default | Applies to `deep_search` only |
+| `WithMetadataFilter(v)` | `Dictionary<string, object>` | `null` | Operator filter over memory metadata |
+| `WithSpeakerActorId(v)` | `string` | `null` | Who is asking. Never filters results. |
 
 ---
 
@@ -182,7 +204,9 @@ await client.DeleteAsync("mem_abc123");
 
 ```csharp
 var results = await client.SearchAsync("",
-    new SearchOptions().WithActorId("alice").WithActorType("user").WithLimit(20));
+    new SearchOptions()
+        .WithScope(new MemoryScope().WithActorId("alice").WithActorType("user"))
+        .WithLimit(20));
 ```
 
 `limit` must not exceed the server's `top_n_max` (default 20); a larger value returns a 400 error. Omit it to use the app's `top_n`.
@@ -197,7 +221,8 @@ using Smritea.Sdk;
 try
 {
     var results = await client.SearchAsync("preferences",
-        new SearchOptions().WithActorId("alice").WithActorType("user"));
+        new SearchOptions().WithScope(
+            new MemoryScope().WithActorId("alice").WithActorType("user")));
 }
 catch (SmriteaUnauthorizedException)
 {

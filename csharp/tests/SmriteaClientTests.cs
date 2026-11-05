@@ -182,22 +182,90 @@ public class SmriteaClientTests : IDisposable
         Assert.Empty(results);
     }
 
-    [Fact]
-    public async Task SearchAsync_ScopeSourceType_SentInRequest()
+    // Each row is (name, actor ID, actor type, actor name, conversation ID, source type,
+    // comma-separated participant IDs, the whole scope the request must carry).
+    // The expected scope lists every sent field, so an omitted source type must be absent.
+    public static TheoryData<string, string?, string?, string?, string?, string?, string?, string> SearchScopeRows => new()
     {
-        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories/search").UsingPost()
-                .WithBody(b => b != null && b.Contains("\"source_type\":\"document\"")))
+        { "source_type only", null, null, null, null, "conversation", null, "source_type=conversation" },
+        {
+            "source_type with actor", "alice", "user", null, null, "document", null,
+            "actor_id=alice|actor_type=user|source_type=document"
+        },
+        {
+            "source_type with conversation", null, null, null, "conv-123", "api", null,
+            "conversation_id=conv-123|source_type=api"
+        },
+        {
+            "source_type with participants", null, null, null, null, "conversation", "a-1,b-2",
+            "participant_ids=a-1,b-2|source_type=conversation"
+        },
+        {
+            "source_type with actor_name (not a search filter, so not sent)", "alice", "user", "Alice Smith", null, "document", null,
+            "actor_id=alice|actor_type=user|source_type=document"
+        },
+        { "source_type omitted is not sent", "alice", "user", null, null, null, null, "actor_id=alice|actor_type=user" },
+    };
+
+    [Theory]
+    [MemberData(nameof(SearchScopeRows))]
+    public async Task SearchAsync_ScopeSourceType_SentInRequest(
+        string name,
+        string? actorId,
+        string? actorType,
+        string? actorName,
+        string? conversationId,
+        string? sourceType,
+        string? participantIds,
+        string expectedScope)
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories/search").UsingPost())
             .RespondWith(Response.Create().WithStatusCode(200)
                 .WithHeader("Content-Type", "application/json")
                 .WithBody("{\"memories\":[]}"));
+        var scope = new MemoryScope();
+        if (actorId is not null)
+        {
+            scope.WithActorId(actorId);
+        }
+
+        if (actorType is not null)
+        {
+            scope.WithActorType(actorType);
+        }
+
+        if (actorName is not null)
+        {
+            scope.WithActorName(actorName);
+        }
+
+        if (conversationId is not null)
+        {
+            scope.WithConversationId(conversationId);
+        }
+
+        if (sourceType is not null)
+        {
+            scope.WithSourceType(sourceType);
+        }
+
+        if (participantIds is not null)
+        {
+            scope.WithParticipantIds(participantIds.Split(','));
+        }
 
         using var client = CreateClient();
-        var opts = new SearchOptions()
-            .WithScope(new MemoryScope().WithSourceType("document"));
-        var results = await client.SearchAsync("find docs", opts);
+        var results = await client.SearchAsync("find docs", new SearchOptions().WithScope(scope));
 
-        Assert.NotNull(results);
         Assert.Empty(results);
+        var body = Assert.Single(_server.LogEntries).RequestMessage?.Body;
+        Assert.NotNull(body);
+        using var document = JsonDocument.Parse(body);
+        var sent = document.RootElement.GetProperty("scope").EnumerateObject()
+            .Select(p => $"{p.Name}={FormatScopeValue(p.Value)}")
+            .OrderBy(s => s, StringComparer.Ordinal);
+        var sentScope = string.Join("|", sent);
+        Assert.True(expectedScope == sentScope, $"{name}: want '{expectedScope}', got '{sentScope}'");
     }
 
     // -----------------------------------------------------------------------
@@ -565,6 +633,11 @@ public class SmriteaClientTests : IDisposable
             .OrderBy(s => s, StringComparer.Ordinal);
         Assert.Equal(expected, string.Join("|", sent));
     }
+
+    private static string FormatScopeValue(JsonElement value) =>
+        value.ValueKind == JsonValueKind.Array
+            ? string.Join(",", value.EnumerateArray().Select(item => item.GetString()))
+            : FormatJsonValue(value);
 
     private static string FormatJsonValue(JsonElement value) =>
         value.ValueKind == JsonValueKind.Number

@@ -71,7 +71,8 @@ export SMRITEA_APP_ID="app_..."
 ```java
 import ai.smritea.sdk.SmriteaClient;
 import ai.smritea.sdk.model.AddOptions;
-import ai.smritea.sdk.model.Memory;
+import ai.smritea.sdk.model.MemoryCreationResult;
+import ai.smritea.sdk.model.MemoryScope;
 import ai.smritea.sdk.model.SearchOptions;
 import ai.smritea.sdk.model.SearchResult;
 import java.util.List;
@@ -82,12 +83,14 @@ SmriteaClient client = new SmriteaClient(
 );
 
 // Store something about a user
-Memory mem = client.add("Alice is a vegetarian and loves hiking",
-    new AddOptions().withActorId("alice").withActorType("user"));
+MemoryCreationResult result = client.add("Alice is a vegetarian and loves hiking",
+    new AddOptions().withScope(
+        MemoryScope.builder().actorId("alice").actorType("user").build()));
 
 // Retrieve it later
 List<SearchResult> results = client.search("What are Alice's food preferences?",
-    new SearchOptions().withActorId("alice").withActorType("user"));
+    new SearchOptions().withScope(
+        MemoryScope.builder().actorId("alice").actorType("user").build()));
 for (SearchResult r : results) {
     System.out.printf("%.2f  %s%n", r.getScore(), r.getContent());
 }
@@ -140,33 +143,56 @@ All methods are **synchronous** and return values directly. For async use, wrap 
 ### `add` — Store a memory
 
 ```java
-Memory memory = client.add("User prefers concise replies",
+import ai.smritea.sdk.model.AddOptions;
+import ai.smritea.sdk.model.MemoryCreationResult;
+import ai.smritea.sdk.model.MemoryScope;
+import java.util.Map;
+
+MemoryCreationResult result = client.add("User prefers concise replies",
     new AddOptions()
-        .withActorId("alice")                                   // explicit actor ID
-        .withActorType("user")                                  // "user" | "agent" | "system"
-        .withMetadata(Map.of("source", "chat"))                 // optional
-        .withConversationId("conv_123"));                       // optional
-System.out.println(memory.getId()); // mem_...
+        .withScope(MemoryScope.builder()
+            .actorId("alice")                                   // explicit actor ID
+            .actorType("user")                                  // "user" | "agent" | "system"
+            .conversationId("conv_123")                         // optional
+            .build())
+        .withMetadata(Map.of("source", "chat")));               // optional
+System.out.println(result.getMemories().get(0).getId()); // mem_...
 ```
+
+`add` returns a `MemoryCreationResult`. One call can store several facts, so read each one from `getMemories()`.
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `content` | `String` | required | Memory text |
-| `withActorId(v)` | `String` | `null` | Actor ID |
-| `withActorType(v)` | `String` | `null` | `"user"` \| `"agent"` \| `"system"` |
-| `withActorName(v)` | `String` | `null` | Display name |
-| `withMetadata(v)` | `Map<String, Object>` | `null` | Arbitrary key-value map |
-| `withConversationId(v)` | `String` | `null` | Conversation context |
+| `withScope(v)` | `MemoryScope` | `null` | Actor and conversation context (see the scope builder below) |
+| `withMetadata(v)` | `Map<String, Object>` | `null` | Key-value map; values must be string, integer or float |
+| `withEventOccurredAt(v)` | `String` | `null` | RFC 3339 time the event in the text happened |
+| `withRelativeStanding(v)` | `RelativeStanding` | `null` | Importance and decay configuration |
+
+`MemoryScope.builder()` sets the scope fields. Every field is optional.
+
+| Builder method | Type | Description |
+|---|---|---|
+| `actorId(v)` | `String` | Actor ID, at most 64 characters. Pair it with `actorType`. |
+| `actorType(v)` | `String` | `"user"` \| `"agent"` \| `"system"` |
+| `actorName(v)` | `String` | Display name, at most 255 characters |
+| `conversationId(v)` | `String` | Conversation ID. Cannot be combined with `participantIds`. |
+| `sourceType(v)` | `String` | `"conversation"` \| `"document"` \| `"api"` |
+| `participantIds(v)` | `List<String>` | Search only: every listed actor took part. Cannot be combined with `conversationId`. |
 
 ---
 
 ### `search` — Semantic search
 
 ```java
+import ai.smritea.sdk.model.MemoryScope;
+import ai.smritea.sdk.model.SearchOptions;
+import ai.smritea.sdk.model.SearchResult;
+import java.util.List;
+
 List<SearchResult> results = client.search("dietary restrictions",
     new SearchOptions()
-        .withActorId("alice")
-        .withActorType("user")
+        .withScope(MemoryScope.builder().actorId("alice").actorType("user").build())
         .withLimit(5));
 for (SearchResult r : results) {
     System.out.println(r.getScore() + "  " + r.getContent());
@@ -178,11 +204,16 @@ Results are ordered by relevance (descending). Each result exposes `getScore()` 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `query` | `String` | required | Search text |
-| `withActorId(v)` | `String` | `null` | Filter by actor ID |
-| `withActorType(v)` | `String` | `null` | Filter by actor type |
-| `withLimit(v)` | `Integer` | app default | Max results to return |
-| `withGraphDepth(v)` | `Integer` | `null` | Graph traversal depth override |
-| `withConversationId(v)` | `String` | `null` | Conversation context |
+| `withScope(v)` | `MemoryScope` | `null` | Filter by actor, conversation, source type or participants |
+| `withLimit(v)` | `Integer` | app default | Max results to return; at most the server's `top_n_max` |
+| `withGraphDepth(v)` | `Integer` | `null` | Graph traversal depth, 1 to 5 |
+| `withFromTime(v)` | `String` | `null` | RFC 3339 start of a time range. Cannot be combined with `withValidAt`. |
+| `withToTime(v)` | `String` | `null` | RFC 3339 end of a time range. Cannot be combined with `withValidAt`. |
+| `withValidAt(v)` | `String` | `null` | RFC 3339 moment; returns memories valid at that moment |
+| `withMethod(v)` | `String` | app default | `"quick_search"` \| `"deep_search"` \| `"context_aware_search"` |
+| `withRerankerType(v)` | `String` | app default | Applies to `deep_search` only |
+| `withMetadataFilter(v)` | `Map<String, Object>` | `null` | Operator filter over memory metadata |
+| `withSpeakerActorId(v)` | `String` | `null` | Who is asking. Never filters results. |
 
 ---
 
@@ -212,8 +243,7 @@ client.delete("mem_abc123");
 
 ```java
 List<SearchResult> results = client.search("", new SearchOptions()
-    .withActorId("alice")
-    .withActorType("user")
+    .withScope(MemoryScope.builder().actorId("alice").actorType("user").build())
     .withLimit(20));
 ```
 
@@ -231,7 +261,8 @@ import ai.smritea.sdk.errors.SmriteaError;
 
 try {
     List<SearchResult> results = client.search("preferences",
-        new SearchOptions().withActorId("alice").withActorType("user"));
+        new SearchOptions().withScope(
+            MemoryScope.builder().actorId("alice").actorType("user").build()));
 } catch (SmriteaUnauthorizedError e) {
     System.out.println("Check your API key");
 } catch (SmriteaTooManyRequestsError e) {

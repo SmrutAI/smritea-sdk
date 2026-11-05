@@ -24,12 +24,20 @@ import ai.smritea.sdk.model.SearchResult;
 import ai.smritea.sdk.model.StageTrace;
 import ai.smritea.sdk.model.StepTrace;
 import ai.smritea.sdk.model.Trace;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -287,18 +295,92 @@ class SmriteaClientTest {
             .withRequestBody(matchingJsonPath("$.speaker_actor_id", equalTo("agent-ravi"))));
   }
 
-  @Test
-  void testSearch_SendsScopeSourceType(WireMockRuntimeInfo wm) {
+  private static Stream<Arguments> searchScopeSourceTypeCases() {
+    return Stream.of(
+        Arguments.of(
+            "source_type only",
+            MemoryScope.builder().sourceType("conversation").build(),
+            "conversation",
+            Map.of()),
+        Arguments.of(
+            "source_type with actor",
+            MemoryScope.builder().actorId("alice").actorType("user").sourceType("document").build(),
+            "document",
+            Map.of("actor_id", "alice", "actor_type", "user")),
+        Arguments.of(
+            "source_type with conversation",
+            MemoryScope.builder().conversationId("conv-123").sourceType("api").build(),
+            "api",
+            Map.of("conversation_id", "conv-123")),
+        Arguments.of(
+            "source_type with participants",
+            MemoryScope.builder()
+                .participantIds(List.of("a-1", "b-2"))
+                .sourceType("conversation")
+                .build(),
+            "conversation",
+            Map.of("participant_ids", List.of("a-1", "b-2"))),
+        Arguments.of(
+            "source_type with actor_name (not a search filter, so not sent)",
+            MemoryScope.builder()
+                .actorId("alice")
+                .actorType("user")
+                .actorName("Alice Smith")
+                .sourceType("document")
+                .build(),
+            "document",
+            Map.of("actor_id", "alice", "actor_type", "user")),
+        Arguments.of(
+            "source_type omitted is not sent",
+            MemoryScope.builder().actorId("alice").actorType("user").build(),
+            null,
+            Map.of("actor_id", "alice", "actor_type", "user")));
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("searchScopeSourceTypeCases")
+  void testSearch_ForwardsScopeSourceType(
+      String name,
+      MemoryScope scope,
+      String wantSourceType,
+      Map<String, Object> wantOtherScopeFields,
+      WireMockRuntimeInfo wm)
+      throws Exception {
     stubFor(post("/api/v1/sdk/memories/search").willReturn(okJson("{\"memories\":[]}")));
 
-    SmriteaClient client = clientFor(wm);
-    client.search(
-        "find docs",
-        new SearchOptions().withScope(MemoryScope.builder().sourceType("document").build()));
+    clientFor(wm).search("find docs", new SearchOptions().withScope(scope));
 
-    verify(
-        postRequestedFor(urlEqualTo("/api/v1/sdk/memories/search"))
-            .withRequestBody(matchingJsonPath("$.scope.source_type", equalTo("document"))));
+    List<LoggedRequest> requests =
+        findAll(postRequestedFor(urlEqualTo("/api/v1/sdk/memories/search")));
+    assertEquals(1, requests.size(), name);
+    JsonNode sentScope = MAPPER.readTree(requests.get(0).getBodyAsString()).path("scope");
+
+    if (wantSourceType == null) {
+      assertTrue(sentScope.path("source_type").isMissingNode(), name + ": source_type was sent");
+    } else {
+      assertEquals(wantSourceType, sentScope.path("source_type").asText(), name);
+    }
+    for (Map.Entry<String, Object> field : wantOtherScopeFields.entrySet()) {
+      assertEquals(MAPPER.valueToTree(field.getValue()), sentScope.path(field.getKey()), name);
+    }
+
+    Set<String> wantKeys = new HashSet<>(wantOtherScopeFields.keySet());
+    if (wantSourceType != null) {
+      wantKeys.add("source_type");
+    }
+    // The generated Java scope model always writes participant_ids, as an empty list when unset.
+    Set<String> sentKeys = new HashSet<>();
+    sentScope
+        .fields()
+        .forEachRemaining(
+            field -> {
+              boolean emptyParticipantIds =
+                  field.getKey().equals("participant_ids") && field.getValue().isEmpty();
+              if (!emptyParticipantIds) {
+                sentKeys.add(field.getKey());
+              }
+            });
+    assertEquals(wantKeys, sentKeys, name + ": the scope carries exactly these fields");
   }
 
   // -----------------------------------------------------------------------
