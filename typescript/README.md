@@ -66,14 +66,14 @@ const client = new SmriteaClient({
 const created = await client.add('Alice is a vegetarian and loves hiking', {
   scope: { actorId: 'alice', actorType: 'user' },
 });
-console.log(created.memories[0].id); // mem_...
+console.log(created.memories?.[0]?.id); // mem_...
 
 // Retrieve it later in a different session
 const results = await client.search("What are Alice's food preferences?", {
   scope: { actorId: 'alice', actorType: 'user' },
 });
 for (const r of results) {
-  console.log(r.score, r.memory.content);
+  console.log(r.score, r.memory?.content);
 }
 ```
 
@@ -114,7 +114,7 @@ const result = await client.add('User prefers concise replies', {
   },
   metadata: { source: 'chat' },
 });
-console.log(result.memories[0].id); // mem_...
+console.log(result.memories?.[0]?.id); // mem_...
 ```
 
 | Option | Default | Description |
@@ -133,15 +133,14 @@ console.log(result.memories[0].id); // mem_...
 
 ```typescript
 const results = await client.search('dietary restrictions', {
-  actorId: 'alice',
-  actorType: 'user',
+  scope: { actorId: 'alice', actorType: 'user' },
   limit: 5,
   method: 'deep_search',  // "quick_search" | "deep_search" | "context_aware_search"
 });
-results.forEach(r => console.log(r.score, r.content));
+results.forEach(r => console.log(r.score, r.memory?.content));
 ```
 
-Results are ordered by relevance (descending). Each result exposes `score` (0.0–1.0) and all `Memory` fields directly.
+Results are ordered by relevance (descending). Each result exposes `score` (0.0–1.0) and a `memory` object holding the `Memory` fields.
 
 | Search method | When to use |
 |---|---|
@@ -151,12 +150,16 @@ Results are ordered by relevance (descending). Each result exposes `score` (0.0�
 
 | Option | Default | Description |
 |---|---|---|
-| `actorId` | `undefined` | Filter by actor ID |
-| `actorType` | `undefined` | Filter by actor type |
-| `limit` | app default | Max results to return |
+| `scope` | `undefined` | Filter by `actorId`, `actorType`, `conversationId`, `sourceType` or `participantIds` |
+| `limit` | app default | Max results to return; at most the server's `top_n_max` |
 | `method` | app default | Search strategy |
-| `graphDepth` | `undefined` | Graph traversal depth override |
-| `conversationId` | `undefined` | Conversation context |
+| `rerankerType` | app default | Applies to `deep_search` only |
+| `graphDepth` | `undefined` | Graph traversal depth, 1 to 5 |
+| `fromTime` | `undefined` | RFC 3339 start of a time range. Cannot be combined with `validAt`. |
+| `toTime` | `undefined` | RFC 3339 end of a time range. Cannot be combined with `validAt`. |
+| `validAt` | `undefined` | RFC 3339 moment; returns memories valid at that moment |
+| `metadataFilter` | `undefined` | Operator filter over memory metadata |
+| `speakerActorId` | `undefined` | Who is asking. Never filters results. |
 
 ---
 
@@ -185,7 +188,7 @@ await client.delete('mem_abc123');
 > Use `search()` with a broad query as a workaround:
 
 ```typescript
-const results = await client.search('', { actorId: 'alice', actorType: 'user', limit: 20 });
+const results = await client.search('', { scope: { actorId: 'alice', actorType: 'user' }, limit: 20 });
 ```
 
 `limit` must not exceed the server's `top_n_max` (default 20); a larger value returns a 400 error. Omit it to use the app's `top_n`.
@@ -220,8 +223,10 @@ try {
 Every `SmriteaError` and its subclasses expose `requestId`, the server's request ID for the failed call. It is taken from the response body's `request_id` field when that is a non-empty string, otherwise from the `X-Request-ID` response header. It is `undefined` when neither is present:
 
 ```typescript
+import { SmriteaError } from 'smritea-sdk';
+
 try {
-  await client.add('Alice prefers morning meetings', { actorId: 'alice', actorType: 'user' });
+  await client.add('Alice prefers morning meetings', { scope: { actorId: 'alice', actorType: 'user' } });
 } catch (e) {
   if (e instanceof SmriteaError) console.log(e.requestId);
 }

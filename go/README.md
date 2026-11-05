@@ -95,13 +95,15 @@ func main() {
 ```go
 import smritea "github.com/SmrutAI/smritea-sdk/go"
 
-client := smritea.NewClient(smritea.ClientConfig{
-    APIKey:     "smrt_<prefix>_<secret>",   // required
-    AppID:      "app_...",                  // required
-    BaseURL:    "https://api-us.smritea.ai",   // optional, default shown
-    TraceID:    "checkout-flow-7f3a",       // optional; 8-100 chars of A-Z, a-z, 0-9, '.', '_', ':', '-'
-    MaxRetries: smritea.Int(2),             // optional; nil = default 2; smritea.Int(0) disables retry; a negative value counts as 0
-})
+func newClient() *smritea.SmriteaClient {
+    return smritea.NewClient(smritea.ClientConfig{
+        APIKey:     "smrt_<prefix>_<secret>",   // required
+        AppID:      "app_...",                  // required
+        BaseURL:    "https://api-us.smritea.ai",   // optional, default shown
+        TraceID:    "checkout-flow-7f3a",       // optional; 8-100 chars of A-Z, a-z, 0-9, '.', '_', ':', '-'
+        MaxRetries: smritea.Int(2),             // optional; nil = default 2; smritea.Int(0) disables retry; a negative value counts as 0
+    })
+}
 ```
 
 `TraceID` (optional) is sent as the `X-Trace-ID` header on every request, including retries. It must be
@@ -122,58 +124,112 @@ returns a `*SmriteaBadRequestError` (HTTP 400) with `Code` `"INVALID_TRACE_ID"` 
 ### `Add` — Store a memory
 
 ```go
-result, err := client.Add(ctx, "User prefers concise replies",
-    smritea.NewAddOptions().
-        WithScope(smritea.NewMemoryScope().
-            WithActorID("alice").              // explicit actor ID
-            WithActorType("user").             // "user" | "agent" | "system"
-            WithConversationID("conv_123")).   // optional
-        WithMetadata(map[string]any{"source": "chat"}))   // optional
-fmt.Println(result.Memories[0].Id) // mem_...
+import (
+    "context"
+    "fmt"
+    "log"
+
+    smritea "github.com/SmrutAI/smritea-sdk/go"
+)
+
+func addMemory(ctx context.Context, client *smritea.SmriteaClient) {
+    result, err := client.Add(ctx, "User prefers concise replies",
+        smritea.NewAddOptions().
+            WithScope(smritea.NewMemoryScope().
+                WithActorID("alice").              // explicit actor ID
+                WithActorType("user").             // "user" | "agent" | "system"
+                WithConversationID("conv_123")).   // optional
+            WithMetadata(map[string]any{"source": "chat"}))   // optional
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(result.Memories[0].Id) // mem_...
+}
 ```
 
-| Parameter | Type | Default | Description |
+| `AddOptions` method | Type | Default | Description |
 |---|---|---|---|
 | `content` | `string` | required | Memory text |
-| `ActorID` | `*string` | `nil` | Actor ID |
-| `ActorType` | `*string` | `nil` | `"user"` \| `"agent"` \| `"system"` |
-| `ActorName` | `*string` | `nil` | Display name |
-| `Metadata` | `map[string]any` | `nil` | Arbitrary key-value map |
-| `ConversationID` | `*string` | `nil` | Conversation context |
+| `WithScope(v)` | `*MemoryScope` | `nil` | Actor and conversation context; see the scope methods below |
+| `WithMetadata(v)` | `map[string]any` | `nil` | Arbitrary key-value map |
+| `WithEventOccurredAt(v)` | `string` | `nil` | RFC 3339 time the event in the text happened |
+| `WithRelativeStanding(v)` | `*RelativeStanding` | `nil` | Importance and decay configuration |
+
+`NewMemoryScope()` sets the scope fields through chained methods. Every field is optional.
+
+| `MemoryScope` method | Type | Description |
+|---|---|---|
+| `WithActorID(v)` | `string` | Actor ID. Pair it with `WithActorType`. |
+| `WithActorType(v)` | `string` | `"user"` \| `"agent"` \| `"system"` |
+| `WithActorName(v)` | `string` | Display name |
+| `WithConversationID(v)` | `string` | Conversation context. Cannot be combined with participant IDs. |
+| `WithSourceType(v)` | `string` | `"conversation"` \| `"document"` \| `"api"` |
+| `WithParticipantIDs(v)` | `[]string` | Search only: every listed actor took part. Cannot be combined with a conversation ID. |
 
 ---
 
 ### `Search` — Semantic search
 
 ```go
-results, err := client.Search(ctx, "dietary restrictions",
-    smritea.NewSearchOptions().
-        WithScope(smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")).
-        WithLimit(5))
-for _, r := range results {
-    fmt.Println(r.Score, r.Memory.Content)
+import (
+    "context"
+    "fmt"
+    "log"
+
+    smritea "github.com/SmrutAI/smritea-sdk/go"
+)
+
+func searchMemories(ctx context.Context, client *smritea.SmriteaClient) {
+    results, err := client.Search(ctx, "dietary restrictions",
+        smritea.NewSearchOptions().
+            WithScope(smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")).
+            WithLimit(5))
+    if err != nil {
+        log.Fatal(err)
+    }
+    for _, r := range results {
+        fmt.Println(r.Score, r.Memory.Content)
+    }
 }
 ```
 
 Results are ordered by relevance (descending). Each result exposes `Score` (0.0–1.0) and a `Memory` struct.
 
-| Parameter | Type | Default | Description |
+| `SearchOptions` method | Type | Default | Description |
 |---|---|---|---|
 | `query` | `string` | required | Search text |
-| `ActorID` | `*string` | `nil` | Filter by actor ID |
-| `ActorType` | `*string` | `nil` | Filter by actor type |
-| `Limit` | `*int32` | app default | Max results to return |
-| `GraphDepth` | `*int32` | `nil` | Graph traversal depth override |
-| `ConversationID` | `*string` | `nil` | Conversation context |
+| `WithScope(v)` | `*MemoryScope` | `nil` | Filter by actor, conversation, source type or participants |
+| `WithLimit(v)` | `int32` | app default | Max results to return; at most the server's `top_n_max` |
+| `WithGraphDepth(v)` | `int32` | `nil` | Graph traversal depth, 1 to 5 |
+| `WithFromTime(v)` | `string` | `nil` | RFC 3339 start of a time range. Cannot be combined with `WithValidAt`. |
+| `WithToTime(v)` | `string` | `nil` | RFC 3339 end of a time range. Cannot be combined with `WithValidAt`. |
+| `WithValidAt(v)` | `string` | `nil` | RFC 3339 moment; returns memories valid at that moment |
+| `WithMethod(v)` | `string` | app default | `"quick_search"` \| `"deep_search"` \| `"context_aware_search"` |
+| `WithRerankerType(v)` | `string` | app default | Applies to `deep_search` only |
+| `WithMetadataFilter(v)` | `map[string]any` | `nil` | Operator filter over memory metadata |
+| `WithSpeakerActorID(v)` | `string` | `nil` | Who is asking. Never filters results. |
 
 ---
 
 ### `Get` — Retrieve a memory by ID
 
 ```go
-memory, err := client.Get(ctx, "mem_abc123")
-fmt.Println(memory.Content, memory.CreatedAt)
-// Returns SmriteaNotFoundError if the ID does not exist
+import (
+    "context"
+    "fmt"
+    "log"
+
+    smritea "github.com/SmrutAI/smritea-sdk/go"
+)
+
+func getMemory(ctx context.Context, client *smritea.SmriteaClient) {
+    memory, err := client.Get(ctx, "mem_abc123")
+    // Returns SmriteaNotFoundError if the ID does not exist
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(memory.Content, memory.CreatedAt)
+}
 ```
 
 ---
@@ -181,8 +237,20 @@ fmt.Println(memory.Content, memory.CreatedAt)
 ### `Delete` — Delete a memory by ID
 
 ```go
-err := client.Delete(ctx, "mem_abc123")
-// Returns SmriteaNotFoundError if the ID does not exist
+import (
+    "context"
+    "log"
+
+    smritea "github.com/SmrutAI/smritea-sdk/go"
+)
+
+func deleteMemory(ctx context.Context, client *smritea.SmriteaClient) {
+    err := client.Delete(ctx, "mem_abc123")
+    // Returns SmriteaNotFoundError if the ID does not exist
+    if err != nil {
+        log.Fatal(err)
+    }
+}
 ```
 
 ---
@@ -193,9 +261,22 @@ err := client.Delete(ctx, "mem_abc123")
 > Use `Search()` with a broad query as a workaround:
 
 ```go
-results, _ := client.Search(ctx, "",
-    smritea.NewSearchOptions().WithScope(
-        smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")).WithLimit(20))
+import (
+    "context"
+    "log"
+
+    smritea "github.com/SmrutAI/smritea-sdk/go"
+)
+
+func listMemories(ctx context.Context, client *smritea.SmriteaClient) {
+    results, err := client.Search(ctx, "",
+        smritea.NewSearchOptions().WithScope(
+            smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")).WithLimit(20))
+    if err != nil {
+        log.Fatal(err)
+    }
+    log.Println(len(results))
+}
 ```
 
 `limit` must not exceed the server's `top_n_max` (default 20); a larger value returns a 400 error. Omit it to use the app's `top_n`.
@@ -206,54 +287,57 @@ results, _ := client.Search(ctx, "",
 
 ```go
 import (
+    "context"
     "errors"
     "fmt"
 
     smritea "github.com/SmrutAI/smritea-sdk/go"
 )
 
-results, err := client.Search(ctx, "preferences",
-    smritea.NewSearchOptions().WithScope(
-        smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")))
-if err != nil {
-    var badRequestErr *smritea.SmriteaBadRequestError
-    var authErr *smritea.SmriteaUnauthorizedError
-    var paymentErr *smritea.SmriteaPaymentRequiredError
-    var forbiddenErr *smritea.SmriteaForbiddenError
-    var notFoundErr *smritea.SmriteaNotFoundError
-    var conflictErr *smritea.SmriteaConflictError
-    var unprocessableErr *smritea.SmriteaUnprocessableError
-    var tooManyErr *smritea.SmriteaTooManyRequestsError
-    var smriteaErr *smritea.SmriteaError
+func handleSearchError(ctx context.Context, client *smritea.SmriteaClient) {
+    _, err := client.Search(ctx, "preferences",
+        smritea.NewSearchOptions().WithScope(
+            smritea.NewMemoryScope().WithActorID("alice").WithActorType("user")))
+    if err != nil {
+        var badRequestErr *smritea.SmriteaBadRequestError
+        var authErr *smritea.SmriteaUnauthorizedError
+        var paymentErr *smritea.SmriteaPaymentRequiredError
+        var forbiddenErr *smritea.SmriteaForbiddenError
+        var notFoundErr *smritea.SmriteaNotFoundError
+        var conflictErr *smritea.SmriteaConflictError
+        var unprocessableErr *smritea.SmriteaUnprocessableError
+        var tooManyErr *smritea.SmriteaTooManyRequestsError
+        var smriteaErr *smritea.SmriteaError
 
-    // Typed errors embed SmriteaError by value and do not unwrap to it, so each
-    // typed error must be matched first. *smritea.SmriteaError only matches the
-    // base error returned for statuses without a dedicated type (e.g. 5xx).
-    switch {
-    case errors.As(err, &badRequestErr):
-        fmt.Printf("Invalid request: %s\n", badRequestErr.Message)
-    case errors.As(err, &authErr):
-        fmt.Println("Check your API key")
-    case errors.As(err, &paymentErr):
-        fmt.Println("Plan quota exceeded")
-    case errors.As(err, &forbiddenErr):
-        fmt.Println("Access denied")
-    case errors.As(err, &notFoundErr):
-        fmt.Printf("Not found: %s\n", notFoundErr.Message)
-    case errors.As(err, &conflictErr):
-        fmt.Println("Conflicting resource state")
-    case errors.As(err, &unprocessableErr):
-        fmt.Printf("Cannot process request: %s\n", unprocessableErr.Message)
-    case errors.As(err, &tooManyErr):
-        if tooManyErr.RetryAfter != nil {
-            fmt.Printf("Rate limited — retry after %ds\n", *tooManyErr.RetryAfter)
-        } else {
-            fmt.Println("Rate limited — no Retry-After header")
+        // Typed errors embed SmriteaError by value and do not unwrap to it, so each
+        // typed error must be matched first. *smritea.SmriteaError only matches the
+        // base error returned for statuses without a dedicated type (e.g. 5xx).
+        switch {
+        case errors.As(err, &badRequestErr):
+            fmt.Printf("Invalid request: %s\n", badRequestErr.Message)
+        case errors.As(err, &authErr):
+            fmt.Println("Check your API key")
+        case errors.As(err, &paymentErr):
+            fmt.Println("Plan quota exceeded")
+        case errors.As(err, &forbiddenErr):
+            fmt.Println("Access denied")
+        case errors.As(err, &notFoundErr):
+            fmt.Printf("Not found: %s\n", notFoundErr.Message)
+        case errors.As(err, &conflictErr):
+            fmt.Println("Conflicting resource state")
+        case errors.As(err, &unprocessableErr):
+            fmt.Printf("Cannot process request: %s\n", unprocessableErr.Message)
+        case errors.As(err, &tooManyErr):
+            if tooManyErr.RetryAfter != nil {
+                fmt.Printf("Rate limited — retry after %ds\n", *tooManyErr.RetryAfter)
+            } else {
+                fmt.Println("Rate limited — no Retry-After header")
+            }
+        case errors.As(err, &smriteaErr):
+            fmt.Printf("Unexpected error: %s\n", smriteaErr.Message)
+        default:
+            fmt.Printf("Non-API error: %v\n", err)
         }
-    case errors.As(err, &smriteaErr):
-        fmt.Printf("Unexpected error: %s\n", smriteaErr.Message)
-    default:
-        fmt.Printf("Non-API error: %v\n", err)
     }
 }
 ```
@@ -281,15 +365,25 @@ as a promoted field. `errors.As` into `*smritea.SmriteaError` matches only the b
 without a dedicated type), so check the typed errors first:
 
 ```go
-_, err := client.Get(ctx, "mem_missing")
+import (
+    "context"
+    "errors"
+    "fmt"
 
-var notFound *smritea.SmriteaNotFoundError
-var se *smritea.SmriteaError
-switch {
-case errors.As(err, &notFound):
-    fmt.Println("request id:", notFound.RequestID)
-case errors.As(err, &se):
-    fmt.Println("request id:", se.RequestID)
+    smritea "github.com/SmrutAI/smritea-sdk/go"
+)
+
+func printRequestID(ctx context.Context, client *smritea.SmriteaClient) {
+    _, err := client.Get(ctx, "mem_missing")
+
+    var notFound *smritea.SmriteaNotFoundError
+    var se *smritea.SmriteaError
+    switch {
+    case errors.As(err, &notFound):
+        fmt.Println("request id:", notFound.RequestID)
+    case errors.As(err, &se):
+        fmt.Println("request id:", se.RequestID)
+    }
 }
 ```
 

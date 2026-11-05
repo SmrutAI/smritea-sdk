@@ -69,7 +69,8 @@ results = client.search(
     scope=MemoryScope(actor_id="alice", actor_type="user"),
 )
 for r in results:
-    print(f"{r.score:.2f}  {r.memory.content}")
+    if r.memory:
+        print(f"{r.score:.2f}  {r.memory.content}")
 ```
 
 **TypeScript**
@@ -92,7 +93,7 @@ const results = await client.search("What are Alice's food preferences?", {
   scope: { actorId: 'alice', actorType: 'user' },
 });
 for (const r of results) {
-  console.log(r.score?.toFixed(2), r.memory.content);
+  console.log(r.score?.toFixed(2), r.memory?.content);
 }
 ```
 
@@ -139,23 +140,28 @@ func strPtr(s string) *string { return &s }
 ```java
 import ai.smritea.sdk.SmriteaClient;
 import ai.smritea.sdk.model.*;
+import java.util.List;
 
-SmriteaClient client = new SmriteaClient(
-    System.getenv("SMRITEA_API_KEY"),
-    System.getenv("SMRITEA_APP_ID")
-);
+public class Quickstart {
+    public static void main(String[] args) {
+        SmriteaClient client = new SmriteaClient(
+            System.getenv("SMRITEA_API_KEY"),
+            System.getenv("SMRITEA_APP_ID")
+        );
 
-// Store something about a user
-MemoryCreationResult result = client.add("Alice is a vegetarian and loves hiking",
-    new AddOptions().withScope(
-        MemoryScope.builder().actorId("alice").actorType("user").build()));
+        // Store something about a user
+        MemoryCreationResult result = client.add("Alice is a vegetarian and loves hiking",
+            new AddOptions().withScope(
+                MemoryScope.builder().actorId("alice").actorType("user").build()));
 
-// Retrieve it later
-List<SearchResult> results = client.search("What are Alice's food preferences?",
-    new SearchOptions().withScope(
-        MemoryScope.builder().actorId("alice").actorType("user").build()));
-for (SearchResult r : results) {
-    System.out.printf("%.2f  %s%n", r.getScore(), r.getContent());
+        // Retrieve it later
+        List<SearchResult> results = client.search("What are Alice's food preferences?",
+            new SearchOptions().withScope(
+                MemoryScope.builder().actorId("alice").actorType("user").build()));
+        for (SearchResult r : results) {
+            System.out.printf("%.2f  %s%n", r.getScore(), r.getContent());
+        }
+    }
 }
 ```
 
@@ -201,7 +207,8 @@ result = client.add(
     ),
     metadata={"source": "chat"},       # optional arbitrary key-value pairs
 )
-print(result.memories[0].id)  # mem_...
+for memory in result.memories or []:
+    print(memory.id)  # mem_...
 ```
 
 ```typescript
@@ -214,7 +221,7 @@ const result = await client.add('User prefers concise replies', {
   },
   metadata: { source: 'chat' },
 });
-console.log(result.memories[0].id); // mem_...
+console.log(result.memories?.[0]?.id); // mem_...
 ```
 
 **Full signature**
@@ -236,6 +243,8 @@ Responses return `conversation_id` in the service's normalized form (`cnv_` + 16
 
 ```python
 # Python
+from smritea import MemoryScope
+
 results = client.search(
     "dietary restrictions",
     scope=MemoryScope(actor_id="alice", actor_type="user"),
@@ -243,7 +252,8 @@ results = client.search(
     method="deep_search",   # optional: "quick_search" | "deep_search" | "context_aware_search"
 )
 for r in results:
-    print(r.score, r.memory.content)
+    if r.memory:
+        print(r.score, r.memory.content)
 ```
 
 ```typescript
@@ -253,7 +263,7 @@ const results = await client.search('dietary restrictions', {
   limit: 5,
   method: 'deep_search',
 });
-results.forEach(r => console.log(r.score, r.memory.content));
+results.forEach(r => console.log(r.score, r.memory?.content));
 ```
 
 Results are ordered by relevance (descending). Each result exposes `score` (float 0–1) and a nested `memory` object containing the memory fields.
@@ -330,6 +340,8 @@ Raises / throws `SmriteaNotFoundError` if the ID does not exist.
 
 ```python
 # Workaround until get_all is available
+from smritea import MemoryScope
+
 results = client.search("", scope=MemoryScope(actor_id="alice", actor_type="user"), limit=20)
 ```
 

@@ -72,7 +72,8 @@ client.add("Alice is a vegetarian and loves hiking", scope=alice)
 # Retrieve it later in a different session
 results = client.search("What are Alice's food preferences?", scope=alice)
 for r in results:
-    print(f"{r.score:.2f}  {r.content}")
+    if r.memory:
+        print(f"{r.score:.2f}  {r.memory.content}")
 ```
 
 ---
@@ -132,7 +133,7 @@ result = client.add(
     ),
     metadata={"source": "chat"},    # optional
 )
-for memory in result.memories:
+for memory in result.memories or []:
     print(memory.id)  # mem_...
 ```
 
@@ -149,13 +150,16 @@ for memory in result.memories:
 ### `search` — Semantic search
 
 ```python
+from smritea import MemoryScope
+
 results = client.search(
     "dietary restrictions",
     scope=MemoryScope(actor_id="alice", actor_type="user"),
     limit=5,
 )
 for r in results:
-    print(r.score, r.memory.content)
+    if r.memory:
+        print(r.score, r.memory.content)
 ```
 
 Results are ordered by relevance (descending). Each result exposes `score` (0.0–1.0) and a `memory` object holding the `Memory` fields.
@@ -195,6 +199,8 @@ client.delete("mem_abc123")
 > Use `search()` with a broad query as a workaround:
 
 ```python
+from smritea import MemoryScope
+
 results = client.search("", scope=MemoryScope(actor_id="alice", actor_type="user"), limit=20)
 ```
 

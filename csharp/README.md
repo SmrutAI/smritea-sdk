@@ -203,6 +203,8 @@ await client.DeleteAsync("mem_abc123");
 > Use `SearchAsync()` with a broad query as a workaround:
 
 ```csharp
+using Smritea.Sdk;
+
 var results = await client.SearchAsync("",
     new SearchOptions()
         .WithScope(new MemoryScope().WithActorId("alice").WithActorType("user"))
@@ -265,6 +267,8 @@ Every exception also carries `RequestId`, the server-assigned ID for the failed 
 header. It is `null` when neither is available.
 
 ```csharp
+using Smritea.Sdk;
+
 try
 {
     await client.DeleteAsync("mem_abc123");

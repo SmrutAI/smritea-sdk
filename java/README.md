@@ -77,22 +77,26 @@ import ai.smritea.sdk.model.SearchOptions;
 import ai.smritea.sdk.model.SearchResult;
 import java.util.List;
 
-SmriteaClient client = new SmriteaClient(
-    System.getenv("SMRITEA_API_KEY"),
-    System.getenv("SMRITEA_APP_ID")
-);
+public class Quickstart {
+    public static void main(String[] args) {
+        SmriteaClient client = new SmriteaClient(
+            System.getenv("SMRITEA_API_KEY"),
+            System.getenv("SMRITEA_APP_ID")
+        );
 
-// Store something about a user
-MemoryCreationResult result = client.add("Alice is a vegetarian and loves hiking",
-    new AddOptions().withScope(
-        MemoryScope.builder().actorId("alice").actorType("user").build()));
+        // Store something about a user
+        MemoryCreationResult result = client.add("Alice is a vegetarian and loves hiking",
+            new AddOptions().withScope(
+                MemoryScope.builder().actorId("alice").actorType("user").build()));
 
-// Retrieve it later
-List<SearchResult> results = client.search("What are Alice's food preferences?",
-    new SearchOptions().withScope(
-        MemoryScope.builder().actorId("alice").actorType("user").build()));
-for (SearchResult r : results) {
-    System.out.printf("%.2f  %s%n", r.getScore(), r.getContent());
+        // Retrieve it later
+        List<SearchResult> results = client.search("What are Alice's food preferences?",
+            new SearchOptions().withScope(
+                MemoryScope.builder().actorId("alice").actorType("user").build()));
+        for (SearchResult r : results) {
+            System.out.printf("%.2f  %s%n", r.getScore(), r.getContent());
+        }
+    }
 }
 ```
 
@@ -103,25 +107,29 @@ for (SearchResult r : results) {
 ```java
 import ai.smritea.sdk.SmriteaClient;
 
-// Minimal (uses default base URL and 2 retries)
-SmriteaClient client = new SmriteaClient("smrt_<prefix>_<secret>", "app_...");
+class ConstructorExamples {
+    static void build() {
+        // Minimal (uses default base URL and 2 retries)
+        SmriteaClient minimal = new SmriteaClient("smrt_<prefix>_<secret>", "app_...");
 
-// Full
-SmriteaClient client = new SmriteaClient(
-    "smrt_<prefix>_<secret>",           // apiKey — required
-    "app_...",                          // appId — required
-    "https://api-us.smritea.ai",           // baseUrl — optional, default shown
-    2                                   // maxRetries — optional, default 2; 0 disables retry
-);
+        // Full
+        SmriteaClient full = new SmriteaClient(
+            "smrt_<prefix>_<secret>",           // apiKey — required
+            "app_...",                          // appId — required
+            "https://api-us.smritea.ai",           // baseUrl — optional, default shown
+            2                                   // maxRetries — optional, default 2; 0 disables retry
+        );
 
-// With a Trace ID — the 5th argument
-SmriteaClient client = new SmriteaClient(
-    "smrt_<prefix>_<secret>",
-    "app_...",
-    "https://api-us.smritea.ai",
-    2,
-    "checkout-req-7f3a9c"               // traceId — optional; pass null to send no header
-);
+        // With a Trace ID — the 5th argument
+        SmriteaClient traced = new SmriteaClient(
+            "smrt_<prefix>_<secret>",
+            "app_...",
+            "https://api-us.smritea.ai",
+            2,
+            "checkout-req-7f3a9c"               // traceId — optional; pass null to send no header
+        );
+    }
+}
 ```
 
 `traceId` is sent as the `X-Trace-ID` header on every request the client makes. It must be 8–100
@@ -143,20 +151,25 @@ All methods are **synchronous** and return values directly. For async use, wrap 
 ### `add` — Store a memory
 
 ```java
+import ai.smritea.sdk.SmriteaClient;
 import ai.smritea.sdk.model.AddOptions;
 import ai.smritea.sdk.model.MemoryCreationResult;
 import ai.smritea.sdk.model.MemoryScope;
 import java.util.Map;
 
-MemoryCreationResult result = client.add("User prefers concise replies",
-    new AddOptions()
-        .withScope(MemoryScope.builder()
-            .actorId("alice")                                   // explicit actor ID
-            .actorType("user")                                  // "user" | "agent" | "system"
-            .conversationId("conv_123")                         // optional
-            .build())
-        .withMetadata(Map.of("source", "chat")));               // optional
-System.out.println(result.getMemories().get(0).getId()); // mem_...
+class AddExample {
+    static void run(SmriteaClient client) {
+        MemoryCreationResult result = client.add("User prefers concise replies",
+            new AddOptions()
+                .withScope(MemoryScope.builder()
+                    .actorId("alice")                                   // explicit actor ID
+                    .actorType("user")                                  // "user" | "agent" | "system"
+                    .conversationId("conv_123")                         // optional
+                    .build())
+                .withMetadata(Map.of("source", "chat")));               // optional
+        System.out.println(result.getMemories().get(0).getId()); // mem_...
+    }
+}
 ```
 
 `add` returns a `MemoryCreationResult`. One call can store several facts, so read each one from `getMemories()`.
@@ -185,17 +198,22 @@ System.out.println(result.getMemories().get(0).getId()); // mem_...
 ### `search` — Semantic search
 
 ```java
+import ai.smritea.sdk.SmriteaClient;
 import ai.smritea.sdk.model.MemoryScope;
 import ai.smritea.sdk.model.SearchOptions;
 import ai.smritea.sdk.model.SearchResult;
 import java.util.List;
 
-List<SearchResult> results = client.search("dietary restrictions",
-    new SearchOptions()
-        .withScope(MemoryScope.builder().actorId("alice").actorType("user").build())
-        .withLimit(5));
-for (SearchResult r : results) {
-    System.out.println(r.getScore() + "  " + r.getContent());
+class SearchExample {
+    static void run(SmriteaClient client) {
+        List<SearchResult> results = client.search("dietary restrictions",
+            new SearchOptions()
+                .withScope(MemoryScope.builder().actorId("alice").actorType("user").build())
+                .withLimit(5));
+        for (SearchResult r : results) {
+            System.out.println(r.getScore() + "  " + r.getContent());
+        }
+    }
 }
 ```
 
@@ -220,9 +238,16 @@ Results are ordered by relevance (descending). Each result exposes `getScore()` 
 ### `get` — Retrieve a memory by ID
 
 ```java
-Memory memory = client.get("mem_abc123");
-System.out.println(memory.getContent() + " " + memory.getCreatedAt());
-// Throws SmriteaNotFoundError if the ID does not exist
+import ai.smritea.sdk.SmriteaClient;
+import ai.smritea.sdk.model.Memory;
+
+class GetExample {
+    static void run(SmriteaClient client) {
+        Memory memory = client.get("mem_abc123");
+        System.out.println(memory.getContent() + " " + memory.getCreatedAt());
+        // Throws SmriteaNotFoundError if the ID does not exist
+    }
+}
 ```
 
 ---
@@ -230,8 +255,14 @@ System.out.println(memory.getContent() + " " + memory.getCreatedAt());
 ### `delete` — Delete a memory by ID
 
 ```java
-client.delete("mem_abc123");
-// Throws SmriteaNotFoundError if the ID does not exist
+import ai.smritea.sdk.SmriteaClient;
+
+class DeleteExample {
+    static void run(SmriteaClient client) {
+        client.delete("mem_abc123");
+        // Throws SmriteaNotFoundError if the ID does not exist
+    }
+}
 ```
 
 ---
@@ -242,9 +273,19 @@ client.delete("mem_abc123");
 > Use `search()` with a broad query as a workaround:
 
 ```java
-List<SearchResult> results = client.search("", new SearchOptions()
-    .withScope(MemoryScope.builder().actorId("alice").actorType("user").build())
-    .withLimit(20));
+import ai.smritea.sdk.SmriteaClient;
+import ai.smritea.sdk.model.MemoryScope;
+import ai.smritea.sdk.model.SearchOptions;
+import ai.smritea.sdk.model.SearchResult;
+import java.util.List;
+
+class ListAllExample {
+    static void run(SmriteaClient client) {
+        List<SearchResult> results = client.search("", new SearchOptions()
+            .withScope(MemoryScope.builder().actorId("alice").actorType("user").build())
+            .withLimit(20));
+    }
+}
 ```
 
 `limit` must not exceed the server's `top_n_max` (default 20); a larger value returns a 400 error. Omit it to use the app's `top_n`.
@@ -254,25 +295,34 @@ List<SearchResult> results = client.search("", new SearchOptions()
 ## Error handling
 
 ```java
-import ai.smritea.sdk.errors.SmriteaUnauthorizedError;
-import ai.smritea.sdk.errors.SmriteaTooManyRequestsError;
-import ai.smritea.sdk.errors.SmriteaPaymentRequiredError;
+import ai.smritea.sdk.SmriteaClient;
 import ai.smritea.sdk.errors.SmriteaError;
+import ai.smritea.sdk.errors.SmriteaPaymentRequiredError;
+import ai.smritea.sdk.errors.SmriteaTooManyRequestsError;
+import ai.smritea.sdk.errors.SmriteaUnauthorizedError;
+import ai.smritea.sdk.model.MemoryScope;
+import ai.smritea.sdk.model.SearchOptions;
+import ai.smritea.sdk.model.SearchResult;
+import java.util.List;
 
-try {
-    List<SearchResult> results = client.search("preferences",
-        new SearchOptions().withScope(
-            MemoryScope.builder().actorId("alice").actorType("user").build()));
-} catch (SmriteaUnauthorizedError e) {
-    System.out.println("Check your API key");
-} catch (SmriteaTooManyRequestsError e) {
-    System.out.printf("Rate limited — retry after %ds%n", e.getRetryAfter());
-} catch (SmriteaPaymentRequiredError e) {
-    System.out.println("Plan quota exceeded");
-} catch (SmriteaError e) {
-    System.out.printf("Unexpected error: %s (code=%s, retryable=%b)%n",
-        e.getMessage(), e.getCode(), e.isRetryable());
-    System.out.println("Request ID: " + e.getRequestId());
+class ErrorHandlingExample {
+    static void run(SmriteaClient client) {
+        try {
+            List<SearchResult> results = client.search("preferences",
+                new SearchOptions().withScope(
+                    MemoryScope.builder().actorId("alice").actorType("user").build()));
+        } catch (SmriteaUnauthorizedError e) {
+            System.out.println("Check your API key");
+        } catch (SmriteaTooManyRequestsError e) {
+            System.out.printf("Rate limited — retry after %ds%n", e.getRetryAfter());
+        } catch (SmriteaPaymentRequiredError e) {
+            System.out.println("Plan quota exceeded");
+        } catch (SmriteaError e) {
+            System.out.printf("Unexpected error: %s (code=%s, retryable=%b)%n",
+                e.getMessage(), e.getCode(), e.isRetryable());
+            System.out.println("Request ID: " + e.getRequestId());
+        }
+    }
 }
 ```
 
