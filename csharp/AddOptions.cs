@@ -17,7 +17,7 @@ public sealed class AddOptions
     /// <summary>Gets the arbitrary key-value metadata.</summary>
     public Dictionary<string, object>? Metadata { get; private set; }
 
-    /// <summary>Gets the ISO-8601 datetime string for when this content was created or occurred.</summary>
+    /// <summary>Gets the RFC 3339 datetime string for when this content was created or occurred.</summary>
     public string? EventOccurredAt { get; private set; }
 
     /// <summary>Gets the importance and temporal decay configuration.</summary>
@@ -41,10 +41,10 @@ public sealed class AddOptions
         return this;
     }
 
-    /// <summary>Sets the temporal anchor for extraction (ISO-8601 datetime string).
+    /// <summary>Sets the temporal anchor for extraction (RFC 3339 datetime string).
     /// Used by the extraction LLM to resolve relative temporal expressions like "last year".
     /// Defaults to current time if omitted.</summary>
-    /// <param name="eventOccurredAt">ISO-8601 datetime string.</param>
+    /// <param name="eventOccurredAt">RFC 3339 datetime string.</param>
     /// <returns>The current instance for method chaining.</returns>
     public AddOptions WithEventOccurredAt(string eventOccurredAt)
     {

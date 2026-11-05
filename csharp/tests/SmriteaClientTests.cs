@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Text.Json;
 using Smritea.Internal.Autogen.Api;
 using Smritea.Internal.Autogen.Client;
 using Smritea.Internal.Autogen.Model;
@@ -510,4 +512,62 @@ public class SmriteaClientTests : IDisposable
 
         Assert.Empty(_server.LogEntries);
     }
+
+    // -----------------------------------------------------------------------
+    // Relative standing -- an explicit 0 must reach the server, an unset field must be omitted
+    // -----------------------------------------------------------------------
+
+    // Each row is (importance, decay factor, decay function, expected relative_standing fields).
+    // The generated model drops a plain 0, and the server then applies its defaults (1.0 and 0.2).
+    public static TheoryData<float?, float?, string?, string> RelativeStandingRows => new()
+    {
+        { 0f, 0f, null, "decay_factor=0|importance=0" },
+        { null, 0f, null, "decay_factor=0" },
+        { 0f, null, null, "importance=0" },
+        { null, null, "gaussian", "decay_function=gaussian" },
+        { 0.5f, 0.25f, "linear", "decay_factor=0.25|decay_function=linear|importance=0.5" },
+        { 1f, 3f, "exponential", "decay_factor=3|decay_function=exponential|importance=1" },
+    };
+
+    [Theory]
+    [MemberData(nameof(RelativeStandingRows))]
+    public async Task AddAsync_RelativeStanding_SendsExplicitValuesAndOmitsUnset(
+        float? importance, float? decayFactor, string? decayFunction, string expected)
+    {
+        _server.Given(Request.Create().WithPath("/api/v1/sdk/memories").UsingPost())
+            .RespondWith(Response.Create().WithStatusCode(200)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(MemCreateJson("mem-rs", "content")));
+        var standing = new RelativeStanding();
+        if (importance is not null)
+        {
+            standing.WithImportance(importance.Value);
+        }
+
+        if (decayFactor is not null)
+        {
+            standing.WithDecayFactor(decayFactor.Value);
+        }
+
+        if (decayFunction is not null)
+        {
+            standing.WithDecayFunction(decayFunction);
+        }
+
+        using var client = CreateClient();
+        await client.AddAsync("content", new AddOptions().WithRelativeStanding(standing));
+
+        var body = Assert.Single(_server.LogEntries).RequestMessage?.Body;
+        Assert.NotNull(body);
+        using var document = JsonDocument.Parse(body);
+        var sent = document.RootElement.GetProperty("relative_standing").EnumerateObject()
+            .Select(p => $"{p.Name}={FormatJsonValue(p.Value)}")
+            .OrderBy(s => s, StringComparer.Ordinal);
+        Assert.Equal(expected, string.Join("|", sent));
+    }
+
+    private static string FormatJsonValue(JsonElement value) =>
+        value.ValueKind == JsonValueKind.Number
+            ? value.GetDouble().ToString(CultureInfo.InvariantCulture)
+            : value.GetString()!;
 }

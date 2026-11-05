@@ -171,11 +171,18 @@ public class SmriteaClient : IDisposable
                 if (opts.RelativeStanding.Importance.HasValue)
                 {
                     rs.Importance = (decimal)opts.RelativeStanding.Importance.Value;
+
+                    // The generated field is a non-nullable decimal: mark it as chosen so an explicit 0 is still sent.
+                    // TODO: Remove the IsSet flag assignments, RelativeStandingConfigConverter and the partial class
+                    // once the generator emits nullable value types (decimal?) for optional fields. The public SDK
+                    // contract (RelativeStanding and its With* builders) must stay unchanged for SDK users.
+                    rs.ImportanceIsSet = true;
                 }
 
                 if (opts.RelativeStanding.DecayFactor.HasValue)
                 {
                     rs.DecayFactor = (decimal)opts.RelativeStanding.DecayFactor.Value;
+                    rs.DecayFactorIsSet = true;
                 }
 
                 if (opts.RelativeStanding.DecayFunction is not null)

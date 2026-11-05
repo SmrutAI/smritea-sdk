@@ -117,7 +117,7 @@ class SmriteaClient:
             scope: Optional MemoryScope object for actor and conversation context.
             metadata: Optional key-value metadata attached to the memory. Values must be
                 strings, integers or floats; booleans, null, objects and arrays are rejected.
-            event_occurred_at: ISO-8601 datetime string — when this content was created
+            event_occurred_at: RFC 3339 datetime string — when this content was created
                 or occurred. Used by the extraction LLM to resolve relative temporal
                 expressions like "last year" or "yesterday". Defaults to current time
                 if omitted.
@@ -196,13 +196,13 @@ class SmriteaClient:
             limit: Number of results. It must not exceed the server's top_n_max
                 (default 20). Omit to use the app's top_n.
             graph_depth: Graph traversal depth, 1-5; omit to use the system default.
-            from_time: ISO-8601 datetime — start of a time range. Returns memories whose validity
+            from_time: RFC 3339 datetime — start of a time range. Returns memories whose validity
                 period overlaps [from_time, infinity). Can be used alone (open-ended). With to_time
                 the range is [from_time, to_time]. Cannot be combined with valid_at.
-            to_time: ISO-8601 datetime — end of a time range (inclusive). Returns memories whose
+            to_time: RFC 3339 datetime — end of a time range (inclusive). Returns memories whose
                 validity period overlaps (-infinity, to_time]. Can be used alone (open-ended). With
                 from_time the range is [from_time, to_time]. Cannot be combined with valid_at.
-            valid_at: ISO-8601 datetime — return memories valid at exactly this moment. Cannot be
+            valid_at: RFC 3339 datetime — return memories valid at exactly this moment. Cannot be
                 combined with from_time or to_time.
             method: Search method override. Accepted values: ``"quick_search"``,
                 ``"deep_search"``, ``"context_aware_search"``. Defaults to app config.

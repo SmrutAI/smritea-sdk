@@ -115,7 +115,7 @@ class AddOptions(BaseModel):
     scope: MemoryScope | None = None
     metadata: dict[str, Any] | None = None
     event_occurred_at: str | None = None
-    """ISO-8601 datetime string — when this content was created or occurred.
+    """RFC 3339 datetime string — when this content was created or occurred.
     Used by the extraction LLM to resolve relative temporal expressions
     like "last year" or "yesterday". Defaults to current time if omitted."""
     relative_standing: RelativeStanding | None = None
@@ -129,15 +129,15 @@ class SearchOptions(BaseModel):
     limit: int | None = None
     graph_depth: int | None = None
     from_time: str | None = None
-    """ISO-8601 datetime string — start of a time range. Returns memories whose validity period
+    """RFC 3339 datetime string — start of a time range. Returns memories whose validity period
     overlaps [from_time, infinity). Can be used alone (open-ended). With to_time the range is
     [from_time, to_time]. Cannot be combined with valid_at."""
     to_time: str | None = None
-    """ISO-8601 datetime string — end of a time range (inclusive). Returns memories whose validity
+    """RFC 3339 datetime string — end of a time range (inclusive). Returns memories whose validity
     period overlaps (-infinity, to_time]. Can be used alone (open-ended). With from_time the range
     is [from_time, to_time]. Cannot be combined with valid_at."""
     valid_at: str | None = None
-    """ISO-8601 datetime string — return memories valid at exactly this moment. Cannot be combined
+    """RFC 3339 datetime string — return memories valid at exactly this moment. Cannot be combined
     with from_time or to_time."""
     method: str | None = None
     """Search method override. Accepted values: ``"quick_search"``, ``"deep_search"``,

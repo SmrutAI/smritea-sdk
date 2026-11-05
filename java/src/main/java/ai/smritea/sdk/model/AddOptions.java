@@ -45,11 +45,11 @@ public final class AddOptions {
   }
 
   /**
-   * Sets the temporal anchor for extraction (ISO-8601 datetime string). Used by the extraction LLM
+   * Sets the temporal anchor for extraction (RFC 3339 datetime string). Used by the extraction LLM
    * to resolve relative temporal expressions like "last year" or "yesterday". Defaults to current
    * time if omitted.
    *
-   * @param eventOccurredAt ISO-8601 datetime string
+   * @param eventOccurredAt RFC 3339 datetime string
    * @return this instance for chaining
    */
   public AddOptions withEventOccurredAt(String eventOccurredAt) {

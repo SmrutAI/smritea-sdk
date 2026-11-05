@@ -76,11 +76,11 @@ public final class SearchOptions {
   }
 
   /**
-   * Sets the start of a time range filter (ISO 8601 format). Returns memories whose validity period
+   * Sets the start of a time range filter (RFC 3339 format). Returns memories whose validity period
    * overlaps [fromTime, infinity). Can be used alone (open-ended). With toTime the range is
    * [fromTime, toTime]. Cannot be combined with validAt.
    *
-   * @param fromTime the start of the time range (ISO 8601)
+   * @param fromTime the start of the time range (RFC 3339)
    * @return this instance for chaining
    */
   public SearchOptions withFromTime(String fromTime) {
@@ -89,11 +89,11 @@ public final class SearchOptions {
   }
 
   /**
-   * Sets the end of a time range filter (ISO 8601 format, inclusive). Returns memories whose
+   * Sets the end of a time range filter (RFC 3339 format, inclusive). Returns memories whose
    * validity period overlaps (-infinity, toTime]. Can be used alone (open-ended). With fromTime the
    * range is [fromTime, toTime]. Cannot be combined with validAt.
    *
-   * @param toTime the end of the time range (ISO 8601)
+   * @param toTime the end of the time range (RFC 3339)
    * @return this instance for chaining
    */
   public SearchOptions withToTime(String toTime) {
@@ -102,10 +102,10 @@ public final class SearchOptions {
   }
 
   /**
-   * Sets a point-in-time filter (ISO 8601 format): memories valid at exactly this moment. Cannot be
+   * Sets a point-in-time filter (RFC 3339 format): memories valid at exactly this moment. Cannot be
    * combined with fromTime or toTime.
    *
-   * @param validAt the point-in-time to filter by (ISO 8601)
+   * @param validAt the point-in-time to filter by (RFC 3339)
    * @return this instance for chaining
    */
   public SearchOptions withValidAt(String validAt) {

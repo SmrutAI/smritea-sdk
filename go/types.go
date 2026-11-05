@@ -117,7 +117,7 @@ func (r *RelativeStanding) WithDecayFunction(v string) *RelativeStanding {
 type AddOptions struct {
 	Scope    *MemoryScope
 	Metadata map[string]any
-	// EventOccurredAt is an ISO-8601 datetime string — when this content was created or occurred.
+	// EventOccurredAt is an RFC 3339 datetime string — when this content was created or occurred.
 	// Used by the extraction LLM to resolve relative temporal expressions like "last year".
 	// Defaults to current time if nil.
 	EventOccurredAt *string
@@ -160,15 +160,15 @@ type SearchOptions struct {
 	Scope          *MemoryScope
 	Limit          *int32
 	GraphDepth     *int32
-	// FromTime is an ISO-8601 datetime string — the start of a time range. Returns memories whose
+	// FromTime is an RFC 3339 datetime string — the start of a time range. Returns memories whose
 	// validity period overlaps [FromTime, infinity). Can be used alone (open-ended). With ToTime the
 	// range is [FromTime, ToTime]. Cannot be combined with ValidAt.
 	FromTime *string
-	// ToTime is an ISO-8601 datetime string — the end of a time range (inclusive). Returns memories
+	// ToTime is an RFC 3339 datetime string — the end of a time range (inclusive). Returns memories
 	// whose validity period overlaps (-infinity, ToTime]. Can be used alone (open-ended). With FromTime
 	// the range is [FromTime, ToTime]. Cannot be combined with ValidAt.
 	ToTime *string
-	// ValidAt is an ISO-8601 datetime string — return memories valid at exactly this moment. Cannot be
+	// ValidAt is an RFC 3339 datetime string — return memories valid at exactly this moment. Cannot be
 	// combined with FromTime or ToTime.
 	ValidAt *string
 	// Method overrides the search method. Accepted values: "quick_search", "deep_search",

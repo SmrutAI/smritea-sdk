@@ -141,7 +141,7 @@ for memory in result.memories:
 | `content` | required | Memory text |
 | `scope` | `None` | `MemoryScope` object carrying the actor and conversation context. Its fields are listed in [MemoryScope](#memoryscope). `add()` sends all of them. |
 | `metadata` | `None` | Arbitrary key-value dict; values must be strings, integers or floats |
-| `event_occurred_at` | `None` | ISO-8601 datetime of when the content occurred. Used to resolve relative expressions such as "yesterday". Defaults to now. |
+| `event_occurred_at` | `None` | RFC 3339 datetime of when the content occurred. Used to resolve relative expressions such as "yesterday". Defaults to now. |
 | `relative_standing` | `None` | `RelativeStanding` object with `importance`, `decay_factor` and `decay_function` |
 
 ---
