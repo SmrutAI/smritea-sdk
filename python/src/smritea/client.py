@@ -10,6 +10,7 @@ from typing import Any, Callable, NoReturn, TypeVar
 
 import urllib3
 
+from smritea._http_client import _default_pool_manager, _supplied_pool_manager
 from smritea._internal.autogen.smritea_cloud_sdk import ApiClient, Configuration
 from smritea._internal.autogen.smritea_cloud_sdk.api.sdk_memory_api import SDKMemoryApi
 from smritea._internal.autogen.smritea_cloud_sdk.exceptions import ApiException
@@ -34,6 +35,9 @@ from smritea.exceptions import (
     extract_request_id,
 )
 from smritea.types import Memory, MemoryCreationResult, MemoryScope, RelativeStanding, SearchResult
+
+DEFAULT_TIMEOUT_SECONDS = 10.0
+"""Total time budget, in seconds, of one HTTP exchange sent by the SDK-built HTTP client."""
 
 _T = TypeVar("_T")
 _RETRY_CAP_SECONDS = 30.0
@@ -78,8 +82,15 @@ class SmriteaClient:
                 colon or hyphen. Default: None (the server assigns one).
             http_client: Optional urllib3 PoolManager (or a subclass such as
                 ProxyManager) that sends every request. Use it to set your own proxy,
-                TLS, timeout or pool settings. The client does not close it.
-                Default: None (the SDK builds its own).
+                TLS, timeout or pool settings. The SDK adds no timeout to it, so
+                the timeout of this PoolManager applies (none if you set none), and
+                the client does not close it.
+                Default: None (the SDK builds its own, with a timeout of
+                DEFAULT_TIMEOUT_SECONDS, 10 s: the connection and the response
+                headers must arrive within it, and the response body may not stall
+                for longer than it; a body that keeps sending data is not cut off).
+                The SDK does not retry a timeout, and a retry after HTTP 429 gets
+                a fresh timeout. A timeout surfaces as SmriteaError.
 
         Raises:
             ValueError: If trace_id is set and does not match the allowed format.
@@ -91,8 +102,13 @@ class SmriteaClient:
         configuration = Configuration(host=base_url)
         configuration.api_key["ApiKeyAuth"] = api_key
         self._api_client = ApiClient(configuration)
+        rest_client = self._api_client.rest_client
         if http_client is not None:
-            self._api_client.rest_client.pool_manager = http_client
+            rest_client.pool_manager = _supplied_pool_manager(http_client)
+        else:
+            rest_client.pool_manager = _default_pool_manager(
+                rest_client.pool_manager, DEFAULT_TIMEOUT_SECONDS
+            )
         if trace_id is not None:
             self._api_client.set_default_header("X-Trace-ID", trace_id)
         self._memory_api = SDKMemoryApi(self._api_client)

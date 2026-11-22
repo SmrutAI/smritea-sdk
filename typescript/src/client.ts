@@ -1,5 +1,6 @@
 import { Configuration, ResponseError } from './_internal/autogen/runtime.js';
 import { SDKMemoryApi } from './_internal/autogen/apis/SDKMemoryApi.js';
+import { DEFAULT_TIMEOUT_MS, createDefaultFetch } from './default-fetch.js';
 import type { AddOptions, Memory, MemoryCreationResult, SearchOptions, SearchResult, SmriteaClientConfig } from './types.js';
 import {
   SmriteaBadRequestError,
@@ -32,7 +33,7 @@ export class SmriteaClient {
     const configuration = new Configuration({
       basePath: config.baseUrl?.replace(/\/$/, '') ?? 'https://api-us.smritea.ai',
       apiKey: config.apiKey,
-      fetchApi: config.fetch,
+      fetchApi: config.fetch ?? createDefaultFetch(DEFAULT_TIMEOUT_MS),
       headers: config.traceId !== undefined ? { 'X-Trace-ID': config.traceId } : undefined,
     });
     this.api = new SDKMemoryApi(configuration);
@@ -110,7 +111,12 @@ export class SmriteaClient {
   }
 
   async delete(memoryId: string): Promise<void> {
-    await this.withRetry(() => this.api.deleteMemory({ xAppID: this.appId, memoryId }));
+    await this.withRetry(async () => {
+      const response = await this.api.deleteMemoryRaw({ xAppID: this.appId, memoryId });
+      // The generated void response never reads the body. Read it so the exchange ends only
+      // when the body is complete, which keeps a stalled body inside the timeout budget.
+      await response.raw.arrayBuffer();
+    });
   }
 
   async getAll(options?: { limit?: number; offset?: number }): Promise<Memory[]> {

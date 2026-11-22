@@ -27,7 +27,7 @@ type ClientConfig struct {
 	BaseURL    string       // default: https://api-us.smritea.ai
 	MaxRetries *int         // nil: default 2; pointer to 0: no retry; pointer to N: N retries
 	TraceID    string       // optional; 8-100 bytes of A-Z, a-z, 0-9, '.', '_', ':', '-'; sent as X-Trace-ID on every call
-	HTTPClient *http.Client // optional; sends every request (your own transport, proxy, TLS, timeout); nil: http.DefaultClient
+	HTTPClient *http.Client // optional; sends every request as given (your own transport, proxy, TLS, timeout; the SDK adds no timeout and never closes it); nil: a new client with Timeout DefaultTimeout (10s)
 }
 
 // Int returns a pointer to v. It is a convenience for setting ClientConfig.MaxRetries,

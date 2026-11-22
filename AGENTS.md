@@ -51,9 +51,10 @@ Every SDK implementation MUST expose exactly this surface:
 | Method   | Signature                                                                                                                                                |
 |----------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `add`    | `(content, *, scope?, metadata?, event_occurred_at?, relative_standing?) → MemoryCreationResult`                                                         |
-| `search` | `(query, *, scope?, limit?, graph_depth?, from_time?, to_time?, valid_at?, method?, reranker_type?) → list[SearchResult]`                                |
+| `search` | `(query, *, speaker_actor_id?, scope?, limit?, graph_depth?, from_time?, to_time?, valid_at?, method?, reranker_type?, metadata_filter?) → list[SearchResult]` |
 | `get`    | `(memory_id) → Memory`                                                                                                                                   |
 | `delete` | `(memory_id) → void`                                                                                                                                     |
+| `get_all` | `() → list[Memory]` — a stub that raises "not yet available" in every language                                                                          |
 
 **`app_id` on constructor**: Set once, then sent as the `X-App-ID` request header on every call —
 `add`, `search`, `get`, and `delete`. It is never placed in the request body and is never accepted as
@@ -81,15 +82,18 @@ Language notes: Go treats an empty `TraceID` as unset (no error); every other la
 it fails the pattern. Go's validation counts bytes, not characters. Java's 4-argument constructors pass
 `null` for the trace ID, which sends no header.
 
-**HTTP client on constructor**: Optional. The given client sends every request; the SDK never closes it.
+**HTTP client on constructor**: Optional. The given client sends every request exactly as given: the SDK
+adds no timeout to it and never closes it, so the caller's own timeouts, proxy and TLS settings take
+effect. When none is given, the SDK builds its own client with the default request timeout (see
+"Request Timeout").
 
-| Language   | Option name                                         | Null or absent                         | Source                                                                 |
-|------------|-----------------------------------------------------|----------------------------------------|------------------------------------------------------------------------|
-| Python     | `http_client` keyword (`urllib3.PoolManager`)       | the generated client's own PoolManager | `python/src/smritea/client.py#SmriteaClient.__init__`                  |
-| TypeScript | `fetch` field (`typeof fetch`)                      | the global `fetch`                     | `typescript/src/types.ts#SmriteaClientConfig`                          |
-| Go         | `ClientConfig.HTTPClient` (`*http.Client`)          | `http.DefaultClient`                   | `go/types.go#ClientConfig`                                             |
-| Java       | `httpClient`, 6th constructor argument (`HttpClient`) | a new default client                 | `java/src/main/java/ai/smritea/sdk/SmriteaClient.java#SmriteaClient`   |
-| C#         | `httpClient`, 6th constructor parameter (`HttpClient?`) | the SDK creates its own; `Dispose` never disposes a given one | `csharp/SmriteaClient.cs#SmriteaClient` |
+| Language   | Option name                                         | Null or absent                                                              | Source                                                                                                              |
+|------------|-----------------------------------------------------|-----------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| Python     | `http_client` keyword (`urllib3.PoolManager`)       | the generated client's PoolManager, wrapped so each request has a 10 s timeout | `python/src/smritea/client.py#SmriteaClient.__init__`, `python/src/smritea/_http_client.py#_default_pool_manager`  |
+| TypeScript | `fetch` field (`typeof fetch`)                      | the global `fetch`, wrapped so each request has a 10 s timeout              | `typescript/src/types.ts#SmriteaClientConfig`, `typescript/src/default-fetch.ts#createDefaultFetch`                 |
+| Go         | `ClientConfig.HTTPClient` (`*http.Client`)          | a new `http.Client` with `Timeout` 10 s (never `http.DefaultClient`)        | `go/types.go#ClientConfig`, `go/client.go#newDefaultHTTPClient`                                                     |
+| Java       | `httpClient`, 6th constructor argument (`HttpClient`) | a new client wrapped in `TimeoutHttpClient`, 10 s per exchange            | `java/src/main/java/ai/smritea/sdk/SmriteaClient.java#SmriteaClient`, `java/src/main/java/ai/smritea/sdk/TimeoutHttpClient.java#TimeoutHttpClient` |
+| C#         | `httpClient`, 6th constructor parameter (`HttpClient?`) | the SDK creates its own with a 10 s request timeout; `Dispose` never disposes a given one | `csharp/SmriteaClient.cs#SmriteaClient`, `csharp/SmriteaClient.cs#ResolveTimeout`           |
 
 ---
 
@@ -151,7 +155,7 @@ Every SDK implementation MUST implement automatic retry on HTTP 429 with the fol
 1. **Default retries**: 2 (configurable via `max_retries` on the client constructor, default 2,
    minimum 0 to disable). A negative value is treated as 0. Go uses `*int`: nil means the default 2; use `smritea.Int(n)` to set a value.
 2. **Sleep strategy** (in priority order):
-    - If the server returns a `Retry-After` header: sleep for that many seconds.
+    - If the server returns a `Retry-After` header: sleep for 90 % of that many seconds.
     - Otherwise: exponential backoff — `1s × 2^attempt` with ±25 % random jitter.
 3. **Hard cap**: sleep duration must never exceed **30 seconds**, regardless of what the server says.
 4. **Jitter**: always apply jitter to exponential backoff to avoid thundering herd from concurrent clients.
@@ -162,11 +166,70 @@ Reference implementation in Python (`client.py`):
 
 ```
 _retry_delay(attempt, retry_after):
-    if retry_after > 0: return min(retry_after, 30)
+    if retry_after > 0: return min(retry_after * 0.9, 30)
     base = min(1.0 * 2^attempt, 30)
     jitter = base * (0.75 + 0.5 * random())
     return min(jitter, 30)
 ```
+
+---
+
+## Request Timeout (MANDATORY for all languages)
+
+Every SDK implementation MUST bound every HTTP exchange it sends through its own HTTP client:
+
+1. **Default**: when the caller passes no HTTP client, the SDK builds its own client with a timeout of
+   **10 seconds**. The number lives in one named constant per language (table below); no other file repeats it.
+2. **Budget**: the 10 seconds are the total time of ONE HTTP exchange, from sending the request until the whole
+   response body has been read. A server that never answers, or that sends the headers and then stalls the
+   body, must make the call fail within 10 seconds. Python is the one exception (see "Python" below).
+3. **Retries**: a 429 retry starts a new exchange with a new budget, and the retry sleep is not counted. A
+   timeout is never retried.
+4. **Supplied client**: a client the caller passes is used exactly as given. The SDK adds no timeout to it and
+   never closes it, so the caller's own timeouts take effect.
+5. **No timeout option**: the constructors have no timeout parameter. A caller who wants another value passes
+   an HTTP client configured with it.
+
+| Language   | Constant                                           | Mechanism of the default client                                                       |
+|------------|----------------------------------------------------|---------------------------------------------------------------------------------------|
+| Python     | `python/src/smritea/client.py#DEFAULT_TIMEOUT_SECONDS` (`10.0`) | `_PoolManagerAdapter` puts `urllib3.Timeout(total=10)` on every request and `_NoTimeoutRetry` stops urllib3 from retrying a timeout (`python/src/smritea/_http_client.py`) |
+| TypeScript | `typescript/src/default-fetch.ts#DEFAULT_TIMEOUT_MS` (`10_000`) | `createDefaultFetch` adds `AbortSignal.timeout` to every `fetch` call; `client.ts` uses it when `config.fetch` is absent |
+| Go         | `go/client.go#DefaultTimeout` (`10 * time.Second`) | `newDefaultHTTPClient` returns `&http.Client{Timeout: DefaultTimeout}`                |
+| Java       | `java/src/main/java/ai/smritea/sdk/SmriteaClient.java#DEFAULT_TIMEOUT` (`Duration.ofSeconds(10)`) | `TimeoutHttpClient` wraps a JDK client: request timeout for the header wait, plus a body stream that a timer closes at the deadline |
+| C#         | `csharp/SmriteaClient.cs#DefaultTimeout` (`TimeSpan.FromSeconds(10)`) | the generated `Configuration.Timeout` cancels `SendAsync`; `ResolveTimeout` sets it to `Timeout.InfiniteTimeSpan` for a supplied client |
+
+**Why the mechanism differs per language** (each point was reproduced with a local server that stalls, not
+assumed):
+
+- **Python**: the generated REST layer passes `timeout=None` on every call, and an explicit `None` overrides a
+  timeout set on the `PoolManager` itself. A `PoolManager(timeout=...)` passed as `http_client` was therefore
+  ignored. `_PoolManagerAdapter` replaces the `None` with the SDK default, or drops it for a supplied manager so
+  that the manager's own timeout applies. urllib3 limits the connect, the wait for headers and each read, not
+  the whole body: a body that stalls fails within 10 seconds, but a body that keeps sending data is not cut off.
+- **Java**: `HttpRequest.Builder.timeout` covers only the wait for the response headers. A server that sends
+  the headers and stalls the body blocks a reader of the body stream forever (reproduced on JDK 21).
+  `TimeoutHttpClient` closes the body stream at the deadline. This is verified on JDK 21 only, although the
+  module targets release 11.
+- **TypeScript**: `AbortSignal.timeout` stays attached to the response body, so a stalled body is covered. The
+  generated `deleteMemory` never reads its response body, so `delete()` in `typescript/src/client.ts` reads it
+  explicitly; without that a stalled body made a delete succeed.
+- **Go**: `http.Client.Timeout` includes reading the response body.
+- **C#**: `SendAsync` buffers the response body inside the call, so the cancellation of the generated
+  `Configuration.Timeout` covers a stalled body.
+
+**What a caller sees on a timeout today** (asserted by the tests named in the last column). The surfaces are not
+identical yet:
+
+| Language   | Error                                                                                                  | Test |
+|------------|--------------------------------------------------------------------------------------------------------|------|
+| Python     | `SmriteaError`; `__cause__` is the urllib3 timeout error                                               | `python/tests/test_timeout.py#test_default_client_fails_within_timeout` |
+| TypeScript | `SmriteaError`; message `FetchError: ...` when the server never answers, `TimeoutError: ...` when the body stalls | `typescript/tests/default-timeout.test.ts` |
+| Go         | `*SmriteaError`; no cause is kept; a stalled body reads as `Code` `INTERNAL_ERROR`, `HTTPStatus` 200, message `Unknown error` | `go/timeout_test.go#TestDefaultHTTPClient_TimesOut` |
+| Java       | `SmriteaError`, message `request failed: request timed out after 10000 ms`, cause `HttpTimeoutException`, `HTTPStatus` 0 | `java/src/test/java/ai/smritea/sdk/SmriteaTimeoutTest.java#defaultClientTimesOut` |
+| C#         | `TaskCanceledException` from the generated client, not a `SmriteaException`; its inner exception is a `TimeoutException` | `csharp/tests/SmriteaTimeoutTests.cs#SdkDefaultClientFailsWithinTheBudget` |
+
+Known gap: a timeout is not yet a typed, detectable SDK error in every language. Do not change one language's
+surface alone; the five must move together (see "What NOT to do").
 
 ---
 
@@ -209,6 +272,13 @@ _retry_delay(attempt, retry_after):
 - Tests must mock `_internal/` entirely — never make real network calls in unit tests.
 - Test the retry logic explicitly: mock the API to return 429 N times then succeed; assert the
   correct number of sleeps occurred with approximately correct durations.
+- Test the request timeout against a real loopback server (`127.0.0.1`, ephemeral port, never an external
+  host), the only exception to the no-network rule. The server has two stall modes: it accepts and never
+  answers, or it sends `HTTP/1.1 200 OK`, `Content-Length: 100` and 10 body bytes and then stalls. Cover
+  `add`, `search`, `get` and `delete` in both modes. Keep the suite fast: build the default client through an
+  internal factory that takes a short timeout, and separately assert that the public constructor wires the
+  10-second constant. Also assert that a supplied client reaches the generated client unchanged with no
+  SDK timeout added, and that a 429 retry gets a fresh budget.
 - The `_internal/` directory must be excluded from test coverage collection.
 
 ---
@@ -230,6 +300,8 @@ them in the top-level wrappers:
 | `build-<lang>`   | Compile / package the SDK                     | `uv build` / `tsc` / `go build`      |
 | `test-<lang>`    | Run the full unit test suite                  | `uv run pytest tests/ -v`            |
 | `publish-<lang>` | Build and publish to the package registry     | `uv publish` / `npm publish`         |
+| `install-<lang>` | Download dependencies; wired into `make install` | `uv sync` / `npm install`         |
+| `sync-autogen-<lang>` | Regenerate `_internal/autogen` from the spec | `openapi-generator-cli generate`  |
 
 After adding the language-specific targets, add them to the top-level wrappers:
 
@@ -243,7 +315,7 @@ Also add all new target names to the `.PHONY` declaration at the top of the Make
 
 ### Required Pre-commit Hooks
 
-Add four hooks in `.pre-commit-config.yaml` under the `local` repo, in this exact order:
+Add these hooks in `.pre-commit-config.yaml` under the `local` repo, after `sdk-install`:
 
 ```yaml
 - id: sdk-format
@@ -271,10 +343,8 @@ Add four hooks in `.pre-commit-config.yaml` under the `local` repo, in this exac
   pass_filenames: false
 ```
 
-Note: there is no separate `build` hook — build is covered implicitly by the type-check step
-inside `lint-<lang>`. Add a dedicated build hook only if the language has a separate compile
-step that is not part of lint (e.g. a compiled language where type errors only surface at
-build time).
+Also add the extension to the `sdk-build` hook `files` pattern, and the language to the
+`sdk-install` and `sdk-build` hook names. Wire `install-<lang>` into `make install`.
 
 ### Checklist for a New Language
 
@@ -284,10 +354,12 @@ build time).
 - [ ] `format-<lang>` target added and wired into `make format`
 - [ ] `lint-<lang>` target added and wired into `make lint`
 - [ ] `test-<lang>` target added and wired into `make test`
-- [ ] `build-<lang>` and `publish-<lang>` targets added
+- [ ] `build-<lang>`, `publish-<lang>`, `install-<lang>` and `sync-autogen-<lang>` targets added
 - [ ] `.PHONY` updated
-- [ ] `files` pattern in all three pre-commit hooks updated to include the new extension
+- [ ] `files` pattern in the format, lint, build and test hooks updated to include the new extension
 - [ ] Hook names updated to list the new language
+- [ ] Every contract section above is implemented and has a test: scope, trace ID, HTTP client, errors, retry, timeout
+- [ ] `<lang>/README.md` written, and the language added to `README.md`, `SDKs.md` and the release script
 
 ---
 
@@ -296,5 +368,8 @@ build time).
 - Do not add language-specific business logic that differs between implementations. If behaviour
   diverges, it is a bug in the diverging implementation.
 - Do not add new public methods without updating ALL language implementations simultaneously.
+- Do not rely on a per-request timeout alone to bound a call. In Java it ends at the response headers, and in
+  Python a pool-level timeout is overridden by the generated client. Prove every timeout against a server that
+  stalls the response body (see "Request Timeout").
 - Do not make HTTP calls outside of `_internal/`. All networking goes through the auto-gen client.
 - Do not catch and swallow errors from `_internal/` without re-raising as a typed `SmriteaError`.

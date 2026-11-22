@@ -18,6 +18,16 @@ using Smritea.Internal.Autogen.Model;
 /// </summary>
 public class SmriteaClient : IDisposable
 {
+    /// <summary>
+    /// The total time budget of one HTTP exchange when the SDK creates its own HTTP client: from sending the
+    /// request until the full response body is read. A server that never answers, or that sends the headers and
+    /// then stalls the body, makes the call fail with a <see cref="TaskCanceledException"/> after this time.
+    /// A retry after HTTP 429 starts a new exchange with a fresh budget; the retry sleep is not counted.
+    /// An <see cref="HttpClient"/> that the caller supplies gets no SDK timeout: only its own
+    /// <see cref="HttpClient.Timeout"/> and the caller's <see cref="CancellationToken"/> limit a call.
+    /// </summary>
+    public static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(10);
+
     private const string DefaultBaseUrl = "https://api-us.smritea.ai";
     private const int DefaultMaxRetries = 2;
     private const double RetryCap = 30.0;
@@ -55,9 +65,26 @@ public class SmriteaClient : IDisposable
     /// <param name="maxRetries">Maximum number of retries on HTTP 429. Defaults to 2.</param>
     /// <param name="traceId">Optional Trace ID sent as the <c>X-Trace-ID</c> header on every call. When set, it must be
     /// 8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen.</param>
-    /// <param name="httpClient">Optional HttpClient that sends every request (your own handler, proxy, TLS or timeout). Null: the SDK creates its own. Dispose does not dispose this client.</param>
+    /// <param name="httpClient">Optional HttpClient that sends every request (your own handler, proxy, TLS or timeout). Null: the SDK creates its own, with a request timeout of <see cref="DefaultTimeout"/> (10 seconds) for each HTTP exchange. A given client is used exactly as given: the SDK adds no timeout to it, so only its own <see cref="HttpClient.Timeout"/> and the <see cref="CancellationToken"/> of the call limit a request. Dispose does not dispose this client.</param>
     /// <exception cref="ArgumentException">Thrown when <paramref name="traceId"/> is not a valid Trace ID.</exception>
     public SmriteaClient(string apiKey, string appId, string? baseUrl, int maxRetries, string? traceId, HttpClient? httpClient)
+        : this(apiKey, appId, baseUrl, maxRetries, traceId, httpClient, DefaultTimeout)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SmriteaClient"/> class.
+    /// Internal constructor that sets the request timeout used when the SDK creates its own HTTP client,
+    /// so tests can use a short value.
+    /// </summary>
+    /// <param name="apiKey">API key for authentication.</param>
+    /// <param name="appId">Application ID injected into every request.</param>
+    /// <param name="baseUrl">Base URL of the smritea API.</param>
+    /// <param name="maxRetries">Maximum number of retries on HTTP 429.</param>
+    /// <param name="traceId">Optional Trace ID.</param>
+    /// <param name="httpClient">Optional caller-supplied HttpClient.</param>
+    /// <param name="defaultTimeout">Request timeout when <paramref name="httpClient"/> is null; ignored otherwise.</param>
+    internal SmriteaClient(string apiKey, string appId, string? baseUrl, int maxRetries, string? traceId, HttpClient? httpClient, TimeSpan defaultTimeout)
     {
         ArgumentNullException.ThrowIfNull(apiKey);
         ArgumentNullException.ThrowIfNull(appId);
@@ -76,6 +103,7 @@ public class SmriteaClient : IDisposable
         {
             // BasePath is the server root only — the autogen paths already include /api/v1/...
             BasePath = resolvedBaseUrl,
+            Timeout = ResolveTimeout(httpClient, defaultTimeout),
         };
         config.ApiKey["X-API-Key"] = apiKey;
         if (traceId is not null)
@@ -100,6 +128,12 @@ public class SmriteaClient : IDisposable
         this.maxRetries = Math.Max(0, maxRetries);
         this.api = api;
     }
+
+    /// <summary>
+    /// Gets the per-exchange request timeout set on the generated API client:
+    /// <see cref="Timeout.InfiniteTimeSpan"/> when the caller supplied an <see cref="HttpClient"/>.
+    /// </summary>
+    internal TimeSpan RequestTimeout => this.api.Configuration.Timeout;
 
     /// <summary>
     /// Stores a new memory with the given content. The optional <paramref name="opts"/>
@@ -413,6 +447,19 @@ public class SmriteaClient : IDisposable
     // ---------------------------------------------------------------------------
     // Static helpers — must appear before non-static member per SA1204
     // ---------------------------------------------------------------------------
+
+    /// <summary>
+    /// Chooses the request timeout of the generated API client. The SDK applies <paramref name="defaultTimeout"/>
+    /// only to an HTTP client it creates itself. A caller-supplied client is used exactly as given, so the SDK
+    /// timeout is switched off and only the client's own <see cref="HttpClient.Timeout"/> applies.
+    /// </summary>
+    /// <param name="httpClient">The caller-supplied HTTP client, or null when the SDK creates its own.</param>
+    /// <param name="defaultTimeout">The timeout for an SDK-created HTTP client.</param>
+    /// <returns><paramref name="defaultTimeout"/> when <paramref name="httpClient"/> is null; otherwise <see cref="Timeout.InfiniteTimeSpan"/>.</returns>
+    internal static TimeSpan ResolveTimeout(HttpClient? httpClient, TimeSpan defaultTimeout)
+    {
+        return httpClient is null ? defaultTimeout : Timeout.InfiniteTimeSpan;
+    }
 
     /// <summary>
     /// Checks that a Trace ID is 8-100 characters long and made only of ASCII letters, digits,

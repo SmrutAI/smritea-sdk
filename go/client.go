@@ -13,6 +13,14 @@ import (
 	"github.com/SmrutAI/smritea-sdk/go/internal/autogen"
 )
 
+// DefaultTimeout is the request timeout of the HTTP client the SDK creates when
+// ClientConfig.HTTPClient is nil. It is the total budget for one HTTP exchange,
+// from sending the request until the whole response body has been read. A 429
+// retry starts a new exchange with a fresh budget; the retry sleep is not counted.
+// A caller-supplied ClientConfig.HTTPClient is used exactly as given: the SDK adds
+// no timeout to it.
+const DefaultTimeout = 10 * time.Second
+
 const retryCap = 30 * time.Second
 
 const msgInvalidTraceID = "trace_id must be 8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or hyphen"
@@ -39,7 +47,11 @@ type SmriteaClient struct {
 // If cfg.TraceID is set but invalid, NewClient still returns a client, and every method
 // returns a *SmriteaBadRequestError (HTTP 400) with Code ErrCodeInvalidTraceID without
 // sending a request.
-// If cfg.HTTPClient is set, it sends every request; nil keeps http.DefaultClient.
+// If cfg.HTTPClient is set, it sends every request exactly as given: the SDK adds no
+// timeout to it and never closes it. If cfg.HTTPClient is nil, the SDK creates its own
+// http.Client with a Timeout of DefaultTimeout (10 seconds), which bounds one HTTP
+// exchange including the reading of the response body. A call that exceeds it fails
+// with a *SmriteaError. The ctx argument of each method can still bound a call further.
 func NewClient(cfg ClientConfig) *SmriteaClient {
 	baseURL := cfg.BaseURL
 	if baseURL == "" {
@@ -60,7 +72,13 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 	// "/api/v1/sdk/memories") to this value at request time.
 	configuration.Servers = autogen.ServerConfigurations{{URL: baseURL}}
 	configuration.AddDefaultHeader("X-API-Key", cfg.APIKey)
-	configuration.HTTPClient = cfg.HTTPClient
+	// The generated client falls back to http.DefaultClient (no timeout) when this is
+	// nil, so the default client must be set here, before the generated client is built.
+	httpClient := cfg.HTTPClient
+	if httpClient == nil {
+		httpClient = newDefaultHTTPClient(DefaultTimeout)
+	}
+	configuration.HTTPClient = httpClient
 
 	var initErr error
 	if cfg.TraceID != "" {
@@ -84,6 +102,13 @@ func NewClient(cfg ClientConfig) *SmriteaClient {
 		cfg:        configuration,
 		initErr:    initErr,
 	}
+}
+
+// newDefaultHTTPClient returns a new http.Client whose Timeout is timeout. Timeout
+// covers the whole exchange, including reading the response body. It leaves
+// http.DefaultClient and http.DefaultTransport untouched.
+func newDefaultHTTPClient(timeout time.Duration) *http.Client {
+	return &http.Client{Timeout: timeout}
 }
 
 // isValidTraceID reports whether id is 8-100 bytes long and every byte is one of

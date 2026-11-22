@@ -149,7 +149,12 @@ export interface SmriteaClientConfig {
   traceId?: string;
   /**
    * Optional `fetch` function that sends every request. Use it to set your own HTTP agent,
-   * proxy, timeout or instrumentation. Default: the global `fetch`.
+   * proxy, timeout or instrumentation. It is used exactly as given: the SDK adds no timeout
+   * or signal to it.
+   *
+   * Default: the global `fetch`, limited to `DEFAULT_TIMEOUT_MS` (10 seconds) in total for one
+   * HTTP exchange, from sending the request until the full response body has been read. A
+   * retry after HTTP 429 starts a new exchange with a fresh 10 second budget.
    */
   fetch?: typeof fetch;
 }

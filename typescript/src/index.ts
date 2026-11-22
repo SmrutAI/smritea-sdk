@@ -1,4 +1,5 @@
 export { SmriteaClient } from './client.js';
+export { DEFAULT_TIMEOUT_MS } from './default-fetch.js';
 export type { SmriteaClientConfig } from './types.js';
 export type {
   Memory,

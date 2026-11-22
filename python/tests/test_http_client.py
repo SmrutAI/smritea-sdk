@@ -53,7 +53,7 @@ def test_custom_pool_manager_sends_every_request(name, trace_id):
     with pytest.raises(SmriteaNotFoundError):
         client.get('mem_1')
 
-    assert client._api_client.rest_client.pool_manager is pool, name
+    assert client._api_client.rest_client.pool_manager.pool_manager is pool, name
     assert len(pool.calls) == 1, name
     method, url, headers = pool.calls[0]
     assert method == 'GET', name
@@ -70,7 +70,9 @@ def test_custom_pool_manager_sends_every_request(name, trace_id):
     ],
 )
 def test_without_option_the_sdk_builds_its_own_pool_manager(name, extra):
-    """Without http_client the generated client keeps its own urllib3 PoolManager."""
+    """Without http_client the SDK wraps the generated client's own urllib3 PoolManager."""
     client = SmriteaClient(api_key='test-key', app_id='app-123', base_url=_BASE_URL, **extra)
 
-    assert type(client._api_client.rest_client.pool_manager) is urllib3.PoolManager, name
+    assert type(client._api_client.rest_client.pool_manager.pool_manager) is urllib3.PoolManager, (
+        name
+    )

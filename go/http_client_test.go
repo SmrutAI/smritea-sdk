@@ -34,7 +34,7 @@ func TestNewClient_HTTPClient(t *testing.T) {
 	}{
 		{name: "custom client without trace id", useCustom: true},
 		{name: "custom client with trace id", useCustom: true, traceID: "trace-abc12345"},
-		{name: "nil client uses http.DefaultClient", useCustom: false},
+		{name: "nil client uses the SDK default client", useCustom: false},
 	}
 
 	for _, tc := range tests {
@@ -77,16 +77,19 @@ func TestNewClient_HTTPClient(t *testing.T) {
 				t.Errorf("X-Trace-ID = %q, want %q", got.traceID, tc.traceID)
 			}
 			wantCount := int32(0)
-			wantClient := http.DefaultClient
 			if tc.useCustom {
 				wantCount = 1
-				wantClient = httpClient
 			}
 			if c := transport.count.Load(); c != wantCount {
 				t.Errorf("custom transport saw %d requests, want %d", c, wantCount)
 			}
-			if client.cfg.HTTPClient != wantClient {
-				t.Errorf("cfg.HTTPClient = %p, want %p", client.cfg.HTTPClient, wantClient)
+			if tc.useCustom {
+				if client.cfg.HTTPClient != httpClient {
+					t.Errorf("cfg.HTTPClient = %p, want the supplied client %p", client.cfg.HTTPClient, httpClient)
+				}
+			} else if client.cfg.HTTPClient == http.DefaultClient || client.cfg.HTTPClient.Timeout != DefaultTimeout {
+				t.Errorf("cfg.HTTPClient = %p with Timeout %v, want a new client with Timeout %v",
+					client.cfg.HTTPClient, client.cfg.HTTPClient.Timeout, DefaultTimeout)
 			}
 		})
 	}

@@ -31,6 +31,7 @@ import ai.smritea.sdk.model.SearchOptions;
 import ai.smritea.sdk.model.SearchResult;
 import java.math.BigDecimal;
 import java.net.http.HttpClient;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,8 +42,22 @@ import java.util.regex.Pattern;
 /**
  * Entry point for all Smritea memory operations. Create one instance per application and reuse it
  * across calls. All methods are safe for concurrent use.
+ *
+ * <p>Timeout: when you do not pass an {@link HttpClient}, every HTTP exchange has a total budget of
+ * {@link #DEFAULT_TIMEOUT}, from the moment the request is sent until the whole response body is
+ * read. A call that exceeds it fails with a {@link SmriteaError} whose cause is a {@link
+ * java.net.http.HttpTimeoutException}. A 429 retry starts a new exchange with a new budget, and the
+ * wait between retries does not count. A client that you pass is used exactly as you configured it:
+ * the SDK adds no timeout to it.
  */
 public class SmriteaClient {
+
+  /**
+   * The total time of one HTTP exchange with the default HTTP client: 10 seconds, from the moment
+   * the request is sent until the whole response body is read. It is also the connect timeout of
+   * that client. It does not apply to an {@link HttpClient} that you pass to the constructor.
+   */
+  public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
 
   private static final String DEFAULT_BASE_URL = "https://api-us.smritea.ai";
   private static final int DEFAULT_MAX_RETRIES = 2;
@@ -106,8 +121,9 @@ public class SmriteaClient {
    * @param traceId optional Trace ID (8-100 characters of A-Z, a-z, 0-9, dot, underscore, colon or
    *     hyphen), or null to send no header
    * @param httpClient the HTTP client that sends every request (your own proxy, TLS, timeouts,
-   *     executor or a wrapping client), or null for a new default client; the SmriteaClient does
-   *     not close it
+   *     executor or a wrapping client), or null for a new default client with a total timeout of
+   *     {@link #DEFAULT_TIMEOUT} for each exchange; the SmriteaClient adds no timeout to your
+   *     client and does not close it
    * @throws IllegalArgumentException if {@code traceId} is non-null and invalid
    */
   public SmriteaClient(
@@ -117,6 +133,22 @@ public class SmriteaClient {
       int maxRetries,
       String traceId,
       HttpClient httpClient) {
+    this(apiKey, appId, baseUrl, maxRetries, traceId, httpClient, DEFAULT_TIMEOUT);
+  }
+
+  /**
+   * Creates a SmriteaClient whose default HTTP client limits every exchange to {@code
+   * defaultTimeout}. A caller-supplied {@code httpClient} is used as it is and {@code
+   * defaultTimeout} does not apply to it.
+   */
+  SmriteaClient(
+      String apiKey,
+      String appId,
+      String baseUrl,
+      int maxRetries,
+      String traceId,
+      HttpClient httpClient,
+      Duration defaultTimeout) {
     Objects.requireNonNull(apiKey, "apiKey must not be null");
     Objects.requireNonNull(appId, "appId must not be null");
     if (traceId != null && !TRACE_ID_PATTERN.matcher(traceId).matches()) {
@@ -131,13 +163,7 @@ public class SmriteaClient {
     // suffix
     // and getBaseUri() would produce a malformed URL with the full URL string as the path.
     String resolvedBaseUrl = baseUrl != null ? baseUrl : DEFAULT_BASE_URL;
-    ApiClient apiClient =
-        httpClient == null
-            ? new ApiClient()
-            : new ApiClient(
-                new ProvidedHttpClientBuilder(httpClient),
-                ApiClient.createDefaultObjectMapper(),
-                null);
+    ApiClient apiClient = newApiClient(httpClient, defaultTimeout);
     apiClient.updateBaseUri(resolvedBaseUrl);
     apiClient.setRequestInterceptor(
         builder -> {
@@ -147,6 +173,17 @@ public class SmriteaClient {
           }
         });
     this.api = new SdkMemoryApi(apiClient);
+  }
+
+  /**
+   * Builds the generated API client. A given HTTP client is used exactly as it is. Without one, the
+   * default client limits every exchange to {@code defaultTimeout}.
+   */
+  static ApiClient newApiClient(HttpClient httpClient, Duration defaultTimeout) {
+    HttpClient client =
+        httpClient != null ? httpClient : TimeoutHttpClient.newDefault(defaultTimeout);
+    return new ApiClient(
+        new ProvidedHttpClientBuilder(client), ApiClient.createDefaultObjectMapper(), null);
   }
 
   /**
@@ -480,6 +517,14 @@ public class SmriteaClient {
    */
   private SmriteaError mapError(ApiException e) {
     int httpStatus = e.getCode();
+    if (httpStatus == 0 && e.getResponseBody() == null && e.getCause() != null) {
+      // No HTTP response: the exchange failed in transport (for example a timeout).
+      Throwable cause = e.getCause();
+      String detail = cause.getMessage() != null ? cause.getMessage() : cause.toString();
+      SmriteaError error = new SmriteaError("request failed: " + detail, httpStatus);
+      error.initCause(cause);
+      return error;
+    }
     ExtractedErrorFields fields = extractErrorFieldsWithBody(e.getResponseBody());
     String message = fields.message;
     String code = fields.errorCode;

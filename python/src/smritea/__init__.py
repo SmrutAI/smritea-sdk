@@ -3,7 +3,7 @@
 from importlib.metadata import PackageNotFoundError as _PackageNotFoundError
 from importlib.metadata import version as _distribution_version
 
-from smritea.client import SmriteaClient
+from smritea.client import DEFAULT_TIMEOUT_SECONDS, SmriteaClient
 from smritea.exceptions import (
     SmriteaBadRequestError,
     SmriteaConflictError,
@@ -19,6 +19,7 @@ from smritea.exceptions import (
 from smritea.types import Memory, MemoryCreationResult, MemoryScope, SearchResult
 
 __all__ = [
+    "DEFAULT_TIMEOUT_SECONDS",
     "SmriteaClient",
     "Memory",
     "MemoryCreationResult",
